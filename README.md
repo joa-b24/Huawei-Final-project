@@ -81,8 +81,3 @@ npm run dev
 
 3. Abre la URL local que imprima Vite, normalmente `http://localhost:5173`.
 
-## Siguientes pasos sugeridos
-
-- Sustituir los datos demo por fuentes reales de Mexico.
-- Agregar mas variables por categoria.
-- Incorporar mapas o tablas exportables si el MVP lo requiere.
