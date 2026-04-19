@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import DashboardHeader from "../components/DashboardHeader";
+import EmptyState from "../components/EmptyState";
 import InsightPanel from "../components/InsightPanel";
 import KPIGrid from "../components/KPIGrid";
 import MetricSelector from "../components/MetricSelector";
 import ComparisonBarChart from "../components/charts/ComparisonBarChart";
 import CorrelationScatter from "../components/charts/CorrelationScatter";
 import { loadDataset } from "../data/loadDataset";
-import type { DashboardDataset, StateMetricRecord } from "../types/dataset";
+import type { DashboardDataset } from "../types/dataset";
 import { buildInsights } from "../utils/insights";
 import { getMetricDefinition, getMetricOptions } from "../utils/metrics";
 
@@ -50,8 +51,8 @@ export default function App() {
       return [];
     }
 
-    return buildInsights(dataset.records, selectedMetric);
-  }, [dataset, selectedMetric]);
+    return buildInsights(filteredRecords, selectedMetric);
+  }, [dataset, filteredRecords, selectedMetric]);
 
   const scatterData = useMemo(() => {
     return filteredRecords.map((record) => ({
@@ -95,16 +96,37 @@ export default function App() {
       </section>
 
       <section className="panel">
-        <KPIGrid metric={selectedMetric} records={topStates} />
+        {topStates.length > 0 ? (
+          <KPIGrid metric={selectedMetric} records={topStates} />
+        ) : (
+          <EmptyState
+            title="Sin datos para esta seleccion"
+            description="Activa al menos un estado para recalcular los KPIs y comparativos."
+          />
+        )}
       </section>
 
       <section className="grid-layout">
         <div className="panel">
-          <ComparisonBarChart records={filteredRecords} metric={selectedMetric} />
+          {filteredRecords.length > 0 ? (
+            <ComparisonBarChart records={filteredRecords} metric={selectedMetric} />
+          ) : (
+            <EmptyState
+              title="No hay barras para mostrar"
+              description="Los dashboards comparativos se actualizan con los estados seleccionados."
+            />
+          )}
         </div>
 
         <div className="panel">
-          <CorrelationScatter data={scatterData} />
+          {scatterData.length > 0 ? (
+            <CorrelationScatter data={scatterData} />
+          ) : (
+            <EmptyState
+              title="Sin puntos en la correlacion"
+              description="Selecciona al menos un estado para explorar la relacion digital-industrial."
+            />
+          )}
         </div>
       </section>
 

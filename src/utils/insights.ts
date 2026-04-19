@@ -1,6 +1,10 @@
 import type { MetricDefinition, StateMetricRecord } from "../types/dataset";
 
 export function buildInsights(records: StateMetricRecord[], metric: MetricDefinition): string[] {
+  if (records.length === 0) {
+    return [];
+  }
+
   const sorted = [...records].sort(
     (left, right) => right.metrics[metric.id] - left.metrics[metric.id]
   );

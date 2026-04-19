@@ -31,6 +31,7 @@ Se prioriza una arquitectura simple:
 
 ```text
 .
+|-- .gitignore
 |-- package.json
 |-- tsconfig.json
 |-- vite.config.ts
@@ -63,6 +64,8 @@ Se prioriza una arquitectura simple:
 `-- data/
     |-- processed/
     `-- raw/
+        |-- states.metrics.source.json
+        `-- states.metrics.source.csv
 ```
 
 ## Como correrlo
@@ -73,13 +76,26 @@ Se prioriza una arquitectura simple:
 npm install
 ```
 
-2. Levanta la app:
+2. Si quieres regenerar el dataset publico desde la fuente local:
+
+```bash
+npm run data:build
+```
+
+3. Levanta la app:
 
 ```bash
 npm run dev
 ```
 
-3. Abre la URL local que imprima Vite, normalmente `http://localhost:5173`.
+4. Abre la URL local que imprima Vite, normalmente `http://localhost:5173`.
+
+## Que incluye este scaffolding
+
+- Una sola pagina con `header`, filtros, KPIs, dashboards comparativos e insights.
+- Datos mock minimos para validar la UI desde archivos locales.
+- Un script base para mover datos procesados hacia la carpeta publica.
+- Componentes desacoplados para crecer sin meter backend antes de tiempo.
 
 ## Siguientes pasos sugeridos
 
