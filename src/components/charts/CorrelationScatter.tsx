@@ -18,14 +18,28 @@ type ScatterDatum = {
 
 type CorrelationScatterProps = {
   data: ScatterDatum[];
+  title: string;
+  description: string;
+  xLabel: string;
+  xUnit: string;
+  yLabel: string;
+  yUnit: string;
 };
 
-export default function CorrelationScatter({ data }: CorrelationScatterProps) {
+export default function CorrelationScatter({
+  data,
+  title,
+  description,
+  xLabel,
+  xUnit,
+  yLabel,
+  yUnit
+}: CorrelationScatterProps) {
   return (
     <div>
       <div className="section-heading">
-        <h2>Relacion digital-industrial</h2>
-        <p>Explora la relacion entre conectividad, actividad industrial y tamano poblacional.</p>
+        <h2>{title}</h2>
+        <p>{description}</p>
       </div>
 
       <div className="chart-frame">
@@ -35,20 +49,20 @@ export default function CorrelationScatter({ data }: CorrelationScatterProps) {
             <XAxis
               type="number"
               dataKey="x"
-              name="Conectividad digital"
-              unit="%"
+              name={xLabel}
+              unit={xUnit}
               tickLine={false}
               axisLine={false}
             />
             <YAxis
               type="number"
               dataKey="y"
-              name="Actividad industrial"
-              unit=" pts"
+              name={yLabel}
+              unit={yUnit}
               tickLine={false}
               axisLine={false}
             />
-            <ZAxis type="number" dataKey="z" range={[80, 500]} name="Poblacion" />
+            <ZAxis type="number" dataKey="z" range={[90, 460]} name="Tamano relativo" />
             <Tooltip cursor={{ strokeDasharray: "3 3" }} />
             <Scatter data={data} fill="#0f8b8d" />
           </ScatterChart>

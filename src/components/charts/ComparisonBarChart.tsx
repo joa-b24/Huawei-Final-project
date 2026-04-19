@@ -12,18 +12,25 @@ import type { MetricDefinition, StateMetricRecord } from "../../types/dataset";
 type ComparisonBarChartProps = {
   records: StateMetricRecord[];
   metric: MetricDefinition;
+  title: string;
+  description: string;
 };
 
-export default function ComparisonBarChart({ records, metric }: ComparisonBarChartProps) {
+export default function ComparisonBarChart({
+  records,
+  metric,
+  title,
+  description
+}: ComparisonBarChartProps) {
   const chartData = [...records].sort(
-    (left, right) => right.metrics[metric.id] - left.metrics[metric.id]
+    (left, right) => (right.metrics[metric.id] ?? 0) - (left.metrics[metric.id] ?? 0)
   );
 
   return (
     <div>
       <div className="section-heading">
-        <h2>Comparativo por estado</h2>
-        <p>{metric.label} para el conjunto de estados seleccionado.</p>
+        <h2>{title}</h2>
+        <p>{description}</p>
       </div>
 
       <div className="chart-frame">

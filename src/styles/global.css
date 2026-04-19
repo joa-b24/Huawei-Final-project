@@ -82,6 +82,21 @@ select {
   gap: 20px;
 }
 
+.filters-heading h2 {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+}
+
+.filters-heading p {
+  margin: 0;
+  color: #486581;
+}
+
+.eyebrow.dark {
+  color: #486581;
+  opacity: 1;
+}
+
 .controls-layout label,
 .filter-label {
   display: block;
@@ -167,10 +182,68 @@ select {
   color: #d64500;
 }
 
+.kpi-helper {
+  margin: 10px 0 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #486581;
+}
+
+.executive-kpi-grid {
+  margin-bottom: 24px;
+}
+
+.kpi-warm {
+  background: linear-gradient(180deg, #fff7f1 0%, #ffffff 100%);
+}
+
+.kpi-cool {
+  background: linear-gradient(180deg, #edf7f8 0%, #ffffff 100%);
+  border-color: rgba(8, 126, 139, 0.14);
+}
+
+.kpi-neutral {
+  background: linear-gradient(180deg, #f4f7fb 0%, #ffffff 100%);
+  border-color: rgba(16, 42, 67, 0.08);
+}
+
 .grid-layout {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   gap: 24px;
+}
+
+.panel-nested {
+  margin-top: 0;
+  padding: 20px;
+}
+
+.dashboard-block {
+  margin-top: 28px;
+  padding: 28px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 251, 253, 0.92) 100%);
+  border: 1px solid rgba(16, 42, 67, 0.08);
+  box-shadow: 0 16px 40px rgba(16, 42, 67, 0.06);
+}
+
+.dashboard-block-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.metric-control {
+  min-width: 280px;
+}
+
+.metric-control label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
 }
 
 .chart-frame {
@@ -221,6 +294,15 @@ select {
 }
 
 @media (max-width: 900px) {
+  .dashboard-block-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .metric-control {
+    min-width: 100%;
+  }
+
   .grid-layout {
     grid-template-columns: 1fr;
   }
