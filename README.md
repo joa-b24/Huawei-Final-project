@@ -109,8 +109,3 @@ npm run dev
 - Un estandar de datos documentado en `docs/data-standard.md`.
 - Catalogos y ejemplos procesados para comparar estados con nombres consistentes.
 
-## Siguientes pasos sugeridos
-
-- Sustituir los datos demo por fuentes reales de Mexico.
-- Agregar mas variables por categoria.
-- Incorporar mapas o tablas exportables si el MVP lo requiere.
