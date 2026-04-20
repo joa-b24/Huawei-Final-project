@@ -7,7 +7,7 @@ export default function DashboardHeader({ title, subtitle }: DashboardHeaderProp
   return (
     <header className="hero">
       <div>
-        <p className="eyebrow">Decision Support Dashboard</p>
+        <p className="eyebrow">Proyecto Huawei</p>
         <h1>{title}</h1>
         <p className="hero-copy">{subtitle}</p>
       </div>

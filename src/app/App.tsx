@@ -296,8 +296,8 @@ export default function App() {
   return (
     <div className="app-shell">
       <DashboardHeader
-        title="Huawei Territorial Intelligence"
-        subtitle="Primera version de una plataforma analitica para leer cobertura movil, poblacion cubierta, brechas territoriales, adopcion digital y oportunidad estrategica por estado con ENDUTIH 2024, teledensidad movil y datos de brecha digital."
+        title="Propuesta de Dashboards Proyecto Huawei"
+        subtitle="Visualizacion ejecutiva para comparar estados de Mexico en cobertura movil, poblacion cubierta, adopcion digital y oportunidad estrategica con base en ENDUTIH 2024 y otros indicadores territoriales de conectividad."
       />
 
       <div className="filter-toolbar">
