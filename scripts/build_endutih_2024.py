@@ -25,6 +25,11 @@ TD_FILES = {
     "td_teledensidad_intmovil": RAW_DIR / "TD_TELEDENSIDAD_INTMOVIL_ITE_VA.csv",
 }
 
+BRECHA_FILES = {
+    "loc_tipo": RAW_DIR / "loc_tipo_conectividad.csv",
+    "localidades": RAW_DIR / "localidades_conectividad.csv",
+}
+
 VARIABLE_SPECS = [
     {
         "file_key": "usuarios",
@@ -161,6 +166,73 @@ DIRECT_VALUE_SPECS = [
     }
 ]
 
+LOCALITY_AGG_SPECS = [
+    {
+        "variable": "localidades_con_cobertura_movil_pct",
+        "categoria": "cobertura_red",
+        "label": "Localidades con cobertura movil",
+        "unidad": "%",
+        "weight_key": "localidades",
+        "predicate": lambda row: row["MOVIL"].strip() == "Sí",
+    },
+    {
+        "variable": "poblacion_en_localidades_con_cobertura_movil_pct",
+        "categoria": "cobertura_red",
+        "label": "Poblacion en localidades con cobertura movil",
+        "unidad": "%",
+        "weight_key": "poblacion",
+        "predicate": lambda row: row["MOVIL"].strip() == "Sí",
+    },
+    {
+        "variable": "localidades_con_4g_garantizada_pct",
+        "categoria": "cobertura_red",
+        "label": "Localidades con 4G garantizada",
+        "unidad": "%",
+        "weight_key": "localidades",
+        "predicate": lambda row: row["G_4G"].strip() == "Garantizada",
+    },
+    {
+        "variable": "poblacion_en_localidades_con_4g_garantizada_pct",
+        "categoria": "cobertura_red",
+        "label": "Poblacion en localidades con 4G garantizada",
+        "unidad": "%",
+        "weight_key": "poblacion",
+        "predicate": lambda row: row["G_4G"].strip() == "Garantizada",
+    },
+    {
+        "variable": "localidades_con_5g_garantizada_pct",
+        "categoria": "cobertura_red",
+        "label": "Localidades con 5G garantizada",
+        "unidad": "%",
+        "weight_key": "localidades",
+        "predicate": lambda row: row["G_5G"].strip() == "Garantizada",
+    },
+    {
+        "variable": "poblacion_en_localidades_con_5g_garantizada_pct",
+        "categoria": "cobertura_red",
+        "label": "Poblacion en localidades con 5G garantizada",
+        "unidad": "%",
+        "weight_key": "poblacion",
+        "predicate": lambda row: row["G_5G"].strip() == "Garantizada",
+    },
+    {
+        "variable": "hogares_en_localidades_con_internet_pct",
+        "categoria": "infraestructura_digital",
+        "label": "Hogares en localidades con internet",
+        "unidad": "%",
+        "weight_key": "hogares",
+        "predicate": lambda row: row["INTERNET"].strip() == "Sí",
+    },
+    {
+        "variable": "poblacion_en_localidades_con_internet_pct",
+        "categoria": "infraestructura_digital",
+        "label": "Poblacion en localidades con internet",
+        "unidad": "%",
+        "weight_key": "poblacion",
+        "predicate": lambda row: row["INTERNET"].strip() == "Sí",
+    },
+]
+
 
 def load_state_master() -> dict[str, dict]:
     payload = json.loads(STATE_MASTER_FILE.read_text(encoding="utf-8"))
@@ -191,6 +263,75 @@ def aggregate_file(file_path: Path, specs: list[dict]) -> tuple[dict[str, float]
                     positives[spec["variable"]][cve_ent] += weight
 
     return totals, positives
+
+
+def load_locality_metadata() -> dict[str, dict]:
+    metadata: dict[str, dict] = {}
+    with BRECHA_FILES["localidades"].open("r", encoding="latin1", newline="") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            cvegeo = row["CVEGEO"].strip()
+            metadata[cvegeo] = {
+                "cve_ent": row["ENT"].strip().zfill(2),
+                "poblacion": float((row["POBLACION"] or "0").strip() or 0),
+                "hogares": float((row["TOTHOG"] or "0").strip() or 0),
+                "localidades": 1.0,
+            }
+    return metadata
+
+
+def aggregate_locality_connectivity(state_master: dict[str, dict]) -> list[dict]:
+    locality_metadata = load_locality_metadata()
+    totals_by_state: dict[str, dict[str, float]] = defaultdict(
+        lambda: {"poblacion": 0.0, "hogares": 0.0, "localidades": 0.0}
+    )
+    positives_by_variable: dict[str, dict[str, float]] = {
+        spec["variable"]: defaultdict(float) for spec in LOCALITY_AGG_SPECS
+    }
+
+    with BRECHA_FILES["loc_tipo"].open("r", encoding="latin1", newline="") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            if row["ANIO"].strip() != str(YEAR):
+                continue
+
+            cvegeo = row["CVEGEO"].strip()
+            locality = locality_metadata.get(cvegeo)
+            if not locality:
+                continue
+
+            cve_ent = locality["cve_ent"]
+            for weight_key in ("poblacion", "hogares", "localidades"):
+                totals_by_state[cve_ent][weight_key] += locality[weight_key]
+
+            for spec in LOCALITY_AGG_SPECS:
+                if spec["predicate"](row):
+                    positives_by_variable[spec["variable"]][cve_ent] += locality[spec["weight_key"]]
+
+    long_records: list[dict] = []
+    for spec in LOCALITY_AGG_SPECS:
+        for cve_ent, totals in sorted(totals_by_state.items()):
+            state = state_master.get(cve_ent)
+            denominator = totals[spec["weight_key"]]
+            if not state or denominator == 0:
+                continue
+
+            value = round((positives_by_variable[spec["variable"]][cve_ent] / denominator) * 100, 2)
+            long_records.append(
+                {
+                    "state_code": state["state_code"],
+                    "cve_ent": cve_ent,
+                    "estado": state["estado"],
+                    "categoria": spec["categoria"],
+                    "variable": spec["variable"],
+                    "valor": value,
+                    "anio": YEAR,
+                    "fuente": "BIT brechas digitales 2024",
+                    "unidad": spec["unidad"],
+                }
+            )
+
+    return long_records
 
 
 def build_outputs() -> tuple[dict, dict]:
@@ -279,6 +420,19 @@ def build_outputs() -> tuple[dict, dict]:
                         "unidad": spec["unidad"],
                     }
                 )
+
+    for spec in LOCALITY_AGG_SPECS:
+        metric_catalog.append(
+            {
+                "variable_id": spec["variable"],
+                "categoria_id": spec["categoria"],
+                "label": spec["label"],
+                "unidad": spec["unidad"],
+                "source_table": "loc_tipo_conectividad + localidades_conectividad",
+            }
+        )
+
+    long_records.extend(aggregate_locality_connectivity(state_master))
 
     wide_records_by_state: dict[str, dict] = {}
     for record in long_records:

@@ -15,7 +15,7 @@ export default function DashboardFilters({
         <div>
           <p className="eyebrow dark">Filtros globales</p>
           <h2>Comparativo entre estados</h2>
-          <p>Selecciona la muestra territorial que alimenta los tres dashboards.</p>
+          <p>Selecciona la muestra territorial que alimenta los cinco dashboards.</p>
         </div>
       </div>
 

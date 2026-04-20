@@ -101,6 +101,62 @@
       "label": "Teledensidad de internet movil",
       "unidad": "lineas por cada 100 habitantes",
       "source_table": "td_teledensidad_intmovil"
+    },
+    {
+      "variable_id": "localidades_con_cobertura_movil_pct",
+      "categoria_id": "cobertura_red",
+      "label": "Localidades con cobertura movil",
+      "unidad": "%",
+      "source_table": "loc_tipo_conectividad + localidades_conectividad"
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_cobertura_movil_pct",
+      "categoria_id": "cobertura_red",
+      "label": "Poblacion en localidades con cobertura movil",
+      "unidad": "%",
+      "source_table": "loc_tipo_conectividad + localidades_conectividad"
+    },
+    {
+      "variable_id": "localidades_con_4g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "label": "Localidades con 4G garantizada",
+      "unidad": "%",
+      "source_table": "loc_tipo_conectividad + localidades_conectividad"
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_4g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "label": "Poblacion en localidades con 4G garantizada",
+      "unidad": "%",
+      "source_table": "loc_tipo_conectividad + localidades_conectividad"
+    },
+    {
+      "variable_id": "localidades_con_5g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "label": "Localidades con 5G garantizada",
+      "unidad": "%",
+      "source_table": "loc_tipo_conectividad + localidades_conectividad"
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_5g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "label": "Poblacion en localidades con 5G garantizada",
+      "unidad": "%",
+      "source_table": "loc_tipo_conectividad + localidades_conectividad"
+    },
+    {
+      "variable_id": "hogares_en_localidades_con_internet_pct",
+      "categoria_id": "infraestructura_digital",
+      "label": "Hogares en localidades con internet",
+      "unidad": "%",
+      "source_table": "loc_tipo_conectividad + localidades_conectividad"
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_internet_pct",
+      "categoria_id": "infraestructura_digital",
+      "label": "Poblacion en localidades con internet",
+      "unidad": "%",
+      "source_table": "loc_tipo_conectividad + localidades_conectividad"
     }
   ],
   "records": [
@@ -124,7 +180,15 @@
         "personas_conexion_datos_celular_pct": 58.73,
         "personas_usan_apps_redes_sociales_pct": 65.24,
         "personas_usan_banca_movil_pct": 29.42,
-        "teledensidad_internet_movil": 91.0
+        "teledensidad_internet_movil": 91.0,
+        "localidades_con_cobertura_movil_pct": 99.46,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.87,
+        "localidades_con_4g_garantizada_pct": 97.97,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.59,
+        "localidades_con_5g_garantizada_pct": 14.44,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 72.06,
+        "hogares_en_localidades_con_internet_pct": 93.3,
+        "poblacion_en_localidades_con_internet_pct": 92.31
       }
     },
     {
@@ -147,7 +211,15 @@
         "personas_conexion_datos_celular_pct": 72.17,
         "personas_usan_apps_redes_sociales_pct": 66.43,
         "personas_usan_banca_movil_pct": 34.44,
-        "teledensidad_internet_movil": 107.0
+        "teledensidad_internet_movil": 107.0,
+        "localidades_con_cobertura_movil_pct": 92.12,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.89,
+        "localidades_con_4g_garantizada_pct": 89.11,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.85,
+        "localidades_con_5g_garantizada_pct": 10.33,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 85.39,
+        "hogares_en_localidades_con_internet_pct": 97.69,
+        "poblacion_en_localidades_con_internet_pct": 97.29
       }
     },
     {
@@ -170,7 +242,15 @@
         "personas_conexion_datos_celular_pct": 75.4,
         "personas_usan_apps_redes_sociales_pct": 71.6,
         "personas_usan_banca_movil_pct": 40.84,
-        "teledensidad_internet_movil": 120.0
+        "teledensidad_internet_movil": 120.0,
+        "localidades_con_cobertura_movil_pct": 69.45,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 98.79,
+        "localidades_con_4g_garantizada_pct": 50.1,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 98.0,
+        "localidades_con_5g_garantizada_pct": 3.85,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 74.33,
+        "hogares_en_localidades_con_internet_pct": 95.58,
+        "poblacion_en_localidades_con_internet_pct": 94.72
       }
     },
     {
@@ -193,7 +273,15 @@
         "personas_conexion_datos_celular_pct": 69.16,
         "personas_usan_apps_redes_sociales_pct": 65.18,
         "personas_usan_banca_movil_pct": 32.96,
-        "teledensidad_internet_movil": 109.0
+        "teledensidad_internet_movil": 109.0,
+        "localidades_con_cobertura_movil_pct": 75.56,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 92.81,
+        "localidades_con_4g_garantizada_pct": 68.25,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 92.0,
+        "localidades_con_5g_garantizada_pct": 0.07,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 47.49,
+        "hogares_en_localidades_con_internet_pct": 78.37,
+        "poblacion_en_localidades_con_internet_pct": 76.37
       }
     },
     {
@@ -216,7 +304,15 @@
         "personas_conexion_datos_celular_pct": 68.4,
         "personas_usan_apps_redes_sociales_pct": 70.4,
         "personas_usan_banca_movil_pct": 31.16,
-        "teledensidad_internet_movil": 108.0
+        "teledensidad_internet_movil": 108.0,
+        "localidades_con_cobertura_movil_pct": 84.11,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.42,
+        "localidades_con_4g_garantizada_pct": 77.74,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.09,
+        "localidades_con_5g_garantizada_pct": 7.04,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 76.79,
+        "hogares_en_localidades_con_internet_pct": 94.84,
+        "poblacion_en_localidades_con_internet_pct": 94.39
       }
     },
     {
@@ -239,7 +335,15 @@
         "personas_conexion_datos_celular_pct": 69.93,
         "personas_usan_apps_redes_sociales_pct": 68.41,
         "personas_usan_banca_movil_pct": 32.17,
-        "teledensidad_internet_movil": 108.0
+        "teledensidad_internet_movil": 108.0,
+        "localidades_con_cobertura_movil_pct": 97.72,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.6,
+        "localidades_con_4g_garantizada_pct": 94.05,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.2,
+        "localidades_con_5g_garantizada_pct": 11.58,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 76.51,
+        "hogares_en_localidades_con_internet_pct": 96.72,
+        "poblacion_en_localidades_con_internet_pct": 96.3
       }
     },
     {
@@ -262,7 +366,15 @@
         "personas_conexion_datos_celular_pct": 46.84,
         "personas_usan_apps_redes_sociales_pct": 47.01,
         "personas_usan_banca_movil_pct": 16.61,
-        "teledensidad_internet_movil": 70.0
+        "teledensidad_internet_movil": 70.0,
+        "localidades_con_cobertura_movil_pct": 87.89,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 93.68,
+        "localidades_con_4g_garantizada_pct": 78.91,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 90.05,
+        "localidades_con_5g_garantizada_pct": 0.42,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 19.95,
+        "hogares_en_localidades_con_internet_pct": 57.9,
+        "poblacion_en_localidades_con_internet_pct": 53.35
       }
     },
     {
@@ -285,7 +397,15 @@
         "personas_conexion_datos_celular_pct": 67.93,
         "personas_usan_apps_redes_sociales_pct": 67.06,
         "personas_usan_banca_movil_pct": 32.5,
-        "teledensidad_internet_movil": 105.0
+        "teledensidad_internet_movil": 105.0,
+        "localidades_con_cobertura_movil_pct": 58.58,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 96.0,
+        "localidades_con_4g_garantizada_pct": 44.52,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 94.78,
+        "localidades_con_5g_garantizada_pct": 1.72,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 75.83,
+        "hogares_en_localidades_con_internet_pct": 92.94,
+        "poblacion_en_localidades_con_internet_pct": 91.93
       }
     },
     {
@@ -308,7 +428,15 @@
         "personas_conexion_datos_celular_pct": 73.61,
         "personas_usan_apps_redes_sociales_pct": 67.52,
         "personas_usan_banca_movil_pct": 37.03,
-        "teledensidad_internet_movil": 125.0
+        "teledensidad_internet_movil": 125.0,
+        "localidades_con_cobertura_movil_pct": 99.37,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 100.0,
+        "localidades_con_4g_garantizada_pct": 98.26,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 100.0,
+        "localidades_con_5g_garantizada_pct": 5.99,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 92.84,
+        "hogares_en_localidades_con_internet_pct": 99.9,
+        "poblacion_en_localidades_con_internet_pct": 99.88
       }
     },
     {
@@ -331,7 +459,15 @@
         "personas_conexion_datos_celular_pct": 67.44,
         "personas_usan_apps_redes_sociales_pct": 65.6,
         "personas_usan_banca_movil_pct": 24.65,
-        "teledensidad_internet_movil": 105.0
+        "teledensidad_internet_movil": 105.0,
+        "localidades_con_cobertura_movil_pct": 51.83,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 91.97,
+        "localidades_con_4g_garantizada_pct": 42.46,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 89.89,
+        "localidades_con_5g_garantizada_pct": 1.65,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 56.01,
+        "hogares_en_localidades_con_internet_pct": 82.75,
+        "poblacion_en_localidades_con_internet_pct": 81.0
       }
     },
     {
@@ -354,7 +490,15 @@
         "personas_conexion_datos_celular_pct": 57.47,
         "personas_usan_apps_redes_sociales_pct": 54.49,
         "personas_usan_banca_movil_pct": 18.2,
-        "teledensidad_internet_movil": 89.0
+        "teledensidad_internet_movil": 89.0,
+        "localidades_con_cobertura_movil_pct": 95.37,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.38,
+        "localidades_con_4g_garantizada_pct": 92.98,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 98.98,
+        "localidades_con_5g_garantizada_pct": 7.04,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 53.33,
+        "hogares_en_localidades_con_internet_pct": 83.16,
+        "poblacion_en_localidades_con_internet_pct": 82.46
       }
     },
     {
@@ -377,7 +521,15 @@
         "personas_conexion_datos_celular_pct": 60.52,
         "personas_usan_apps_redes_sociales_pct": 60.11,
         "personas_usan_banca_movil_pct": 17.42,
-        "teledensidad_internet_movil": 95.0
+        "teledensidad_internet_movil": 95.0,
+        "localidades_con_cobertura_movil_pct": 69.71,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 92.7,
+        "localidades_con_4g_garantizada_pct": 63.6,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 90.62,
+        "localidades_con_5g_garantizada_pct": 2.3,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 30.26,
+        "hogares_en_localidades_con_internet_pct": 69.24,
+        "poblacion_en_localidades_con_internet_pct": 66.51
       }
     },
     {
@@ -400,7 +552,15 @@
         "personas_conexion_datos_celular_pct": 69.44,
         "personas_usan_apps_redes_sociales_pct": 65.46,
         "personas_usan_banca_movil_pct": 27.43,
-        "teledensidad_internet_movil": 110.0
+        "teledensidad_internet_movil": 110.0,
+        "localidades_con_cobertura_movil_pct": 95.12,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 98.52,
+        "localidades_con_4g_garantizada_pct": 87.14,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 96.5,
+        "localidades_con_5g_garantizada_pct": 4.9,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 27.21,
+        "hogares_en_localidades_con_internet_pct": 67.81,
+        "poblacion_en_localidades_con_internet_pct": 66.83
       }
     },
     {
@@ -423,7 +583,15 @@
         "personas_conexion_datos_celular_pct": 67.63,
         "personas_usan_apps_redes_sociales_pct": 68.48,
         "personas_usan_banca_movil_pct": 26.04,
-        "teledensidad_internet_movil": 108.0
+        "teledensidad_internet_movil": 108.0,
+        "localidades_con_cobertura_movil_pct": 85.01,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.18,
+        "localidades_con_4g_garantizada_pct": 74.41,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 98.42,
+        "localidades_con_5g_garantizada_pct": 4.51,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 65.35,
+        "hogares_en_localidades_con_internet_pct": 93.77,
+        "poblacion_en_localidades_con_internet_pct": 93.32
       }
     },
     {
@@ -446,7 +614,15 @@
         "personas_conexion_datos_celular_pct": 65.2,
         "personas_usan_apps_redes_sociales_pct": 58.43,
         "personas_usan_banca_movil_pct": 23.74,
-        "teledensidad_internet_movil": 107.0
+        "teledensidad_internet_movil": 107.0,
+        "localidades_con_cobertura_movil_pct": 97.79,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.92,
+        "localidades_con_4g_garantizada_pct": 91.11,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.66,
+        "localidades_con_5g_garantizada_pct": 7.72,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 57.37,
+        "hogares_en_localidades_con_internet_pct": 93.83,
+        "poblacion_en_localidades_con_internet_pct": 93.18
       }
     },
     {
@@ -469,7 +645,15 @@
         "personas_conexion_datos_celular_pct": 65.45,
         "personas_usan_apps_redes_sociales_pct": 63.49,
         "personas_usan_banca_movil_pct": 22.98,
-        "teledensidad_internet_movil": 104.0
+        "teledensidad_internet_movil": 104.0,
+        "localidades_con_cobertura_movil_pct": 78.16,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 98.48,
+        "localidades_con_4g_garantizada_pct": 63.47,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 96.53,
+        "localidades_con_5g_garantizada_pct": 4.42,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 43.91,
+        "hogares_en_localidades_con_internet_pct": 82.29,
+        "poblacion_en_localidades_con_internet_pct": 81.35
       }
     },
     {
@@ -492,7 +676,15 @@
         "personas_conexion_datos_celular_pct": 68.54,
         "personas_usan_apps_redes_sociales_pct": 61.73,
         "personas_usan_banca_movil_pct": 23.21,
-        "teledensidad_internet_movil": 108.0
+        "teledensidad_internet_movil": 108.0,
+        "localidades_con_cobertura_movil_pct": 99.3,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.9,
+        "localidades_con_4g_garantizada_pct": 98.61,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.75,
+        "localidades_con_5g_garantizada_pct": 10.39,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 54.19,
+        "hogares_en_localidades_con_internet_pct": 96.67,
+        "poblacion_en_localidades_con_internet_pct": 96.53
       }
     },
     {
@@ -515,7 +707,15 @@
         "personas_conexion_datos_celular_pct": 70.32,
         "personas_usan_apps_redes_sociales_pct": 65.19,
         "personas_usan_banca_movil_pct": 24.85,
-        "teledensidad_internet_movil": 107.0
+        "teledensidad_internet_movil": 107.0,
+        "localidades_con_cobertura_movil_pct": 72.6,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 96.33,
+        "localidades_con_4g_garantizada_pct": 63.58,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 94.32,
+        "localidades_con_5g_garantizada_pct": 3.02,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 42.14,
+        "hogares_en_localidades_con_internet_pct": 85.33,
+        "poblacion_en_localidades_con_internet_pct": 83.59
       }
     },
     {
@@ -538,7 +738,15 @@
         "personas_conexion_datos_celular_pct": 62.32,
         "personas_usan_apps_redes_sociales_pct": 66.58,
         "personas_usan_banca_movil_pct": 33.79,
-        "teledensidad_internet_movil": 97.0
+        "teledensidad_internet_movil": 97.0,
+        "localidades_con_cobertura_movil_pct": 92.47,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.71,
+        "localidades_con_4g_garantizada_pct": 84.59,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.53,
+        "localidades_con_5g_garantizada_pct": 8.48,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 90.09,
+        "hogares_en_localidades_con_internet_pct": 97.16,
+        "poblacion_en_localidades_con_internet_pct": 97.14
       }
     },
     {
@@ -561,7 +769,15 @@
         "personas_conexion_datos_celular_pct": 49.06,
         "personas_usan_apps_redes_sociales_pct": 51.02,
         "personas_usan_banca_movil_pct": 15.52,
-        "teledensidad_internet_movil": 77.0
+        "teledensidad_internet_movil": 77.0,
+        "localidades_con_cobertura_movil_pct": 84.75,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 93.29,
+        "localidades_con_4g_garantizada_pct": 81.11,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 91.79,
+        "localidades_con_5g_garantizada_pct": 4.19,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 22.52,
+        "hogares_en_localidades_con_internet_pct": 56.2,
+        "poblacion_en_localidades_con_internet_pct": 55.08
       }
     },
     {
@@ -584,7 +800,15 @@
         "personas_conexion_datos_celular_pct": 62.35,
         "personas_usan_apps_redes_sociales_pct": 58.66,
         "personas_usan_banca_movil_pct": 18.39,
-        "teledensidad_internet_movil": 93.0
+        "teledensidad_internet_movil": 93.0,
+        "localidades_con_cobertura_movil_pct": 94.4,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 98.91,
+        "localidades_con_4g_garantizada_pct": 90.58,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 98.16,
+        "localidades_con_5g_garantizada_pct": 7.93,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 47.86,
+        "hogares_en_localidades_con_internet_pct": 79.42,
+        "poblacion_en_localidades_con_internet_pct": 78.36
       }
     },
     {
@@ -607,7 +831,15 @@
         "personas_conexion_datos_celular_pct": 66.58,
         "personas_usan_apps_redes_sociales_pct": 60.52,
         "personas_usan_banca_movil_pct": 30.02,
-        "teledensidad_internet_movil": 103.0
+        "teledensidad_internet_movil": 103.0,
+        "localidades_con_cobertura_movil_pct": 95.21,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.31,
+        "localidades_con_4g_garantizada_pct": 88.09,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 98.24,
+        "localidades_con_5g_garantizada_pct": 6.16,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 62.37,
+        "hogares_en_localidades_con_internet_pct": 84.62,
+        "poblacion_en_localidades_con_internet_pct": 82.86
       }
     },
     {
@@ -630,7 +862,15 @@
         "personas_conexion_datos_celular_pct": 74.87,
         "personas_usan_apps_redes_sociales_pct": 66.75,
         "personas_usan_banca_movil_pct": 35.13,
-        "teledensidad_internet_movil": 111.0
+        "teledensidad_internet_movil": 111.0,
+        "localidades_con_cobertura_movil_pct": 78.34,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 97.89,
+        "localidades_con_4g_garantizada_pct": 66.2,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 97.35,
+        "localidades_con_5g_garantizada_pct": 1.45,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 80.3,
+        "hogares_en_localidades_con_internet_pct": 94.2,
+        "poblacion_en_localidades_con_internet_pct": 93.17
       }
     },
     {
@@ -653,7 +893,15 @@
         "personas_conexion_datos_celular_pct": 65.83,
         "personas_usan_apps_redes_sociales_pct": 65.44,
         "personas_usan_banca_movil_pct": 23.48,
-        "teledensidad_internet_movil": 103.0
+        "teledensidad_internet_movil": 103.0,
+        "localidades_con_cobertura_movil_pct": 87.9,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 97.31,
+        "localidades_con_4g_garantizada_pct": 77.34,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 94.14,
+        "localidades_con_5g_garantizada_pct": 3.16,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 54.75,
+        "hogares_en_localidades_con_internet_pct": 73.6,
+        "poblacion_en_localidades_con_internet_pct": 72.0
       }
     },
     {
@@ -676,7 +924,15 @@
         "personas_conexion_datos_celular_pct": 70.22,
         "personas_usan_apps_redes_sociales_pct": 72.54,
         "personas_usan_banca_movil_pct": 32.22,
-        "teledensidad_internet_movil": 109.0
+        "teledensidad_internet_movil": 109.0,
+        "localidades_con_cobertura_movil_pct": 90.01,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 98.81,
+        "localidades_con_4g_garantizada_pct": 80.22,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 98.04,
+        "localidades_con_5g_garantizada_pct": 2.04,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 54.58,
+        "hogares_en_localidades_con_internet_pct": 86.29,
+        "poblacion_en_localidades_con_internet_pct": 84.89
       }
     },
     {
@@ -699,7 +955,15 @@
         "personas_conexion_datos_celular_pct": 81.24,
         "personas_usan_apps_redes_sociales_pct": 77.88,
         "personas_usan_banca_movil_pct": 39.98,
-        "teledensidad_internet_movil": 128.0
+        "teledensidad_internet_movil": 128.0,
+        "localidades_con_cobertura_movil_pct": 88.26,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.5,
+        "localidades_con_4g_garantizada_pct": 79.25,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.13,
+        "localidades_con_5g_garantizada_pct": 1.99,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 66.57,
+        "hogares_en_localidades_con_internet_pct": 93.84,
+        "poblacion_en_localidades_con_internet_pct": 92.87
       }
     },
     {
@@ -722,7 +986,15 @@
         "personas_conexion_datos_celular_pct": 64.65,
         "personas_usan_apps_redes_sociales_pct": 63.83,
         "personas_usan_banca_movil_pct": 35.0,
-        "teledensidad_internet_movil": 106.0
+        "teledensidad_internet_movil": 106.0,
+        "localidades_con_cobertura_movil_pct": 91.83,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 98.58,
+        "localidades_con_4g_garantizada_pct": 82.12,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 96.54,
+        "localidades_con_5g_garantizada_pct": 1.66,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 20.81,
+        "hogares_en_localidades_con_internet_pct": 64.99,
+        "poblacion_en_localidades_con_internet_pct": 63.3
       }
     },
     {
@@ -745,7 +1017,15 @@
         "personas_conexion_datos_celular_pct": 73.69,
         "personas_usan_apps_redes_sociales_pct": 69.58,
         "personas_usan_banca_movil_pct": 31.0,
-        "teledensidad_internet_movil": 112.0
+        "teledensidad_internet_movil": 112.0,
+        "localidades_con_cobertura_movil_pct": 97.18,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.59,
+        "localidades_con_4g_garantizada_pct": 89.37,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.26,
+        "localidades_con_5g_garantizada_pct": 4.31,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 83.0,
+        "hogares_en_localidades_con_internet_pct": 93.65,
+        "poblacion_en_localidades_con_internet_pct": 93.45
       }
     },
     {
@@ -768,7 +1048,15 @@
         "personas_conexion_datos_celular_pct": 67.46,
         "personas_usan_apps_redes_sociales_pct": 66.83,
         "personas_usan_banca_movil_pct": 21.3,
-        "teledensidad_internet_movil": 112.0
+        "teledensidad_internet_movil": 112.0,
+        "localidades_con_cobertura_movil_pct": 99.83,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.99,
+        "localidades_con_4g_garantizada_pct": 98.47,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 99.83,
+        "localidades_con_5g_garantizada_pct": 7.83,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 40.57,
+        "hogares_en_localidades_con_internet_pct": 92.95,
+        "poblacion_en_localidades_con_internet_pct": 92.81
       }
     },
     {
@@ -791,7 +1079,15 @@
         "personas_conexion_datos_celular_pct": 56.02,
         "personas_usan_apps_redes_sociales_pct": 56.9,
         "personas_usan_banca_movil_pct": 21.63,
-        "teledensidad_internet_movil": 89.0
+        "teledensidad_internet_movil": 89.0,
+        "localidades_con_cobertura_movil_pct": 94.09,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 97.84,
+        "localidades_con_4g_garantizada_pct": 87.99,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 96.12,
+        "localidades_con_5g_garantizada_pct": 4.57,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 38.04,
+        "hogares_en_localidades_con_internet_pct": 71.34,
+        "poblacion_en_localidades_con_internet_pct": 69.26
       }
     },
     {
@@ -814,7 +1110,15 @@
         "personas_conexion_datos_celular_pct": 68.96,
         "personas_usan_apps_redes_sociales_pct": 69.54,
         "personas_usan_banca_movil_pct": 33.54,
-        "teledensidad_internet_movil": 104.0
+        "teledensidad_internet_movil": 104.0,
+        "localidades_con_cobertura_movil_pct": 89.11,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 99.03,
+        "localidades_con_4g_garantizada_pct": 86.81,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 98.88,
+        "localidades_con_5g_garantizada_pct": 1.23,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 47.06,
+        "hogares_en_localidades_con_internet_pct": 88.41,
+        "poblacion_en_localidades_con_internet_pct": 87.29
       }
     },
     {
@@ -837,7 +1141,15 @@
         "personas_conexion_datos_celular_pct": 62.63,
         "personas_usan_apps_redes_sociales_pct": 67.62,
         "personas_usan_banca_movil_pct": 21.98,
-        "teledensidad_internet_movil": 97.0
+        "teledensidad_internet_movil": 97.0,
+        "localidades_con_cobertura_movil_pct": 86.55,
+        "poblacion_en_localidades_con_cobertura_movil_pct": 96.65,
+        "localidades_con_4g_garantizada_pct": 79.92,
+        "poblacion_en_localidades_con_4g_garantizada_pct": 94.96,
+        "localidades_con_5g_garantizada_pct": 1.56,
+        "poblacion_en_localidades_con_5g_garantizada_pct": 28.87,
+        "hogares_en_localidades_con_internet_pct": 78.56,
+        "poblacion_en_localidades_con_internet_pct": 77.9
       }
     }
   ]

@@ -1,13 +1,19 @@
 type ExecutiveInsightListProps = {
   insights: string[];
+  title?: string;
+  description?: string;
 };
 
-export default function ExecutiveInsightList({ insights }: ExecutiveInsightListProps) {
+export default function ExecutiveInsightList({
+  insights,
+  title = "Insights ejecutivos",
+  description = "Lecturas automaticas para orientar una primera conversacion estrategica."
+}: ExecutiveInsightListProps) {
   return (
     <div>
       <div className="section-heading">
-        <h2>Insights ejecutivos</h2>
-        <p>Lecturas automaticas para orientar una primera conversacion estrategica.</p>
+        <h2>{title}</h2>
+        <p>{description}</p>
       </div>
 
       {insights.length > 0 ? (

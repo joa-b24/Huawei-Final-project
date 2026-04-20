@@ -43,13 +43,14 @@ export function buildOpportunityRecords(records: StateMetricRecord[]): Opportuni
   const ranges = {
     personas_usuarias_internet_pct: getMetricRange(records, "personas_usuarias_internet_pct"),
     personas_con_smartphone_pct: getMetricRange(records, "personas_con_smartphone_pct"),
-    personas_usuarias_computadora_pct: getMetricRange(
+    teledensidad_internet_movil: getMetricRange(records, "teledensidad_internet_movil"),
+    poblacion_en_localidades_con_4g_garantizada_pct: getMetricRange(
       records,
-      "personas_usuarias_computadora_pct"
+      "poblacion_en_localidades_con_4g_garantizada_pct"
     ),
-    personas_usan_redes_sociales_pct: getMetricRange(
+    poblacion_en_localidades_con_5g_garantizada_pct: getMetricRange(
       records,
-      "personas_usan_redes_sociales_pct"
+      "poblacion_en_localidades_con_5g_garantizada_pct"
     ),
     personas_compras_internet_pct: getMetricRange(records, "personas_compras_internet_pct"),
     personas_pagos_internet_pct: getMetricRange(records, "personas_pagos_internet_pct"),
@@ -61,19 +62,23 @@ export function buildOpportunityRecords(records: StateMetricRecord[]): Opportuni
       normalizeValue(
         record.metrics.personas_usuarias_internet_pct ?? 0,
         ranges.personas_usuarias_internet_pct
-      ) * 0.35 +
+      ) * 0.25 +
       normalizeValue(
         record.metrics.personas_con_smartphone_pct ?? 0,
         ranges.personas_con_smartphone_pct
-      ) * 0.25 +
+      ) * 0.15 +
       normalizeValue(
-        record.metrics.personas_usan_redes_sociales_pct ?? 0,
-        ranges.personas_usan_redes_sociales_pct
+        record.metrics.teledensidad_internet_movil ?? 0,
+        ranges.teledensidad_internet_movil
       ) * 0.2 +
       normalizeValue(
-        record.metrics.personas_usuarias_computadora_pct ?? 0,
-        ranges.personas_usuarias_computadora_pct
-      ) * 0.2;
+        record.metrics.poblacion_en_localidades_con_4g_garantizada_pct ?? 0,
+        ranges.poblacion_en_localidades_con_4g_garantizada_pct
+      ) * 0.25 +
+      normalizeValue(
+        record.metrics.poblacion_en_localidades_con_5g_garantizada_pct ?? 0,
+        ranges.poblacion_en_localidades_con_5g_garantizada_pct
+      ) * 0.15;
 
     const whitespaceScore =
       (1 -
@@ -119,16 +124,21 @@ export function buildExecutiveInsights(
   }
 
   const digitalLeader = getTopRecordByMetric(records, "personas_usuarias_internet_pct");
-  const mobileLeader = getTopRecordByMetric(records, "personas_conexion_datos_celular_pct");
+  const teledensityLeader = getTopRecordByMetric(records, "teledensidad_internet_movil");
+  const coverageLeader = getTopRecordByMetric(
+    records,
+    "poblacion_en_localidades_con_4g_garantizada_pct"
+  );
   const opportunityLeader = [...opportunityRecords].sort(
     (left, right) => right.opportunityScore - left.opportunityScore
   )[0];
 
   return [
     `${digitalLeader.state} lidera la muestra en uso de internet, funcionando como referencia de adopcion digital.`,
-    `${mobileLeader.state} destaca en conexion por datos celulares, una senal util para estrategias moviles y de servicios conectados.`,
-    `${opportunityLeader.state} aparece como prioridad estrategica inicial al combinar una base digital fuerte con espacio para profundizar transacciones y servicios.`,
-    `La lectura ejecutiva ya distingue entre adopcion digital consolidada y whitespace comercial dentro del ecosistema TIC.`
+    `${teledensityLeader.state} presenta la mayor teledensidad de internet movil, una senal directa de intensidad de servicio en el mercado.`,
+    `${coverageLeader.state} destaca por la cobertura territorial sobre poblacion en localidades con 4G garantizada.`,
+    `${opportunityLeader.state} aparece como prioridad estrategica inicial al combinar base digital, acceso movil y espacio para profundizar transacciones y servicios.`,
+    `La lectura ejecutiva ya distingue entre adopcion digital, capacidad territorial de conectividad y whitespace comercial dentro del ecosistema TIC.`
   ];
 }
 

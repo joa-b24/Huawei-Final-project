@@ -156,6 +156,94 @@
       "sinonimos": ["T_INTMOVIL_ITE_VA", "teledensidad internet movil", "internet movil por cada 100 habitantes"]
     },
     {
+      "variable_id": "localidades_con_cobertura_movil_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Localidades con cobertura movil",
+      "descripcion": "Porcentaje de localidades de la entidad con cobertura movil reportada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": ["MOVIL", "localidades con movil", "cobertura movil por localidad"]
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_cobertura_movil_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Poblacion en localidades con cobertura movil",
+      "descripcion": "Porcentaje de poblacion estatal que reside en localidades con cobertura movil reportada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": ["poblacion con cobertura movil", "movil ponderado por poblacion"]
+    },
+    {
+      "variable_id": "localidades_con_4g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Localidades con 4G garantizada",
+      "descripcion": "Porcentaje de localidades con 4G garantizada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": ["G_4G", "localidades con 4G", "4G garantizada"]
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_4g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Poblacion en localidades con 4G garantizada",
+      "descripcion": "Porcentaje de poblacion estatal que reside en localidades con 4G garantizada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": ["poblacion con 4G", "4G garantizada ponderada"]
+    },
+    {
+      "variable_id": "localidades_con_5g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Localidades con 5G garantizada",
+      "descripcion": "Porcentaje de localidades con 5G garantizada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": ["G_5G", "localidades con 5G", "5G garantizada"]
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_5g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Poblacion en localidades con 5G garantizada",
+      "descripcion": "Porcentaje de poblacion estatal que reside en localidades con 5G garantizada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": ["poblacion con 5G", "5G garantizada ponderada"]
+    },
+    {
+      "variable_id": "hogares_en_localidades_con_internet_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Hogares en localidades con internet",
+      "descripcion": "Porcentaje de hogares estatales ubicados en localidades con internet reportado.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": ["hogares con internet por localidad", "INTERNET ponderado por hogares"]
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_internet_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Poblacion en localidades con internet",
+      "descripcion": "Porcentaje de poblacion estatal ubicada en localidades con internet reportado.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": ["poblacion con internet por localidad", "INTERNET ponderado por poblacion"]
+    },
+    {
       "variable_id": "personas_usan_apps_redes_sociales_pct",
       "categoria_id": "infraestructura_digital",
       "nombre": "Personas que usan apps de redes sociales",

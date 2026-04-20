@@ -3,7 +3,7 @@
 Aplicación local para explorar variables territoriales de México con foco en análisis comparativo por entidad.  
 La base actual combina indicadores procesados de ENDUTIH 2024 y una primera capa de servicio móvil.
 
-## Qué contiene hoy
+## Qué contiene 
 
 - una aplicación web local en `React + Vite`
 - un flujo de datos con archivos crudos, catálogos y salidas procesadas
@@ -139,16 +139,6 @@ Build de validación:
 ```bash
 npm run build
 ```
-
-## Qué falta
-
-La base de `personas usuarias de TIC` ya está integrada.  
-Los siguientes bloques naturales son:
-
-- equipamiento TIC en el hogar
-- contexto territorial por entidad
-- industria y entorno económico
-- mayor integración de métricas de cobertura y servicio móvil
 
 ## Nota de trabajo
 
