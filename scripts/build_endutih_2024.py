@@ -21,6 +21,10 @@ INPUT_FILES = {
     "usuarios2": RAW_DIR / "tr_endutih_usuarios2_anual_2024.csv",
 }
 
+TD_FILES = {
+    "td_teledensidad_intmovil": RAW_DIR / "TD_TELEDENSIDAD_INTMOVIL_ITE_VA.csv",
+}
+
 VARIABLE_SPECS = [
     {
         "file_key": "usuarios",
@@ -141,6 +145,22 @@ VARIABLE_SPECS = [
     },
 ]
 
+DIRECT_VALUE_SPECS = [
+    {
+        "file_key": "td_teledensidad_intmovil",
+        "variable": "teledensidad_internet_movil",
+        "categoria": "cobertura_red",
+        "label": "Teledensidad de internet movil",
+        "unidad": "lineas por cada 100 habitantes",
+        "value_column": "T_INTMOVIL_ITE_VA",
+        "entity_column": "K_ENTIDAD",
+        "year_column": "ANIO",
+        "encoding": "latin1",
+        "source": "IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA",
+        "source_table": "td_teledensidad_intmovil",
+    }
+]
+
 
 def load_state_master() -> dict[str, dict]:
     payload = json.loads(STATE_MASTER_FILE.read_text(encoding="utf-8"))
@@ -220,6 +240,45 @@ def build_outputs() -> tuple[dict, dict]:
                     "unidad": spec["unidad"],
                 }
             )
+
+    for spec in DIRECT_VALUE_SPECS:
+        metric_catalog.append(
+            {
+                "variable_id": spec["variable"],
+                "categoria_id": spec["categoria"],
+                "label": spec["label"],
+                "unidad": spec["unidad"],
+                "source_table": spec["source_table"],
+            }
+        )
+
+        file_path = TD_FILES[spec["file_key"]]
+        with file_path.open("r", encoding=spec["encoding"], newline="") as handle:
+            reader = csv.DictReader(handle)
+            for row in reader:
+                cve_ent = row[spec["entity_column"]].strip().zfill(2)
+                state = state_master.get(cve_ent)
+                if not state:
+                    continue
+
+                year = int(row[spec["year_column"]])
+                if year != YEAR:
+                    continue
+
+                value = float(row[spec["value_column"]].strip())
+                long_records.append(
+                    {
+                        "state_code": state["state_code"],
+                        "cve_ent": cve_ent,
+                        "estado": state["estado"],
+                        "categoria": spec["categoria"],
+                        "variable": spec["variable"],
+                        "valor": value,
+                        "anio": year,
+                        "fuente": spec["source"],
+                        "unidad": spec["unidad"],
+                    }
+                )
 
     wide_records_by_state: dict[str, dict] = {}
     for record in long_records:

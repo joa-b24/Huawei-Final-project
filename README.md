@@ -1,113 +1,160 @@
-# Huawei Territorial Dashboard MVP
+# Huawei Territorial Dashboard
 
-MVP local para analizar variables territoriales de Mexico con dashboards interactivos orientados a comparacion de estados y apoyo a decisiones estrategicas.
+Aplicación local para explorar variables territoriales de México con foco en análisis comparativo por entidad.  
+La base actual combina indicadores procesados de ENDUTIH 2024 y una primera capa de servicio móvil.
 
-## Arquitectura propuesta
+## Qué contiene hoy
 
-Se prioriza una arquitectura simple:
+- una aplicación web local en `React + Vite`
+- un flujo de datos con archivos crudos, catálogos y salidas procesadas
+- indicadores estatales de ENDUTIH 2024
+- una variable estatal adicional de teledensidad de internet móvil
 
-1. `Frontend SPA` en React + TypeScript con Vite.
-2. `Datos procesados` en archivos JSON locales servidos desde `public/data`.
-3. `Scripts locales` para transformar fuentes crudas en datasets homogeneos.
-4. `Utilidades de analisis` en frontend para generar insights automatizados sin backend.
-
-## Por que esta arquitectura
-
-- Evita un backend innecesario para el MVP.
-- Permite iterar rapido sobre visualizaciones y logica analitica.
-- Separa claramente `fuentes crudas`, `datos procesados` y `presentacion`.
-- Facilita evolucion futura hacia API o base de datos si el producto crece.
-
-## Stack minimo viable recomendado
-
-- `Vite`
-- `React`
-- `TypeScript`
-- `Recharts`
-- `CSS` plano con variables para mantener claridad
-- `Node.js` para scripts de procesamiento locales
-
-## Estructura del proyecto
+## Estructura general
 
 ```text
 .
-|-- .gitignore
-|-- docs/
-|   `-- data-standard.md
+|-- README.md
 |-- package.json
-|-- tsconfig.json
-|-- vite.config.ts
-|-- public/
-|   `-- data/
-|       `-- endutih_2024_state_dashboard.wide.json
+|-- scripts/
+|   `-- build_endutih_2024.py
 |-- data/
+|   |-- raw/
+|   |   |-- tr_endutih_usuarios_anual_2024.csv
+|   |   |-- tr_endutih_usuarios2_anual_2024.csv
+|   |   |-- TD_TELEDENSIDAD_INTMOVIL_ITE_VA.csv
+|   |   |-- diccionarios
+|   |   `-- metadatos
 |   |-- catalogs/
 |   |   |-- states.master.json
 |   |   `-- variables.catalog.json
-|   |-- processed/
-|   |   |-- endutih_2024_state_dashboard.wide.json
-|   |   |-- endutih_2024_state_observations.long.csv
-|   |   `-- endutih_2024_state_observations.long.json
-|   `-- raw/
-|       |-- tr_endutih_usuarios_anual_2024.csv
-|       |-- tr_endutih_usuarios2_anual_2024.csv
-|       |-- diccionario_de_datos_tr_endutih_usuarios_anual_2024.csv
-|       |-- diccionario_de_datos_tr_endutih_usuarios2_anual_2024.csv
-|       `-- metadatos_endutih_anual_2024.txt
-|-- scripts/
-|   `-- build_endutih_2024.py
-|-- src/
-|   |-- app/
-|   |   |-- App.tsx
-|   |   `-- main.tsx
-|   |-- components/
-|   |   |-- DashboardHeader.tsx
-|   |   |-- InsightPanel.tsx
-|   |   |-- KPIGrid.tsx
-|   |   |-- MetricSelector.tsx
-|   |   `-- charts/
-|   |       |-- ComparisonBarChart.tsx
-|   |       `-- CorrelationScatter.tsx
-|   |-- data/
-|   |   `-- loadDataset.ts
-|   |-- styles/
-|   |   `-- global.css
-|   |-- types/
-|   |   |-- dataStandard.ts
-|   |   `-- dataset.ts
-|   `-- utils/
-|       |-- insights.ts
-|       |-- metrics.ts
-|       `-- normalization.ts
+|   `-- processed/
+|       |-- endutih_2024_state_observations.long.json
+|       |-- endutih_2024_state_observations.long.csv
+|       `-- endutih_2024_state_dashboard.wide.json
+|-- public/
+|   `-- data/
+|       `-- endutih_2024_state_dashboard.wide.json
+`-- src/
+    |-- app/
+    |-- components/
+    |-- data/
+    |-- styles/
+    |-- types/
+    `-- utils/
 ```
 
-## Como correrlo
+## Cómo está organizada la data
 
-1. Instala dependencias:
+### `data/raw`
+
+Aquí van los archivos originales.  
+No se editan manualmente.
+
+Ejemplos:
+- microdatos `ENDUTIH`
+- diccionarios de variables
+- metadatos
+- archivos externos de servicio móvil como los `TD_*`
+
+### `data/catalogs`
+
+Aquí están los catálogos que ordenan el proyecto:
+
+- `states.master.json`
+  - catálogo maestro de entidades
+  - incluye `state_code`, `cve_ent`, nombre normalizado y región
+
+- `variables.catalog.json`
+  - catálogo de variables analíticas
+  - define nombre, categoría, unidad y fuente sugerida
+
+### `data/processed`
+
+Aquí quedan las salidas generadas por los scripts.
+
+- `endutih_2024_state_observations.long.json`
+  - formato largo
+  - una fila por entidad y variable
+
+- `endutih_2024_state_observations.long.csv`
+  - misma información en CSV
+
+- `endutih_2024_state_dashboard.wide.json`
+  - formato ancho
+  - una fila por entidad con las métricas agrupadas
+  - este archivo es el que usa el frontend
+
+### `public/data`
+
+Contiene la copia pública del dataset que consume la UI.  
+La idea es que `src` no lea directamente desde `data/processed`, sino desde esta carpeta.
+
+## Flujo de trabajo
+
+El flujo actual es simple:
+
+1. se colocan archivos fuente en `data/raw`
+2. el script `scripts/build_endutih_2024.py` los transforma
+3. las salidas se guardan en `data/processed`
+4. el dataset ancho se publica en `public/data`
+5. el frontend carga ese JSON y construye los dashboards
+
+## Variables que ya están integradas
+
+Hoy el proyecto ya trae variables reales como:
+
+- personas usuarias de internet
+- personas usuarias de computadora
+- personas con celular
+- personas con smartphone
+- personas que usan banca electrónica
+- personas que realizan compras por internet
+- personas que realizan pagos por internet
+- personas que usan apps de banca móvil
+- teledensidad de internet móvil
+
+## Cómo correrlo
+
+Instalar dependencias:
 
 ```bash
 npm install
 ```
 
-2. Si quieres regenerar los indicadores estatales de ENDUTIH 2024:
+Regenerar los datos procesados:
 
 ```bash
 npm run data:build:endutih
 ```
 
-3. Levanta la app:
+Levantar la aplicación:
 
 ```bash
 npm run dev
 ```
 
-4. Abre la URL local que imprima Vite, normalmente `http://localhost:5173`.
+Build de validación:
 
-## Que incluye este scaffolding
+```bash
+npm run build
+```
 
-- Una sola pagina con `header`, filtros, KPIs, dashboards comparativos e insights.
-- Datos crudos reales de ENDUTIH 2024 en `data/raw`.
-- Un ETL en Python que agrega indicadores por entidad usando `FAC_PER` y `CVE_ENT`.
-- Componentes desacoplados para crecer sin meter backend antes de tiempo.
-- Un estandar de datos documentado en `docs/data-standard.md`.
-- Catalogos y datasets procesados listos para comparar estados con nombres consistentes.
+## Qué falta
+
+La base de `personas usuarias de TIC` ya está integrada.  
+Los siguientes bloques naturales son:
+
+- equipamiento TIC en el hogar
+- contexto territorial por entidad
+- industria y entorno económico
+- mayor integración de métricas de cobertura y servicio móvil
+
+## Nota de trabajo
+
+Si entra una fuente nueva, la regla es:
+
+- guardar el archivo original en `data/raw`
+- documentar o mapear la variable en `variables.catalog.json`
+- transformar con script
+- publicar solo la salida procesada que realmente usa la UI

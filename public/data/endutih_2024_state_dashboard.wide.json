@@ -94,6 +94,13 @@
       "label": "Personas que usan apps de banca movil",
       "unidad": "%",
       "source_table": "usuarios2"
+    },
+    {
+      "variable_id": "teledensidad_internet_movil",
+      "categoria_id": "cobertura_red",
+      "label": "Teledensidad de internet movil",
+      "unidad": "lineas por cada 100 habitantes",
+      "source_table": "td_teledensidad_intmovil"
     }
   ],
   "records": [
@@ -116,7 +123,8 @@
         "personas_con_smartphone_pct": 85.33,
         "personas_conexion_datos_celular_pct": 58.73,
         "personas_usan_apps_redes_sociales_pct": 65.24,
-        "personas_usan_banca_movil_pct": 29.42
+        "personas_usan_banca_movil_pct": 29.42,
+        "teledensidad_internet_movil": 91.0
       }
     },
     {
@@ -138,7 +146,8 @@
         "personas_con_smartphone_pct": 86.21,
         "personas_conexion_datos_celular_pct": 72.17,
         "personas_usan_apps_redes_sociales_pct": 66.43,
-        "personas_usan_banca_movil_pct": 34.44
+        "personas_usan_banca_movil_pct": 34.44,
+        "teledensidad_internet_movil": 107.0
       }
     },
     {
@@ -160,7 +169,8 @@
         "personas_con_smartphone_pct": 89.14,
         "personas_conexion_datos_celular_pct": 75.4,
         "personas_usan_apps_redes_sociales_pct": 71.6,
-        "personas_usan_banca_movil_pct": 40.84
+        "personas_usan_banca_movil_pct": 40.84,
+        "teledensidad_internet_movil": 120.0
       }
     },
     {
@@ -182,7 +192,8 @@
         "personas_con_smartphone_pct": 83.9,
         "personas_conexion_datos_celular_pct": 69.16,
         "personas_usan_apps_redes_sociales_pct": 65.18,
-        "personas_usan_banca_movil_pct": 32.96
+        "personas_usan_banca_movil_pct": 32.96,
+        "teledensidad_internet_movil": 109.0
       }
     },
     {
@@ -204,7 +215,8 @@
         "personas_con_smartphone_pct": 89.02,
         "personas_conexion_datos_celular_pct": 68.4,
         "personas_usan_apps_redes_sociales_pct": 70.4,
-        "personas_usan_banca_movil_pct": 31.16
+        "personas_usan_banca_movil_pct": 31.16,
+        "teledensidad_internet_movil": 108.0
       }
     },
     {
@@ -226,7 +238,8 @@
         "personas_con_smartphone_pct": 88.93,
         "personas_conexion_datos_celular_pct": 69.93,
         "personas_usan_apps_redes_sociales_pct": 68.41,
-        "personas_usan_banca_movil_pct": 32.17
+        "personas_usan_banca_movil_pct": 32.17,
+        "teledensidad_internet_movil": 108.0
       }
     },
     {
@@ -248,7 +261,8 @@
         "personas_con_smartphone_pct": 68.04,
         "personas_conexion_datos_celular_pct": 46.84,
         "personas_usan_apps_redes_sociales_pct": 47.01,
-        "personas_usan_banca_movil_pct": 16.61
+        "personas_usan_banca_movil_pct": 16.61,
+        "teledensidad_internet_movil": 70.0
       }
     },
     {
@@ -270,7 +284,8 @@
         "personas_con_smartphone_pct": 83.45,
         "personas_conexion_datos_celular_pct": 67.93,
         "personas_usan_apps_redes_sociales_pct": 67.06,
-        "personas_usan_banca_movil_pct": 32.5
+        "personas_usan_banca_movil_pct": 32.5,
+        "teledensidad_internet_movil": 105.0
       }
     },
     {
@@ -292,7 +307,8 @@
         "personas_con_smartphone_pct": 88.48,
         "personas_conexion_datos_celular_pct": 73.61,
         "personas_usan_apps_redes_sociales_pct": 67.52,
-        "personas_usan_banca_movil_pct": 37.03
+        "personas_usan_banca_movil_pct": 37.03,
+        "teledensidad_internet_movil": 125.0
       }
     },
     {
@@ -314,7 +330,8 @@
         "personas_con_smartphone_pct": 85.8,
         "personas_conexion_datos_celular_pct": 67.44,
         "personas_usan_apps_redes_sociales_pct": 65.6,
-        "personas_usan_banca_movil_pct": 24.65
+        "personas_usan_banca_movil_pct": 24.65,
+        "teledensidad_internet_movil": 105.0
       }
     },
     {
@@ -336,7 +353,8 @@
         "personas_con_smartphone_pct": 82.2,
         "personas_conexion_datos_celular_pct": 57.47,
         "personas_usan_apps_redes_sociales_pct": 54.49,
-        "personas_usan_banca_movil_pct": 18.2
+        "personas_usan_banca_movil_pct": 18.2,
+        "teledensidad_internet_movil": 89.0
       }
     },
     {
@@ -358,7 +376,8 @@
         "personas_con_smartphone_pct": 80.98,
         "personas_conexion_datos_celular_pct": 60.52,
         "personas_usan_apps_redes_sociales_pct": 60.11,
-        "personas_usan_banca_movil_pct": 17.42
+        "personas_usan_banca_movil_pct": 17.42,
+        "teledensidad_internet_movil": 95.0
       }
     },
     {
@@ -380,7 +399,8 @@
         "personas_con_smartphone_pct": 85.13,
         "personas_conexion_datos_celular_pct": 69.44,
         "personas_usan_apps_redes_sociales_pct": 65.46,
-        "personas_usan_banca_movil_pct": 27.43
+        "personas_usan_banca_movil_pct": 27.43,
+        "teledensidad_internet_movil": 110.0
       }
     },
     {
@@ -402,7 +422,8 @@
         "personas_con_smartphone_pct": 86.47,
         "personas_conexion_datos_celular_pct": 67.63,
         "personas_usan_apps_redes_sociales_pct": 68.48,
-        "personas_usan_banca_movil_pct": 26.04
+        "personas_usan_banca_movil_pct": 26.04,
+        "teledensidad_internet_movil": 108.0
       }
     },
     {
@@ -424,7 +445,8 @@
         "personas_con_smartphone_pct": 85.3,
         "personas_conexion_datos_celular_pct": 65.2,
         "personas_usan_apps_redes_sociales_pct": 58.43,
-        "personas_usan_banca_movil_pct": 23.74
+        "personas_usan_banca_movil_pct": 23.74,
+        "teledensidad_internet_movil": 107.0
       }
     },
     {
@@ -446,7 +468,8 @@
         "personas_con_smartphone_pct": 85.03,
         "personas_conexion_datos_celular_pct": 65.45,
         "personas_usan_apps_redes_sociales_pct": 63.49,
-        "personas_usan_banca_movil_pct": 22.98
+        "personas_usan_banca_movil_pct": 22.98,
+        "teledensidad_internet_movil": 104.0
       }
     },
     {
@@ -468,7 +491,8 @@
         "personas_con_smartphone_pct": 85.91,
         "personas_conexion_datos_celular_pct": 68.54,
         "personas_usan_apps_redes_sociales_pct": 61.73,
-        "personas_usan_banca_movil_pct": 23.21
+        "personas_usan_banca_movil_pct": 23.21,
+        "teledensidad_internet_movil": 108.0
       }
     },
     {
@@ -490,7 +514,8 @@
         "personas_con_smartphone_pct": 83.44,
         "personas_conexion_datos_celular_pct": 70.32,
         "personas_usan_apps_redes_sociales_pct": 65.19,
-        "personas_usan_banca_movil_pct": 24.85
+        "personas_usan_banca_movil_pct": 24.85,
+        "teledensidad_internet_movil": 107.0
       }
     },
     {
@@ -512,7 +537,8 @@
         "personas_con_smartphone_pct": 87.67,
         "personas_conexion_datos_celular_pct": 62.32,
         "personas_usan_apps_redes_sociales_pct": 66.58,
-        "personas_usan_banca_movil_pct": 33.79
+        "personas_usan_banca_movil_pct": 33.79,
+        "teledensidad_internet_movil": 97.0
       }
     },
     {
@@ -534,7 +560,8 @@
         "personas_con_smartphone_pct": 73.01,
         "personas_conexion_datos_celular_pct": 49.06,
         "personas_usan_apps_redes_sociales_pct": 51.02,
-        "personas_usan_banca_movil_pct": 15.52
+        "personas_usan_banca_movil_pct": 15.52,
+        "teledensidad_internet_movil": 77.0
       }
     },
     {
@@ -556,7 +583,8 @@
         "personas_con_smartphone_pct": 80.07,
         "personas_conexion_datos_celular_pct": 62.35,
         "personas_usan_apps_redes_sociales_pct": 58.66,
-        "personas_usan_banca_movil_pct": 18.39
+        "personas_usan_banca_movil_pct": 18.39,
+        "teledensidad_internet_movil": 93.0
       }
     },
     {
@@ -578,7 +606,8 @@
         "personas_con_smartphone_pct": 83.86,
         "personas_conexion_datos_celular_pct": 66.58,
         "personas_usan_apps_redes_sociales_pct": 60.52,
-        "personas_usan_banca_movil_pct": 30.02
+        "personas_usan_banca_movil_pct": 30.02,
+        "teledensidad_internet_movil": 103.0
       }
     },
     {
@@ -600,7 +629,8 @@
         "personas_con_smartphone_pct": 91.05,
         "personas_conexion_datos_celular_pct": 74.87,
         "personas_usan_apps_redes_sociales_pct": 66.75,
-        "personas_usan_banca_movil_pct": 35.13
+        "personas_usan_banca_movil_pct": 35.13,
+        "teledensidad_internet_movil": 111.0
       }
     },
     {
@@ -622,7 +652,8 @@
         "personas_con_smartphone_pct": 81.22,
         "personas_conexion_datos_celular_pct": 65.83,
         "personas_usan_apps_redes_sociales_pct": 65.44,
-        "personas_usan_banca_movil_pct": 23.48
+        "personas_usan_banca_movil_pct": 23.48,
+        "teledensidad_internet_movil": 103.0
       }
     },
     {
@@ -644,7 +675,8 @@
         "personas_con_smartphone_pct": 86.83,
         "personas_conexion_datos_celular_pct": 70.22,
         "personas_usan_apps_redes_sociales_pct": 72.54,
-        "personas_usan_banca_movil_pct": 32.22
+        "personas_usan_banca_movil_pct": 32.22,
+        "teledensidad_internet_movil": 109.0
       }
     },
     {
@@ -666,7 +698,8 @@
         "personas_con_smartphone_pct": 90.48,
         "personas_conexion_datos_celular_pct": 81.24,
         "personas_usan_apps_redes_sociales_pct": 77.88,
-        "personas_usan_banca_movil_pct": 39.98
+        "personas_usan_banca_movil_pct": 39.98,
+        "teledensidad_internet_movil": 128.0
       }
     },
     {
@@ -688,7 +721,8 @@
         "personas_con_smartphone_pct": 84.93,
         "personas_conexion_datos_celular_pct": 64.65,
         "personas_usan_apps_redes_sociales_pct": 63.83,
-        "personas_usan_banca_movil_pct": 35.0
+        "personas_usan_banca_movil_pct": 35.0,
+        "teledensidad_internet_movil": 106.0
       }
     },
     {
@@ -710,7 +744,8 @@
         "personas_con_smartphone_pct": 87.47,
         "personas_conexion_datos_celular_pct": 73.69,
         "personas_usan_apps_redes_sociales_pct": 69.58,
-        "personas_usan_banca_movil_pct": 31.0
+        "personas_usan_banca_movil_pct": 31.0,
+        "teledensidad_internet_movil": 112.0
       }
     },
     {
@@ -732,7 +767,8 @@
         "personas_con_smartphone_pct": 83.44,
         "personas_conexion_datos_celular_pct": 67.46,
         "personas_usan_apps_redes_sociales_pct": 66.83,
-        "personas_usan_banca_movil_pct": 21.3
+        "personas_usan_banca_movil_pct": 21.3,
+        "teledensidad_internet_movil": 112.0
       }
     },
     {
@@ -754,7 +790,8 @@
         "personas_con_smartphone_pct": 81.08,
         "personas_conexion_datos_celular_pct": 56.02,
         "personas_usan_apps_redes_sociales_pct": 56.9,
-        "personas_usan_banca_movil_pct": 21.63
+        "personas_usan_banca_movil_pct": 21.63,
+        "teledensidad_internet_movil": 89.0
       }
     },
     {
@@ -776,7 +813,8 @@
         "personas_con_smartphone_pct": 85.71,
         "personas_conexion_datos_celular_pct": 68.96,
         "personas_usan_apps_redes_sociales_pct": 69.54,
-        "personas_usan_banca_movil_pct": 33.54
+        "personas_usan_banca_movil_pct": 33.54,
+        "teledensidad_internet_movil": 104.0
       }
     },
     {
@@ -798,7 +836,8 @@
         "personas_con_smartphone_pct": 81.86,
         "personas_conexion_datos_celular_pct": 62.63,
         "personas_usan_apps_redes_sociales_pct": 67.62,
-        "personas_usan_banca_movil_pct": 21.98
+        "personas_usan_banca_movil_pct": 21.98,
+        "teledensidad_internet_movil": 97.0
       }
     }
   ]

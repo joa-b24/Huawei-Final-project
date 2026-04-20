@@ -415,3 +415,35 @@ TLA,29,Tlaxcala,infraestructura_digital,personas_usan_banca_movil_pct,21.3,2024,
 VER,30,Veracruz,infraestructura_digital,personas_usan_banca_movil_pct,21.63,2024,INEGI ENDUTIH 2024,%
 YUC,31,Yucatan,infraestructura_digital,personas_usan_banca_movil_pct,33.54,2024,INEGI ENDUTIH 2024,%
 ZAC,32,Zacatecas,infraestructura_digital,personas_usan_banca_movil_pct,21.98,2024,INEGI ENDUTIH 2024,%
+AGS,01,Aguascalientes,cobertura_red,teledensidad_internet_movil,91.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+BCN,02,Baja California,cobertura_red,teledensidad_internet_movil,107.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+BCS,03,Baja California Sur,cobertura_red,teledensidad_internet_movil,120.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+CAM,04,Campeche,cobertura_red,teledensidad_internet_movil,109.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+COA,05,Coahuila,cobertura_red,teledensidad_internet_movil,108.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+COL,06,Colima,cobertura_red,teledensidad_internet_movil,108.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+CHP,07,Chiapas,cobertura_red,teledensidad_internet_movil,70.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+CHH,08,Chihuahua,cobertura_red,teledensidad_internet_movil,105.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+CMX,09,Ciudad de Mexico,cobertura_red,teledensidad_internet_movil,125.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+DUR,10,Durango,cobertura_red,teledensidad_internet_movil,105.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+GUA,11,Guanajuato,cobertura_red,teledensidad_internet_movil,89.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+GRO,12,Guerrero,cobertura_red,teledensidad_internet_movil,95.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+HID,13,Hidalgo,cobertura_red,teledensidad_internet_movil,110.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+JAL,14,Jalisco,cobertura_red,teledensidad_internet_movil,108.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+MEX,15,Mexico,cobertura_red,teledensidad_internet_movil,107.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+MIC,16,Michoacan,cobertura_red,teledensidad_internet_movil,104.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+MOR,17,Morelos,cobertura_red,teledensidad_internet_movil,108.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+NAY,18,Nayarit,cobertura_red,teledensidad_internet_movil,107.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+NLE,19,Nuevo Leon,cobertura_red,teledensidad_internet_movil,97.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+OAX,20,Oaxaca,cobertura_red,teledensidad_internet_movil,77.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+PUE,21,Puebla,cobertura_red,teledensidad_internet_movil,93.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+QUE,22,Queretaro,cobertura_red,teledensidad_internet_movil,103.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+ROO,23,Quintana Roo,cobertura_red,teledensidad_internet_movil,111.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+SLP,24,San Luis Potosi,cobertura_red,teledensidad_internet_movil,103.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+SIN,25,Sinaloa,cobertura_red,teledensidad_internet_movil,109.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+SON,26,Sonora,cobertura_red,teledensidad_internet_movil,128.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+TAB,27,Tabasco,cobertura_red,teledensidad_internet_movil,106.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+TAM,28,Tamaulipas,cobertura_red,teledensidad_internet_movil,112.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+TLA,29,Tlaxcala,cobertura_red,teledensidad_internet_movil,112.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+VER,30,Veracruz,cobertura_red,teledensidad_internet_movil,89.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+YUC,31,Yucatan,cobertura_red,teledensidad_internet_movil,104.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes
+ZAC,32,Zacatecas,cobertura_red,teledensidad_internet_movil,97.0,2024,IFT TD_TELEDENSIDAD_INTMOVIL_ITE_VA,lineas por cada 100 habitantes

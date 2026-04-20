@@ -145,6 +145,17 @@
       "sinonimos": ["P8_12_2", "datos moviles", "conexion datos celular"]
     },
     {
+      "variable_id": "teledensidad_internet_movil",
+      "categoria_id": "cobertura_red",
+      "nombre": "Teledensidad de internet movil",
+      "descripcion": "Lineas o accesos de internet movil por cada 100 habitantes, reportados por entidad.",
+      "unidad_base": "lineas por cada 100 habitantes",
+      "tipo_valor": "number",
+      "agregacion_default": "latest",
+      "fuente_sugerida": "IFT",
+      "sinonimos": ["T_INTMOVIL_ITE_VA", "teledensidad internet movil", "internet movil por cada 100 habitantes"]
+    },
+    {
       "variable_id": "personas_usan_apps_redes_sociales_pct",
       "categoria_id": "infraestructura_digital",
       "nombre": "Personas que usan apps de redes sociales",
