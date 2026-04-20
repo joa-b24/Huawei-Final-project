@@ -1,7 +1,7 @@
 # Huawei Territorial Dashboard
 
 Aplicación local para explorar variables territoriales de México con foco en análisis comparativo por entidad.  
-La base actual combina indicadores procesados de ENDUTIH 2024 y una primera capa de servicio móvil.
+La base actual combina indicadores procesados de ENDUTIH 2024, teledensidad de internet móvil y primeras métricas territoriales de cobertura.
 
 ## Qué contiene 
 
@@ -17,7 +17,8 @@ La base actual combina indicadores procesados de ENDUTIH 2024 y una primera capa
 |-- README.md
 |-- package.json
 |-- scripts/
-|   `-- build_endutih_2024.py
+|   |-- build_endutih_2024.py
+|   `-- build_data_quality_report.py
 |-- data/
 |   |-- raw/
 |   |   |-- tr_endutih_usuarios_anual_2024.csv
@@ -35,6 +36,9 @@ La base actual combina indicadores procesados de ENDUTIH 2024 y una primera capa
 |-- public/
 |   `-- data/
 |       `-- endutih_2024_state_dashboard.wide.json
+|-- docs/
+|   |-- data-standard.md
+|   `-- data-methodology.md
 `-- src/
     |-- app/
     |-- components/
@@ -96,9 +100,30 @@ El flujo actual es simple:
 
 1. se colocan archivos fuente en `data/raw`
 2. el script `scripts/build_endutih_2024.py` los transforma
-3. las salidas se guardan en `data/processed`
-4. el dataset ancho se publica en `public/data`
-5. el frontend carga ese JSON y construye los dashboards
+3. el script `scripts/build_data_quality_report.py` genera validaciones y perfil estadístico
+4. las salidas se guardan en `data/processed`
+5. el dataset ancho se publica en `public/data`
+6. el frontend carga ese JSON y construye los dashboards
+
+## Proceso de ciencia de datos visible en el repo
+
+Además del dashboard, el proyecto deja evidencia de una capa de trabajo analítico:
+
+- limpieza de registros sin claves válidas
+- uso de factores de expansión `FAC_PER` en ENDUTIH
+- agregación estadística por entidad
+- cruce territorial por `CVEGEO`
+- validaciones de cobertura, duplicados y rangos
+- perfil descriptivo de las métricas finales
+
+La metodología resumida está en:
+
+- [docs/data-methodology.md](/Users/luismorales/HauweI_final-project/Huawei-Final-project/docs/data-methodology.md:1)
+
+Y el reporte automático queda en:
+
+- [data/processed/endutih_2024_data_quality_report.md](/Users/luismorales/HauweI_final-project/Huawei-Final-project/data/processed/endutih_2024_data_quality_report.md:1)
+- [data/processed/endutih_2024_data_quality_report.json](/Users/luismorales/HauweI_final-project/Huawei-Final-project/data/processed/endutih_2024_data_quality_report.json:1)
 
 ## Variables que ya están integradas
 
@@ -126,6 +151,18 @@ Regenerar los datos procesados:
 
 ```bash
 npm run data:build:endutih
+```
+
+Generar el reporte de calidad:
+
+```bash
+npm run data:report:endutih
+```
+
+Ejecutar el flujo completo:
+
+```bash
+npm run data:build:all
 ```
 
 Levantar la aplicación:
