@@ -9,7 +9,6 @@ import OpportunityKpiGrid from "../components/OpportunityKpiGrid";
 import ComparisonBarChart from "../components/charts/ComparisonBarChart";
 import CorrelationScatter from "../components/charts/CorrelationScatter";
 import DumbbellComparisonChart from "../components/charts/DumbbellComparisonChart";
-import MetricHeatmapChart from "../components/charts/MetricHeatmapChart";
 import { loadDataset } from "../data/loadDataset";
 import type { DashboardDataset, MetricDefinition, StateMetricRecord } from "../types/dataset";
 import { buildOpportunityRecords, getMetricAverage, getTopRecordByMetric } from "../utils/dashboard";
@@ -33,14 +32,6 @@ const POPULATION_COVERAGE_IDS = [
 ];
 
 const ADOPTION_COVERAGE_IDS = [
-  "personas_usuarias_internet_pct",
-  "personas_con_smartphone_pct",
-  "personas_conexion_datos_celular_pct",
-  "personas_compras_internet_pct",
-  "personas_usan_banca_movil_pct"
-];
-
-const ADOPTION_COMPARISON_IDS = [
   "personas_usuarias_internet_pct",
   "personas_con_smartphone_pct",
   "personas_conexion_datos_celular_pct",
@@ -203,17 +194,6 @@ export default function App() {
     [selectedAdoptionMetricId]
   );
 
-  const adoptionScatter = useMemo(
-    () =>
-      filteredRecords.map((record) => ({
-        state: record.state,
-        x: record.metrics[adoptionCoveragePair.coverageMetricId] ?? 0,
-        y: record.metrics[selectedAdoptionMetricId] ?? 0,
-        z: record.metrics.teledensidad_internet_movil ?? 0
-      })),
-    [adoptionCoveragePair.coverageMetricId, filteredRecords, selectedAdoptionMetricId]
-  );
-
   const opportunityScatter = useMemo(
     () =>
       opportunityRecords.map((record) => ({
@@ -268,7 +248,7 @@ export default function App() {
     <div className="app-shell">
       <DashboardHeader
         title="Propuesta de Dashboards Proyecto Huawei"
-        subtitle="Visualizacion ejecutiva para comparar estados de Mexico en cobertura movil, poblacion cubierta, adopcion digital y oportunidad estrategica con base en ENDUTIH 2024 y otros indicadores territoriales de conectividad."
+        subtitle="Visualizacion ejecutiva para comparar estados de Mexico en cobertura movil, poblacion cubierta, adopcion digital y oportunidad estrategica con base en indicadores territoriales de conectividad."
       />
 
       <div className="filter-toolbar">
@@ -507,24 +487,24 @@ export default function App() {
 
             <div className="grid-layout">
               <div className="panel panel-nested">
-                <CorrelationScatter
-                  data={adoptionScatter}
-                  title="Cobertura asociada vs adopcion"
-                  description={`Cada punto cruza ${adoptionCoveragePair.coverageLabel.toLowerCase()} con ${adoptionMetric.label.toLowerCase()}.`}
-                  xLabel={adoptionCoveragePair.coverageLabel}
-                  xUnit=" %"
-                  yLabel={adoptionMetric.label}
-                  yUnit={` ${adoptionMetric.unit}`}
+                <ComparisonBarChart
+                  records={filteredRecords}
+                  metric={adoptionMetric}
+                  title="Ranking de adopcion"
+                  description={`${adoptionMetric.label} para los estados seleccionados.`}
                 />
               </div>
 
               <div className="panel panel-nested">
-                <MetricHeatmapChart
+                <DumbbellComparisonChart
                   records={filteredRecords}
-                  metricIds={ADOPTION_COMPARISON_IDS}
-                  metricCatalog={dataset.metricCatalog}
-                  title="Matriz comparativa de adopcion digital"
-                  description="Lectura compacta para comparar intensidad relativa entre estados y metricas clave."
+                  leftMetricId={adoptionCoveragePair.coverageMetricId}
+                  leftLabel={adoptionCoveragePair.coverageLabel}
+                  rightMetricId={selectedAdoptionMetricId}
+                  rightLabel={adoptionMetric.label}
+                  title="Cobertura disponible vs adopcion observada"
+                  description="La distancia entre ambos puntos ayuda a ver si la adopcion ya acompana a la base de conectividad o si todavia hay espacio por activar."
+                  unit={adoptionMetric.unit}
                 />
               </div>
             </div>
@@ -695,8 +675,8 @@ function getAdoptionCoveragePair(metricId: string) {
       };
     case "personas_conexion_datos_celular_pct":
       return {
-        coverageMetricId: "teledensidad_internet_movil",
-        coverageLabel: "Teledensidad de internet movil"
+        coverageMetricId: "poblacion_en_localidades_con_cobertura_movil_pct",
+        coverageLabel: "Poblacion en localidades con cobertura movil"
       };
     case "personas_compras_internet_pct":
     case "personas_usan_banca_movil_pct":
