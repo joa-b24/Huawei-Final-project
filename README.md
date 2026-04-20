@@ -39,8 +39,7 @@ Se prioriza una arquitectura simple:
 |-- vite.config.ts
 |-- public/
 |   `-- data/
-|       |-- endutih_2024_state_dashboard.wide.json
-|       `-- states.metrics.json
+|       `-- endutih_2024_state_dashboard.wide.json
 |-- data/
 |   |-- catalogs/
 |   |   |-- states.master.json

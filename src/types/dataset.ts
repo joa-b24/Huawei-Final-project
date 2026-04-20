@@ -9,6 +9,9 @@ export type MetricDefinition = {
 export type StateMetricRecord = {
   state: string;
   region: string;
+  stateCode?: string;
+  cveEnt?: string;
+  year?: number;
   metrics: Record<string, number>;
 };
 

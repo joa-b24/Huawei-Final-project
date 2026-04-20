@@ -26,12 +26,14 @@ const DEFAULT_STATES = ["Nuevo Leon", "Jalisco", "Ciudad de Mexico", "Queretaro"
 export default function App() {
   const [dataset, setDataset] = useState<DashboardDataset | null>(null);
   const [selectedStates, setSelectedStates] = useState<string[]>(DEFAULT_STATES);
-  const [selectedInfraMetricId, setSelectedInfraMetricId] = useState("digital_connectivity");
-  const [selectedTerritorialMetricId, setSelectedTerritorialMetricId] = useState(
-    "population_millions"
+  const [selectedInfraMetricId, setSelectedInfraMetricId] = useState(
+    "personas_usuarias_internet_pct"
   );
   const [selectedOpportunityMetricId, setSelectedOpportunityMetricId] =
-    useState("industrial_activity");
+    useState("personas_compras_internet_pct");
+  const [selectedCoverageMetricId, setSelectedCoverageMetricId] = useState(
+    "personas_con_smartphone_pct"
+  );
 
   useEffect(() => {
     loadDataset().then(setDataset);
@@ -55,18 +57,16 @@ export default function App() {
     [dataset]
   );
 
-  const territorialMetrics = useMemo(
-    () => (dataset ? getCategoryMetrics(dataset.metricCatalog, "Contexto territorial") : []),
+  const coverageMetrics = useMemo(
+    () => (dataset ? getCategoryMetrics(dataset.metricCatalog, "Cobertura de red") : []),
     [dataset]
   );
 
   const opportunityMetrics = useMemo(
     () =>
       dataset
-        ? getCategoryMetrics(dataset.metricCatalog, "Industria").concat(
-            getCategoryMetrics(dataset.metricCatalog, "Infraestructura digital"),
-            getCategoryMetrics(dataset.metricCatalog, "Cobertura de red"),
-            getCategoryMetrics(dataset.metricCatalog, "Contexto territorial")
+        ? getCategoryMetrics(dataset.metricCatalog, "Infraestructura digital").concat(
+            getCategoryMetrics(dataset.metricCatalog, "Cobertura de red")
           )
         : [],
     [dataset]
@@ -77,10 +77,9 @@ export default function App() {
     [dataset, selectedInfraMetricId]
   );
 
-  const territorialMetric = useMemo(
-    () =>
-      dataset ? getMetricDefinition(dataset.metricCatalog, selectedTerritorialMetricId) : null,
-    [dataset, selectedTerritorialMetricId]
+  const coverageMetric = useMemo(
+    () => (dataset ? getMetricDefinition(dataset.metricCatalog, selectedCoverageMetricId) : null),
+    [dataset, selectedCoverageMetricId]
   );
 
   const opportunityFocusMetric = useMemo(
@@ -103,9 +102,9 @@ export default function App() {
     () =>
       filteredRecords.map((record) => ({
         state: record.state,
-        x: record.metrics.population_millions,
-        y: record.metrics.urbanization_rate,
-        z: record.metrics.digital_connectivity
+        x: record.metrics.personas_con_celular_pct,
+        y: record.metrics.personas_conexion_datos_celular_pct,
+        z: record.metrics.personas_usuarias_internet_pct
       })),
     [filteredRecords]
   );
@@ -116,7 +115,7 @@ export default function App() {
         state: record.state,
         x: record.opportunityScore,
         y: record.metrics[selectedOpportunityMetricId] ?? 0,
-        z: record.metrics.population_millions
+        z: record.metrics.personas_usuarias_internet_pct
       })),
     [opportunityRecords, selectedOpportunityMetricId]
   );
@@ -136,7 +135,7 @@ export default function App() {
     });
   };
 
-  if (!dataset || !infraMetric || !territorialMetric || !opportunityFocusMetric) {
+  if (!dataset || !infraMetric || !coverageMetric || !opportunityFocusMetric) {
     return <div className="app-shell loading">Cargando dashboards...</div>;
   }
 
@@ -144,7 +143,7 @@ export default function App() {
     <div className="app-shell">
       <DashboardHeader
         title="Huawei Territorial Intelligence"
-        subtitle="Primera version de una plataforma analitica para comparar estados, detectar brechas digitales y priorizar oportunidades estrategicas en Mexico."
+        subtitle="Primera version de una plataforma analitica con ENDUTIH 2024 para comparar adopcion digital, acceso movil y oportunidad estrategica por estado."
       />
 
       <section className="panel controls-panel">
@@ -208,23 +207,23 @@ export default function App() {
       </DashboardSection>
 
       <DashboardSection
-        sectionId="territorial"
-        title="Dashboard de contexto territorial"
-        description="Contexto demografico y urbano para dimensionar escala, densidad de demanda y condiciones de despliegue."
-        metricOptions={territorialMetrics}
-        selectedMetricId={selectedTerritorialMetricId}
-        onMetricChange={setSelectedTerritorialMetricId}
+        sectionId="cobertura"
+        title="Dashboard de cobertura y acceso"
+        description="Lectura comparativa de acceso movil, disponibilidad de dispositivos y capacidad de conexion sobre la base real de ENDUTIH."
+        metricOptions={coverageMetrics}
+        selectedMetricId={selectedCoverageMetricId}
+        onMetricChange={setSelectedCoverageMetricId}
       >
         {filteredRecords.length > 0 ? (
           <>
             <ExecutiveKpiGrid
               cards={[
-                buildTopStateCard(filteredRecords, territorialMetric, "Mayor escala territorial"),
-                buildAverageCard(filteredRecords, territorialMetric, "Promedio muestra"),
+                buildTopStateCard(filteredRecords, coverageMetric, "Estado lider en acceso"),
+                buildAverageCard(filteredRecords, coverageMetric, "Promedio muestra"),
                 {
                   label: "Lectura complementaria",
-                  value: `${getMetricAverage(filteredRecords, "urbanization_rate").toFixed(1)} %`,
-                  helper: "Urbanizacion promedio de la muestra",
+                  value: `${getMetricAverage(filteredRecords, "personas_conexion_datos_celular_pct").toFixed(1)} %`,
+                  helper: "Conexion por datos moviles promedio",
                   tone: "cool"
                 }
               ]}
@@ -234,20 +233,20 @@ export default function App() {
               <div className="panel panel-nested">
                 <ComparisonBarChart
                   records={filteredRecords}
-                  metric={territorialMetric}
-                  title="Comparativo territorial"
-                  description={`${territorialMetric.label} por estado para interpretar escala relativa.`}
+                  metric={coverageMetric}
+                  title="Comparativo de acceso"
+                  description={`${coverageMetric.label} por estado para interpretar madurez de acceso movil.`}
                 />
               </div>
 
               <div className="panel panel-nested">
                 <CorrelationScatter
                   data={territorialScatter}
-                  title="Escala vs urbanizacion"
-                  description="Cada punto combina tamano poblacional, urbanizacion y madurez digital."
-                  xLabel="Poblacion"
-                  xUnit=" M"
-                  yLabel="Urbanizacion"
+                  title="Celular vs datos moviles"
+                  description="Cada punto combina disponibilidad de celular, uso de datos moviles y adopcion de internet."
+                  xLabel="Disponibilidad de celular"
+                  xUnit="%"
+                  yLabel="Conexion por datos moviles"
                   yUnit="%"
                 />
               </div>
@@ -255,8 +254,8 @@ export default function App() {
           </>
         ) : (
           <EmptyState
-            title="Sin muestra territorial"
-            description="Selecciona estados para explorar contexto poblacional y urbano."
+            title="Sin muestra de cobertura"
+            description="Selecciona estados para explorar acceso y conectividad movil."
           />
         )}
       </DashboardSection>
@@ -264,7 +263,7 @@ export default function App() {
       <DashboardSection
         sectionId="oportunidad"
         title="Dashboard de oportunidad estrategica"
-        description="Score inicial para detectar territorios con buena combinacion de atractivo industrial, escala de mercado y espacio de mejora digital."
+        description="Score inicial para detectar territorios con buena adopcion TIC y margen para profundizar transacciones digitales."
         metricOptions={opportunityMetrics}
         selectedMetricId={selectedOpportunityMetricId}
         onMetricChange={setSelectedOpportunityMetricId}
@@ -343,6 +342,6 @@ const opportunityScoreMetric: MetricDefinition = {
   id: "opportunityScore",
   label: "Score de oportunidad",
   unit: "pts",
-  category: "Oportunidad estrategica",
+  category: "Infraestructura digital",
   description: "Score compuesto para priorizacion ejecutiva."
 };

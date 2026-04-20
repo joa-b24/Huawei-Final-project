@@ -41,22 +41,59 @@ export function buildOpportunityRecords(records: StateMetricRecord[]): Opportuni
   }
 
   const ranges = {
-    digital_connectivity: getMetricRange(records, "digital_connectivity"),
-    mobile_coverage_5g: getMetricRange(records, "mobile_coverage_5g"),
-    industrial_activity: getMetricRange(records, "industrial_activity"),
-    population_millions: getMetricRange(records, "population_millions"),
-    urbanization_rate: getMetricRange(records, "urbanization_rate")
+    personas_usuarias_internet_pct: getMetricRange(records, "personas_usuarias_internet_pct"),
+    personas_con_smartphone_pct: getMetricRange(records, "personas_con_smartphone_pct"),
+    personas_usuarias_computadora_pct: getMetricRange(
+      records,
+      "personas_usuarias_computadora_pct"
+    ),
+    personas_usan_redes_sociales_pct: getMetricRange(
+      records,
+      "personas_usan_redes_sociales_pct"
+    ),
+    personas_compras_internet_pct: getMetricRange(records, "personas_compras_internet_pct"),
+    personas_pagos_internet_pct: getMetricRange(records, "personas_pagos_internet_pct"),
+    personas_usan_banca_movil_pct: getMetricRange(records, "personas_usan_banca_movil_pct")
   };
 
   return records.map((record) => {
     const marketAttractiveness =
-      normalizeValue(record.metrics.industrial_activity, ranges.industrial_activity) * 0.45 +
-      normalizeValue(record.metrics.population_millions, ranges.population_millions) * 0.35 +
-      normalizeValue(record.metrics.urbanization_rate, ranges.urbanization_rate) * 0.2;
+      normalizeValue(
+        record.metrics.personas_usuarias_internet_pct ?? 0,
+        ranges.personas_usuarias_internet_pct
+      ) * 0.35 +
+      normalizeValue(
+        record.metrics.personas_con_smartphone_pct ?? 0,
+        ranges.personas_con_smartphone_pct
+      ) * 0.25 +
+      normalizeValue(
+        record.metrics.personas_usan_redes_sociales_pct ?? 0,
+        ranges.personas_usan_redes_sociales_pct
+      ) * 0.2 +
+      normalizeValue(
+        record.metrics.personas_usuarias_computadora_pct ?? 0,
+        ranges.personas_usuarias_computadora_pct
+      ) * 0.2;
 
     const whitespaceScore =
-      (1 - normalizeValue(record.metrics.mobile_coverage_5g, ranges.mobile_coverage_5g)) * 0.6 +
-      (1 - normalizeValue(record.metrics.digital_connectivity, ranges.digital_connectivity)) * 0.4;
+      (1 -
+        normalizeValue(
+          record.metrics.personas_compras_internet_pct ?? 0,
+          ranges.personas_compras_internet_pct
+        )) *
+        0.4 +
+      (1 -
+        normalizeValue(
+          record.metrics.personas_pagos_internet_pct ?? 0,
+          ranges.personas_pagos_internet_pct
+        )) *
+        0.35 +
+      (1 -
+        normalizeValue(
+          record.metrics.personas_usan_banca_movil_pct ?? 0,
+          ranges.personas_usan_banca_movil_pct
+        )) *
+        0.25;
 
     const opportunityScore = (marketAttractiveness * 0.65 + whitespaceScore * 0.35) * 100;
 
@@ -81,17 +118,17 @@ export function buildExecutiveInsights(
     return [];
   }
 
-  const digitalLeader = getTopRecordByMetric(records, "digital_connectivity");
-  const populationLeader = getTopRecordByMetric(records, "population_millions");
+  const digitalLeader = getTopRecordByMetric(records, "personas_usuarias_internet_pct");
+  const mobileLeader = getTopRecordByMetric(records, "personas_conexion_datos_celular_pct");
   const opportunityLeader = [...opportunityRecords].sort(
     (left, right) => right.opportunityScore - left.opportunityScore
   )[0];
 
   return [
-    `${digitalLeader.state} marca la referencia digital de la muestra, liderando en conectividad y sirviendo como benchmark de madurez territorial.`,
-    `${populationLeader.state} concentra la mayor escala poblacional, lo que eleva su peso relativo para decisiones comerciales y de cobertura.`,
-    `${opportunityLeader.state} aparece como la prioridad estrategica inicial al combinar atractivo industrial con espacio para mejorar cobertura digital.`,
-    `La plataforma ya permite contrastar liderazgo actual frente a whitespace potencial, una logica util para priorizacion comercial de Huawei.`
+    `${digitalLeader.state} lidera la muestra en uso de internet, funcionando como referencia de adopcion digital.`,
+    `${mobileLeader.state} destaca en conexion por datos celulares, una senal util para estrategias moviles y de servicios conectados.`,
+    `${opportunityLeader.state} aparece como prioridad estrategica inicial al combinar una base digital fuerte con espacio para profundizar transacciones y servicios.`,
+    `La lectura ejecutiva ya distingue entre adopcion digital consolidada y whitespace comercial dentro del ecosistema TIC.`
   ];
 }
 

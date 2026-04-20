@@ -18,6 +18,6 @@ export function buildInsights(records: StateMetricRecord[], metric: MetricDefini
     `${leader.state} lidera en ${metric.label.toLowerCase()} con ${leader.metrics[metric.id].toFixed(1)} ${metric.unit}.`,
     `${laggard.state} presenta el menor valor en ${metric.label.toLowerCase()}, lo que sugiere una oportunidad de expansion o priorizacion comercial.`,
     `El promedio simple de la muestra es ${average.toFixed(1)} ${metric.unit}, util como referencia para benchmark territorial.`,
-    `Los estados con mejor conectividad digital tambien concentran mejores niveles de actividad industrial en este dataset demo.`
+    `La distribucion territorial de ${metric.label.toLowerCase()} ayuda a detectar brechas de adopcion y focos de oportunidad.`
   ];
 }
