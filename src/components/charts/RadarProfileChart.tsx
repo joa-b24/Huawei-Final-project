@@ -16,7 +16,7 @@ type RadarProfileChartProps = {
   description: string;
 };
 
-const COLORS = ["#ff6b00", "#0f8b8d", "#7c3aed", "#2563eb", "#cf5c36", "#1f6f78"];
+const COLORS = ["#1d4ed8", "#0f766e", "#2563eb", "#1e40af", "#0891b2", "#334155"];
 
 export default function RadarProfileChart({
   records,

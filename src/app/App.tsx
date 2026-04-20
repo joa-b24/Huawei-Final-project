@@ -86,6 +86,7 @@ type OpportunityRecord = ReturnType<typeof buildOpportunityRecords>[number];
 
 export default function App() {
   const [dataset, setDataset] = useState<DashboardDataset | null>(null);
+  const [filtersVisible, setFiltersVisible] = useState(true);
   const [selectedStates, setSelectedStates] = useState<string[]>(DEFAULT_STATES);
   const [selectedTerritorialMetricId, setSelectedTerritorialMetricId] = useState(
     "localidades_con_4g_garantizada_pct"
@@ -299,13 +300,28 @@ export default function App() {
         subtitle="Primera version de una plataforma analitica para leer cobertura movil, poblacion cubierta, brechas territoriales, adopcion digital y oportunidad estrategica por estado con ENDUTIH 2024, teledensidad movil y datos de brecha digital."
       />
 
-      <section className="panel controls-panel">
-        <DashboardFilters
-          states={allStates}
-          selectedStates={selectedStates}
-          onToggleState={toggleState}
-        />
-      </section>
+      <div className="filter-toolbar">
+        <button
+          className="filter-toggle"
+          onClick={() => setFiltersVisible((current) => !current)}
+          type="button"
+        >
+          {filtersVisible ? "Ocultar filtros" : "Mostrar filtros"}
+        </button>
+        <span className="filter-toolbar-copy">
+          {selectedStates.length} estados activos en la muestra
+        </span>
+      </div>
+
+      {filtersVisible ? (
+        <section className="panel controls-panel">
+          <DashboardFilters
+            states={allStates}
+            selectedStates={selectedStates}
+            onToggleState={toggleState}
+          />
+        </section>
+      ) : null}
 
       <DashboardSection
         sectionId="cobertura-territorial"

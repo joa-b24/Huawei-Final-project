@@ -40,7 +40,7 @@ export default function ComparisonBarChart({
             <XAxis dataKey="state" tickLine={false} axisLine={false} />
             <YAxis tickLine={false} axisLine={false} />
             <Tooltip />
-            <Bar dataKey={`metrics.${metric.id}`} fill="#ff6b00" radius={[8, 8, 0, 0]} />
+            <Bar dataKey={`metrics.${metric.id}`} fill="#2563eb" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

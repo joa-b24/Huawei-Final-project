@@ -64,7 +64,7 @@ export default function CorrelationScatter({
             />
             <ZAxis type="number" dataKey="z" range={[90, 460]} name="Tamano relativo" />
             <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-            <Scatter data={data} fill="#0f8b8d" />
+            <Scatter data={data} fill="#1d4ed8" />
           </ScatterChart>
         </ResponsiveContainer>
       </div>
