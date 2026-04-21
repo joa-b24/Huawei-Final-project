@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "data:build:endutih": "python3 scripts/build_endutih_2024.py"
+    "data:build:endutih": "python3 scripts/build_endutih_2024.py",
+    "data:report:endutih": "python3 scripts/build_data_quality_report.py",
+    "data:build:all": "python3 scripts/build_endutih_2024.py && python3 scripts/build_data_quality_report.py"
   },
   "dependencies": {
     "react": "^18.3.1",
