@@ -305,26 +305,110 @@ export default function App() {
 
       <main className="dashboard-content" style={{ marginTop: '20px' }}>
         {activeSection === null ? (
-          /* V1: menu principal de tarjetas */
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-            {SECTIONS_CONFIG.map((section) => (
+          /* VISTA 1: MENÚ PRINCIPAL CON MINI-STATS DINÁMICOS */
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', padding: '10px' }}>
+            {[
+              { 
+                id: "cobertura-territorial", 
+                title: "1. Cobertura Territorial", 
+                icon: "📡",
+                desc: "Infraestructura física y despliegue de red móvil.",
+                statLabel: "Líder 5G",
+                statValue: getTopRecordByMetric(filteredRecords, "poblacion_en_localidades_con_5g_garantizada_pct")?.state || "N/D",
+                color: "#2563eb"
+              },
+              { 
+                id: "cobertura-poblacional", 
+                title: "2. Cobertura Poblacional", 
+                icon: "👥",
+                desc: "Alcance real sobre personas y hogares mexicanos.",
+                statLabel: "Prom. Hogares",
+                statValue: `${getMetricAverage(filteredRecords, "hogares_en_localidades_con_internet_pct").toFixed(1)}%`,
+                color: "#7c3aed"
+              },
+              { 
+                id: "brecha-territorial", 
+                title: "3. Brecha de Conectividad", 
+                icon: "⚖️",
+                desc: "Desigualdad entre zonas urbanas y rurales.",
+                statLabel: "Brecha Media",
+                statValue: `${getMetricAverage(gapRecords, "brecha_cobertura_movil_pp").toFixed(1)} pp`,
+                color: "#db2777"
+              },
+              { 
+                id: "adopcion-cobertura", 
+                title: "4. Adopción vs Cobertura", 
+                icon: "📱",
+                desc: "Uso de dispositivos y madurez del ecosistema.",
+                statLabel: "Líder Smartphone",
+                statValue: getTopRecordByMetric(filteredRecords, "personas_con_smartphone_pct")?.state || "N/D",
+                color: "#059669"
+              },
+              { 
+                id: "oportunidad", 
+                title: "5. Oportunidad Estratégica", 
+                icon: "🎯",
+                desc: "Priorización de estados para inversión y expansión.",
+                statLabel: "Top Oportunidad",
+                statValue: [...opportunityRecords].sort((a,b) => b.opportunityScore - a.opportunityScore)[0]?.state || "N/D",
+                color: "#ea580c"
+              }
+            ].map((section) => (
               <div 
                 key={section.id} 
                 onClick={() => setActiveSection(section.id)}
-                style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e0e0e0', cursor: 'pointer', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}
+                style={{ 
+                  background: 'white', 
+                  padding: '24px', 
+                  borderRadius: '16px', 
+                  border: '1px solid #eef2f6', 
+                  borderTop: `4px solid ${section.color}`,
+                  cursor: 'pointer', 
+                  boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
               >
-                <h3 style={{ margin: '0 0 10px 0', fontSize: '1.2rem' }}>
-                  <span style={{ marginRight: '10px' }}>{section.icon}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '2rem' }}>{section.icon}</span>
+                  {/* MINI BADGE CON DATO CLAVE */}
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '0.65rem', fontWeight: 'bold', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      {section.statLabel}
+                    </div>
+                    <div style={{ fontSize: '1rem', fontWeight: '800', color: section.color }}>
+                      {section.statValue}
+                    </div>
+                  </div>
+                </div>
+
+                <h3 style={{ margin: '0 0 8px 0', fontSize: '1.15rem', color: '#1e293b', fontWeight: '700' }}>
                   {section.title}
                 </h3>
-                <p style={{ color: '#666', fontSize: '0.9rem' }}>Detalle.</p>
-                <button style={{ marginTop: '15px', padding: '8px 16px', background: '#f0f0f0', border: 'none', borderRadius: '6px', cursor: 'pointer', width: '100%', fontWeight: 'bold' }}>
-                  Explorar
-                </button>
+                <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: '1.5', marginBottom: '20px', flexGrow: 1 }}>
+                  {section.desc}
+                </p>
+
+                <div style={{ 
+                  padding: '8px', 
+                  background: '#f8fafc', 
+                  borderRadius: '8px', 
+                  textAlign: 'center', 
+                  fontSize: '0.8rem', 
+                  fontWeight: '600', 
+                  color: section.color,
+                  border: `1px dashed ${section.color}44`
+                }}>
+                  Explorar Análisis →
+                </div>
               </div>
             ))}
           </div>
         ) : (
+          
           /* V2: detalle de la seccion seleccionada */
           <div className="detail-view">
             <button 
