@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-19",
+  "updated_at": "2026-04-22",
   "categories": [
     {
       "categoria_id": "infraestructura_digital",
@@ -20,6 +20,21 @@
       "categoria_id": "contexto_territorial",
       "nombre": "Contexto territorial",
       "descripcion": "Condiciones demograficas y territoriales para interpretacion estrategica."
+    },
+    {
+      "categoria_id": "bienestar_social",
+      "nombre": "Bienestar social",
+      "descripcion": "Indicadores de pobreza, carencias y bienestar de la poblacion."
+    },
+    {
+      "categoria_id": "economia",
+      "nombre": "Economia",
+      "descripcion": "Indicadores economicos para contextualizar el desarrollo estatal."
+    },
+    {
+      "categoria_id": "demografia",
+      "nombre": "Demografia",
+      "descripcion": "Indicadores poblacionales y estructura demografica por entidad."
     }
   ],
   "variables": [
@@ -32,7 +47,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P6_1", "uso de computadora", "usuarios computadora"]
+      "sinonimos": [
+        "P6_1",
+        "uso de computadora",
+        "usuarios computadora"
+      ]
     },
     {
       "variable_id": "personas_usuarias_internet_pct",
@@ -43,7 +62,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P7_1", "uso de internet", "usuarios internet"]
+      "sinonimos": [
+        "P7_1",
+        "uso de internet",
+        "usuarios internet"
+      ]
     },
     {
       "variable_id": "personas_conexion_internet_movil_pct",
@@ -54,7 +77,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P7_8_7", "internet movil", "uso internet movil"]
+      "sinonimos": [
+        "P7_8_7",
+        "internet movil",
+        "uso internet movil"
+      ]
     },
     {
       "variable_id": "personas_usan_redes_sociales_pct",
@@ -65,7 +92,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P7_15", "redes sociales", "uso redes"]
+      "sinonimos": [
+        "P7_15",
+        "redes sociales",
+        "uso redes"
+      ]
     },
     {
       "variable_id": "personas_compras_internet_pct",
@@ -76,7 +107,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P7_21", "compras en linea", "ecommerce"]
+      "sinonimos": [
+        "P7_21",
+        "compras en linea",
+        "ecommerce"
+      ]
     },
     {
       "variable_id": "personas_pagos_internet_pct",
@@ -87,7 +122,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P7_28", "pagos digitales", "pagos por internet"]
+      "sinonimos": [
+        "P7_28",
+        "pagos digitales",
+        "pagos por internet"
+      ]
     },
     {
       "variable_id": "personas_banca_electronica_pct",
@@ -98,7 +137,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P7_33", "banca electronica", "uso banca electronica"]
+      "sinonimos": [
+        "P7_33",
+        "banca electronica",
+        "uso banca electronica"
+      ]
     },
     {
       "variable_id": "personas_con_celular_pct",
@@ -109,7 +152,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P8_1", "disponibilidad celular"]
+      "sinonimos": [
+        "P8_1",
+        "disponibilidad celular"
+      ]
     },
     {
       "variable_id": "personas_usuarias_celular_pct",
@@ -120,7 +166,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P8_3", "uso celular", "usuarios celular"]
+      "sinonimos": [
+        "P8_3",
+        "uso celular",
+        "usuarios celular"
+      ]
     },
     {
       "variable_id": "personas_con_smartphone_pct",
@@ -131,7 +181,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P8_4_2", "smartphone", "celular inteligente"]
+      "sinonimos": [
+        "P8_4_2",
+        "smartphone",
+        "celular inteligente"
+      ]
     },
     {
       "variable_id": "personas_conexion_datos_celular_pct",
@@ -142,7 +196,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P8_12_2", "datos moviles", "conexion datos celular"]
+      "sinonimos": [
+        "P8_12_2",
+        "datos moviles",
+        "conexion datos celular"
+      ]
     },
     {
       "variable_id": "teledensidad_internet_movil",
@@ -153,7 +211,11 @@
       "tipo_valor": "number",
       "agregacion_default": "latest",
       "fuente_sugerida": "IFT",
-      "sinonimos": ["T_INTMOVIL_ITE_VA", "teledensidad internet movil", "internet movil por cada 100 habitantes"]
+      "sinonimos": [
+        "T_INTMOVIL_ITE_VA",
+        "teledensidad internet movil",
+        "internet movil por cada 100 habitantes"
+      ]
     },
     {
       "variable_id": "localidades_con_cobertura_movil_pct",
@@ -164,7 +226,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "BIT",
-      "sinonimos": ["MOVIL", "localidades con movil", "cobertura movil por localidad"]
+      "sinonimos": [
+        "MOVIL",
+        "localidades con movil",
+        "cobertura movil por localidad"
+      ]
     },
     {
       "variable_id": "poblacion_en_localidades_con_cobertura_movil_pct",
@@ -175,7 +241,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "BIT",
-      "sinonimos": ["poblacion con cobertura movil", "movil ponderado por poblacion"]
+      "sinonimos": [
+        "poblacion con cobertura movil",
+        "movil ponderado por poblacion"
+      ]
     },
     {
       "variable_id": "localidades_con_4g_garantizada_pct",
@@ -186,7 +255,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "BIT",
-      "sinonimos": ["G_4G", "localidades con 4G", "4G garantizada"]
+      "sinonimos": [
+        "G_4G",
+        "localidades con 4G",
+        "4G garantizada"
+      ]
     },
     {
       "variable_id": "poblacion_en_localidades_con_4g_garantizada_pct",
@@ -197,7 +270,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "BIT",
-      "sinonimos": ["poblacion con 4G", "4G garantizada ponderada"]
+      "sinonimos": [
+        "poblacion con 4G",
+        "4G garantizada ponderada"
+      ]
     },
     {
       "variable_id": "localidades_con_5g_garantizada_pct",
@@ -208,7 +284,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "BIT",
-      "sinonimos": ["G_5G", "localidades con 5G", "5G garantizada"]
+      "sinonimos": [
+        "G_5G",
+        "localidades con 5G",
+        "5G garantizada"
+      ]
     },
     {
       "variable_id": "poblacion_en_localidades_con_5g_garantizada_pct",
@@ -219,7 +299,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "BIT",
-      "sinonimos": ["poblacion con 5G", "5G garantizada ponderada"]
+      "sinonimos": [
+        "poblacion con 5G",
+        "5G garantizada ponderada"
+      ]
     },
     {
       "variable_id": "hogares_en_localidades_con_internet_pct",
@@ -230,7 +313,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "BIT",
-      "sinonimos": ["hogares con internet por localidad", "INTERNET ponderado por hogares"]
+      "sinonimos": [
+        "hogares con internet por localidad",
+        "INTERNET ponderado por hogares"
+      ]
     },
     {
       "variable_id": "poblacion_en_localidades_con_internet_pct",
@@ -241,7 +327,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "BIT",
-      "sinonimos": ["poblacion con internet por localidad", "INTERNET ponderado por poblacion"]
+      "sinonimos": [
+        "poblacion con internet por localidad",
+        "INTERNET ponderado por poblacion"
+      ]
     },
     {
       "variable_id": "personas_usan_apps_redes_sociales_pct",
@@ -252,7 +341,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P8_13_6", "apps redes sociales", "redes sociales movil"]
+      "sinonimos": [
+        "P8_13_6",
+        "apps redes sociales",
+        "redes sociales movil"
+      ]
     },
     {
       "variable_id": "personas_usan_banca_movil_pct",
@@ -263,7 +356,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI ENDUTIH",
-      "sinonimos": ["P8_13_7", "banca movil", "apps banca movil"]
+      "sinonimos": [
+        "P8_13_7",
+        "banca movil",
+        "apps banca movil"
+      ]
     },
     {
       "variable_id": "indice_conectividad_digital",
@@ -274,7 +371,11 @@
       "tipo_valor": "number",
       "agregacion_default": "avg",
       "fuente_sugerida": "IFT / INEGI",
-      "sinonimos": ["digital_connectivity", "conectividad digital", "indice de conectividad"]
+      "sinonimos": [
+        "digital_connectivity",
+        "conectividad digital",
+        "indice de conectividad"
+      ]
     },
     {
       "variable_id": "hogares_banda_ancha_fija_pct",
@@ -285,7 +386,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "ENDUTIH",
-      "sinonimos": ["banda ancha fija", "fixed broadband households pct"]
+      "sinonimos": [
+        "banda ancha fija",
+        "fixed broadband households pct"
+      ]
     },
     {
       "variable_id": "cobertura_5g_pct",
@@ -296,7 +400,11 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "IFT / operadores",
-      "sinonimos": ["mobile_coverage_5g", "5g coverage", "cobertura 5g"]
+      "sinonimos": [
+        "mobile_coverage_5g",
+        "5g coverage",
+        "cobertura 5g"
+      ]
     },
     {
       "variable_id": "cobertura_4g_pct",
@@ -307,7 +415,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "IFT / operadores",
-      "sinonimos": ["4g coverage", "cobertura 4g"]
+      "sinonimos": [
+        "4g coverage",
+        "cobertura 4g"
+      ]
     },
     {
       "variable_id": "penetracion_movil_pct",
@@ -318,7 +429,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "IFT",
-      "sinonimos": ["mobile penetration", "penetracion movil"]
+      "sinonimos": [
+        "mobile penetration",
+        "penetracion movil"
+      ]
     },
     {
       "variable_id": "actividad_industrial_indice",
@@ -329,7 +443,10 @@
       "tipo_valor": "number",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI",
-      "sinonimos": ["industrial_activity", "actividad industrial"]
+      "sinonimos": [
+        "industrial_activity",
+        "actividad industrial"
+      ]
     },
     {
       "variable_id": "empleo_industrial_pct",
@@ -340,7 +457,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI / ENOE",
-      "sinonimos": ["industrial employment pct", "empleo industrial"]
+      "sinonimos": [
+        "industrial employment pct",
+        "empleo industrial"
+      ]
     },
     {
       "variable_id": "exportaciones_industriales_usd_millones",
@@ -351,7 +471,10 @@
       "tipo_valor": "currency",
       "agregacion_default": "sum",
       "fuente_sugerida": "INEGI",
-      "sinonimos": ["industrial_exports", "exportaciones industriales"]
+      "sinonimos": [
+        "industrial_exports",
+        "exportaciones industriales"
+      ]
     },
     {
       "variable_id": "inversion_extranjera_industria_usd_millones",
@@ -362,7 +485,10 @@
       "tipo_valor": "currency",
       "agregacion_default": "sum",
       "fuente_sugerida": "Secretaria de Economia",
-      "sinonimos": ["industrial fdi", "ied industria"]
+      "sinonimos": [
+        "industrial fdi",
+        "ied industria"
+      ]
     },
     {
       "variable_id": "poblacion_total",
@@ -373,7 +499,10 @@
       "tipo_valor": "integer",
       "agregacion_default": "sum",
       "fuente_sugerida": "INEGI / CONAPO",
-      "sinonimos": ["population", "poblacion total"]
+      "sinonimos": [
+        "population",
+        "poblacion total"
+      ]
     },
     {
       "variable_id": "densidad_poblacional",
@@ -384,7 +513,10 @@
       "tipo_valor": "number",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI",
-      "sinonimos": ["population density", "densidad"]
+      "sinonimos": [
+        "population density",
+        "densidad"
+      ]
     },
     {
       "variable_id": "edad_mediana",
@@ -395,7 +527,10 @@
       "tipo_valor": "number",
       "agregacion_default": "avg",
       "fuente_sugerida": "CONAPO",
-      "sinonimos": ["median age", "edad mediana"]
+      "sinonimos": [
+        "median age",
+        "edad mediana"
+      ]
     },
     {
       "variable_id": "urbanizacion_pct",
@@ -406,7 +541,10 @@
       "tipo_valor": "percentage",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI / CONAPO",
-      "sinonimos": ["urbanization rate", "urbanizacion"]
+      "sinonimos": [
+        "urbanization rate",
+        "urbanizacion"
+      ]
     },
     {
       "variable_id": "escolaridad_promedio_anios",
@@ -417,7 +555,187 @@
       "tipo_valor": "number",
       "agregacion_default": "avg",
       "fuente_sugerida": "INEGI",
-      "sinonimos": ["average schooling years", "escolaridad promedio"]
+      "sinonimos": [
+        "average schooling years",
+        "escolaridad promedio"
+      ]
+    },
+    {
+      "variable_id": "pobreza_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Población en situación de pobreza",
+      "descripcion": "Población en situación de pobreza (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "pobreza",
+        "poblacion en pobreza"
+      ]
+    },
+    {
+      "variable_id": "pobreza_extrema_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Población en pobreza extrema",
+      "descripcion": "Población en pobreza extrema (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "pobreza extrema"
+      ]
+    },
+    {
+      "variable_id": "vulnerable_carencias_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Población vulnerable por carencias",
+      "descripcion": "Población vulnerable por carencias (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "vulnerable por carencias"
+      ]
+    },
+    {
+      "variable_id": "no_pobre_no_vulnerable_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Población no pobre y no vulnerable",
+      "descripcion": "Población no pobre y no vulnerable (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "no pobre y no vulnerable"
+      ]
+    },
+    {
+      "variable_id": "rezago_educativo_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Rezago educativo",
+      "descripcion": "Rezago educativo (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "rezago educativo"
+      ]
+    },
+    {
+      "variable_id": "carencia_salud_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Carencia por acceso a salud",
+      "descripcion": "Carencia por acceso a salud (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "carencia salud",
+        "acceso a salud"
+      ]
+    },
+    {
+      "variable_id": "carencia_servicios_basicos_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Carencia por servicios básicos",
+      "descripcion": "Carencia por servicios básicos (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "servicios basicos",
+        "carencias de vivienda"
+      ]
+    },
+    {
+      "variable_id": "ingreso_inferior_lp_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Ingreso inferior a la línea de pobreza",
+      "descripcion": "Ingreso inferior a la línea de pobreza (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "linea de pobreza por ingresos"
+      ]
+    },
+    {
+      "variable_id": "pib_total",
+      "categoria_id": "economia",
+      "nombre": "PIB total",
+      "descripcion": "PIB total (año 2024).",
+      "unidad_base": "MDP",
+      "tipo_valor": "currency",
+      "agregacion_default": "sum",
+      "fuente_sugerida": "INEGI PIBE",
+      "sinonimos": [
+        "PIBE",
+        "producto interno bruto estatal"
+      ]
+    },
+    {
+      "variable_id": "pib_per_capita",
+      "categoria_id": "economia",
+      "nombre": "PIB per cápita",
+      "descripcion": "PIB per cápita (año 2024).",
+      "unidad_base": "MDP",
+      "tipo_valor": "currency",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI PIBE + ITER",
+      "sinonimos": [
+        "PIB per capita",
+        "PIB por habitante"
+      ]
+    },
+    {
+      "variable_id": "poblacion_edad_laboral_pct",
+      "categoria_id": "demografia",
+      "nombre": "Población en edad laboral",
+      "descripcion": "Población en edad laboral (año 2020).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ITER",
+      "sinonimos": [
+        "poblacion 15 a 64",
+        "POB15_64"
+      ]
+    },
+    {
+      "variable_id": "poblacion_economicamente_activa_pct",
+      "categoria_id": "demografia",
+      "nombre": "Población económicamente activa",
+      "descripcion": "Población económicamente activa (año 2020).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ITER",
+      "sinonimos": [
+        "PEA",
+        "poblacion economicamente activa"
+      ]
+    },
+    {
+      "variable_id": "poblacion_afiliada_imss_pct",
+      "categoria_id": "demografia",
+      "nombre": "Población afiliada al IMSS",
+      "descripcion": "Población afiliada al IMSS (año 2020).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ITER",
+      "sinonimos": [
+        "PDER_IMSS",
+        "afiliacion IMSS"
+      ]
     }
   ]
 }
