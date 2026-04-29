@@ -1,7 +1,11 @@
 # Huawei Territorial Dashboard
 
+> **Presentación / expo (ES, paso a paso):** [README-EXPOSICION.md](./README-EXPOSICION.md) — narrativa, demo, pipeline y **Git LFS**.  
+> **Pipeline analítico municipal:** [docs/PIPELINE_ANALYTICS.md](./docs/PIPELINE_ANALYTICS.md) — estandarización → clustering → Gini/Theil.  
+> **Archivos grandes:** el repo usa [Git LFS](https://git-lfs.com). Tras clonar: `git lfs install` y `git lfs pull`. Patrones en [`.gitattributes`](./.gitattributes).
+
 Aplicación local para explorar variables territoriales de México con foco en análisis comparativo por entidad.  
-La base actual combina indicadores procesados de ENDUTIH 2024, teledensidad de internet móvil y primeras métricas territoriales de cobertura.
+La base combina indicadores procesados de ENDUTIH 2024, teledensidad de internet móvil, métricas territoriales de cobertura y un **maestro municipal analítico** (`npm run data:build:analytics`).
 
 ## Qué contiene 
 
@@ -18,6 +22,7 @@ La base actual combina indicadores procesados de ENDUTIH 2024, teledensidad de i
 |-- package.json
 |-- scripts/
 |   |-- build_endutih_2024.py
+|   |-- build_municipal_analytics.py
 |   `-- build_data_quality_report.py
 |-- data/
 |   |-- raw/
@@ -147,7 +152,17 @@ Instalar dependencias:
 npm install
 ```
 
-Regenerar los datos procesados:
+### Pipeline analítico municipal (clustering, Gini, maestro por municipio)
+
+Requiere Python y dependencias del archivo `requirements-pipeline.txt` (recomendado: `python3 -m venv .venv-pipeline && .venv-pipeline/bin/pip install -r requirements-pipeline.txt`).
+
+```bash
+npm run data:build:analytics
+```
+
+### Pipeline ENDUTIH + reporte
+
+Regenerar los datos procesados ENDUTIH:
 
 ```bash
 npm run data:build:endutih

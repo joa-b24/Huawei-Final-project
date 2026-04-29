@@ -7,3 +7,10 @@ dist
 *.dbf
 *.prj
 *.cpg
+
+.venv*/
+__pycache__/
+*.pyc
+
+# Notas locales del pipeline (no versionar)
+docs/*.local.md
