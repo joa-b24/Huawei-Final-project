@@ -14,3 +14,4 @@ __pycache__/
 
 # Notas locales del pipeline (no versionar)
 docs/*.local.md
+README-EXPOSICION.md
