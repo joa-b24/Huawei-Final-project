@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Database } from "lucide-react";
 import { AppProvider, actions, useAppContext, type TabId } from "../context/AppContext";
 import { loadAppData, type AppData } from "../services/DataService";
 import type { MetricDefinition, StateMetricRecord } from "../types/dataset";
@@ -17,7 +18,6 @@ const TABS: Tab[] = [
   { id: "relaciones", label: "Impacto" },
   { id: "estructura", label: "Patrones" },
   { id: "temporal", label: "Evolución" },
-  { id: "datos", label: "Datos" },
 ];
 
 export type ImportedData = {
@@ -50,6 +50,7 @@ function mergeImport(base: AppData, imported: ImportedData): AppData {
 
 function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: ImportedData) => void }) {
   const { state, dispatch } = useAppContext();
+  const [datosOpen, setDatosOpen] = useState(false);
 
   const allStateNames = useMemo(
     () => appData.dataset.records.map((r) => r.state),
@@ -75,30 +76,43 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
       />
       <MainContent>
         <h1 className="page-title">Análisis de Indicadores Estatales</h1>
-        <TabBar
-          tabs={TABS}
-          activeTab={state.activeTab}
-          onTabChange={(id) => dispatch(actions.setTab(id as TabId))}
-        />
-        <TabPanel id="diagnostico" activeTab={state.activeTab}>
-          <DiagnosticoTab appData={appData} />
-        </TabPanel>
-        <TabPanel id="relaciones" activeTab={state.activeTab}>
-          <RelacionesTab appData={appData} />
-        </TabPanel>
-        <TabPanel id="estructura" activeTab={state.activeTab}>
-          <PhasePlaceholder
-            message="Análisis de estructura latente (PCA + Clustering) — no disponible aún."
+        <div className="tab-bar-row">
+          <TabBar
+            tabs={TABS}
+            activeTab={datosOpen ? "__none__" : state.activeTab}
+            onTabChange={(id) => { setDatosOpen(false); dispatch(actions.setTab(id as TabId)); }}
           />
-        </TabPanel>
-        <TabPanel id="temporal" activeTab={state.activeTab}>
-          <PhasePlaceholder
-            message="Series de tiempo y análisis de tendencias — no disponible aún."
-          />
-        </TabPanel>
-        <TabPanel id="datos" activeTab={state.activeTab}>
+          <button
+            className={`btn-datos${datosOpen ? " active" : ""}`}
+            onClick={() => setDatosOpen((v) => !v)}
+            type="button"
+          >
+            <Database size={14} />
+            Datos
+          </button>
+        </div>
+        {datosOpen ? (
           <DatosTab appData={appData} onImport={onImport} />
-        </TabPanel>
+        ) : (
+          <>
+            <TabPanel id="diagnostico" activeTab={state.activeTab}>
+              <DiagnosticoTab appData={appData} />
+            </TabPanel>
+            <TabPanel id="relaciones" activeTab={state.activeTab}>
+              <RelacionesTab appData={appData} />
+            </TabPanel>
+            <TabPanel id="estructura" activeTab={state.activeTab}>
+              <PhasePlaceholder
+                message="Análisis de estructura latente (PCA + Clustering) — no disponible aún."
+              />
+            </TabPanel>
+            <TabPanel id="temporal" activeTab={state.activeTab}>
+              <PhasePlaceholder
+                message="Series de tiempo y análisis de tendencias — no disponible aún."
+              />
+            </TabPanel>
+          </>
+        )}
       </MainContent>
     </AppShell>
   );

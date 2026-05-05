@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Upload, FileText } from "lucide-react";
 import { parseCsv, type ParsedRow } from "../../../lib/csvParser";
 import type { OperationType } from "../../../lib/dataStorage";
 
@@ -13,10 +14,11 @@ type Props = {
 
 const SCHEMA_HINT: Record<OperationType, string> = {
   nueva_variable: "state_code, value [, year]",
-  actualizar: "state_code, value [, year]",
-  completar: "state_code, value [, year]",
   historico: "state_code, year, value",
   municipal: "cve_mun, municipio, state_code, value [, year]",
+  completar: "state_code, value [, year]",
+  modificar: "state_code, value [, year]",
+  actualizar: "state_code, value, year",
 };
 
 export default function Step3FileUpload({ operation, variableId, onParsed, onBack, onNext, hasData }: Props) {
@@ -75,10 +77,10 @@ export default function Step3FileUpload({ operation, variableId, onParsed, onBac
         onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
       >
         {fileName ? (
-          <span className="dropzone-filename">📄 {fileName}</span>
+          <span className="dropzone-filename"><FileText size={14} /> {fileName}</span>
         ) : (
           <>
-            <span className="dropzone-icon">📂</span>
+            <span className="dropzone-icon"><Upload size={40} strokeWidth={1.5} /></span>
             <span className="dropzone-label">Arrastra tu archivo aquí o haz clic para seleccionar</span>
             <span className="dropzone-hint">Formatos: .csv · .json</span>
           </>

@@ -19,18 +19,18 @@ const CATEGORY_LABELS: Record<CategoryId, string> = {
   demografia: "Demografía",
 };
 
-const DIRECTION_LABEL: Record<string, string> = {
-  higher_better: "↑ mayor es mejor",
-  lower_better: "↓ menor es mejor",
-};
-
 export default function CatalogBrowser({ catalog, editedIds, onSelectVariable, onNewOperation }: Props) {
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState<CategoryId | "">("");
-  const [filterDir, setFilterDir] = useState<"" | "higher_better" | "lower_better">("");
+  const [filterFuente, setFilterFuente] = useState("");
 
   const categories = useMemo(
     () => Array.from(new Set(catalog.map((v) => v.categoria_id))) as CategoryId[],
+    [catalog]
+  );
+
+  const fuentes = useMemo(
+    () => Array.from(new Set(catalog.map((v) => v.fuente_sugerida).filter(Boolean))).sort(),
     [catalog]
   );
 
@@ -39,10 +39,10 @@ export default function CatalogBrowser({ catalog, editedIds, onSelectVariable, o
     return catalog.filter((v) => {
       if (q && !v.nombre.toLowerCase().includes(q) && !v.variable_id.includes(q)) return false;
       if (filterCat && v.categoria_id !== filterCat) return false;
-      if (filterDir && v.direction && v.direction !== filterDir) return false;
+      if (filterFuente && v.fuente_sugerida !== filterFuente) return false;
       return true;
     });
-  }, [catalog, search, filterCat, filterDir]);
+  }, [catalog, search, filterCat, filterFuente]);
 
   return (
     <div className="catalog-browser">
@@ -65,12 +65,13 @@ export default function CatalogBrowser({ catalog, editedIds, onSelectVariable, o
         </select>
         <select
           className="comparison-select"
-          value={filterDir}
-          onChange={(e) => setFilterDir(e.target.value as "" | "higher_better" | "lower_better")}
+          value={filterFuente}
+          onChange={(e) => setFilterFuente(e.target.value)}
         >
-          <option value="">Cualquier dirección</option>
-          <option value="higher_better">↑ Mayor es mejor</option>
-          <option value="lower_better">↓ Menor es mejor</option>
+          <option value="">Cualquier fuente</option>
+          {fuentes.map((f) => (
+            <option key={f} value={f}>{f}</option>
+          ))}
         </select>
         <div className="catalog-actions">
           <button className="btn-primary" onClick={onNewOperation} type="button">
@@ -97,7 +98,6 @@ export default function CatalogBrowser({ catalog, editedIds, onSelectVariable, o
             <th>Nombre</th>
             <th>Categoría</th>
             <th>Unidad</th>
-            <th>Dirección</th>
             <th>Fuente</th>
           </tr>
         </thead>
@@ -115,7 +115,6 @@ export default function CatalogBrowser({ catalog, editedIds, onSelectVariable, o
               </td>
               <td>{CATEGORY_LABELS[v.categoria_id] ?? v.categoria_id}</td>
               <td>{v.unidad_base}</td>
-              <td>{v.direction ? DIRECTION_LABEL[v.direction] : "—"}</td>
               <td>{v.fuente_sugerida || "—"}</td>
             </tr>
           ))}

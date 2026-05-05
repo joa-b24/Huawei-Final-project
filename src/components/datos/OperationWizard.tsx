@@ -16,12 +16,20 @@ type Props = {
 const STEP_LABELS = ["Operación", "Variable", "Archivo", "Confirmar"];
 
 export default function OperationWizard({ catalog, initialVariable, onDone }: Props) {
-  const [step, setStep] = useState(initialVariable ? 1 : 0);
+  const [step, setStep] = useState(0);
   const [operation, setOperation] = useState<OperationType | null>(null);
   const [variable, setVariable] = useState<VariableCatalogEntry | null>(initialVariable ?? null);
   const [parsedRows, setParsedRows] = useState<ParsedRow[]>([]);
   const [parsedHeaders, setParsedHeaders] = useState<string[]>([]);
 
+  // When coming from a variable click, step 1 (variable selection) is skipped.
+  function handleStep0Next() {
+    if (initialVariable) {
+      setStep(2); // skip variable selection
+    } else {
+      setStep(1);
+    }
+  }
   return (
     <div className="wizard">
       <div className="wizard-stepper">
@@ -35,11 +43,18 @@ export default function OperationWizard({ catalog, initialVariable, onDone }: Pr
         ))}
       </div>
 
+      {initialVariable && (
+        <p className="wizard-preset-var">
+          Variable: <strong>{initialVariable.nombre}</strong>
+        </p>
+      )}
+
       {step === 0 && (
         <Step1OperationType
           selected={operation}
           onChange={setOperation}
-          onNext={() => setStep(1)}
+          disableNew={!!initialVariable}
+          onNext={handleStep0Next}
         />
       )}
       {step === 1 && operation && (
@@ -57,7 +72,7 @@ export default function OperationWizard({ catalog, initialVariable, onDone }: Pr
           operation={operation}
           variableId={variable.variable_id}
           onParsed={(rows, headers) => { setParsedRows(rows); setParsedHeaders(headers); }}
-          onBack={() => setStep(1)}
+          onBack={() => setStep(initialVariable ? 0 : 1)}
           onNext={() => setStep(3)}
           hasData={parsedRows.length > 0}
         />

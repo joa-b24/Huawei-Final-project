@@ -15,10 +15,9 @@ type Props = {
 
 const OP_LABELS: Record<OperationType, string> = {
   nueva_variable: "Nueva variable",
-  historico: "Datos históricos",
-  municipal: "Granularidad municipal",
-  actualizar: "Actualizar datos",
   completar: "Completar datos",
+  modificar: "Modificar datos",
+  actualizar: "Actualizar datos",
 };
 
 function coerceRows(

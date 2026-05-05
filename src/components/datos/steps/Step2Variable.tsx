@@ -60,16 +60,16 @@ export default function Step2Variable({ operation, catalog, selected, onSelect, 
       <div className="wizard-step-body">
         <p className="wizard-step-title">Define la nueva variable</p>
         <div className="var-form">
-          <label>ID de variable <span className="required">*</span>
+          <label><span>ID de variable <span className="required">*</span></span>
             <input value={draft.variable_id} onChange={(e) => handleDraftChange("variable_id", e.target.value)}
               placeholder="ej: cobertura_fibra_pct" />
           </label>
-          <label>Nombre <span className="required">*</span>
+          <label><span>Nombre <span className="required">*</span></span>
             <input value={draft.nombre} onChange={(e) => handleDraftChange("nombre", e.target.value)}
               placeholder="ej: Cobertura de fibra óptica" />
           </label>
           <div className="var-form__row">
-            <label>Unidad <span className="required">*</span>
+            <label><span>Unidad <span className="required">*</span></span>
               <input value={draft.unidad_base} onChange={(e) => handleDraftChange("unidad_base", e.target.value)}
                 placeholder="ej: %" />
             </label>
@@ -80,17 +80,32 @@ export default function Step2Variable({ operation, catalog, selected, onSelect, 
           </div>
           <div className="var-form__row">
             <label>Categoría
-              <select value={draft.categoria_id} onChange={(e) => handleDraftChange("categoria_id", e.target.value as CategoryId)}>
-                {CATEGORIES.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
-              </select>
+              <input
+                list="cat-options"
+                value={CATEGORIES.find(c => c.id === draft.categoria_id)?.label ?? draft.categoria_id}
+                onChange={(e) => {
+                  const match = CATEGORIES.find(c => c.label === e.target.value);
+                  handleDraftChange("categoria_id", (match?.id ?? e.target.value) as CategoryId);
+                }}
+                placeholder="ej: Infraestructura digital"
+              />
+              <datalist id="cat-options">
+                {CATEGORIES.map(c => <option key={c.id} value={c.label} />)}
+              </datalist>
             </label>
             <label>Tipo de valor
-              <select value={draft.tipo_valor} onChange={(e) => handleDraftChange("tipo_valor", e.target.value as TipoValor)}>
-                <option value="percentage">Porcentaje (%)</option>
-                <option value="number">Número decimal</option>
-                <option value="integer">Entero</option>
-                <option value="currency">Moneda</option>
-              </select>
+              <input
+                list="tipo-options"
+                value={draft.tipo_valor}
+                onChange={(e) => handleDraftChange("tipo_valor", e.target.value as TipoValor)}
+                placeholder="ej: percentage"
+              />
+              <datalist id="tipo-options">
+                <option value="percentage" />
+                <option value="number" />
+                <option value="integer" />
+                <option value="currency" />
+              </datalist>
             </label>
             <label>Dirección
               <select value={draft.direction ?? "higher_better"} onChange={(e) => handleDraftChange("direction", e.target.value as MetricDirection)}>
@@ -99,11 +114,17 @@ export default function Step2Variable({ operation, catalog, selected, onSelect, 
               </select>
             </label>
             <label>Agregación
-              <select value={draft.agregacion_default} onChange={(e) => handleDraftChange("agregacion_default", e.target.value as AgregacionDefault)}>
-                <option value="avg">Promedio</option>
-                <option value="sum">Suma</option>
-                <option value="latest">Último valor</option>
-              </select>
+              <input
+                list="agr-options"
+                value={draft.agregacion_default}
+                onChange={(e) => handleDraftChange("agregacion_default", e.target.value as AgregacionDefault)}
+                placeholder="ej: avg"
+              />
+              <datalist id="agr-options">
+                <option value="avg" />
+                <option value="sum" />
+                <option value="latest" />
+              </datalist>
             </label>
           </div>
           <label>Descripción

@@ -7,8 +7,9 @@ export type OperationType =
   | "nueva_variable"
   | "historico"
   | "municipal"
-  | "actualizar"
-  | "completar";
+  | "completar"
+  | "modificar"
+  | "actualizar";
 
 export type ImportedDataEntry = {
   id: string;
