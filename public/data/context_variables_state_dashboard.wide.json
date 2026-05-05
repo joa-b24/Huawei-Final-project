@@ -1,0 +1,812 @@
+{
+  "updated_at": "2026-04-22",
+  "schema_version": "1.0.0",
+  "dataset_id": "context_variables_state_dashboard.wide",
+  "source": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
+  "metric_catalog": [
+    {
+      "variable_id": "pobreza_pct",
+      "anio": 2022,
+      "categoria_id": "bienestar_social",
+      "label": "Población en situación de pobreza",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "pobreza_extrema_pct",
+      "anio": 2022,
+      "categoria_id": "bienestar_social",
+      "label": "Población en pobreza extrema",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "vulnerable_carencias_pct",
+      "anio": 2022,
+      "categoria_id": "bienestar_social",
+      "label": "Población vulnerable por carencias",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "no_pobre_no_vulnerable_pct",
+      "anio": 2022,
+      "categoria_id": "bienestar_social",
+      "label": "Población no pobre y no vulnerable",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "rezago_educativo_pct",
+      "anio": 2022,
+      "categoria_id": "bienestar_social",
+      "label": "Rezago educativo",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "carencia_salud_pct",
+      "anio": 2022,
+      "categoria_id": "bienestar_social",
+      "label": "Carencia por acceso a salud",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "carencia_servicios_basicos_pct",
+      "anio": 2022,
+      "categoria_id": "bienestar_social",
+      "label": "Carencia por servicios básicos",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "ingreso_inferior_lp_pct",
+      "anio": 2022,
+      "categoria_id": "bienestar_social",
+      "label": "Ingreso inferior a la línea de pobreza",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "pib_total",
+      "anio": 2024,
+      "categoria_id": "economia",
+      "label": "PIB total",
+      "unidad": "MDP"
+    },
+    {
+      "variable_id": "pib_per_capita",
+      "anio": 2024,
+      "categoria_id": "economia",
+      "label": "PIB per cápita",
+      "unidad": "MDP"
+    },
+    {
+      "variable_id": "poblacion_total",
+      "anio": 2020,
+      "categoria_id": "demografia",
+      "label": "Población total",
+      "unidad": "personas"
+    },
+    {
+      "variable_id": "poblacion_edad_laboral_pct",
+      "anio": 2020,
+      "categoria_id": "demografia",
+      "label": "Población en edad laboral",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "poblacion_economicamente_activa_pct",
+      "anio": 2020,
+      "categoria_id": "demografia",
+      "label": "Población económicamente activa",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "poblacion_afiliada_imss_pct",
+      "anio": 2020,
+      "categoria_id": "demografia",
+      "label": "Población afiliada al IMSS",
+      "unidad": "%"
+    }
+  ],
+  "records": [
+    {
+      "state_code": "AGS",
+      "cve_ent": "01",
+      "estado": "Aguascalientes",
+      "region": "Bajio",
+      "metrics": {
+        "pobreza_pct": 23.7223,
+        "pobreza_extrema_pct": 1.7586,
+        "vulnerable_carencias_pct": 29.8944,
+        "no_pobre_no_vulnerable_pct": 37.1289,
+        "rezago_educativo_pct": 16.4998,
+        "carencia_salud_pct": 26.194,
+        "carencia_servicios_basicos_pct": 2.4658,
+        "ingreso_inferior_lp_pct": 32.9767,
+        "pib_total": 328087.965,
+        "pib_per_capita": 0.2301,
+        "poblacion_total": 1425607.0,
+        "poblacion_edad_laboral_pct": 66.0655,
+        "poblacion_economicamente_activa_pct": 49.588,
+        "poblacion_afiliada_imss_pct": 54.7504
+      }
+    },
+    {
+      "state_code": "BCN",
+      "cve_ent": "02",
+      "estado": "Baja California",
+      "region": "Noroeste",
+      "metrics": {
+        "pobreza_pct": 13.3708,
+        "pobreza_extrema_pct": 1.3059,
+        "vulnerable_carencias_pct": 38.0503,
+        "no_pobre_no_vulnerable_pct": 43.1717,
+        "rezago_educativo_pct": 15.547,
+        "carencia_salud_pct": 28.4101,
+        "carencia_servicios_basicos_pct": 4.0521,
+        "ingreso_inferior_lp_pct": 18.778,
+        "pib_total": 947677.009,
+        "pib_per_capita": 0.2514,
+        "poblacion_total": 3769020.0,
+        "poblacion_edad_laboral_pct": 69.9709,
+        "poblacion_economicamente_activa_pct": 53.3533,
+        "poblacion_afiliada_imss_pct": 52.9456
+      }
+    },
+    {
+      "state_code": "BCS",
+      "cve_ent": "03",
+      "estado": "Baja California Sur",
+      "region": "Noroeste",
+      "metrics": {
+        "pobreza_pct": 13.329,
+        "pobreza_extrema_pct": 0.7617,
+        "vulnerable_carencias_pct": 37.71,
+        "no_pobre_no_vulnerable_pct": 44.3967,
+        "rezago_educativo_pct": 14.1839,
+        "carencia_salud_pct": 17.3367,
+        "carencia_servicios_basicos_pct": 9.9279,
+        "ingreso_inferior_lp_pct": 17.8933,
+        "pib_total": 187152.161,
+        "pib_per_capita": 0.2344,
+        "poblacion_total": 798447.0,
+        "poblacion_edad_laboral_pct": 68.7634,
+        "poblacion_economicamente_activa_pct": 53.5139,
+        "poblacion_afiliada_imss_pct": 51.2064
+      }
+    },
+    {
+      "state_code": "CAM",
+      "cve_ent": "04",
+      "estado": "Campeche",
+      "region": "Sureste",
+      "metrics": {
+        "pobreza_pct": 45.1294,
+        "pobreza_extrema_pct": 9.643,
+        "vulnerable_carencias_pct": 27.7007,
+        "no_pobre_no_vulnerable_pct": 21.2748,
+        "rezago_educativo_pct": 20.312,
+        "carencia_salud_pct": 34.5696,
+        "carencia_servicios_basicos_pct": 34.871,
+        "ingreso_inferior_lp_pct": 51.0245,
+        "pib_total": 473399.457,
+        "pib_per_capita": 0.5099,
+        "poblacion_total": 928363.0,
+        "poblacion_edad_laboral_pct": 66.0424,
+        "poblacion_economicamente_activa_pct": 49.8304,
+        "poblacion_afiliada_imss_pct": 31.0424
+      }
+    },
+    {
+      "state_code": "COA",
+      "cve_ent": "05",
+      "estado": "Coahuila",
+      "region": "Noreste",
+      "metrics": {
+        "pobreza_pct": 18.2433,
+        "pobreza_extrema_pct": 1.7962,
+        "vulnerable_carencias_pct": 24.1203,
+        "no_pobre_no_vulnerable_pct": 47.0562,
+        "rezago_educativo_pct": 13.453,
+        "carencia_salud_pct": 19.6773,
+        "carencia_servicios_basicos_pct": 3.381,
+        "ingreso_inferior_lp_pct": 28.8235,
+        "pib_total": 922286.189,
+        "pib_per_capita": 0.2931,
+        "poblacion_total": 3146771.0,
+        "poblacion_edad_laboral_pct": 66.3138,
+        "poblacion_economicamente_activa_pct": 47.1892,
+        "poblacion_afiliada_imss_pct": 66.2808
+      }
+    },
+    {
+      "state_code": "COL",
+      "cve_ent": "06",
+      "estado": "Colima",
+      "region": "Occidente",
+      "metrics": {
+        "pobreza_pct": 20.5472,
+        "pobreza_extrema_pct": 1.2116,
+        "vulnerable_carencias_pct": 31.8597,
+        "no_pobre_no_vulnerable_pct": 40.8059,
+        "rezago_educativo_pct": 15.6373,
+        "carencia_salud_pct": 21.9358,
+        "carencia_servicios_basicos_pct": 4.783,
+        "ingreso_inferior_lp_pct": 27.3345,
+        "pib_total": 157139.889,
+        "pib_per_capita": 0.2149,
+        "poblacion_total": 731391.0,
+        "poblacion_edad_laboral_pct": 67.6123,
+        "poblacion_economicamente_activa_pct": 52.8639,
+        "poblacion_afiliada_imss_pct": 49.5281
+      }
+    },
+    {
+      "state_code": "CHP",
+      "cve_ent": "07",
+      "estado": "Chiapas",
+      "region": "Sureste",
+      "metrics": {
+        "pobreza_pct": 67.3708,
+        "pobreza_extrema_pct": 28.2125,
+        "vulnerable_carencias_pct": 21.8887,
+        "no_pobre_no_vulnerable_pct": 8.0717,
+        "rezago_educativo_pct": 31.1069,
+        "carencia_salud_pct": 66.0662,
+        "carencia_servicios_basicos_pct": 50.831,
+        "ingreso_inferior_lp_pct": 70.0396,
+        "pib_total": 389794.852,
+        "pib_per_capita": 0.0703,
+        "poblacion_total": 5543828.0,
+        "poblacion_edad_laboral_pct": 61.2731,
+        "poblacion_economicamente_activa_pct": 45.1194,
+        "poblacion_afiliada_imss_pct": 12.1339
+      }
+    },
+    {
+      "state_code": "CHH",
+      "cve_ent": "08",
+      "estado": "Chihuahua",
+      "region": "Norte",
+      "metrics": {
+        "pobreza_pct": 17.5722,
+        "pobreza_extrema_pct": 2.0961,
+        "vulnerable_carencias_pct": 30.1221,
+        "no_pobre_no_vulnerable_pct": 44.3411,
+        "rezago_educativo_pct": 16.0886,
+        "carencia_salud_pct": 21.4914,
+        "carencia_servicios_basicos_pct": 4.7382,
+        "ingreso_inferior_lp_pct": 25.5367,
+        "pib_total": 930854.91,
+        "pib_per_capita": 0.2488,
+        "poblacion_total": 3741869.0,
+        "poblacion_edad_laboral_pct": 67.1575,
+        "poblacion_economicamente_activa_pct": 49.8046,
+        "poblacion_afiliada_imss_pct": 54.6051
+      }
+    },
+    {
+      "state_code": "CMX",
+      "cve_ent": "09",
+      "estado": "Ciudad de Mexico",
+      "region": "Centro",
+      "metrics": {
+        "pobreza_pct": 23.9676,
+        "pobreza_extrema_pct": 1.7126,
+        "vulnerable_carencias_pct": 26.7409,
+        "no_pobre_no_vulnerable_pct": 41.0921,
+        "rezago_educativo_pct": 9.6995,
+        "carencia_salud_pct": 28.7459,
+        "carencia_servicios_basicos_pct": 3.3896,
+        "ingreso_inferior_lp_pct": 32.167,
+        "pib_total": 3885956.593,
+        "pib_per_capita": 0.4219,
+        "poblacion_total": 9209944.0,
+        "poblacion_edad_laboral_pct": 70.8521,
+        "poblacion_economicamente_activa_pct": 55.3745,
+        "poblacion_afiliada_imss_pct": 42.1452
+      }
+    },
+    {
+      "state_code": "DUR",
+      "cve_ent": "10",
+      "estado": "Durango",
+      "region": "Norte",
+      "metrics": {
+        "pobreza_pct": 34.3111,
+        "pobreza_extrema_pct": 6.302,
+        "vulnerable_carencias_pct": 28.1554,
+        "no_pobre_no_vulnerable_pct": 28.3619,
+        "rezago_educativo_pct": 17.868,
+        "carencia_salud_pct": 30.1584,
+        "carencia_servicios_basicos_pct": 9.6992,
+        "ingreso_inferior_lp_pct": 43.4827,
+        "pib_total": 323802.357,
+        "pib_per_capita": 0.1767,
+        "poblacion_total": 1832650.0,
+        "poblacion_edad_laboral_pct": 63.9854,
+        "poblacion_economicamente_activa_pct": 44.65,
+        "poblacion_afiliada_imss_pct": 40.6332
+      }
+    },
+    {
+      "state_code": "GUA",
+      "cve_ent": "11",
+      "estado": "Guanajuato",
+      "region": "Bajio",
+      "metrics": {
+        "pobreza_pct": 33.0343,
+        "pobreza_extrema_pct": 3.2402,
+        "vulnerable_carencias_pct": 34.0723,
+        "no_pobre_no_vulnerable_pct": 24.5415,
+        "rezago_educativo_pct": 22.8444,
+        "carencia_salud_pct": 33.1531,
+        "carencia_servicios_basicos_pct": 9.3568,
+        "ingreso_inferior_lp_pct": 41.3862,
+        "pib_total": 1170675.898,
+        "pib_per_capita": 0.1898,
+        "poblacion_total": 6166934.0,
+        "poblacion_edad_laboral_pct": 65.7089,
+        "poblacion_economicamente_activa_pct": 48.6001,
+        "poblacion_afiliada_imss_pct": 36.6318
+      }
+    },
+    {
+      "state_code": "GRO",
+      "cve_ent": "12",
+      "estado": "Guerrero",
+      "region": "Sur",
+      "metrics": {
+        "pobreza_pct": 60.3547,
+        "pobreza_extrema_pct": 22.23,
+        "vulnerable_carencias_pct": 26.2094,
+        "no_pobre_no_vulnerable_pct": 10.0681,
+        "rezago_educativo_pct": 28.8152,
+        "carencia_salud_pct": 52.7395,
+        "carencia_servicios_basicos_pct": 53.9169,
+        "ingreso_inferior_lp_pct": 63.7225,
+        "pib_total": 314019.724,
+        "pib_per_capita": 0.0887,
+        "poblacion_total": 3540685.0,
+        "poblacion_edad_laboral_pct": 61.4157,
+        "poblacion_economicamente_activa_pct": 46.1828,
+        "poblacion_afiliada_imss_pct": 14.2918
+      }
+    },
+    {
+      "state_code": "HID",
+      "cve_ent": "13",
+      "estado": "Hidalgo",
+      "region": "Centro",
+      "metrics": {
+        "pobreza_pct": 40.999,
+        "pobreza_extrema_pct": 6.7787,
+        "vulnerable_carencias_pct": 36.972,
+        "no_pobre_no_vulnerable_pct": 16.9536,
+        "rezago_educativo_pct": 19.996,
+        "carencia_salud_pct": 50.4086,
+        "carencia_servicios_basicos_pct": 24.4624,
+        "ingreso_inferior_lp_pct": 46.0745,
+        "pib_total": 454116.317,
+        "pib_per_capita": 0.1473,
+        "poblacion_total": 3082841.0,
+        "poblacion_edad_laboral_pct": 65.6366,
+        "poblacion_economicamente_activa_pct": 48.7331,
+        "poblacion_afiliada_imss_pct": 24.1401
+      }
+    },
+    {
+      "state_code": "JAL",
+      "cve_ent": "14",
+      "estado": "Jalisco",
+      "region": "Occidente",
+      "metrics": {
+        "pobreza_pct": 21.8362,
+        "pobreza_extrema_pct": 2.1237,
+        "vulnerable_carencias_pct": 37.7998,
+        "no_pobre_no_vulnerable_pct": 33.0449,
+        "rezago_educativo_pct": 20.4422,
+        "carencia_salud_pct": 37.1307,
+        "carencia_servicios_basicos_pct": 4.1523,
+        "ingreso_inferior_lp_pct": 29.1554,
+        "pib_total": 1864059.172,
+        "pib_per_capita": 0.2233,
+        "poblacion_total": 8348151.0,
+        "poblacion_edad_laboral_pct": 65.9671,
+        "poblacion_economicamente_activa_pct": 50.8383,
+        "poblacion_afiliada_imss_pct": 49.706
+      }
+    },
+    {
+      "state_code": "MEX",
+      "cve_ent": "15",
+      "estado": "Mexico",
+      "region": "Centro",
+      "metrics": {
+        "pobreza_pct": 42.8755,
+        "pobreza_extrema_pct": 5.96,
+        "vulnerable_carencias_pct": 23.4499,
+        "no_pobre_no_vulnerable_pct": 23.6014,
+        "rezago_educativo_pct": 16.3426,
+        "carencia_salud_pct": 44.1544,
+        "carencia_servicios_basicos_pct": 9.4612,
+        "ingreso_inferior_lp_pct": 52.9487,
+        "pib_total": 2313164.328,
+        "pib_per_capita": 0.1361,
+        "poblacion_total": 16992418.0,
+        "poblacion_edad_laboral_pct": 68.2879,
+        "poblacion_economicamente_activa_pct": 50.2837,
+        "poblacion_afiliada_imss_pct": 35.2121
+      }
+    },
+    {
+      "state_code": "MIC",
+      "cve_ent": "16",
+      "estado": "Michoacan",
+      "region": "Occidente",
+      "metrics": {
+        "pobreza_pct": 41.7363,
+        "pobreza_extrema_pct": 7.5261,
+        "vulnerable_carencias_pct": 36.3391,
+        "no_pobre_no_vulnerable_pct": 17.2863,
+        "rezago_educativo_pct": 28.9364,
+        "carencia_salud_pct": 51.2139,
+        "carencia_servicios_basicos_pct": 21.7857,
+        "ingreso_inferior_lp_pct": 46.3746,
+        "pib_total": 681445.83,
+        "pib_per_capita": 0.1435,
+        "poblacion_total": 4748846.0,
+        "poblacion_edad_laboral_pct": 63.6815,
+        "poblacion_economicamente_activa_pct": 48.3498,
+        "poblacion_afiliada_imss_pct": 25.4176
+      }
+    },
+    {
+      "state_code": "MOR",
+      "cve_ent": "17",
+      "estado": "Morelos",
+      "region": "Centro",
+      "metrics": {
+        "pobreza_pct": 41.0559,
+        "pobreza_extrema_pct": 5.8455,
+        "vulnerable_carencias_pct": 30.8426,
+        "no_pobre_no_vulnerable_pct": 21.3802,
+        "rezago_educativo_pct": 17.898,
+        "carencia_salud_pct": 46.4475,
+        "carencia_servicios_basicos_pct": 17.4311,
+        "ingreso_inferior_lp_pct": 47.7772,
+        "pib_total": 271218.84,
+        "pib_per_capita": 0.1376,
+        "poblacion_total": 1971520.0,
+        "poblacion_edad_laboral_pct": 66.5777,
+        "poblacion_economicamente_activa_pct": 51.6347,
+        "poblacion_afiliada_imss_pct": 31.2731
+      }
+    },
+    {
+      "state_code": "NAY",
+      "cve_ent": "18",
+      "estado": "Nayarit",
+      "region": "Occidente",
+      "metrics": {
+        "pobreza_pct": 29.3132,
+        "pobreza_extrema_pct": 6.4292,
+        "vulnerable_carencias_pct": 37.4273,
+        "no_pobre_no_vulnerable_pct": 27.266,
+        "rezago_educativo_pct": 20.3332,
+        "carencia_salud_pct": 34.0886,
+        "carencia_servicios_basicos_pct": 14.3869,
+        "ingreso_inferior_lp_pct": 35.3068,
+        "pib_total": 159749.672,
+        "pib_per_capita": 0.1293,
+        "poblacion_total": 1235456.0,
+        "poblacion_edad_laboral_pct": 64.2445,
+        "poblacion_economicamente_activa_pct": 49.3385,
+        "poblacion_afiliada_imss_pct": 37.581
+      }
+    },
+    {
+      "state_code": "NLE",
+      "cve_ent": "19",
+      "estado": "Nuevo Leon",
+      "region": "Noreste",
+      "metrics": {
+        "pobreza_pct": 16.0404,
+        "pobreza_extrema_pct": 1.0718,
+        "vulnerable_carencias_pct": 28.4383,
+        "no_pobre_no_vulnerable_pct": 45.8834,
+        "rezago_educativo_pct": 13.5155,
+        "carencia_salud_pct": 22.8339,
+        "carencia_servicios_basicos_pct": 3.8075,
+        "ingreso_inferior_lp_pct": 25.6782,
+        "pib_total": 2059995.565,
+        "pib_per_capita": 0.3561,
+        "poblacion_total": 5784442.0,
+        "poblacion_edad_laboral_pct": 68.2529,
+        "poblacion_economicamente_activa_pct": 49.4776,
+        "poblacion_afiliada_imss_pct": 62.1688
+      }
+    },
+    {
+      "state_code": "OAX",
+      "cve_ent": "20",
+      "estado": "Oaxaca",
+      "region": "Sur",
+      "metrics": {
+        "pobreza_pct": 58.4403,
+        "pobreza_extrema_pct": 20.2324,
+        "vulnerable_carencias_pct": 29.178,
+        "no_pobre_no_vulnerable_pct": 9.3981,
+        "rezago_educativo_pct": 29.1302,
+        "carencia_salud_pct": 65.7087,
+        "carencia_servicios_basicos_pct": 55.1704,
+        "ingreso_inferior_lp_pct": 61.4238,
+        "pib_total": 467374.413,
+        "pib_per_capita": 0.1131,
+        "poblacion_total": 4132148.0,
+        "poblacion_edad_laboral_pct": 62.4612,
+        "poblacion_economicamente_activa_pct": 44.1802,
+        "poblacion_afiliada_imss_pct": 14.1199
+      }
+    },
+    {
+      "state_code": "PUE",
+      "cve_ent": "21",
+      "estado": "Puebla",
+      "region": "Centro",
+      "metrics": {
+        "pobreza_pct": 54.0173,
+        "pobreza_extrema_pct": 11.4016,
+        "vulnerable_carencias_pct": 25.0899,
+        "no_pobre_no_vulnerable_pct": 14.158,
+        "rezago_educativo_pct": 21.8983,
+        "carencia_salud_pct": 48.2832,
+        "carencia_servicios_basicos_pct": 27.0781,
+        "ingreso_inferior_lp_pct": 60.7521,
+        "pib_total": 882359.631,
+        "pib_per_capita": 0.134,
+        "poblacion_total": 6583278.0,
+        "poblacion_edad_laboral_pct": 65.0261,
+        "poblacion_economicamente_activa_pct": 48.5794,
+        "poblacion_afiliada_imss_pct": 21.9561
+      }
+    },
+    {
+      "state_code": "QUE",
+      "cve_ent": "22",
+      "estado": "Queretaro",
+      "region": "Bajio",
+      "metrics": {
+        "pobreza_pct": 21.6907,
+        "pobreza_extrema_pct": 1.7179,
+        "vulnerable_carencias_pct": 36.3613,
+        "no_pobre_no_vulnerable_pct": 34.4141,
+        "rezago_educativo_pct": 17.61,
+        "carencia_salud_pct": 30.4315,
+        "carencia_servicios_basicos_pct": 7.8119,
+        "ingreso_inferior_lp_pct": 29.2247,
+        "pib_total": 621620.129,
+        "pib_per_capita": 0.2625,
+        "poblacion_total": 2368467.0,
+        "poblacion_edad_laboral_pct": 68.3432,
+        "poblacion_economicamente_activa_pct": 52.0624,
+        "poblacion_afiliada_imss_pct": 47.3413
+      }
+    },
+    {
+      "state_code": "ROO",
+      "cve_ent": "23",
+      "estado": "Quintana Roo",
+      "region": "Sureste",
+      "metrics": {
+        "pobreza_pct": 26.966,
+        "pobreza_extrema_pct": 4.1515,
+        "vulnerable_carencias_pct": 35.6751,
+        "no_pobre_no_vulnerable_pct": 31.3688,
+        "rezago_educativo_pct": 16.5229,
+        "carencia_salud_pct": 32.3707,
+        "carencia_servicios_basicos_pct": 22.4838,
+        "ingreso_inferior_lp_pct": 32.9561,
+        "pib_total": 383116.448,
+        "pib_per_capita": 0.2062,
+        "poblacion_total": 1857985.0,
+        "poblacion_edad_laboral_pct": 69.8516,
+        "poblacion_economicamente_activa_pct": 54.1887,
+        "poblacion_afiliada_imss_pct": 44.5387
+      }
+    },
+    {
+      "state_code": "SLP",
+      "cve_ent": "24",
+      "estado": "San Luis Potosi",
+      "region": "Centro",
+      "metrics": {
+        "pobreza_pct": 35.5228,
+        "pobreza_extrema_pct": 7.4127,
+        "vulnerable_carencias_pct": 28.4539,
+        "no_pobre_no_vulnerable_pct": 29.2958,
+        "rezago_educativo_pct": 20.5577,
+        "carencia_salud_pct": 34.5504,
+        "carencia_servicios_basicos_pct": 23.9259,
+        "ingreso_inferior_lp_pct": 42.2503,
+        "pib_total": 579636.262,
+        "pib_per_capita": 0.2054,
+        "poblacion_total": 2822255.0,
+        "poblacion_edad_laboral_pct": 65.1929,
+        "poblacion_economicamente_activa_pct": 48.2546,
+        "poblacion_afiliada_imss_pct": 39.5595
+      }
+    },
+    {
+      "state_code": "SIN",
+      "cve_ent": "25",
+      "estado": "Sinaloa",
+      "region": "Noroeste",
+      "metrics": {
+        "pobreza_pct": 21.6388,
+        "pobreza_extrema_pct": 1.808,
+        "vulnerable_carencias_pct": 35.5263,
+        "no_pobre_no_vulnerable_pct": 36.1653,
+        "rezago_educativo_pct": 17.0028,
+        "carencia_salud_pct": 26.5751,
+        "carencia_servicios_basicos_pct": 9.6807,
+        "ingreso_inferior_lp_pct": 28.3084,
+        "pib_total": 514385.484,
+        "pib_per_capita": 0.1699,
+        "poblacion_total": 3026943.0,
+        "poblacion_edad_laboral_pct": 66.335,
+        "poblacion_economicamente_activa_pct": 48.752,
+        "poblacion_afiliada_imss_pct": 50.1144
+      }
+    },
+    {
+      "state_code": "SON",
+      "cve_ent": "26",
+      "estado": "Sonora",
+      "region": "Noroeste",
+      "metrics": {
+        "pobreza_pct": 21.6931,
+        "pobreza_extrema_pct": 1.7072,
+        "vulnerable_carencias_pct": 32.6904,
+        "no_pobre_no_vulnerable_pct": 39.4633,
+        "rezago_educativo_pct": 14.5653,
+        "carencia_salud_pct": 24.4289,
+        "carencia_servicios_basicos_pct": 9.1916,
+        "ingreso_inferior_lp_pct": 27.8463,
+        "pib_total": 822556.904,
+        "pib_per_capita": 0.2793,
+        "poblacion_total": 2944840.0,
+        "poblacion_edad_laboral_pct": 67.2861,
+        "poblacion_economicamente_activa_pct": 49.1921,
+        "poblacion_afiliada_imss_pct": 53.635
+      }
+    },
+    {
+      "state_code": "TAB",
+      "cve_ent": "27",
+      "estado": "Tabasco",
+      "region": "Sureste",
+      "metrics": {
+        "pobreza_pct": 46.4741,
+        "pobreza_extrema_pct": 11.1566,
+        "vulnerable_carencias_pct": 33.6348,
+        "no_pobre_no_vulnerable_pct": 16.3124,
+        "rezago_educativo_pct": 17.9338,
+        "carencia_salud_pct": 44.8,
+        "carencia_servicios_basicos_pct": 43.9413,
+        "ingreso_inferior_lp_pct": 50.0527,
+        "pib_total": 605206.515,
+        "pib_per_capita": 0.2519,
+        "poblacion_total": 2402598.0,
+        "poblacion_edad_laboral_pct": 65.5728,
+        "poblacion_economicamente_activa_pct": 48.8019,
+        "poblacion_afiliada_imss_pct": 20.7602
+      }
+    },
+    {
+      "state_code": "TAM",
+      "cve_ent": "28",
+      "estado": "Tamaulipas",
+      "region": "Noreste",
+      "metrics": {
+        "pobreza_pct": 26.8227,
+        "pobreza_extrema_pct": 2.8598,
+        "vulnerable_carencias_pct": 27.7527,
+        "no_pobre_no_vulnerable_pct": 34.7248,
+        "rezago_educativo_pct": 16.0956,
+        "carencia_salud_pct": 27.9477,
+        "carencia_servicios_basicos_pct": 6.8114,
+        "ingreso_inferior_lp_pct": 37.5226,
+        "pib_total": 764735.773,
+        "pib_per_capita": 0.2168,
+        "poblacion_total": 3527735.0,
+        "poblacion_edad_laboral_pct": 67.018,
+        "poblacion_economicamente_activa_pct": 49.2434,
+        "poblacion_afiliada_imss_pct": 47.3466
+      }
+    },
+    {
+      "state_code": "TLA",
+      "cve_ent": "29",
+      "estado": "Tlaxcala",
+      "region": "Centro",
+      "metrics": {
+        "pobreza_pct": 52.52,
+        "pobreza_extrema_pct": 6.7536,
+        "vulnerable_carencias_pct": 20.9559,
+        "no_pobre_no_vulnerable_pct": 16.0953,
+        "rezago_educativo_pct": 16.1424,
+        "carencia_salud_pct": 45.2309,
+        "carencia_servicios_basicos_pct": 8.0608,
+        "ingreso_inferior_lp_pct": 62.9488,
+        "pib_total": 151512.669,
+        "pib_per_capita": 0.1128,
+        "poblacion_total": 1342977.0,
+        "poblacion_edad_laboral_pct": 65.1355,
+        "poblacion_economicamente_activa_pct": 47.5326,
+        "poblacion_afiliada_imss_pct": 24.0502
+      }
+    },
+    {
+      "state_code": "VER",
+      "cve_ent": "30",
+      "estado": "Veracruz",
+      "region": "Oriente",
+      "metrics": {
+        "pobreza_pct": 51.7324,
+        "pobreza_extrema_pct": 13.1412,
+        "vulnerable_carencias_pct": 26.7388,
+        "no_pobre_no_vulnerable_pct": 15.578,
+        "rezago_educativo_pct": 25.4997,
+        "carencia_salud_pct": 49.2191,
+        "carencia_servicios_basicos_pct": 37.3542,
+        "ingreso_inferior_lp_pct": 57.6832,
+        "pib_total": 1094822.174,
+        "pib_per_capita": 0.1358,
+        "poblacion_total": 8062579.0,
+        "poblacion_edad_laboral_pct": 65.589,
+        "poblacion_economicamente_activa_pct": 47.7666,
+        "poblacion_afiliada_imss_pct": 28.1172
+      }
+    },
+    {
+      "state_code": "YUC",
+      "cve_ent": "31",
+      "estado": "Yucatan",
+      "region": "Sureste",
+      "metrics": {
+        "pobreza_pct": 38.7726,
+        "pobreza_extrema_pct": 5.604,
+        "vulnerable_carencias_pct": 30.2348,
+        "no_pobre_no_vulnerable_pct": 24.0506,
+        "rezago_educativo_pct": 21.2201,
+        "carencia_salud_pct": 35.1273,
+        "carencia_servicios_basicos_pct": 34.7609,
+        "ingreso_inferior_lp_pct": 45.7145,
+        "pib_total": 402785.746,
+        "pib_per_capita": 0.1735,
+        "poblacion_total": 2320898.0,
+        "poblacion_edad_laboral_pct": 67.3694,
+        "poblacion_economicamente_activa_pct": 49.9929,
+        "poblacion_afiliada_imss_pct": 42.2462
+      }
+    },
+    {
+      "state_code": "ZAC",
+      "cve_ent": "32",
+      "estado": "Zacatecas",
+      "region": "Centro-Norte",
+      "metrics": {
+        "pobreza_pct": 44.2159,
+        "pobreza_extrema_pct": 5.1253,
+        "vulnerable_carencias_pct": 26.4272,
+        "no_pobre_no_vulnerable_pct": 20.5336,
+        "rezago_educativo_pct": 20.7249,
+        "carencia_salud_pct": 36.721,
+        "carencia_servicios_basicos_pct": 7.3511,
+        "ingreso_inferior_lp_pct": 53.0392,
+        "pib_total": 240511.776,
+        "pib_per_capita": 0.1483,
+        "poblacion_total": 1622138.0,
+        "poblacion_edad_laboral_pct": 62.8637,
+        "poblacion_economicamente_activa_pct": 43.2165,
+        "poblacion_afiliada_imss_pct": 32.455
+      }
+    }
+  ]
+}

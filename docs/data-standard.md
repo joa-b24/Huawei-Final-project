@@ -1,110 +1,190 @@
-# Estandar de datos territoriales
+# Estándar de datos territoriales
+**Versión:** 2.0 | **Actualizado:** 2026-05-04
 
 ## Objetivo
 
-Definir un esquema consistente para comparar estados de Mexico en dashboards, manteniendo separadas tres piezas:
+Definir un esquema consistente para ingestar, transformar y exponer datos territoriales en el dashboard, manteniendo separadas cuatro piezas:
 
-1. `Catalogo de variables`: define que significa cada indicador.
-2. `Maestro de estados`: define nombres canonicos y metadatos territoriales.
-3. `Datasets procesados`: contienen observaciones listas para analisis.
+1. **Catálogo de variables** — qué significa cada indicador.
+2. **Maestro de estados** — nombres canónicos y metadatos territoriales.
+3. **Datasets procesados** — observaciones estandarizadas listas para análisis.
+4. **Serving layer** — los archivos que el frontend realmente carga.
 
-## Diseno recomendado
+---
 
-### 1. Catalogo de variables
+## 1. Catálogo de variables
 
-Archivo recomendado: `data/catalogs/variables.catalog.json`
+**Archivo:** `data/catalogs/variables.catalog.json`
 
-Cada variable tiene:
+Cada variable tiene los campos obligatorios:
 
-- `variable_id`: nombre canonico en `snake_case`
-- `categoria_id`: una de `infraestructura_digital`, `cobertura_red`, `industria`, `contexto_territorial`
-- `nombre`
-- `descripcion`
-- `unidad_base`
-- `tipo_valor`
-- `agregacion_default`
-- `fuente_sugerida`
-- `sinonimos`
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `variable_id` | string | Nombre canónico en `snake_case` |
+| `categoria_id` | CategoryId | Ver categorías abajo |
+| `nombre` | string | Label legible para UI |
+| `descripcion` | string | Descripción completa |
+| `unidad_base` | string | `%`, `MDP`, `personas`, etc. |
+| `tipo_valor` | string | `percentage` / `number` / `integer` / `currency` |
+| `agregacion_default` | string | `avg` / `sum` / `latest` |
+| `direction` | string | `higher_better` / `lower_better` |
+| `fuente_sugerida` | string | Fuente de origen |
+| `sinonimos` | string[] | Aliases para ingesta |
 
-Esto evita ambiguedad cuando una fuente usa nombres distintos para el mismo indicador.
+El campo `direction` determina si un delta positivo se colorea en verde o rojo en la UI.
 
-### 2. Maestro de estados
+### Categorías disponibles
 
-Archivo recomendado: `data/catalogs/states.master.json`
+| categoria_id | Nombre | Descripción |
+|---|---|---|
+| `infraestructura_digital` | Infraestructura digital | Acceso y uso de dispositivos e internet |
+| `cobertura_red` | Cobertura de red | Disponibilidad y penetración de redes móviles |
+| `industria` | Industria | Actividad económica e indicadores industriales |
+| `contexto_territorial` | Contexto territorial | Condiciones demográficas y territoriales |
+| `bienestar_social` | Bienestar social | Pobreza, carencias y bienestar (CONEVAL) |
+| `economia` | Economía | PIB y actividad económica estatal |
+| `demografia` | Demografía | Estructura poblacional (INEGI ITER) |
 
-Cada estado tiene:
+---
 
-- `state_code`: clave corta canonica
-- `estado`: nombre oficial normalizado
-- `aliases`: variantes comunes para ingestion
-- `region`
-- `capital`
+## 2. Maestro de estados
 
-Esto permite que los dashboards trabajen siempre con el mismo nombre, aunque la fuente original venga con acentos, abreviaturas o variantes.
+**Archivo:** `data/catalogs/states.master.json`
 
-### 3. Dataset procesado estandar
+Cada entrada tiene:
 
-Archivo recomendado: `data/processed/territorial_observations.long.json`
+| Campo | Descripción |
+|---|---|
+| `state_code` | Clave corta canónica (ej. `JAL`, `CMX`) |
+| `cve_ent` | Clave INEGI de dos dígitos (ej. `"09"`) |
+| `estado` | Nombre oficial normalizado sin acentos |
+| `aliases` | Variantes aceptadas para ingesta |
+| `region` | Región geográfica |
+| `capital` | Capital del estado |
 
-Formato largo, un registro por observacion:
+La normalización en el frontend (`src/utils/normalization.ts`) cubre todos los aliases del maestro.
 
-- `estado`
-- `categoria`
-- `variable`
-- `valor`
-- `anio`
-- `fuente`
-- `unidad`
+---
 
-Campos opcionales utiles:
+## 3. Formatos de dataset procesado
 
-- `state_code`
-- `cobertura_geografica`
-- `notas`
-- `updated_at`
+### 3a. Formato largo (long) — estatal
 
-Este formato es el mas flexible para:
+Un registro por observación: `estado × variable × año`.
 
-- comparar categorias distintas
-- filtrar por anio
-- mostrar trazabilidad de fuente
-- pivotear despues a formato ancho para dashboards especificos
+```json
+{
+  "state_code": "JAL",
+  "cve_ent": "14",
+  "estado": "Jalisco",
+  "categoria": "infraestructura_digital",
+  "variable": "personas_usuarias_internet_pct",
+  "valor": 83.5,
+  "anio": 2024,
+  "fuente": "INEGI ENDUTIH 2024",
+  "unidad": "%"
+}
+```
 
-## Formato derivado para UI
+### 3b. Formato ancho (wide) — estatal
 
-Archivo recomendado: `data/processed/territorial_dashboard.wide.json`
+Un registro por estado con todas las métricas en un objeto `metrics`.
 
-Este formato es una vista derivada del dataset largo. Agrupa un registro por estado y deja las variables como columnas dentro de `metrics`. Es mas comodo para componentes de KPIs o graficas que esperan un solo objeto por estado.
+```json
+{
+  "state_code": "JAL",
+  "cve_ent": "14",
+  "estado": "Jalisco",
+  "region": "Occidente",
+  "anio": 2024,
+  "metrics": {
+    "personas_usuarias_internet_pct": 83.5,
+    "localidades_con_4g_garantizada_pct": 74.2
+  }
+}
+```
 
-## Convencion de nombres
+### 3c. Formato largo (long) — municipal
 
-### Categorias
+Un registro por observación: `municipio × variable × año`.
 
-- `infraestructura_digital`
-- `cobertura_red`
-- `industria`
-- `contexto_territorial`
+```json
+{
+  "cve_ent": "14",
+  "id_cvegeo": "14039",
+  "nom_mun": "Guadalajara",
+  "state_code": "JAL",
+  "estado": "Jalisco",
+  "categoria": "cobertura_red",
+  "variable": "int_pct_4g_coverage",
+  "valor": 92.3,
+  "anio": 2025,
+  "fuente": "Ookla Open Datasets",
+  "unidad": "%"
+}
+```
 
-### Variables sugeridas
+### 3d. Serie temporal
 
-- `indice_conectividad_digital`
-- `hogares_banda_ancha_fija_pct`
-- `cobertura_5g_pct`
-- `cobertura_4g_pct`
-- `penetracion_movil_pct`
-- `actividad_industrial_indice`
-- `empleo_industrial_pct`
-- `exportaciones_industriales_usd_millones`
-- `inversion_extranjera_industria_usd_millones`
-- `poblacion_total`
-- `densidad_poblacional`
-- `edad_mediana`
-- `urbanizacion_pct`
-- `escolaridad_promedio_anios`
+Un punto por año por estado, para habilitar análisis de tendencias.
 
-## Regla practica
+```json
+{
+  "state_code": "JAL",
+  "estado": "Jalisco",
+  "variable": "personas_usuarias_internet_pct",
+  "points": [
+    { "anio": 2020, "valor": 68.1 },
+    { "anio": 2022, "valor": 76.4 },
+    { "anio": 2024, "valor": 83.5 }
+  ]
+}
+```
 
-- El `catalogo` define el vocabulario.
-- El `maestro de estados` define las entidades comparables.
-- El `dataset largo` es la fuente analitica principal.
-- El `dataset ancho` se genera para consumo rapido en UI.
+---
+
+## 4. Outputs analíticos (Layer 1)
+
+Generados por `scripts/analytics/layer1_descriptive.py`. Se guardan en `data/processed/`.
+
+| Archivo | Contenido |
+|---|---|
+| `state_cards.json` | Perfil completo por estado (métricas fusionadas, overall_score) |
+| `correlations.json` | Matrices Pearson y Spearman entre todas las variables |
+| `distributions.json` | Histogramas + test Shapiro-Wilk por variable |
+| `rankings.json` | Ranking de estados por variable |
+| `outliers_iqr.json` | Valores atípicos por método IQR |
+| `gini.json` | Coeficiente de Gini por variable |
+| `univariate_stats.csv` | Estadísticos descriptivos completos |
+| `combined_data.csv` | Dataset fusionado (contexto + digital) |
+
+---
+
+## 5. Serving layer
+
+**Directorio:** `public/data/`
+
+Es el único directorio que lee el frontend. Se puebla ejecutando `scripts/publish.py`.
+**Nunca escribir directamente en `public/data/`** — siempre pasar por el pipeline.
+
+---
+
+## 6. Regla práctica de nombres
+
+- El `catálogo` define el vocabulario — si no está ahí, la variable no existe.
+- El `maestro de estados` define las entidades — usar siempre `state_code` o `cve_ent` como llave.
+- El `formato largo` es la fuente analítica principal — permite filtrar por año, fuente y categoría.
+- El `formato ancho` se genera por conveniencia para la UI — no es fuente de verdad.
+- `public/data/` es solo una copia de distribución — no editar a mano.
+
+---
+
+## 7. Convención para datos futuros
+
+| Granularidad | Formato recomendado | Llave principal |
+|---|---|---|
+| Estatal (actual) | Wide JSON por dataset | `cve_ent` |
+| Municipal | Long JSON con `id_cvegeo` | `id_cvegeo` (CVEGEO INEGI) |
+| Temporal | Array de `{anio, valor}` por estado+variable | `state_code + variable + anio` |
+| Outputs de modelos | JSON con tipo `ClusteringOutput` o `PcaStateResult` | `state_code` |
+| Métricas compuestas | Mismo formato ancho, `categoria_id: "modelo"` | `state_code` |
