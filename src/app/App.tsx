@@ -14,9 +14,9 @@ import DatosTab from "../views/DatosTab";
 
 const TABS: Tab[] = [
   { id: "diagnostico", label: "Diagnóstico" },
-  { id: "relaciones", label: "Relaciones / Impacto" },
-  { id: "estructura", label: "Estructura" },
-  { id: "temporal", label: "Temporal" },
+  { id: "relaciones", label: "Impacto" },
+  { id: "estructura", label: "Patrones" },
+  { id: "temporal", label: "Evolución" },
   { id: "datos", label: "Datos" },
 ];
 
@@ -57,7 +57,7 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
   );
 
   const allVars = useMemo(
-    () => appData.dataset.metricCatalog.map((m) => ({ id: m.id, label: m.label })),
+    () => appData.dataset.metricCatalog.map((m) => ({ id: m.id, label: m.label, category: m.category })),
     [appData.dataset.metricCatalog]
   );
 
@@ -74,6 +74,7 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
         onToggleVar={(id) => dispatch(actions.toggleVariable(id))}
       />
       <MainContent>
+        <h1 className="page-title">Análisis de Indicadores Estatales</h1>
         <TabBar
           tabs={TABS}
           activeTab={state.activeTab}

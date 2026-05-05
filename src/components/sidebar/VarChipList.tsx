@@ -1,4 +1,14 @@
-type VarItem = { id: string; label: string };
+const CATEGORY_COLORS: Record<string, string> = {
+  infraestructura_digital: "#1d4ed8",
+  cobertura_red: "#0891b2",
+  bienestar_social: "#065f46",
+  economia: "#d97706",
+  industria: "#7c3aed",
+  contexto_territorial: "#c2410c",
+  demografia: "#be185d",
+};
+
+type VarItem = { id: string; label: string; category?: string };
 
 type Props = {
   vars: VarItem[];
@@ -12,9 +22,10 @@ export default function VarChipList({ vars, activeIds, maxActive = 5, onToggle }
 
   return (
     <div className="var-chip-list">
-      {vars.map(({ id, label }) => {
+      {vars.map(({ id, label, category }) => {
         const isActive = activeIds.includes(id);
         const isDisabled = !isActive && atLimit;
+        const dotColor = category ? (CATEGORY_COLORS[category] ?? "#6b7280") : "#6b7280";
         return (
           <button
             key={id}
@@ -24,7 +35,11 @@ export default function VarChipList({ vars, activeIds, maxActive = 5, onToggle }
             aria-pressed={isActive}
             title={isDisabled ? `Máximo ${maxActive} variables activas` : label}
           >
-            <span className="var-chip__dot" aria-hidden="true" />
+            <span
+              className="var-chip__dot"
+              aria-hidden="true"
+              style={{ background: dotColor }}
+            />
             {label}
           </button>
         );

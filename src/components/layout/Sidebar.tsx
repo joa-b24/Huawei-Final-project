@@ -5,7 +5,7 @@ import StateList from "../sidebar/StateList";
 import StateSearch from "../sidebar/StateSearch";
 import VarChipList from "../sidebar/VarChipList";
 
-type VarItem = { id: string; label: string };
+type VarItem = { id: string; label: string; category?: string };
 
 type Props = {
   states: string[];
@@ -30,6 +30,7 @@ export default function Sidebar({
 }: Props) {
   const [stateQuery, setStateQuery] = useState("");
   const [varQuery, setVarQuery] = useState("");
+  const [collapsed, setCollapsed] = useState(false);
 
   const filteredStates = stateQuery
     ? states.filter((s) => s.toLowerCase().includes(stateQuery.toLowerCase()))
@@ -40,28 +41,41 @@ export default function Sidebar({
     : vars;
 
   return (
-    <aside className="layout-sidebar">
-      <div className="sidebar-logo">
-        <p className="sidebar-logo__eyebrow">Huawei</p>
-        <p className="sidebar-logo__title">Observatorio Digital</p>
-      </div>
+    <aside className={`layout-sidebar${collapsed ? " collapsed" : ""}`}>
+      <button
+        className="sidebar-toggle"
+        onClick={() => setCollapsed((c) => !c)}
+        title={collapsed ? "Expandir panel" : "Colapsar panel"}
+        type="button"
+      >
+        {collapsed ? "»" : "«"}
+      </button>
 
-      <div className="sidebar-section">
-        <p className="sidebar-label">Seleccionar estado(s)</p>
-        <StateSearch value={stateQuery} onChange={setStateQuery} placeholder="Buscar estado..." />
-        <StateList states={filteredStates} selected={selectedStates} onToggle={onToggleState} />
-      </div>
+      {!collapsed && (
+        <>
+          <div className="sidebar-logo">
+            <p className="sidebar-logo__eyebrow">Observatorio</p>
+            <p className="sidebar-logo__title">Indicadores Estatales</p>
+          </div>
 
-      <div className="sidebar-section">
-        <p className="sidebar-label">Comparar con</p>
-        <ComparisonSelect value={comparisonTarget} onChange={onComparisonChange} />
-      </div>
+          <div className="sidebar-section">
+            <p className="sidebar-label">Seleccionar estado(s)</p>
+            <StateSearch value={stateQuery} onChange={setStateQuery} placeholder="Buscar estado..." />
+            <StateList states={filteredStates} selected={selectedStates} onToggle={onToggleState} />
+          </div>
 
-      <div className="sidebar-section">
-        <p className="sidebar-label">Variables activas ({activeVarIds.length}/5)</p>
-        <StateSearch value={varQuery} onChange={setVarQuery} placeholder="Buscar variable..." />
-        <VarChipList vars={filteredVars} activeIds={activeVarIds} onToggle={onToggleVar} />
-      </div>
+          <div className="sidebar-section">
+            <p className="sidebar-label">Comparar con</p>
+            <ComparisonSelect value={comparisonTarget} onChange={onComparisonChange} />
+          </div>
+
+          <div className="sidebar-section">
+            <p className="sidebar-label">Variables activas ({activeVarIds.length}/5)</p>
+            <StateSearch value={varQuery} onChange={setVarQuery} placeholder="Buscar variable..." />
+            <VarChipList vars={filteredVars} activeIds={activeVarIds} onToggle={onToggleVar} />
+          </div>
+        </>
+      )}
     </aside>
   );
 }

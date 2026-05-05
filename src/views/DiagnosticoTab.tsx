@@ -9,6 +9,7 @@ import RankingTable from "../components/charts/RankingTable";
 import ChoroplethMap from "../components/charts/ChoroplethMap";
 import EmptyState from "../components/EmptyState";
 import InsightBox from "../components/feedback/InsightBox";
+import PhasePlaceholder from "../components/feedback/PhasePlaceholder";
 import { calcNationalMean, calcDelta, isStateOutlier, normalizeForRadar } from "../lib/stats";
 import type { RankingEntry, TipoValor } from "../types/dataStandard";
 import type { StateMetricRecord } from "../types/dataset";
@@ -208,6 +209,14 @@ export default function DiagnosticoTab({ appData }: Props) {
       <section className="panel">
         <p className="panel-title">Mapa coroplético</p>
         <ChoroplethMap />
+      </section>
+
+      <section className="panel">
+        <p className="panel-title">Distribución del ingreso — Curva de Lorenz / Gini</p>
+        <PhasePlaceholder
+          message="La curva de Lorenz y el coeficiente de Gini estarán disponibles en la Fase 3."
+          availableIn="Fase 3"
+        />
       </section>
     </div>
   );
