@@ -8,7 +8,7 @@ from pathlib import Path
 from statistics import mean, pstdev
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 REPORT_JSON_PATH = PROCESSED_DIR / "endutih_2024_data_quality_report.json"
