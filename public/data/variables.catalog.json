@@ -1,0 +1,741 @@
+{
+  "updated_at": "2026-04-22",
+  "categories": [
+    {
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Infraestructura digital",
+      "descripcion": "Capacidad fisica y acceso digital del territorio."
+    },
+    {
+      "categoria_id": "cobertura_red",
+      "nombre": "Cobertura de red",
+      "descripcion": "Disponibilidad y penetracion de redes moviles y fijas."
+    },
+    {
+      "categoria_id": "industria",
+      "nombre": "Industria",
+      "descripcion": "Actividad economica e indicadores de dinamismo industrial."
+    },
+    {
+      "categoria_id": "contexto_territorial",
+      "nombre": "Contexto territorial",
+      "descripcion": "Condiciones demograficas y territoriales para interpretacion estrategica."
+    },
+    {
+      "categoria_id": "bienestar_social",
+      "nombre": "Bienestar social",
+      "descripcion": "Indicadores de pobreza, carencias y bienestar de la poblacion."
+    },
+    {
+      "categoria_id": "economia",
+      "nombre": "Economia",
+      "descripcion": "Indicadores economicos para contextualizar el desarrollo estatal."
+    },
+    {
+      "categoria_id": "demografia",
+      "nombre": "Demografia",
+      "descripcion": "Indicadores poblacionales y estructura demografica por entidad."
+    }
+  ],
+  "variables": [
+    {
+      "variable_id": "personas_usuarias_computadora_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Personas usuarias de computadora",
+      "descripcion": "Porcentaje de personas de 6 anos o mas que usaron computadora, laptop o tablet en los ultimos tres meses.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P6_1",
+        "uso de computadora",
+        "usuarios computadora"
+      ]
+    },
+    {
+      "variable_id": "personas_usuarias_internet_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Personas usuarias de internet",
+      "descripcion": "Porcentaje de personas de 6 anos o mas que usaron internet en los ultimos tres meses.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P7_1",
+        "uso de internet",
+        "usuarios internet"
+      ]
+    },
+    {
+      "variable_id": "personas_conexion_internet_movil_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Personas con uso de internet movil",
+      "descripcion": "Porcentaje de personas que usaron internet en cualquier lugar mediante conexion movil.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P7_8_7",
+        "internet movil",
+        "uso internet movil"
+      ]
+    },
+    {
+      "variable_id": "personas_usan_redes_sociales_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Personas que usan redes sociales",
+      "descripcion": "Porcentaje de personas que usaron redes sociales en los ultimos tres meses.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P7_15",
+        "redes sociales",
+        "uso redes"
+      ]
+    },
+    {
+      "variable_id": "personas_compras_internet_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Personas que realizan compras por internet",
+      "descripcion": "Porcentaje de personas que realizaron compras por internet en los ultimos 12 meses.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P7_21",
+        "compras en linea",
+        "ecommerce"
+      ]
+    },
+    {
+      "variable_id": "personas_pagos_internet_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Personas que realizan pagos por internet",
+      "descripcion": "Porcentaje de personas que realizaron pagos por internet en los ultimos 12 meses.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P7_28",
+        "pagos digitales",
+        "pagos por internet"
+      ]
+    },
+    {
+      "variable_id": "personas_banca_electronica_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Personas que usan banca electronica",
+      "descripcion": "Porcentaje de personas que hicieron uso de la banca electronica en los ultimos tres meses.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P7_33",
+        "banca electronica",
+        "uso banca electronica"
+      ]
+    },
+    {
+      "variable_id": "personas_con_celular_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Personas con celular",
+      "descripcion": "Porcentaje de personas que disponen de celular.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P8_1",
+        "disponibilidad celular"
+      ]
+    },
+    {
+      "variable_id": "personas_usuarias_celular_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Personas usuarias de celular",
+      "descripcion": "Porcentaje de personas que usaron telefono celular en los ultimos tres meses.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P8_3",
+        "uso celular",
+        "usuarios celular"
+      ]
+    },
+    {
+      "variable_id": "personas_con_smartphone_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Personas con smartphone",
+      "descripcion": "Porcentaje de personas que usan celular inteligente.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P8_4_2",
+        "smartphone",
+        "celular inteligente"
+      ]
+    },
+    {
+      "variable_id": "personas_conexion_datos_celular_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Personas que se conectan por datos celulares",
+      "descripcion": "Porcentaje de personas que se conectan a internet mediante red celular.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P8_12_2",
+        "datos moviles",
+        "conexion datos celular"
+      ]
+    },
+    {
+      "variable_id": "teledensidad_internet_movil",
+      "categoria_id": "cobertura_red",
+      "nombre": "Teledensidad de internet movil",
+      "descripcion": "Lineas o accesos de internet movil por cada 100 habitantes, reportados por entidad.",
+      "unidad_base": "lineas por cada 100 habitantes",
+      "tipo_valor": "number",
+      "agregacion_default": "latest",
+      "fuente_sugerida": "IFT",
+      "sinonimos": [
+        "T_INTMOVIL_ITE_VA",
+        "teledensidad internet movil",
+        "internet movil por cada 100 habitantes"
+      ]
+    },
+    {
+      "variable_id": "localidades_con_cobertura_movil_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Localidades con cobertura movil",
+      "descripcion": "Porcentaje de localidades de la entidad con cobertura movil reportada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": [
+        "MOVIL",
+        "localidades con movil",
+        "cobertura movil por localidad"
+      ]
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_cobertura_movil_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Poblacion en localidades con cobertura movil",
+      "descripcion": "Porcentaje de poblacion estatal que reside en localidades con cobertura movil reportada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": [
+        "poblacion con cobertura movil",
+        "movil ponderado por poblacion"
+      ]
+    },
+    {
+      "variable_id": "localidades_con_4g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Localidades con 4G garantizada",
+      "descripcion": "Porcentaje de localidades con 4G garantizada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": [
+        "G_4G",
+        "localidades con 4G",
+        "4G garantizada"
+      ]
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_4g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Poblacion en localidades con 4G garantizada",
+      "descripcion": "Porcentaje de poblacion estatal que reside en localidades con 4G garantizada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": [
+        "poblacion con 4G",
+        "4G garantizada ponderada"
+      ]
+    },
+    {
+      "variable_id": "localidades_con_5g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Localidades con 5G garantizada",
+      "descripcion": "Porcentaje de localidades con 5G garantizada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": [
+        "G_5G",
+        "localidades con 5G",
+        "5G garantizada"
+      ]
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_5g_garantizada_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Poblacion en localidades con 5G garantizada",
+      "descripcion": "Porcentaje de poblacion estatal que reside en localidades con 5G garantizada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": [
+        "poblacion con 5G",
+        "5G garantizada ponderada"
+      ]
+    },
+    {
+      "variable_id": "hogares_en_localidades_con_internet_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Hogares en localidades con internet",
+      "descripcion": "Porcentaje de hogares estatales ubicados en localidades con internet reportado.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": [
+        "hogares con internet por localidad",
+        "INTERNET ponderado por hogares"
+      ]
+    },
+    {
+      "variable_id": "poblacion_en_localidades_con_internet_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Poblacion en localidades con internet",
+      "descripcion": "Porcentaje de poblacion estatal ubicada en localidades con internet reportado.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "BIT",
+      "sinonimos": [
+        "poblacion con internet por localidad",
+        "INTERNET ponderado por poblacion"
+      ]
+    },
+    {
+      "variable_id": "personas_usan_apps_redes_sociales_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Personas que usan apps de redes sociales",
+      "descripcion": "Porcentaje de personas que usaron aplicaciones de redes sociales en el celular.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P8_13_6",
+        "apps redes sociales",
+        "redes sociales movil"
+      ]
+    },
+    {
+      "variable_id": "personas_usan_banca_movil_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Personas que usan apps de banca movil",
+      "descripcion": "Porcentaje de personas que usaron aplicaciones de banca movil en el celular.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH",
+      "sinonimos": [
+        "P8_13_7",
+        "banca movil",
+        "apps banca movil"
+      ]
+    },
+    {
+      "variable_id": "indice_conectividad_digital",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Indice de conectividad digital",
+      "descripcion": "Indice compuesto de acceso, banda ancha y disponibilidad digital.",
+      "unidad_base": "indice",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "IFT / INEGI",
+      "sinonimos": [
+        "digital_connectivity",
+        "conectividad digital",
+        "indice de conectividad"
+      ]
+    },
+    {
+      "variable_id": "hogares_banda_ancha_fija_pct",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Hogares con banda ancha fija",
+      "descripcion": "Porcentaje de hogares con acceso a banda ancha fija.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "ENDUTIH",
+      "sinonimos": [
+        "banda ancha fija",
+        "fixed broadband households pct"
+      ]
+    },
+    {
+      "variable_id": "cobertura_5g_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Cobertura 5G",
+      "descripcion": "Cobertura estimada de 5G sobre la poblacion objetivo.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "IFT / operadores",
+      "sinonimos": [
+        "mobile_coverage_5g",
+        "5g coverage",
+        "cobertura 5g"
+      ]
+    },
+    {
+      "variable_id": "cobertura_4g_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Cobertura 4G",
+      "descripcion": "Cobertura estimada de 4G sobre la poblacion objetivo.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "IFT / operadores",
+      "sinonimos": [
+        "4g coverage",
+        "cobertura 4g"
+      ]
+    },
+    {
+      "variable_id": "penetracion_movil_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Penetracion movil",
+      "descripcion": "Penetracion estimada de servicios moviles en la poblacion.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "IFT",
+      "sinonimos": [
+        "mobile penetration",
+        "penetracion movil"
+      ]
+    },
+    {
+      "variable_id": "actividad_industrial_indice",
+      "categoria_id": "industria",
+      "nombre": "Actividad industrial",
+      "descripcion": "Indice sintetico de dinamismo industrial estatal.",
+      "unidad_base": "indice",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI",
+      "sinonimos": [
+        "industrial_activity",
+        "actividad industrial"
+      ]
+    },
+    {
+      "variable_id": "empleo_industrial_pct",
+      "categoria_id": "industria",
+      "nombre": "Empleo industrial",
+      "descripcion": "Participacion del empleo industrial en el empleo total.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI / ENOE",
+      "sinonimos": [
+        "industrial employment pct",
+        "empleo industrial"
+      ]
+    },
+    {
+      "variable_id": "exportaciones_industriales_usd_millones",
+      "categoria_id": "industria",
+      "nombre": "Exportaciones industriales",
+      "descripcion": "Exportaciones industriales estatales en millones de USD.",
+      "unidad_base": "USD millones",
+      "tipo_valor": "currency",
+      "agregacion_default": "sum",
+      "fuente_sugerida": "INEGI",
+      "sinonimos": [
+        "industrial_exports",
+        "exportaciones industriales"
+      ]
+    },
+    {
+      "variable_id": "inversion_extranjera_industria_usd_millones",
+      "categoria_id": "industria",
+      "nombre": "Inversion extranjera en industria",
+      "descripcion": "Flujo estimado de inversion extranjera directa en industria.",
+      "unidad_base": "USD millones",
+      "tipo_valor": "currency",
+      "agregacion_default": "sum",
+      "fuente_sugerida": "Secretaria de Economia",
+      "sinonimos": [
+        "industrial fdi",
+        "ied industria"
+      ]
+    },
+    {
+      "variable_id": "poblacion_total",
+      "categoria_id": "contexto_territorial",
+      "nombre": "Poblacion total",
+      "descripcion": "Poblacion total residente.",
+      "unidad_base": "personas",
+      "tipo_valor": "integer",
+      "agregacion_default": "sum",
+      "fuente_sugerida": "INEGI / CONAPO",
+      "sinonimos": [
+        "population",
+        "poblacion total"
+      ]
+    },
+    {
+      "variable_id": "densidad_poblacional",
+      "categoria_id": "contexto_territorial",
+      "nombre": "Densidad poblacional",
+      "descripcion": "Habitantes por kilometro cuadrado.",
+      "unidad_base": "hab/km2",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI",
+      "sinonimos": [
+        "population density",
+        "densidad"
+      ]
+    },
+    {
+      "variable_id": "edad_mediana",
+      "categoria_id": "contexto_territorial",
+      "nombre": "Edad mediana",
+      "descripcion": "Edad mediana de la poblacion residente.",
+      "unidad_base": "anios",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONAPO",
+      "sinonimos": [
+        "median age",
+        "edad mediana"
+      ]
+    },
+    {
+      "variable_id": "urbanizacion_pct",
+      "categoria_id": "contexto_territorial",
+      "nombre": "Urbanizacion",
+      "descripcion": "Proporcion de poblacion urbana.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI / CONAPO",
+      "sinonimos": [
+        "urbanization rate",
+        "urbanizacion"
+      ]
+    },
+    {
+      "variable_id": "escolaridad_promedio_anios",
+      "categoria_id": "contexto_territorial",
+      "nombre": "Escolaridad promedio",
+      "descripcion": "Anos promedio de escolaridad.",
+      "unidad_base": "anios",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI",
+      "sinonimos": [
+        "average schooling years",
+        "escolaridad promedio"
+      ]
+    },
+    {
+      "variable_id": "pobreza_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Población en situación de pobreza",
+      "descripcion": "Población en situación de pobreza (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "pobreza",
+        "poblacion en pobreza"
+      ]
+    },
+    {
+      "variable_id": "pobreza_extrema_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Población en pobreza extrema",
+      "descripcion": "Población en pobreza extrema (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "pobreza extrema"
+      ]
+    },
+    {
+      "variable_id": "vulnerable_carencias_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Población vulnerable por carencias",
+      "descripcion": "Población vulnerable por carencias (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "vulnerable por carencias"
+      ]
+    },
+    {
+      "variable_id": "no_pobre_no_vulnerable_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Población no pobre y no vulnerable",
+      "descripcion": "Población no pobre y no vulnerable (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "no pobre y no vulnerable"
+      ]
+    },
+    {
+      "variable_id": "rezago_educativo_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Rezago educativo",
+      "descripcion": "Rezago educativo (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "rezago educativo"
+      ]
+    },
+    {
+      "variable_id": "carencia_salud_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Carencia por acceso a salud",
+      "descripcion": "Carencia por acceso a salud (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "carencia salud",
+        "acceso a salud"
+      ]
+    },
+    {
+      "variable_id": "carencia_servicios_basicos_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Carencia por servicios básicos",
+      "descripcion": "Carencia por servicios básicos (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "servicios basicos",
+        "carencias de vivienda"
+      ]
+    },
+    {
+      "variable_id": "ingreso_inferior_lp_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Ingreso inferior a la línea de pobreza",
+      "descripcion": "Ingreso inferior a la línea de pobreza (año 2022).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "CONEVAL",
+      "sinonimos": [
+        "linea de pobreza por ingresos"
+      ]
+    },
+    {
+      "variable_id": "pib_total",
+      "categoria_id": "economia",
+      "nombre": "PIB total",
+      "descripcion": "PIB total (año 2024).",
+      "unidad_base": "MDP",
+      "tipo_valor": "currency",
+      "agregacion_default": "sum",
+      "fuente_sugerida": "INEGI PIBE",
+      "sinonimos": [
+        "PIBE",
+        "producto interno bruto estatal"
+      ]
+    },
+    {
+      "variable_id": "pib_per_capita",
+      "categoria_id": "economia",
+      "nombre": "PIB per cápita",
+      "descripcion": "PIB per cápita (año 2024).",
+      "unidad_base": "MDP",
+      "tipo_valor": "currency",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI PIBE + ITER",
+      "sinonimos": [
+        "PIB per capita",
+        "PIB por habitante"
+      ]
+    },
+    {
+      "variable_id": "poblacion_edad_laboral_pct",
+      "categoria_id": "demografia",
+      "nombre": "Población en edad laboral",
+      "descripcion": "Población en edad laboral (año 2020).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ITER",
+      "sinonimos": [
+        "poblacion 15 a 64",
+        "POB15_64"
+      ]
+    },
+    {
+      "variable_id": "poblacion_economicamente_activa_pct",
+      "categoria_id": "demografia",
+      "nombre": "Población económicamente activa",
+      "descripcion": "Población económicamente activa (año 2020).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ITER",
+      "sinonimos": [
+        "PEA",
+        "poblacion economicamente activa"
+      ]
+    },
+    {
+      "variable_id": "poblacion_afiliada_imss_pct",
+      "categoria_id": "demografia",
+      "nombre": "Población afiliada al IMSS",
+      "descripcion": "Población afiliada al IMSS (año 2020).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ITER",
+      "sinonimos": [
+        "PDER_IMSS",
+        "afiliacion IMSS"
+      ]
+    }
+  ]
+}

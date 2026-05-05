@@ -1,0 +1,262 @@
+{
+  "updated_at": "2026-04-19",
+  "country": "Mexico",
+  "states": [
+    {
+      "state_code": "AGS",
+      "cve_ent": "01",
+      "estado": "Aguascalientes",
+      "aliases": ["Aguascalientes"],
+      "region": "Bajio",
+      "capital": "Aguascalientes"
+    },
+    {
+      "state_code": "BCN",
+      "cve_ent": "02",
+      "estado": "Baja California",
+      "aliases": ["Baja California"],
+      "region": "Noroeste",
+      "capital": "Mexicali"
+    },
+    {
+      "state_code": "BCS",
+      "cve_ent": "03",
+      "estado": "Baja California Sur",
+      "aliases": ["Baja California Sur"],
+      "region": "Noroeste",
+      "capital": "La Paz"
+    },
+    {
+      "state_code": "CAM",
+      "cve_ent": "04",
+      "estado": "Campeche",
+      "aliases": ["Campeche"],
+      "region": "Sureste",
+      "capital": "San Francisco de Campeche"
+    },
+    {
+      "state_code": "COA",
+      "cve_ent": "05",
+      "estado": "Coahuila",
+      "aliases": ["Coahuila", "Coahuila de Zaragoza"],
+      "region": "Noreste",
+      "capital": "Saltillo"
+    },
+    {
+      "state_code": "COL",
+      "cve_ent": "06",
+      "estado": "Colima",
+      "aliases": ["Colima"],
+      "region": "Occidente",
+      "capital": "Colima"
+    },
+    {
+      "state_code": "CHP",
+      "cve_ent": "07",
+      "estado": "Chiapas",
+      "aliases": ["Chiapas"],
+      "region": "Sureste",
+      "capital": "Tuxtla Gutierrez"
+    },
+    {
+      "state_code": "CHH",
+      "cve_ent": "08",
+      "estado": "Chihuahua",
+      "aliases": ["Chihuahua", "Estado de Chihuahua"],
+      "region": "Norte",
+      "capital": "Chihuahua"
+    },
+    {
+      "state_code": "CMX",
+      "cve_ent": "09",
+      "estado": "Ciudad de Mexico",
+      "aliases": ["CDMX", "Ciudad de Mexico", "Ciudad de México", "Distrito Federal"],
+      "region": "Centro",
+      "capital": "Ciudad de Mexico"
+    },
+    {
+      "state_code": "DUR",
+      "cve_ent": "10",
+      "estado": "Durango",
+      "aliases": ["Durango"],
+      "region": "Norte",
+      "capital": "Victoria de Durango"
+    },
+    {
+      "state_code": "GUA",
+      "cve_ent": "11",
+      "estado": "Guanajuato",
+      "aliases": ["Guanajuato"],
+      "region": "Bajio",
+      "capital": "Guanajuato"
+    },
+    {
+      "state_code": "GRO",
+      "cve_ent": "12",
+      "estado": "Guerrero",
+      "aliases": ["Guerrero"],
+      "region": "Sur",
+      "capital": "Chilpancingo de los Bravo"
+    },
+    {
+      "state_code": "HID",
+      "cve_ent": "13",
+      "estado": "Hidalgo",
+      "aliases": ["Hidalgo"],
+      "region": "Centro",
+      "capital": "Pachuca de Soto"
+    },
+    {
+      "state_code": "JAL",
+      "cve_ent": "14",
+      "estado": "Jalisco",
+      "aliases": ["Jalisco"],
+      "region": "Occidente",
+      "capital": "Guadalajara"
+    },
+    {
+      "state_code": "MEX",
+      "cve_ent": "15",
+      "estado": "Mexico",
+      "aliases": ["Estado de Mexico", "México", "Mexico"],
+      "region": "Centro",
+      "capital": "Toluca de Lerdo"
+    },
+    {
+      "state_code": "MIC",
+      "cve_ent": "16",
+      "estado": "Michoacan",
+      "aliases": ["Michoacan", "Michoacán", "Michoacan de Ocampo"],
+      "region": "Occidente",
+      "capital": "Morelia"
+    },
+    {
+      "state_code": "MOR",
+      "cve_ent": "17",
+      "estado": "Morelos",
+      "aliases": ["Morelos"],
+      "region": "Centro",
+      "capital": "Cuernavaca"
+    },
+    {
+      "state_code": "NAY",
+      "cve_ent": "18",
+      "estado": "Nayarit",
+      "aliases": ["Nayarit"],
+      "region": "Occidente",
+      "capital": "Tepic"
+    },
+    {
+      "state_code": "NLE",
+      "cve_ent": "19",
+      "estado": "Nuevo Leon",
+      "aliases": ["Nuevo Leon", "Nuevo León", "N.L."],
+      "region": "Noreste",
+      "capital": "Monterrey"
+    },
+    {
+      "state_code": "OAX",
+      "cve_ent": "20",
+      "estado": "Oaxaca",
+      "aliases": ["Oaxaca"],
+      "region": "Sur",
+      "capital": "Oaxaca de Juarez"
+    },
+    {
+      "state_code": "PUE",
+      "cve_ent": "21",
+      "estado": "Puebla",
+      "aliases": ["Puebla"],
+      "region": "Centro",
+      "capital": "Puebla de Zaragoza"
+    },
+    {
+      "state_code": "QUE",
+      "cve_ent": "22",
+      "estado": "Queretaro",
+      "aliases": ["Queretaro", "Querétaro", "Queretaro de Arteaga"],
+      "region": "Bajio",
+      "capital": "Santiago de Queretaro"
+    },
+    {
+      "state_code": "ROO",
+      "cve_ent": "23",
+      "estado": "Quintana Roo",
+      "aliases": ["Quintana Roo"],
+      "region": "Sureste",
+      "capital": "Chetumal"
+    },
+    {
+      "state_code": "SLP",
+      "cve_ent": "24",
+      "estado": "San Luis Potosi",
+      "aliases": ["San Luis Potosi", "San Luis Potosí"],
+      "region": "Centro",
+      "capital": "San Luis Potosi"
+    },
+    {
+      "state_code": "SIN",
+      "cve_ent": "25",
+      "estado": "Sinaloa",
+      "aliases": ["Sinaloa"],
+      "region": "Noroeste",
+      "capital": "Culiacan Rosales"
+    },
+    {
+      "state_code": "SON",
+      "cve_ent": "26",
+      "estado": "Sonora",
+      "aliases": ["Sonora"],
+      "region": "Noroeste",
+      "capital": "Hermosillo"
+    },
+    {
+      "state_code": "TAB",
+      "cve_ent": "27",
+      "estado": "Tabasco",
+      "aliases": ["Tabasco"],
+      "region": "Sureste",
+      "capital": "Villahermosa"
+    },
+    {
+      "state_code": "TAM",
+      "cve_ent": "28",
+      "estado": "Tamaulipas",
+      "aliases": ["Tamaulipas"],
+      "region": "Noreste",
+      "capital": "Ciudad Victoria"
+    },
+    {
+      "state_code": "TLA",
+      "cve_ent": "29",
+      "estado": "Tlaxcala",
+      "aliases": ["Tlaxcala"],
+      "region": "Centro",
+      "capital": "Tlaxcala de Xicohtencatl"
+    },
+    {
+      "state_code": "VER",
+      "cve_ent": "30",
+      "estado": "Veracruz",
+      "aliases": ["Veracruz", "Veracruz de Ignacio de la Llave"],
+      "region": "Oriente",
+      "capital": "Xalapa"
+    },
+    {
+      "state_code": "YUC",
+      "cve_ent": "31",
+      "estado": "Yucatan",
+      "aliases": ["Yucatan", "Yucatán"],
+      "region": "Sureste",
+      "capital": "Merida"
+    },
+    {
+      "state_code": "ZAC",
+      "cve_ent": "32",
+      "estado": "Zacatecas",
+      "aliases": ["Zacatecas"],
+      "region": "Centro-Norte",
+      "capital": "Zacatecas"
+    }
+  ]
+}

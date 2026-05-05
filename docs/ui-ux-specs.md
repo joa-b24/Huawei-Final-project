@@ -1,5 +1,5 @@
 # UI/UX Specifications — Observatorio de Indicadores por Estado
-**Versión:** 1.0 | **Fecha:** 2026-05-03
+**Versión:** 2.0 | **Actualizado:** 2026-05-04
 
 ---
 

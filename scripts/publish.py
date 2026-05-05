@@ -15,6 +15,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+CATALOGS_DIR = PROJECT_ROOT / "data" / "catalogs"
 PUBLIC_DIR = PROJECT_ROOT / "public" / "data"
 
 # Mapa: archivo fuente en data/processed/ → nombre destino en public/data/.
@@ -39,9 +40,26 @@ def publish(dry_run: bool = False) -> None:
         PUBLIC_DIR.mkdir(parents=True, exist_ok=True)
 
     ok, missing = 0, 0
+
+    # Processed outputs
     for src_name, dst_name in PUBLISH_MAP.items():
         src = PROCESSED_DIR / src_name
         dst = PUBLIC_DIR / dst_name
+        if not src.exists():
+            print(f"  [MISSING] {src.relative_to(PROJECT_ROOT)}")
+            missing += 1
+            continue
+        if dry_run:
+            print(f"  [dry-run] {src.relative_to(PROJECT_ROOT)} -> {dst.relative_to(PROJECT_ROOT)}")
+        else:
+            shutil.copy2(src, dst)
+            print(f"  [ok]      {src.relative_to(PROJECT_ROOT)} -> {dst.relative_to(PROJECT_ROOT)}")
+        ok += 1
+
+    # Catalog files (served directly from data/catalogs/)
+    for catalog_name in ("variables.catalog.json", "states.master.json"):
+        src = CATALOGS_DIR / catalog_name
+        dst = PUBLIC_DIR / catalog_name
         if not src.exists():
             print(f"  [MISSING] {src.relative_to(PROJECT_ROOT)}")
             missing += 1

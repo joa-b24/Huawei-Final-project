@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AppProvider, actions, useAppContext, type TabId } from "../context/AppContext";
 import { loadAppData, type AppData } from "../services/DataService";
+import type { MetricDefinition, StateMetricRecord } from "../types/dataset";
 import AppShell from "../components/layout/AppShell";
 import Sidebar from "../components/layout/Sidebar";
 import MainContent from "../components/layout/MainContent";
@@ -9,15 +10,45 @@ import TabPanel from "../components/layout/TabPanel";
 import PhasePlaceholder from "../components/feedback/PhasePlaceholder";
 import DiagnosticoTab from "../views/DiagnosticoTab";
 import RelacionesTab from "../views/RelacionesTab";
+import DatosTab from "../views/DatosTab";
 
 const TABS: Tab[] = [
   { id: "diagnostico", label: "Diagnóstico" },
   { id: "relaciones", label: "Relaciones / Impacto" },
   { id: "estructura", label: "Estructura" },
   { id: "temporal", label: "Temporal" },
+  { id: "datos", label: "Datos" },
 ];
 
-function Dashboard({ appData }: { appData: AppData }) {
+export type ImportedData = {
+  records: StateMetricRecord[];
+  newMetrics: MetricDefinition[];
+};
+
+function mergeImport(base: AppData, imported: ImportedData): AppData {
+  const existingCodes = new Set(base.dataset.records.map((r) => r.stateCode ?? r.state));
+  const newRecords = imported.records.filter(
+    (r) => !existingCodes.has(r.stateCode ?? r.state)
+  );
+  const mergedRecords = base.dataset.records.map((r) => {
+    const patch = imported.records.find(
+      (ir) => (ir.stateCode ?? ir.state) === (r.stateCode ?? r.state)
+    );
+    return patch ? { ...r, metrics: { ...r.metrics, ...patch.metrics } } : r;
+  });
+  const metricIds = new Set(base.dataset.metricCatalog.map((m) => m.id));
+  const newMetrics = imported.newMetrics.filter((m) => !metricIds.has(m.id));
+  return {
+    ...base,
+    dataset: {
+      ...base.dataset,
+      records: [...mergedRecords, ...newRecords],
+      metricCatalog: [...base.dataset.metricCatalog, ...newMetrics],
+    },
+  };
+}
+
+function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: ImportedData) => void }) {
   const { state, dispatch } = useAppContext();
 
   const allStateNames = useMemo(
@@ -66,6 +97,9 @@ function Dashboard({ appData }: { appData: AppData }) {
             availableIn="Fase 4"
           />
         </TabPanel>
+        <TabPanel id="datos" activeTab={state.activeTab}>
+          <DatosTab appData={appData} onImport={onImport} />
+        </TabPanel>
       </MainContent>
     </AppShell>
   );
@@ -73,6 +107,7 @@ function Dashboard({ appData }: { appData: AppData }) {
 
 export default function App() {
   const [appData, setAppData] = useState<AppData | null>(null);
+  const [importedData, setImportedData] = useState<ImportedData | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -81,17 +116,22 @@ export default function App() {
       .catch((err) => setLoadError(String(err)));
   }, []);
 
+  const mergedAppData = useMemo(
+    () => (appData && importedData ? mergeImport(appData, importedData) : appData),
+    [appData, importedData]
+  );
+
   if (loadError) {
     return <div className="app-shell loading">Error al cargar datos: {loadError}</div>;
   }
 
-  if (!appData) {
+  if (!mergedAppData) {
     return <div className="app-shell loading">Cargando dashboard...</div>;
   }
 
   return (
     <AppProvider>
-      <Dashboard appData={appData} />
+      <Dashboard appData={mergedAppData} onImport={setImportedData} />
     </AppProvider>
   );
 }

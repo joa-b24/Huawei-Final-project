@@ -31,7 +31,7 @@ export type VariableCatalogEntry = {
   unidad_base: string;
   tipo_valor: TipoValor;
   agregacion_default: AgregacionDefault;
-  direction: MetricDirection;
+  direction?: MetricDirection;
   fuente_sugerida: string;
   sinonimos: string[];
 };

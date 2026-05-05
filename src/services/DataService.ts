@@ -5,6 +5,7 @@ import type {
   OutlierEntry,
   RankingEntry,
   StateCard,
+  VariableCatalogEntry,
 } from "../types/dataStandard";
 import type { DashboardDataset, MetricDefinition, StateMetricRecord } from "../types/dataset";
 
@@ -19,6 +20,7 @@ export type AppData = {
   distributions: Record<string, DistributionEntry>;
   rankings: Record<string, RankingEntry[]>;
   outliers: Record<string, OutlierEntry>;
+  variablesCatalog: VariableCatalogEntry[];
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -149,7 +151,7 @@ export async function loadAppData(): Promise<AppData> {
   const EMPTY_CONTEXT = { metric_catalog: [], records: [], source: "", updated_at: "" };
   const EMPTY_CORRELATIONS: CorrelationsPayload = { pearson: { variables: [], matrix: [], note: "" }, spearman: { variables: [], matrix: [], note: "" } };
 
-  const [endutih, context, stateCards, correlations, distributions, rankings, outliers] =
+  const [endutih, context, stateCards, correlations, distributions, rankings, outliers, catalogPayload] =
     await Promise.all([
       fetchJson<any>("/data/endutih_2024_state_dashboard.wide.json"),
       fetchJsonOptional<any>("/data/context_variables_state_dashboard.wide.json", EMPTY_CONTEXT),
@@ -158,6 +160,7 @@ export async function loadAppData(): Promise<AppData> {
       fetchJsonOptional<Record<string, DistributionEntry>>("/data/distributions.json", {}),
       fetchJsonOptional<Record<string, RankingEntry[]>>("/data/rankings.json", {}),
       fetchJsonOptional<Record<string, OutlierEntry>>("/data/outliers_iqr.json", {}),
+      fetchJsonOptional<{ variables: VariableCatalogEntry[] }>("/data/variables.catalog.json", { variables: [] }),
     ]);
 
   return {
@@ -167,5 +170,6 @@ export async function loadAppData(): Promise<AppData> {
     distributions,
     rankings,
     outliers,
+    variablesCatalog: catalogPayload.variables,
   };
 }
