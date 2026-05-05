@@ -27,7 +27,7 @@ export default function ComparisonRadarChart({ stateData, nationalValues, variab
   }
 
   const data = variables.map((v) => ({
-    axis: v.label.length > 22 ? v.label.slice(0, 22) + "…" : v.label,
+    axis: v.label.length > 28 ? v.label.slice(0, 28) + "…" : v.label,
     Nacional: nationalValues[v.id] ?? 0,
     ...Object.fromEntries(stateData.map((s) => [s.name, s.values[v.id] ?? 0])),
   }));

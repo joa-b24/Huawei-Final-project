@@ -88,14 +88,12 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
         </TabPanel>
         <TabPanel id="estructura" activeTab={state.activeTab}>
           <PhasePlaceholder
-            message="Análisis de estructura latente (PCA + Clustering) disponible en la Fase 2."
-            availableIn="Fase 2"
+            message="Análisis de estructura latente (PCA + Clustering) — no disponible aún."
           />
         </TabPanel>
         <TabPanel id="temporal" activeTab={state.activeTab}>
           <PhasePlaceholder
-            message="Series de tiempo y análisis de tendencias disponibles en la Fase 4."
-            availableIn="Fase 4"
+            message="Series de tiempo y análisis de tendencias — no disponible aún."
           />
         </TabPanel>
         <TabPanel id="datos" activeTab={state.activeTab}>

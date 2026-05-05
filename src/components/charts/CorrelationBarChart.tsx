@@ -25,7 +25,7 @@ export default function CorrelationBarChart({ rows, significanceThreshold = 0.05
     .slice(0, maxRows);
 
   const data = sorted.map((row) => ({
-    label: row.label.length > 30 ? row.label.slice(0, 30) + "…" : row.label,
+    label: row.label.length > 36 ? row.label.slice(0, 36) + "…" : row.label,
     r: row.r,
     pValue: row.pValue,
     significant: row.pValue === undefined || row.pValue < significanceThreshold,

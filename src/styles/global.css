@@ -676,7 +676,7 @@ select {
    BoxplotPanel
 ───────────────────────────────────────────────────────────────────────────── */
 .boxplot-panel { display: flex; flex-direction: column; gap: 20px; }
-.boxplot-row { display: grid; grid-template-columns: 160px 1fr; gap: 16px; align-items: center; }
+.boxplot-row { display: grid; grid-template-columns: 200px 1fr; gap: 16px; align-items: center; }
 .boxplot-label { font-size: 12px; font-weight: 600; color: var(--text-2); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -745,6 +745,11 @@ select {
 /* ══════════════════════════════════════════════════════════
    Tab Datos — Catálogo y Wizard de importación
    ══════════════════════════════════════════════════════════ */
+
+/* Correlation variable selectors */
+.corr-var-selectors { display: flex; gap: 16px; margin-bottom: 16px; }
+.corr-var-selector { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.corr-var-selector__label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); }
 
 /* Catalog browser */
 .catalog-browser { display: flex; flex-direction: column; gap: 16px; }

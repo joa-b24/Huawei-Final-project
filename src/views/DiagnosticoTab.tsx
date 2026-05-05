@@ -214,8 +214,7 @@ export default function DiagnosticoTab({ appData }: Props) {
       <section className="panel">
         <p className="panel-title">Distribución del ingreso — Curva de Lorenz / Gini</p>
         <PhasePlaceholder
-          message="La curva de Lorenz y el coeficiente de Gini estarán disponibles en la Fase 3."
-          availableIn="Fase 3"
+          message="Curva de Lorenz y coeficiente de Gini — no disponible aún."
         />
       </section>
     </div>

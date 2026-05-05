@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import type { AppData } from "../services/DataService";
 import CorrelationBarChart from "../components/charts/CorrelationBarChart";
@@ -41,20 +41,28 @@ export default function RelacionesTab({ appData }: Props) {
     [stateCards, dataset.records]
   );
 
-  const [xVarId, yVarId] = activeVariableIds;
+  const [selectedX, setSelectedX] = useState<string | null>(null);
+  const [selectedY, setSelectedY] = useState<string | null>(null);
+
+  const xVarId = selectedX && activeVariableIds.includes(selectedX)
+    ? selectedX
+    : activeVariableIds[0] ?? null;
+  const yVarId = selectedY && activeVariableIds.includes(selectedY) && selectedY !== xVarId
+    ? selectedY
+    : activeVariableIds.find((id) => id !== xVarId) ?? null;
 
   const corrRows = useMemo(() => {
-    if (!xVarId || !correlations.pearson.variables.length) return [];
+    if (!yVarId || !correlations.pearson.variables.length) return [];
     const { variables, matrix } = correlations.pearson;
-    const xIdx = variables.indexOf(xVarId);
-    if (xIdx === -1) return [];
+    const refIdx = variables.indexOf(yVarId);
+    if (refIdx === -1) return [];
     const n = dataset.records.length;
     return activeVariableIds
-      .filter((id) => id !== xVarId)
+      .filter((id) => id !== yVarId)
       .map((id) => {
-        const yIdx = variables.indexOf(id);
+        const idx = variables.indexOf(id);
         const r =
-          yIdx !== -1 && Array.isArray(matrix[xIdx]) ? (matrix[xIdx] as number[])[yIdx] : NaN;
+          idx !== -1 && Array.isArray(matrix[refIdx]) ? (matrix[refIdx] as number[])[idx] : NaN;
         return {
           variableId: id,
           label: dataset.metricCatalog.find((m) => m.id === id)?.label ?? id,
@@ -63,7 +71,7 @@ export default function RelacionesTab({ appData }: Props) {
         };
       })
       .filter((row) => isFinite(row.r));
-  }, [xVarId, activeVariableIds, correlations, dataset]);
+  }, [yVarId, activeVariableIds, correlations, dataset]);
 
   const scatterData = useMemo(() => {
     if (!xVarId || !yVarId) return [];
@@ -84,8 +92,8 @@ export default function RelacionesTab({ appData }: Props) {
     return { label: m?.label ?? varId, unit: m?.unit ?? "" };
   };
 
-  const { label: xLabel, unit: xUnit } = getLabelAndUnit(xVarId);
-  const { label: yLabel, unit: yUnit } = getLabelAndUnit(yVarId);
+  const { label: xLabel, unit: xUnit } = getLabelAndUnit(xVarId ?? undefined);
+  const { label: yLabel, unit: yUnit } = getLabelAndUnit(yVarId ?? undefined);
 
   const boxplotVars = useMemo(
     () =>
@@ -114,7 +122,6 @@ export default function RelacionesTab({ appData }: Props) {
   );
 
   const hasCorrData = correlations.pearson.variables.length > 0;
-  const shortLabel = (s: string, n = 32) => (s.length > n ? s.slice(0, n) + "…" : s);
 
   return (
     <div className="tab-content">
@@ -125,9 +132,37 @@ export default function RelacionesTab({ appData }: Props) {
       )}
 
       {activeVariableIds.length >= 2 && (
+        <>
+          <div className="corr-var-selectors">
+            <div className="corr-var-selector">
+              <span className="corr-var-selector__label">Eje Y — vertical</span>
+              <select
+                className="comparison-select"
+                value={yVarId ?? ""}
+                onChange={(e) => setSelectedY(e.target.value)}
+              >
+                {activeVariableIds.map((id) => (
+                  <option key={id} value={id}>{getLabelAndUnit(id).label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="corr-var-selector">
+              <span className="corr-var-selector__label">Eje X — horizontal</span>
+              <select
+                className="comparison-select"
+                value={xVarId ?? ""}
+                onChange={(e) => setSelectedX(e.target.value)}
+              >
+                {activeVariableIds.map((id) => (
+                  <option key={id} value={id}>{getLabelAndUnit(id).label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
         <div className="two-col">
           <section className="panel">
-            <p className="panel-title">Correlaciones con: {shortLabel(xLabel, 40)}</p>
+            <p className="panel-title">Correlaciones con: {yLabel}</p>
             {corrRows.length > 0 ? (
               <CorrelationBarChart rows={corrRows} />
             ) : hasCorrData ? (
@@ -144,9 +179,7 @@ export default function RelacionesTab({ appData }: Props) {
           </section>
 
           <section className="panel">
-            <p className="panel-title">
-              {shortLabel(xLabel, 28)} vs {shortLabel(yLabel, 28)}
-            </p>
+            <p className="panel-title">{xLabel} vs {yLabel}</p>
             <PairScatterChart
               data={scatterData}
               xLabel={xLabel}
@@ -157,6 +190,7 @@ export default function RelacionesTab({ appData }: Props) {
             />
           </section>
         </div>
+        </>
       )}
 
       {activeVariableIds.length > 0 && (
