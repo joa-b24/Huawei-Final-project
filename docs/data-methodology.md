@@ -1,5 +1,5 @@
 # Metodología de Transformación y Validación
-**Versión:** 2.0 | **Actualizado:** 2026-05-04
+**Versión:** 2.1 | **Actualizado:** 2026-05-06
 
 Este proyecto no usa los archivos fuente de forma directa en la interfaz.
 Antes de llegar al dashboard, los datos pasan por tres capas: ETL, Analytics y Publish.
@@ -66,12 +66,23 @@ porcentaje = (Σ FAC_PER en respuestas positivas por entidad) / (Σ FAC_PER tota
 Fusiona CONEVAL 2022, INEGI PIBE e INEGI ITER 2020.
 
 - Normalización de nombres de estados con `states.master.json` usando la función `normalize()` (elimina acentos, lowercase).
-- `pib_per_capita` se calcula dividiendo `pib_total` / `poblacion_total`.
+- `pib_per_capita` se calcula como `(pib_total × 1,000) / poblacion_total`. El factor 1,000 convierte de MDP (millones de pesos) a miles de pesos por persona, dando la unidad final **k MXN**.
 - Los porcentajes de población (edad laboral, PEA, IMSS) se calculan sobre `poblacion_total`.
 
 **Outputs:** `data/processed/context_variables_state_dashboard.wide.json` + `.long.json`
 
-### 3.3 Cobertura de red Ookla — `scripts/etl/build_cobertura_red.py`
+### 3.3 GeoJSON estatal — `scripts/etl/build_geojson.py`
+
+Convierte el shapefile `data/raw/00ent.shp` (INEGI Marco Geoestadístico Nacional, proyección LCC ITRF2008) a GeoJSON en WGS84 listo para el mapa coroplético del frontend.
+
+- Reproyección de LCC metros a lon/lat (EPSG:4326) con `pyproj`.
+- Simplificación de geometría en dos pasos: filtro de distancia radial + Douglas-Peucker, con tolerancia `0.001°` (~100 m). Reduce el tamaño del archivo sin pérdida visual apreciable a escala estatal.
+- Anillos con bounding box menor a `0.05°` en ambas dimensiones se descartan (islas pequeñas irrelevantes).
+- Join key: campo `CVEGEO` del shapefile ↔ `cve_ent` del dataset (`"01"` … `"32"`).
+
+**Output:** `data/processed/estados.geojson`
+
+### 3.4 Cobertura de red Ookla — `scripts/etl/build_cobertura_red.py`
 
 Geodatos de velocidad móvil a nivel hexágono.
 
@@ -147,18 +158,15 @@ npm run pipeline:quality
 ## 8. Cómo correr el pipeline completo
 
 ```bash
-# Opción 1: todo en un comando
-npm run pipeline:full
+# ETL por fuente
+npm run data:build:endutih      # ENDUTIH 2024 + cobertura de red
+npm run data:build:context      # Variables de contexto (CONEVAL + PIBE + ITER)
+npm run data:build:geojson      # GeoJSON estatal (requiere pyproj instalado)
+npm run data:build:analytics    # distribuciones, correlaciones, rankings, outliers
+npm run data:publish            # copia data/processed/ → public/data/
 
-# Opción 2: paso a paso (permite verificar entre etapas)
-npm run pipeline:endutih
-npm run pipeline:context
-npm run pipeline:cobertura
-npm run pipeline:analytics
-npm run pipeline:publish
-
-# Solo el reporte de calidad
-npm run pipeline:quality
+# Reporte de calidad
+npm run data:report:endutih
 ```
 
 Los archivos intermedios quedan en `data/processed/`. Solo `public/data/` alimenta el frontend.

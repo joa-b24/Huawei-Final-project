@@ -12,7 +12,9 @@
     "data:report:endutih": "python3 scripts/build_data_quality_report.py",
     "data:build:all": "python3 scripts/build_endutih_2024.py && python3 scripts/build_data_quality_report.py",
     "data:build:analytics": "python3 scripts/build_municipal_analytics.py",
-    "data:build:geojson": "python3 scripts/etl/build_geojson.py"
+    "data:build:context": "python3 scripts/etl/build_context_variables.py",
+    "data:build:geojson": "python3 scripts/etl/build_geojson.py",
+    "data:publish": "python3 scripts/publish.py"
   },
   "dependencies": {
     "lucide-react": "^1.14.0",

@@ -1,5 +1,5 @@
 # UI/UX Specifications — Observatorio de Indicadores por Estado
-**Versión:** 2.0 | **Actualizado:** 2026-05-04
+**Versión:** 2.1 | **Actualizado:** 2026-05-06
 
 ---
 
@@ -51,14 +51,8 @@
 │                           │                          │
 │ [Logo / Título]           │ [Header]                 │
 │                           │ [Tab Bar]                │
-│ Seleccionar estado(s)     │ [Tab Content]            │
-│ └─ search input           │                          │
-│ └─ state list             │                          │
-│                           │                          │
-│ Comparar con              │                          │
-│ └─ select (Nacional /     │                          │
-│    Cluster / Región /     |                          |
-|    Estado (s)   )         │                          │
+│ Estado principal          │ [Tab Content]            │
+│ └─ typeahead (1 estado)   │                          │
 │                           │                          │
 │ Variables activas         │                          │
 │ └─ search input           │                          │
@@ -73,19 +67,12 @@
 
 ## 3. Componentes del Sidebar
 
-### 3.1 `StateSearch` + `StateList`
-- Input de búsqueda filtra la lista en tiempo real (cliente, sin API calls)
-- Lista scrollable con máximo `200px` de altura
-- Selección múltiple: click togglea. Estado seleccionado: fondo `--blue`, texto blanco, bold
-- Estado no seleccionado: hover `--blue-light`
+### 3.1 `StateTypeahead`
+- Input de búsqueda filtra sugerencias en tiempo real (máx. 8 resultados).
+- Selección de un único estado primario (`primaryState`). El estado seleccionado aparece como badge azul con botón `×` para deseleccionar.
 - **Dato esperado:** array de nombres de estado desde `state_cards.json`.
 
-### 3.2 `ComparisonSelect`
-- `<select>` con opciones: Nacional, Cluster, Región (Norte/Centro/Sur)
-- **Dato esperado:** el promedio nacional se calcula como media simple de los 32 estados. Los clusters se definen en Fase 2. Por ahora (v.1.0) solo *Nacional"* es funcional.
-- Si el usuario elige una opción no disponible aún → mostrar tooltip.
-
-### 3.3 `VarChipList`
+### 3.2 `VarChipList`
 - Lista de variables disponibles como chips con checkbox
 - Máximo 5 activas simultáneamente (evita sobrecarga visual en charts de araña/radar)
 - Variables activas por defecto: las 5 más relevantes según `univariate_stats.csv` (mayor varianza)
@@ -105,35 +92,32 @@ Cada card muestra:
 
 **Las 4 métricas son configurables** según las variables activas del sidebar.
 
-#### 4.1.2 `ComparisonRadarChart` (estado vs. ...)
-- Spider/radar de 5–6 ejes (variables activas)
-- Dos áreas: estado seleccionado (azul sólido) + nacional (gris, stroke)
-- Si hay múltiples estados seleccionados → un trazo por estado + nacional
-- **Dato esperado:** valores normalizados 0–100 por variable (min-max sobre los 32 estados)
+#### 4.1.2 `ComparisonRadarChart` (estado vs. grupos)
+- Spider/radar de N ejes (variables activas), con toggle **Radar | Barras**.
+- El estado primario siempre aparece en azul. El usuario configura hasta 3 grupos de comparación adicionales: **Nacional** (media de 32 estados), **Región** (media de estados de la misma región), o **estados individuales** (chips seleccionables con dropdown).
+- La selección de grupos se resetea automáticamente al cambiar de estado primario.
+- **Dato esperado:** valores normalizados 0–100 por variable via `normalizeForRadar()` (min-max sobre los 32 estados); promedios de región calculados en cliente.
 
 #### 4.1.3 `DistributionHistogram`
-- Histograma de la variable principal seleccionada para los 32 estados
+- Histograma de la variable seleccionada para los 32 estados. Cuando hay más de una variable activa, se muestra un `<select>` para elegir cuál visualizar.
 - Barra del estado seleccionado: resaltada en `--blue`
 - Barra de la media nacional: línea vertical punteada en `--text-3`
-- **Dato esperado:** `dashboard_data/distributions.json` → `[variable].histogram`
+- Tooltip por bin: rango, conteo de estados y lista de nombres; el estado primario aparece en **negrita**.
+- **Dato esperado:** `distributions.json` → `[variable].histogram`; asignación de estados a bins calculada en cliente.
 
 #### 4.1.4 `RankingTable`
-- Tabla de los 32 estados, ordenada por la variable seleccionada
-- Columnas: `#`, Estado, Valor, Tendencia (si hay datos históricos), Benchmark delta
-- Colores de rank: top tercio → `--green`, medio → `--amber`, bajo → `--red`
-- Estado seleccionado: fila resaltada con fondo `--blue-light`, borde izquierdo `--blue`
-- **Dato esperado:** `dashboard_data/rankings.json` → `[variable][]`
+- Tabla de los 32 estados ordenada por la variable seleccionada. Cuando hay más de una variable activa, se muestra un `<select>` para elegir cuál rankear. Toggle **Tabla | Barras**.
+- Columnas: `#`, Estado, Valor, delta vs. media nacional
+- Delta coloreado según `direction`: `higher_better` → positivo verde / negativo rojo; `lower_better` → invertido.
+- Estado primario: fila resaltada con fondo `--blue-light`, borde izquierdo `--blue`
+- **Dato esperado:** `rankings.json` → `[variable][]`; fallback calculado en cliente si el archivo no incluye la variable.
 
-#### 4.1.5 `StateRadarProfile` (Perfil de brechas)
-- Radar pequeño (180px) mostrando dimensiones clave del estado
-- Identificar automáticamente fortalezas (≥ media + 0.5 SD) y brechas (≤ media − 0.5 SD)
-- **Dato esperado:** mismo que ComparisonRadarChart, más `dashboard_data/univariate_stats.csv`
-
-#### 4.1.6 `ChoroplethMap` (mapa de México)
-- Mapa coroplético coloreado por la variable seleccionada
-- Estado seleccionado: borde `--blue` 2px + tooltip fijo
-- Escala de color: 4 rangos (good → critical) según distribución de la variable
-- **Fase 1:** placeholder estático o SVG simple. Implementación real en Fase 3.
+#### 4.1.5 `ChoroplethMap` (mapa de México)
+- Mapa coroplético coloreado por la variable activa (selector cuando hay más de una).
+- Escala de color continua azul min→max; respeta `direction` de la métrica.
+- Estado primario: borde `--blue` 2px. Click en cualquier estado lo selecciona como primario.
+- Tooltip flotante: nombre del estado + valor + unidad.
+- **Dato esperado:** `public/data/estados.geojson` (polígonos) + valores de `dataset.records`; join por `cve_ent`.
 
 ---
 
@@ -177,19 +161,7 @@ Cada card muestra:
 - Estado seleccionado: punto resaltado con halo + etiqueta
 - **Dato esperado:** `state_cards.json` (todos los estados) para el par de variables
 
-#### 4.3.3 `BoxplotPanel`
-- Boxplots horizontales para cada variable activa (5 max)
-- Valores atípicos marcados como puntos individuales (IQR method)
-- Estado seleccionado: marcado en `--blue` sobre cada boxplot
-- **Dato esperado:** `dashboard_data/distributions.json` → `[variable].box` + `dashboard_data/outliers_iqr.json`
-
-#### 4.3.4 `CorrelationMatrixTable`
-- Tabla de las top 15 correlaciones (pares de variables)
-- Columnas: Variable 1, Variable 2, Correlación (r), p-value, Significancia (★★★)
-- Colores de correlación según intensidad: `rank-good` / `rank-alert`
-- **Dato esperado:** `dashboard_data/correlations.json`
-
-#### 4.3.5 `MultivariateRegressionPlot`
+#### 4.3.3 `MultivariateRegressionPlot`
 
 Playground de regresión OLS múltiple calculado en el cliente sobre los 32 estados (n = 32).
 
@@ -303,7 +275,7 @@ Definición: valor fuera de `[Q1 − 1.5×IQR, Q3 + 1.5×IQR]` según `dashboard
 | Coeficientes de correlación | 2 decimales | `r = 0.84` |
 | Scores compuestos | 1 decimal | `67.3 pts` |
 | PIB total (millones MXN) | 0 decimales, separador de miles | `$328,088 M` |
-| PIB per cápita (normalizado) | 2 decimales | `0.23` |
+| PIB per cápita (k MXN) | 1 decimal | `356.4 k MXN` |
 | Población total | 0 decimales, separador de miles | `1,425,607` |
 | Varianza explicada PCA | 1 decimal | `45.2 %` |
 | p-values | Notación de significancia: `< 0.001` → `***`, `< 0.01` → `**`, `< 0.05` → `*`, `≥ 0.05` → ns |
@@ -315,54 +287,47 @@ Definición: valor fuera de `[Q1 − 1.5×IQR, Q3 + 1.5×IQR]` según `dashboard
 ### Layout
 | Componente | Props clave | Estado |
 |---|---|---|
-| `AppShell` | `children` | Crear |
-| `Sidebar` | `states, selectedStates, onToggleState, comparisonTarget, activeVars` | Crear |
-| `MainContent` | `children` | Crear |
+| `Sidebar` | `states, primaryState, onSelectState, vars, activeVarIds, onToggleVar` | Implementado |
+| `App` | orquesta contexto y tabs | Implementado |
 
 ### Navegación
 | Componente | Props clave | Estado |
 |---|---|---|
-| `TabBar` | `tabs, activeTab, onTabChange` | Crear |
-| `TabPanel` | `id, children` | Crear |
+| `TabBar` | `tabs, activeTab, onTabChange` | Implementado |
 
 ### Sidebar sub-componentes
 | Componente | Props clave | Estado |
 |---|---|---|
-| `StateSearch` | `value, onChange` | Crear |
-| `StateList` | `states, selected, onToggle` | Crear |
-| `ComparisonSelect` | `value, onChange, options` | Crear |
-| `VarChipList` | `vars, activeVars, maxActive, onToggle` | Crear |
+| `StateTypeahead` | typeahead de estado único con badge | Implementado (inline en Sidebar) |
+| `VarChipList` | `vars, activeVarIds, onToggle` | Implementado |
+| `ComparisonSelect` | — | Eliminado (comparación vive en `ComparisonRadarChart`) |
 
 ### KPI
 | Componente | Props clave | Estado |
 |---|---|---|
-| `KpiCard` | `label, value, compare, delta, direction, isOutlier, isMissing` | Refactor (existe `ExecutiveKpiGrid`) |
-| `KpiGrid` | `cards[]` | Refactor |
+| `KpiCard` | `label, value, unit, delta, direction, isOutlier` | Implementado |
+| `KpiGrid` | `cards[]` | Implementado |
 
 ### Charts
 | Componente | Props clave | Fuente de datos | Estado |
 |---|---|---|---|
-| `ComparisonRadarChart` | `stateValues, nationalValues, variables` | `state_cards.json` normalizado | Crear |
-| `DistributionHistogram` | `bins, counts, highlightState, nationalMean` | `distributions.json` | Crear |
-| `RankingTable` | `rows[], highlightState, metric` | `rankings.json` | Crear |
-| `CorrelationBarChart` | `correlations[], targetVariable, threshold` | `correlations.json` | Crear |
-| `PairScatterChart` | `data[], xVar, yVar, highlightState` | `state_cards.json` | Refactor (existe `CorrelationScatter`) |
-| `BoxplotPanel` | `distributions[], variables, highlightState` | `distributions.json` + `outliers_iqr.json` | Crear |
-| `CorrelationMatrixTable` | `pairs[]` | `correlations.json` | Crear |
-| `TimeSeriesChart` | `series[], variables` | Datos históricos (Fase 4) | Placeholder |
-| `ChoroplethMap` | `states[], variable, selectedState` | `state_cards.json` | Placeholder (Fase 3) |
-| `PcaScatterChart` | `points[], clusters` | Output Fase 2 | Placeholder |
-| `ComparisonBarChart` | Existente | Existente | Mantener |
-| `DumbbellComparisonChart` | Existente | Existente | Mantener |
-| `MetricHeatmapChart` | Existente | Existente | Mantener |
+| `ComparisonRadarChart` | `primaryState, stateRegion, variables, normalizedMap, nationalValues, stateRegionMap, allStateNames` | `normalizeForRadar()` en cliente | Implementado |
+| `DistributionHistogram` | `histogram, highlightValue, nationalMean, label, binStates` | `distributions.json` + cálculo en cliente | Implementado |
+| `RankingTable` | `rows[], highlightState, metricLabel, unit, view, direction` | `rankings.json` + fallback en cliente | Implementado |
+| `CorrelationBarChart` | `correlations[], targetVariable, threshold` | `correlations.json` | Implementado |
+| `PairScatterChart` | `data[], xVar, yVar, highlightState` | `state_cards.json` | Implementado |
+| `ChoroplethMap` | `appData` | `estados.geojson` + `dataset.records` | Implementado |
+| `BoxplotPanel` | — | — | Eliminado |
+| `CorrelationMatrixTable` | — | — | Eliminado |
+| `TimeSeriesChart` | `series[], variables` | Datos históricos (pendiente) | Placeholder |
+| `PcaScatterChart` | `points[], clusters` | Output clustering (pendiente) | Placeholder |
 
 ### Feedback
 | Componente | Props clave | Estado |
 |---|---|---|
-| `InsightBox` | `title, children` | Refactor (existe `ExecutiveInsightList`) |
-| `EmptyState` | `title, description` | Mantener |
-| `PhasePlaceholder` | `message, availableIn` | Crear |
-| `MissingDataNote` | `count, total` | Crear |
+| `InsightBox` | `title, children` | Implementado |
+| `EmptyState` | `title, description` | Implementado |
+| `PhasePlaceholder` | `message` | Implementado |
 
 ---
 

@@ -1,55 +1,85 @@
-# Pipeline analítico: estandarizar → clustering → Gini / Theil → dashboard
+# Pipeline analítico: ETL → analytics → GeoJSON → dashboard
 
-Este documento describe el flujo acordado para que el entregable tenga **base explícita de ciencia de datos** además de visualización.
+Este documento describe el flujo de datos del pipeline Python hacia el dashboard React.
 
-## Orden de las etapas
+## Etapas implementadas
 
-1. **Dataset maestro municipal** — Cruce de fuentes oficiales (INEGI ITER 2020, CONEVAL IRS 2020, brechas de conectividad por localidad INEGI/IFT 2024, Ookla 2025 cuando exista observación).
-2. **Features derivadas** — Porcentajes de educación, brechas población–localidades en 3G/4G, estructura por edad, etc.
-3. **Estandarización** — `StandardScaler` (media 0, varianza 1) sobre las columnas usadas en clustering. Los valores crudos se conservan en el dataset; las columnas `_z` son las escaladas.
-4. **Clustering** — `KMeans` con \(k = 2..7\), selección de \(k\) por **silhouette score** (máximo en el rango). Perfil de cada cluster: medias de variables clave; etiqueta corta generada por reglas (no LLM).
-5. **Desigualdad** — **Gini** y **Theil L** (mean log deviation) **ponderados por población municipal** sobre indicadores de cobertura 4G (y 3G como referencia).
-6. **Salida para dashboard** — JSON en `public/data/` listo para `fetch()` desde el front: tabla municipal enriquecida, KPIs nacionales y por estado, correlación Spearman educación–cobertura (asociación, no causalidad).
+1. **ETL por fuente** — Transformación y agregación a nivel estatal: ENDUTIH 2024, variables de contexto (CONEVAL + PIBE + ITER), cobertura de red Ookla/IFT, GeoJSON de polígonos estatales.
+2. **Analytics Layer 1** — Estadísticas descriptivas sobre el dataset fusionado: distribuciones, correlaciones Pearson/Spearman, rankings, outliers IQR, Gini por variable.
+3. **Publish** — Copia selectiva de `data/processed/` a `public/data/` mediante `scripts/publish.py`.
+
+## Etapas planificadas (no implementadas)
+
+- **Clustering** — `KMeans` con silhouette score para agrupar estados por perfil multidimensional.
+- **Desigualdad territorial** — Theil L ponderado por población municipal sobre indicadores de cobertura 4G.
+- **Dataset municipal integrado** — Cruce ITER + CONEVAL IRS + conectividad por localidad a nivel `id_cvegeo`.
 
 ## Cómo ejecutarlo
 
-Desde la raíz del repo:
+Desde la raíz del repo (requiere `pip install -r requirements-pipeline.txt`):
 
 ```bash
-python3 -m venv .venv-pipeline
-.venv-pipeline/bin/pip install -r requirements-pipeline.txt
-.venv-pipeline/bin/python scripts/build_municipal_analytics.py
-```
+# ETL — fuentes digitales y de contexto
+npm run data:build:endutih              # ENDUTIH 2024 + cobertura de red (Ookla/IFT)
+npm run data:build:context              # CONEVAL + PIBE + ITER
 
-O vía npm (usa `python3` del PATH; en Windows ajustar):
+# ETL — GeoJSON para mapa coroplético
+npm run data:build:geojson              # 00ent.shp → estados.geojson (requiere pyproj)
 
-```bash
-npm run data:build:analytics
+# Analytics Layer 1
+npm run data:build:analytics            # distribuciones, correlaciones, rankings, outliers
+
+# Publish al frontend
+npm run data:publish                    # copia data/processed/ → public/data/
 ```
 
 ## Archivos que genera
 
-| Salida | Uso |
-|--------|-----|
-| `data/processed/municipios_master_analytics.csv` | Inspección en Excel / notebook |
-| `data/processed/municipios_master_analytics.json` | Misma información en JSON (Git) |
-| `data/processed/state_analytics_dashboard.json` | KPIs estatales + nacional, merges para texto dinámico |
-| `public/data/municipios_master_analytics.json` | Copia para el front (mapas / detalle) |
-| `public/data/state_analytics_dashboard.json` | Copia para KPIs y párrafos dinámicos |
+### ETL (`scripts/etl/`)
 
-## Variables principales (municipio)
+| Salida | Script | Uso |
+|--------|--------|-----|
+| `data/processed/endutih_2024_state_dashboard.wide.json` | `build_endutih_2024.py` | Métricas digitales por estado |
+| `data/processed/context_variables_state_dashboard.wide.json` | `build_context_variables.py` | CONEVAL + PIB + demografía |
+| `data/processed/cobertura_red_por_estado_2025.json` | `build_cobertura_red.py` | Velocidad y cobertura Ookla/IFT estatal |
+| `data/processed/cobertura_red_por_municipio_2025.json` | `build_cobertura_red.py` | Ídem a nivel municipal |
+| `data/processed/estados.geojson` | `build_geojson.py` | Polígonos WGS84 para mapa coroplético |
 
-- **Educación (ITER)**: `graproes`, `pct_sin_escolaridad_15ymas`, `pct_posbasica_18ymas`, `pct_analfabetismo_15ymas`.
-- **Rezago / carencias (CONEVAL IRS 2020)**: índice y componentes (`pct_*` IRS).
-- **Conectividad (localidades 2024)**: `loc_pct_4g_garantizada`, `pob_pct_4g_garantizada`, `loc_pct_3g_garantizada`, `pob_pct_3g_garantizada`, `brecha_4g_pp`, `brecha_3g_pp`.
-- **Ookla (2025, parcial)**: velocidad y `%` 3G/4G/5G donde `id_cvegeo` coincide; resto `null` + bandera `ookla_cubierto`.
+### Analytics Layer 1 (`scripts/analytics/layer1_descriptive.py`)
 
-## Si parece trabado o tarda mucho
+| Salida | Contenido |
+|--------|-----------|
+| `data/processed/distributions.json` | Histogramas (10 bins) + Shapiro-Wilk por variable |
+| `data/processed/correlations.json` | Matrices Pearson y Spearman (32 estados × ~36 variables) |
+| `data/processed/rankings.json` | Ranking de estados por variable + delta vs. media |
+| `data/processed/outliers_iqr.json` | Valores atípicos por método IQR |
+| `data/processed/state_cards.json` | Perfil completo por estado (métricas fusionadas) |
+| `data/processed/gini.json` | Coeficiente de Gini por variable |
+| `data/processed/univariate_stats.csv` | Estadísticos descriptivos (mean, std, quartiles, skewness) |
+| `data/processed/combined_data.csv` | DataFrame fusionado completo |
 
-- **No uses `pd.read_csv` sobre el ITER completo** en laptops modestas: el archivo pesa ~150 MB.  
-  Este script **lee en streaming** solo filas con `LOC = 0000` (total municipal).
-- En **NumPy 2+** ya no existe `trapz`; el script usa `trapezoid` con fallback.
-- Filas vacías al final del Excel de CONEVAL IRS pueden traer `NaN` en clave municipio; se descartan antes del join.
+## Variables principales por capa
+
+### Digital (ENDUTIH 2024 + IFT)
+- `personas_usuarias_internet_pct`, `personas_con_smartphone_pct`, `personas_usan_redes_sociales_pct`, `teledensidad_internet_movil`
+- `localidades_con_4g_garantizada_pct`, `poblacion_en_localidades_con_4g_garantizada_pct`
+
+### Contexto (CONEVAL 2022 + INEGI)
+- `pobreza_pct`, `pobreza_extrema_pct`, `rezago_educativo_pct`, `carencia_salud_pct`
+- `pib_per_capita` (k MXN = MDP × 1,000 / población), `pib_total`
+- `poblacion_economicamente_activa_pct`, `poblacion_afiliada_imss_pct`
+
+### GeoJSON (`build_geojson.py`)
+- Fuente: `data/raw/00ent.shp` — INEGI Marco Geoestadístico Nacional.
+- Proyección original: LCC ITRF2008 (metros). Se reproyecta a WGS84 lon/lat con `pyproj`.
+- Join key: `CVEGEO` (shapefile) ↔ `cve_ent` (dataset), formato `"01"`…`"32"`.
+- Simplificación: distancia radial + Douglas-Peucker (`tol = 0.001°`); islas con bbox < `0.05°` descartadas.
+
+## Notas de ejecución
+
+- El CSV del ITER completo pesa ~150 MB; `build_context_variables.py` filtra solo filas con `MUN = 0` y `LOC = 0` (totales estatales) para no cargar el archivo completo en memoria.
+- En NumPy 2+ ya no existe `trapz`; `layer1_descriptive.py` usa `trapezoid` con fallback.
+- `build_geojson.py` requiere `pyproj` (además de `pyshp`); ambos están en `requirements-pipeline.txt`.
 
 ## Limitaciones declaradas
 

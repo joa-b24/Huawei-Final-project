@@ -1,5 +1,5 @@
 # Estándar de datos territoriales
-**Versión:** 2.0 | **Actualizado:** 2026-05-04
+**Versión:** 2.1 | **Actualizado:** 2026-05-06
 
 ## Objetivo
 
@@ -157,6 +157,7 @@ Generados por `scripts/analytics/layer1_descriptive.py`. Se guardan en `data/pro
 | `gini.json` | Coeficiente de Gini por variable |
 | `univariate_stats.csv` | Estadísticos descriptivos completos |
 | `combined_data.csv` | Dataset fusionado (contexto + digital) |
+| `estados.geojson` | Polígonos estatales simplificados en WGS84 para el mapa coroplético |
 
 ---
 
@@ -166,6 +167,23 @@ Generados por `scripts/analytics/layer1_descriptive.py`. Se guardan en `data/pro
 
 Es el único directorio que lee el frontend. Se puebla ejecutando `scripts/publish.py`.
 **Nunca escribir directamente en `public/data/`** — siempre pasar por el pipeline.
+
+Archivos presentes en `public/data/` tras un publish completo:
+
+| Archivo | Origen |
+|---|---|
+| `endutih_2024_state_dashboard.wide.json` | `scripts/etl/build_endutih_2024.py` |
+| `context_variables_state_dashboard.wide.json` | `scripts/etl/build_context_variables.py` |
+| `cobertura_red_por_estado_2025.json` | `scripts/etl/build_cobertura_red.py` |
+| `cobertura_red_por_municipio_2025.json` | `scripts/etl/build_cobertura_red.py` |
+| `estados.geojson` | `scripts/etl/build_geojson.py` |
+| `state_cards.json` | `scripts/analytics/layer1_descriptive.py` |
+| `correlations.json` | `scripts/analytics/layer1_descriptive.py` |
+| `distributions.json` | `scripts/analytics/layer1_descriptive.py` |
+| `rankings.json` | `scripts/analytics/layer1_descriptive.py` |
+| `outliers_iqr.json` | `scripts/analytics/layer1_descriptive.py` |
+| `variables.catalog.json` | `data/catalogs/` (copiado directamente) |
+| `states.master.json` | `data/catalogs/` (copiado directamente) |
 
 ---
 
