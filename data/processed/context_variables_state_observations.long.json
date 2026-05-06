@@ -161,7 +161,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "bienestar_social",
       "variable": "pobreza_pct",
       "valor": 42.8755,
@@ -513,7 +513,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "bienestar_social",
       "variable": "pobreza_extrema_pct",
       "valor": 5.96,
@@ -865,7 +865,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "bienestar_social",
       "variable": "vulnerable_carencias_pct",
       "valor": 23.4499,
@@ -1217,7 +1217,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "bienestar_social",
       "variable": "no_pobre_no_vulnerable_pct",
       "valor": 23.6014,
@@ -1569,7 +1569,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "bienestar_social",
       "variable": "rezago_educativo_pct",
       "valor": 16.3426,
@@ -1921,7 +1921,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "bienestar_social",
       "variable": "carencia_salud_pct",
       "valor": 44.1544,
@@ -2273,7 +2273,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "bienestar_social",
       "variable": "carencia_servicios_basicos_pct",
       "valor": 9.4612,
@@ -2625,7 +2625,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "bienestar_social",
       "variable": "ingreso_inferior_lp_pct",
       "valor": 52.9487,
@@ -2977,7 +2977,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "economia",
       "variable": "pib_total",
       "valor": 2313164.328,
@@ -3178,10 +3178,10 @@
       "estado": "Aguascalientes",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2301,
+      "valor": 230.1391,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "BCN",
@@ -3189,10 +3189,10 @@
       "estado": "Baja California",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2514,
+      "valor": 251.4386,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "BCS",
@@ -3200,10 +3200,10 @@
       "estado": "Baja California Sur",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2344,
+      "valor": 234.3952,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "CAM",
@@ -3211,10 +3211,10 @@
       "estado": "Campeche",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.5099,
+      "valor": 509.9293,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "COA",
@@ -3222,10 +3222,10 @@
       "estado": "Coahuila",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2931,
+      "valor": 293.0897,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "COL",
@@ -3233,10 +3233,10 @@
       "estado": "Colima",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2149,
+      "valor": 214.8507,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "CHP",
@@ -3244,10 +3244,10 @@
       "estado": "Chiapas",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.0703,
+      "valor": 70.3115,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "CHH",
@@ -3255,10 +3255,10 @@
       "estado": "Chihuahua",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2488,
+      "valor": 248.7674,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "CMX",
@@ -3266,10 +3266,10 @@
       "estado": "Ciudad de Mexico",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.4219,
+      "valor": 421.9305,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "DUR",
@@ -3277,10 +3277,10 @@
       "estado": "Durango",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1767,
+      "valor": 176.6853,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "GUA",
@@ -3288,10 +3288,10 @@
       "estado": "Guanajuato",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1898,
+      "valor": 189.8311,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "GRO",
@@ -3299,10 +3299,10 @@
       "estado": "Guerrero",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.0887,
+      "valor": 88.689,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "HID",
@@ -3310,10 +3310,10 @@
       "estado": "Hidalgo",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1473,
+      "valor": 147.3045,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "JAL",
@@ -3321,21 +3321,21 @@
       "estado": "Jalisco",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2233,
+      "valor": 223.2901,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1361,
+      "valor": 136.1292,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "MIC",
@@ -3343,10 +3343,10 @@
       "estado": "Michoacan",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1435,
+      "valor": 143.4971,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "MOR",
@@ -3354,10 +3354,10 @@
       "estado": "Morelos",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1376,
+      "valor": 137.5684,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "NAY",
@@ -3365,10 +3365,10 @@
       "estado": "Nayarit",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1293,
+      "valor": 129.3042,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "NLE",
@@ -3376,10 +3376,10 @@
       "estado": "Nuevo Leon",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.3561,
+      "valor": 356.1269,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "OAX",
@@ -3387,10 +3387,10 @@
       "estado": "Oaxaca",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1131,
+      "valor": 113.1069,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "PUE",
@@ -3398,10 +3398,10 @@
       "estado": "Puebla",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.134,
+      "valor": 134.0304,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "QUE",
@@ -3409,10 +3409,10 @@
       "estado": "Queretaro",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2625,
+      "valor": 262.4567,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "ROO",
@@ -3420,10 +3420,10 @@
       "estado": "Quintana Roo",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2062,
+      "valor": 206.2,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "SLP",
@@ -3431,10 +3431,10 @@
       "estado": "San Luis Potosi",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2054,
+      "valor": 205.3805,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "SIN",
@@ -3442,10 +3442,10 @@
       "estado": "Sinaloa",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1699,
+      "valor": 169.9356,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "SON",
@@ -3453,10 +3453,10 @@
       "estado": "Sonora",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2793,
+      "valor": 279.3214,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "TAB",
@@ -3464,10 +3464,10 @@
       "estado": "Tabasco",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2519,
+      "valor": 251.8967,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "TAM",
@@ -3475,10 +3475,10 @@
       "estado": "Tamaulipas",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.2168,
+      "valor": 216.7781,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "TLA",
@@ -3486,10 +3486,10 @@
       "estado": "Tlaxcala",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1128,
+      "valor": 112.8185,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "VER",
@@ -3497,10 +3497,10 @@
       "estado": "Veracruz",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1358,
+      "valor": 135.7906,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "YUC",
@@ -3508,10 +3508,10 @@
       "estado": "Yucatan",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1735,
+      "valor": 173.5474,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "ZAC",
@@ -3519,10 +3519,10 @@
       "estado": "Zacatecas",
       "categoria": "economia",
       "variable": "pib_per_capita",
-      "valor": 0.1483,
+      "valor": 148.2684,
       "anio": 2024,
       "fuente": "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
-      "unidad": "MDP"
+      "unidad": "k MXN"
     },
     {
       "state_code": "AGS",
@@ -3681,7 +3681,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "demografia",
       "variable": "poblacion_total",
       "valor": 16992418.0,
@@ -4033,7 +4033,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "demografia",
       "variable": "poblacion_edad_laboral_pct",
       "valor": 68.2879,
@@ -4385,7 +4385,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "demografia",
       "variable": "poblacion_economicamente_activa_pct",
       "valor": 50.2837,
@@ -4737,7 +4737,7 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
+      "estado": "Estado de Mexico",
       "categoria": "demografia",
       "variable": "poblacion_afiliada_imss_pct",
       "valor": 35.2121,

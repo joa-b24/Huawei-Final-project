@@ -117,8 +117,8 @@
     {
       "state_code": "MEX",
       "cve_ent": "15",
-      "estado": "Mexico",
-      "aliases": ["Estado de Mexico", "México", "Mexico"],
+      "estado": "Estado de Mexico",
+      "aliases": ["Estado de Mexico", "México", "Mexico", "Edomex"],
       "region": "Centro",
       "capital": "Toluca de Lerdo"
     },

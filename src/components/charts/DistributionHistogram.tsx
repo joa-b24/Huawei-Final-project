@@ -6,9 +6,40 @@ type Props = {
   highlightValue?: number | null;
   nationalMean?: number | null;
   label?: string;
+  binStates?: string[][];
 };
 
-export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label }: Props) {
+function BinTooltip({ active, payload }: any) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  const range = d.hi !== undefined ? `${d.lo.toFixed(1)} – ${d.hi.toFixed(1)}` : d.center.toFixed(1);
+  const states: string[] = d.states ?? [];
+  return (
+    <div style={{
+      background: "var(--surface)", border: "1px solid var(--border)",
+      borderRadius: 8, padding: "8px 12px", fontSize: 12, maxWidth: 220,
+    }}>
+      <p style={{ margin: "0 0 4px", fontWeight: 600, color: "var(--text-1)" }}>
+        Rango: {range}
+      </p>
+      <p style={{ margin: "0 0 4px", color: "var(--text-3)" }}>
+        {d.count} estado{d.count !== 1 ? "s" : ""}
+      </p>
+      {states.length > 0 && (
+        <p style={{ margin: 0, color: "var(--text-2)", lineHeight: 1.5 }}>
+          {states.map((s, i) => (
+            <span key={s}>
+              {i > 0 && ", "}
+              {d.highlightState === s ? <strong>{s}</strong> : s}
+            </span>
+          ))}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label, binStates }: Props) {
   const { bins, counts } = histogram;
   const hasEdges = bins.length > counts.length; // n+1 edges vs n centers
 
@@ -16,7 +47,7 @@ export default function DistributionHistogram({ histogram, highlightValue, natio
     const lo = bins[i];
     const hi = hasEdges ? bins[i + 1] : bins[i];
     const center = hasEdges ? (lo + hi) / 2 : lo;
-    return { center, count, lo, hi };
+    return { center, count, lo, hi, states: binStates?.[i] ?? [], highlightState: label ?? null };
   });
 
   const highlightIdx =
@@ -51,13 +82,7 @@ export default function DistributionHistogram({ histogram, highlightValue, natio
             tickLine={false}
           />
           <YAxis tick={{ fontSize: 11, fill: "var(--text-3)" }} axisLine={false} tickLine={false} width={28} />
-          <Tooltip
-            formatter={(count: number, _: string, props: any) => {
-              const d = props.payload;
-              const range = hasEdges ? `${d.lo.toFixed(1)} – ${d.hi.toFixed(1)}` : d.center.toFixed(1);
-              return [count, range];
-            }}
-          />
+          <Tooltip content={<BinTooltip />} />
           {nationalMean !== null && nationalMean !== undefined && (
             <ReferenceLine
               x={nationalMean}

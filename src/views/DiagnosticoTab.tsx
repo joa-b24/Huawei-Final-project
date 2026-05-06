@@ -115,15 +115,40 @@ export default function DiagnosticoTab({ appData }: Props) {
   );
 
   const primaryVarId = activeVariableIds[0] ?? null;
-  const primaryMetricDef = primaryVarId
-    ? dataset.metricCatalog.find((m) => m.id === primaryVarId)
+
+  const [histVarId, setHistVarId] = useState<string | null>(null);
+  const effectiveHistVarId =
+    histVarId && activeVariableIds.includes(histVarId) ? histVarId : primaryVarId;
+
+  const histMetricDef = effectiveHistVarId
+    ? dataset.metricCatalog.find((m) => m.id === effectiveHistVarId)
     : null;
-  const distribution = primaryVarId ? distributions[primaryVarId] : null;
-  const nationalMeanPrimary = primaryVarId
-    ? calcNationalMean(dataset.records, primaryVarId)
+  const distribution = effectiveHistVarId ? distributions[effectiveHistVarId] : null;
+  const nationalMeanHist = effectiveHistVarId
+    ? calcNationalMean(dataset.records, effectiveHistVarId)
     : null;
   const highlightValue =
-    primaryRecord && primaryVarId ? (primaryRecord.metrics[primaryVarId] ?? null) : null;
+    primaryRecord && effectiveHistVarId
+      ? (primaryRecord.metrics[effectiveHistVarId] ?? null)
+      : null;
+
+  const histogramBinStates = useMemo(() => {
+    if (!effectiveHistVarId || !distribution) return undefined;
+    const { bins, counts } = distribution.histogram;
+    if (bins.length <= counts.length) return undefined;
+    const nBins = counts.length;
+    return Array.from({ length: nBins }, (_, i) => {
+      const lo = bins[i];
+      const hi = bins[i + 1];
+      return dataset.records
+        .filter((r) => {
+          const v = r.metrics[effectiveHistVarId];
+          if (typeof v !== "number" || isNaN(v)) return false;
+          return i === nBins - 1 ? v >= lo && v <= hi : v >= lo && v < hi;
+        })
+        .map((r) => r.state);
+    });
+  }, [effectiveHistVarId, distribution, dataset.records]);
 
   const [rankingVarId, setRankingVarId] = useState<string | null>(null);
   const [rankingView, setRankingView] = useState<"table" | "bars">("table");
@@ -182,15 +207,28 @@ export default function DiagnosticoTab({ appData }: Props) {
       {primaryVarId && (
         <div className="two-col">
           <section className="panel">
-            <p className="panel-title">
-              Distribución: {primaryMetricDef?.label ?? primaryVarId}
-            </p>
+            <div className="ranking-panel-header">
+              <p className="panel-title" style={{ margin: 0 }}>Distribución nacional</p>
+              {activeVariableIds.length > 1 && (
+                <select
+                  className="ranking-var-select"
+                  value={effectiveHistVarId ?? ""}
+                  onChange={(e) => setHistVarId(e.target.value)}
+                >
+                  {activeVariableIds.map((varId) => {
+                    const lbl = dataset.metricCatalog.find((m) => m.id === varId)?.label ?? varId;
+                    return <option key={varId} value={varId}>{lbl}</option>;
+                  })}
+                </select>
+              )}
+            </div>
             {distribution ? (
               <DistributionHistogram
                 histogram={distribution.histogram}
                 highlightValue={highlightValue}
-                nationalMean={nationalMeanPrimary}
+                nationalMean={nationalMeanHist}
                 label={primaryState}
+                binStates={histogramBinStates}
               />
             ) : (
               <EmptyState
@@ -198,6 +236,9 @@ export default function DiagnosticoTab({ appData }: Props) {
                 description="Ejecuta npm run pipeline:layer1 para generar distribuciones."
               />
             )}
+            <p style={{ margin: "6px 0 0", fontSize: 11, color: "var(--text-3)", textAlign: "center" }}>
+              {histMetricDef?.label ?? effectiveHistVarId} — distribución entre los 32 estados
+            </p>
           </section>
 
           <section className="panel ranking-panel">

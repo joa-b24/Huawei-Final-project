@@ -32,7 +32,7 @@ VARIABLE_SPECS = [
     {"variable": "carencia_servicios_basicos_pct",     "anio": 2022, "categoria": "bienestar_social", "label": "Carencia por servicios básicos",           "unidad": "%"},
     {"variable": "ingreso_inferior_lp_pct",            "anio": 2022, "categoria": "bienestar_social", "label": "Ingreso inferior a la línea de pobreza",  "unidad": "%"},
     {"variable": "pib_total",                          "anio": 2024, "categoria": "economia",          "label": "PIB total",                               "unidad": "MDP"},
-    {"variable": "pib_per_capita",                     "anio": 2024, "categoria": "economia",          "label": "PIB per cápita",                          "unidad": "MDP"},
+    {"variable": "pib_per_capita",                     "anio": 2024, "categoria": "economia",          "label": "PIB per cápita",                          "unidad": "k MXN"},
     {"variable": "poblacion_total",                    "anio": 2020, "categoria": "demografia",        "label": "Población total",                         "unidad": "personas"},
     {"variable": "poblacion_edad_laboral_pct",         "anio": 2020, "categoria": "demografia",        "label": "Población en edad laboral",               "unidad": "%"},
     {"variable": "poblacion_economicamente_activa_pct","anio": 2020, "categoria": "demografia",        "label": "Población económicamente activa",         "unidad": "%"},
@@ -140,7 +140,7 @@ def build_dataset() -> pd.DataFrame:
                 "poblacion_economicamente_activa", "poblacion_afiliada_imss"]:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    df["pib_per_capita"] = df["pib_total"] / df["poblacion_total"]
+    df["pib_per_capita"] = (df["pib_total"] * 1_000) / df["poblacion_total"]
     df["poblacion_edad_laboral_pct"] = (df["poblacion_edad_laboral"] / df["poblacion_total"]) * 100
     df["poblacion_economicamente_activa_pct"] = (df["poblacion_economicamente_activa"] / df["poblacion_total"]) * 100
     df["poblacion_afiliada_imss_pct"] = (df["poblacion_afiliada_imss"] / df["poblacion_total"]) * 100
