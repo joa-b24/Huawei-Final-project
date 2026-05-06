@@ -51,7 +51,8 @@
         "P6_1",
         "uso de computadora",
         "usuarios computadora"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_usuarias_internet_pct",
@@ -66,7 +67,8 @@
         "P7_1",
         "uso de internet",
         "usuarios internet"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_conexion_internet_movil_pct",
@@ -81,7 +83,8 @@
         "P7_8_7",
         "internet movil",
         "uso internet movil"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_usan_redes_sociales_pct",
@@ -96,7 +99,8 @@
         "P7_15",
         "redes sociales",
         "uso redes"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_compras_internet_pct",
@@ -111,7 +115,8 @@
         "P7_21",
         "compras en linea",
         "ecommerce"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_pagos_internet_pct",
@@ -126,7 +131,8 @@
         "P7_28",
         "pagos digitales",
         "pagos por internet"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_banca_electronica_pct",
@@ -141,7 +147,8 @@
         "P7_33",
         "banca electronica",
         "uso banca electronica"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_con_celular_pct",
@@ -155,7 +162,8 @@
       "sinonimos": [
         "P8_1",
         "disponibilidad celular"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_usuarias_celular_pct",
@@ -170,7 +178,8 @@
         "P8_3",
         "uso celular",
         "usuarios celular"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_con_smartphone_pct",
@@ -185,7 +194,8 @@
         "P8_4_2",
         "smartphone",
         "celular inteligente"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_conexion_datos_celular_pct",
@@ -200,7 +210,8 @@
         "P8_12_2",
         "datos moviles",
         "conexion datos celular"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "teledensidad_internet_movil",
@@ -215,7 +226,8 @@
         "T_INTMOVIL_ITE_VA",
         "teledensidad internet movil",
         "internet movil por cada 100 habitantes"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "localidades_con_cobertura_movil_pct",
@@ -230,7 +242,8 @@
         "MOVIL",
         "localidades con movil",
         "cobertura movil por localidad"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "poblacion_en_localidades_con_cobertura_movil_pct",
@@ -244,7 +257,8 @@
       "sinonimos": [
         "poblacion con cobertura movil",
         "movil ponderado por poblacion"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "localidades_con_4g_garantizada_pct",
@@ -259,7 +273,8 @@
         "G_4G",
         "localidades con 4G",
         "4G garantizada"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "poblacion_en_localidades_con_4g_garantizada_pct",
@@ -273,7 +288,8 @@
       "sinonimos": [
         "poblacion con 4G",
         "4G garantizada ponderada"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "localidades_con_5g_garantizada_pct",
@@ -288,7 +304,8 @@
         "G_5G",
         "localidades con 5G",
         "5G garantizada"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "poblacion_en_localidades_con_5g_garantizada_pct",
@@ -302,7 +319,8 @@
       "sinonimos": [
         "poblacion con 5G",
         "5G garantizada ponderada"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "hogares_en_localidades_con_internet_pct",
@@ -316,7 +334,8 @@
       "sinonimos": [
         "hogares con internet por localidad",
         "INTERNET ponderado por hogares"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "poblacion_en_localidades_con_internet_pct",
@@ -330,7 +349,8 @@
       "sinonimos": [
         "poblacion con internet por localidad",
         "INTERNET ponderado por poblacion"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_usan_apps_redes_sociales_pct",
@@ -345,7 +365,8 @@
         "P8_13_6",
         "apps redes sociales",
         "redes sociales movil"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "personas_usan_banca_movil_pct",
@@ -360,7 +381,8 @@
         "P8_13_7",
         "banca movil",
         "apps banca movil"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "indice_conectividad_digital",
@@ -375,7 +397,8 @@
         "digital_connectivity",
         "conectividad digital",
         "indice de conectividad"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "hogares_banda_ancha_fija_pct",
@@ -389,7 +412,8 @@
       "sinonimos": [
         "banda ancha fija",
         "fixed broadband households pct"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "cobertura_5g_pct",
@@ -404,7 +428,8 @@
         "mobile_coverage_5g",
         "5g coverage",
         "cobertura 5g"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "cobertura_4g_pct",
@@ -418,7 +443,8 @@
       "sinonimos": [
         "4g coverage",
         "cobertura 4g"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "penetracion_movil_pct",
@@ -432,7 +458,8 @@
       "sinonimos": [
         "mobile penetration",
         "penetracion movil"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "actividad_industrial_indice",
@@ -446,7 +473,8 @@
       "sinonimos": [
         "industrial_activity",
         "actividad industrial"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "empleo_industrial_pct",
@@ -460,7 +488,8 @@
       "sinonimos": [
         "industrial employment pct",
         "empleo industrial"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "exportaciones_industriales_usd_millones",
@@ -474,7 +503,8 @@
       "sinonimos": [
         "industrial_exports",
         "exportaciones industriales"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "inversion_extranjera_industria_usd_millones",
@@ -488,7 +518,8 @@
       "sinonimos": [
         "industrial fdi",
         "ied industria"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "poblacion_total",
@@ -502,7 +533,8 @@
       "sinonimos": [
         "population",
         "poblacion total"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "densidad_poblacional",
@@ -516,7 +548,8 @@
       "sinonimos": [
         "population density",
         "densidad"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "edad_mediana",
@@ -530,7 +563,8 @@
       "sinonimos": [
         "median age",
         "edad mediana"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "urbanizacion_pct",
@@ -544,7 +578,8 @@
       "sinonimos": [
         "urbanization rate",
         "urbanizacion"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "escolaridad_promedio_anios",
@@ -558,7 +593,8 @@
       "sinonimos": [
         "average schooling years",
         "escolaridad promedio"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "pobreza_pct",
@@ -572,7 +608,8 @@
       "sinonimos": [
         "pobreza",
         "poblacion en pobreza"
-      ]
+      ],
+      "direction": "lower_better"
     },
     {
       "variable_id": "pobreza_extrema_pct",
@@ -585,7 +622,8 @@
       "fuente_sugerida": "CONEVAL",
       "sinonimos": [
         "pobreza extrema"
-      ]
+      ],
+      "direction": "lower_better"
     },
     {
       "variable_id": "vulnerable_carencias_pct",
@@ -598,7 +636,8 @@
       "fuente_sugerida": "CONEVAL",
       "sinonimos": [
         "vulnerable por carencias"
-      ]
+      ],
+      "direction": "lower_better"
     },
     {
       "variable_id": "no_pobre_no_vulnerable_pct",
@@ -611,7 +650,8 @@
       "fuente_sugerida": "CONEVAL",
       "sinonimos": [
         "no pobre y no vulnerable"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "rezago_educativo_pct",
@@ -624,7 +664,8 @@
       "fuente_sugerida": "CONEVAL",
       "sinonimos": [
         "rezago educativo"
-      ]
+      ],
+      "direction": "lower_better"
     },
     {
       "variable_id": "carencia_salud_pct",
@@ -638,7 +679,8 @@
       "sinonimos": [
         "carencia salud",
         "acceso a salud"
-      ]
+      ],
+      "direction": "lower_better"
     },
     {
       "variable_id": "carencia_servicios_basicos_pct",
@@ -652,7 +694,8 @@
       "sinonimos": [
         "servicios basicos",
         "carencias de vivienda"
-      ]
+      ],
+      "direction": "lower_better"
     },
     {
       "variable_id": "ingreso_inferior_lp_pct",
@@ -665,7 +708,8 @@
       "fuente_sugerida": "CONEVAL",
       "sinonimos": [
         "linea de pobreza por ingresos"
-      ]
+      ],
+      "direction": "lower_better"
     },
     {
       "variable_id": "pib_total",
@@ -679,7 +723,8 @@
       "sinonimos": [
         "PIBE",
         "producto interno bruto estatal"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "pib_per_capita",
@@ -693,7 +738,8 @@
       "sinonimos": [
         "PIB per capita",
         "PIB por habitante"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "poblacion_edad_laboral_pct",
@@ -707,7 +753,8 @@
       "sinonimos": [
         "poblacion 15 a 64",
         "POB15_64"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "poblacion_economicamente_activa_pct",
@@ -721,7 +768,8 @@
       "sinonimos": [
         "PEA",
         "poblacion economicamente activa"
-      ]
+      ],
+      "direction": "higher_better"
     },
     {
       "variable_id": "poblacion_afiliada_imss_pct",
@@ -735,7 +783,8 @@
       "sinonimos": [
         "PDER_IMSS",
         "afiliacion IMSS"
-      ]
+      ],
+      "direction": "higher_better"
     }
   ]
 }

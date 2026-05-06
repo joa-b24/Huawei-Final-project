@@ -3,8 +3,6 @@ import { useAppContext } from "../context/AppContext";
 import type { AppData } from "../services/DataService";
 import CorrelationBarChart from "../components/charts/CorrelationBarChart";
 import PairScatterChart from "../components/charts/PairScatterChart";
-import BoxplotPanel from "../components/charts/BoxplotPanel";
-import CorrelationMatrixTable from "../components/charts/CorrelationMatrixTable";
 import MultivariateRegressionPlot from "../components/charts/MultivariateRegressionPlot";
 import EmptyState from "../components/EmptyState";
 import InsightBox from "../components/feedback/InsightBox";
@@ -95,30 +93,12 @@ export default function RelacionesTab({ appData }: Props) {
   const { label: xLabel, unit: xUnit } = getLabelAndUnit(xVarId ?? undefined);
   const { label: yLabel, unit: yUnit } = getLabelAndUnit(yVarId ?? undefined);
 
-  const boxplotVars = useMemo(
-    () =>
-      activeVariableIds.map((varId) => {
-        const metricDef = dataset.metricCatalog.find((m) => m.id === varId);
-        const primaryRecord = dataset.records.find((r) => r.state === primaryState);
-        const values = dataset.records.map((r) => r.metrics[varId] ?? NaN);
-        return {
-          id: varId,
-          label: metricDef?.label ?? varId,
-          values,
-          highlightValue: primaryRecord?.metrics[varId] ?? null,
-        };
-      }),
-    [activeVariableIds, dataset, primaryState]
-  );
-
   const metricOptions = useMemo(
-    () => dataset.metricCatalog.map((m) => ({ id: m.id, label: m.label })),
-    [dataset.metricCatalog]
-  );
-
-  const variableLabels = useMemo(
-    () => Object.fromEntries(dataset.metricCatalog.map((m) => [m.id, m.label])),
-    [dataset.metricCatalog]
+    () => activeVariableIds.map((id) => {
+      const m = dataset.metricCatalog.find((mc) => mc.id === id);
+      return { id, label: m?.label ?? id };
+    }),
+    [activeVariableIds, dataset.metricCatalog]
   );
 
   const hasCorrData = correlations.pearson.variables.length > 0;
@@ -191,24 +171,6 @@ export default function RelacionesTab({ appData }: Props) {
           </section>
         </div>
         </>
-      )}
-
-      {activeVariableIds.length > 0 && (
-        <section className="panel">
-          <p className="panel-title">Distribución por variable (todos los estados)</p>
-          <BoxplotPanel variables={boxplotVars} />
-        </section>
-      )}
-
-      {hasCorrData && (
-        <section className="panel">
-          <p className="panel-title">Top correlaciones (Pearson)</p>
-          <CorrelationMatrixTable
-            payload={correlations}
-            variableLabels={variableLabels}
-            n={dataset.records.length}
-          />
-        </section>
       )}
 
       <section className="panel">

@@ -73,7 +73,14 @@ const METRIC_DIRECTION: Record<string, MetricDirection> = {
   int_pct_3g_coverage: "lower_better",
 };
 
-export function getMetricDirection(metricId: string): MetricDirection {
+export function getMetricDirection(
+  metricId: string,
+  catalog?: VariableCatalogEntry[]
+): MetricDirection {
+  if (catalog) {
+    const entry = catalog.find((v) => v.variable_id === metricId);
+    if (entry?.direction) return entry.direction;
+  }
   return METRIC_DIRECTION[metricId] ?? "higher_better";
 }
 

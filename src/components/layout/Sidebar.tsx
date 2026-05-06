@@ -1,7 +1,4 @@
-import { useState } from "react";
-import type { ComparisonTarget } from "../../context/AppContext";
-import ComparisonSelect from "../sidebar/ComparisonSelect";
-import StateList from "../sidebar/StateList";
+import { useState, useRef } from "react";
 import StateSearch from "../sidebar/StateSearch";
 import VarChipList from "../sidebar/VarChipList";
 
@@ -9,10 +6,8 @@ type VarItem = { id: string; label: string; category?: string };
 
 type Props = {
   states: string[];
-  selectedStates: string[];
-  onToggleState: (s: string) => void;
-  comparisonTarget: ComparisonTarget;
-  onComparisonChange: (t: ComparisonTarget) => void;
+  primaryState: string | null;
+  onSelectState: (s: string) => void;
   vars: VarItem[];
   activeVarIds: string[];
   onToggleVar: (id: string) => void;
@@ -20,21 +15,27 @@ type Props = {
 
 export default function Sidebar({
   states,
-  selectedStates,
-  onToggleState,
-  comparisonTarget,
-  onComparisonChange,
+  primaryState,
+  onSelectState,
   vars,
   activeVarIds,
   onToggleVar,
 }: Props) {
   const [stateQuery, setStateQuery] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
   const [varQuery, setVarQuery] = useState("");
   const [collapsed, setCollapsed] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const filteredStates = stateQuery
-    ? states.filter((s) => s.toLowerCase().includes(stateQuery.toLowerCase()))
-    : states;
+  const suggestions = stateQuery.trim()
+    ? states.filter((s) => s.toLowerCase().includes(stateQuery.toLowerCase())).slice(0, 8)
+    : states.slice(0, 8);
+
+  function handleSelectState(s: string) {
+    onSelectState(s);
+    setStateQuery("");
+    setShowDropdown(false);
+  }
 
   const filteredVars = varQuery
     ? vars.filter((v) => v.label.toLowerCase().includes(varQuery.toLowerCase()))
@@ -59,14 +60,40 @@ export default function Sidebar({
           </div>
 
           <div className="sidebar-section">
-            <p className="sidebar-label">Seleccionar estado(s)</p>
-            <StateSearch value={stateQuery} onChange={setStateQuery} placeholder="Buscar estado..." />
-            <StateList states={filteredStates} selected={selectedStates} onToggle={onToggleState} />
-          </div>
-
-          <div className="sidebar-section">
-            <p className="sidebar-label">Comparar con</p>
-            <ComparisonSelect value={comparisonTarget} onChange={onComparisonChange} />
+            <p className="sidebar-label">Estado principal</p>
+            {primaryState && (
+              <div className="state-selected-badge">
+                <span>{primaryState}</span>
+                <button
+                  type="button"
+                  onClick={() => onSelectState("")}
+                  aria-label="Quitar selección"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+            <div className="state-typeahead">
+              <StateSearch
+                value={stateQuery}
+                onChange={(v) => { setStateQuery(v); setShowDropdown(true); }}
+                placeholder="Buscar estado..."
+              />
+              {showDropdown && suggestions.length > 0 && (
+                <div className="state-typeahead__dropdown" ref={dropdownRef}>
+                  {suggestions.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      className={`state-typeahead__option${s === primaryState ? " selected" : ""}`}
+                      onMouseDown={() => handleSelectState(s)}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="sidebar-section">

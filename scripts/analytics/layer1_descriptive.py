@@ -10,14 +10,28 @@ from scipy.stats import shapiro, zscore
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+CATALOG_PATH = PROJECT_ROOT / "data" / "catalogs" / "variables.catalog.json"
 OUTPUT_DIR = PROCESSED_DIR  # Layer1 escribe en processed/; publish.py copia a public/data/
+
+
+def _load_direction_map() -> dict[str, str]:
+    """Lee variables.catalog.json y devuelve {variable_id: direction}."""
+    if not CATALOG_PATH.exists():
+        return {}
+    catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+    return {
+        v["variable_id"]: v["direction"]
+        for v in catalog.get("variables", [])
+        if "direction" in v
+    }
 
 
 class Layer1Descriptive:
     """Capa descriptiva: estadísticas univariadas, distribuciones, correlaciones,
     outliers y rankings sobre el dataset combinado de 32 estados."""
 
-    def __init__(self, context_df: pd.DataFrame, digital_df: pd.DataFrame) -> None:
+    def __init__(self, context_df: pd.DataFrame, digital_df: pd.DataFrame,
+                 direction_map: dict[str, str] | None = None) -> None:
         meta_cols = ["cve_ent", "estado", "region"]
         self.combined = pd.merge(
             context_df,
@@ -25,6 +39,7 @@ class Layer1Descriptive:
             on="state_code",
             how="outer",
         )
+        self.direction_map: dict[str, str] = direction_map or {}
 
     # ── A. Estadísticas univariadas ──────────────────────────────────────────
 
@@ -100,8 +115,14 @@ class Layer1Descriptive:
         rankings: dict = {}
         estado_col = "estado" if "estado" in self.combined.columns else None
         for col in self._numeric_cols():
+            direction = self.direction_map.get(col, "higher_better")
+            ascending = direction == "lower_better"
             cols = ["state_code"] + ([estado_col] if estado_col else []) + [col]
-            df_sorted = self.combined[cols].sort_values(col).reset_index(drop=True)
+            df_sorted = (
+                self.combined[cols]
+                .sort_values(col, ascending=ascending)
+                .reset_index(drop=True)
+            )
             mean_val = self.combined[col].mean()
             rankings[col] = [
                 {
@@ -192,7 +213,8 @@ def main() -> None:
     digital_df = load_wide_json(PROCESSED_DIR / "endutih_2024_state_dashboard.wide.json")
     digital_df = digital_df.drop(columns=["anio"], errors="ignore")
 
-    layer1 = Layer1Descriptive(context_df, digital_df)
+    direction_map = _load_direction_map()
+    layer1 = Layer1Descriptive(context_df, digital_df, direction_map=direction_map)
     layer1.export()
 
 

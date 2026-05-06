@@ -66,10 +66,8 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
     <AppShell>
       <Sidebar
         states={allStateNames}
-        selectedStates={state.selectedStates}
-        onToggleState={(s) => dispatch(actions.toggleState(s))}
-        comparisonTarget={state.comparisonTarget}
-        onComparisonChange={(t) => dispatch(actions.setComparisonTarget(t))}
+        primaryState={state.primaryState}
+        onSelectState={(s) => dispatch(actions.setPrimaryState(s))}
         vars={allVars}
         activeVarIds={state.activeVariableIds}
         onToggleVar={(id) => dispatch(actions.toggleVariable(id))}

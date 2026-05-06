@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { getMetricDirection } from "../services/DataService";
 import type { AppData } from "../services/DataService";
@@ -40,7 +40,7 @@ type Props = { appData: AppData };
 
 export default function DiagnosticoTab({ appData }: Props) {
   const { state: appState } = useAppContext();
-  const { selectedStates, primaryState, activeVariableIds } = appState;
+  const { primaryState, activeVariableIds } = appState;
   const { dataset, outliers, distributions, rankings } = appData;
 
   const primaryRecord = useMemo(
@@ -67,7 +67,7 @@ export default function DiagnosticoTab({ appData }: Props) {
         unit: metricDef?.unit,
         tipoValor: guessTipoValor(varId, metricDef?.unit ?? ""),
         delta,
-        direction: getMetricDirection(varId),
+        direction: getMetricDirection(varId, appData.variablesCatalog),
         isOutlier: stateIsOutlier,
       };
     });
@@ -78,14 +78,14 @@ export default function DiagnosticoTab({ appData }: Props) {
     [dataset.records, activeVariableIds]
   );
 
-  const stateData = useMemo(
-    () =>
-      selectedStates.map((name) => ({
-        name,
-        values: normalizedMap.get(name) ?? {},
-      })),
-    [selectedStates, normalizedMap]
+  const stateRegionMap = useMemo(
+    () => Object.fromEntries(dataset.records.map((r) => [r.state, r.region ?? ""])),
+    [dataset.records]
   );
+
+  const stateRegion = primaryState
+    ? (stateRegionMap[primaryState] ?? null)
+    : null;
 
   const nationalValues = useMemo(() => {
     const result: Record<string, number | null> = {};
@@ -125,18 +125,29 @@ export default function DiagnosticoTab({ appData }: Props) {
   const highlightValue =
     primaryRecord && primaryVarId ? (primaryRecord.metrics[primaryVarId] ?? null) : null;
 
+  const [rankingVarId, setRankingVarId] = useState<string | null>(null);
+  const [rankingView, setRankingView] = useState<"table" | "bars">("table");
+
+  const effectiveRankingVarId =
+    rankingVarId && activeVariableIds.includes(rankingVarId)
+      ? rankingVarId
+      : primaryVarId;
+  const rankingMetricDef = effectiveRankingVarId
+    ? dataset.metricCatalog.find((m) => m.id === effectiveRankingVarId)
+    : null;
+
   const rankingRows = useMemo(() => {
-    if (!primaryVarId) return [];
-    const fromData = rankings[primaryVarId];
+    if (!effectiveRankingVarId) return [];
+    const fromData = rankings[effectiveRankingVarId];
     if (fromData?.length) return fromData;
-    return buildRankingFromRecords(dataset.records, primaryVarId);
-  }, [primaryVarId, rankings, dataset.records]);
+    return buildRankingFromRecords(dataset.records, effectiveRankingVarId);
+  }, [effectiveRankingVarId, rankings, dataset.records]);
 
   if (!primaryState) {
     return (
       <EmptyState
         title="Sin estado seleccionado"
-        description="Selecciona al menos un estado en el panel lateral."
+        description="Selecciona un estado en el panel lateral."
       />
     );
   }
@@ -156,11 +167,15 @@ export default function DiagnosticoTab({ appData }: Props) {
       )}
 
       <section className="panel">
-        <p className="panel-title">Perfil comparativo (normalizado 0–100)</p>
+        <p className="panel-title">Perfil comparativo</p>
         <ComparisonRadarChart
-          stateData={stateData}
-          nationalValues={nationalValues}
+          primaryState={primaryState}
+          stateRegion={stateRegion}
           variables={radarVars}
+          normalizedMap={normalizedMap}
+          nationalValues={nationalValues}
+          stateRegionMap={stateRegionMap}
+          allStateNames={dataset.records.map((r) => r.state)}
         />
       </section>
 
@@ -185,16 +200,48 @@ export default function DiagnosticoTab({ appData }: Props) {
             )}
           </section>
 
-          <section className="panel">
-            <p className="panel-title">
-              Ranking nacional: {primaryMetricDef?.label ?? primaryVarId}
-            </p>
+          <section className="panel ranking-panel">
+            <div className="ranking-panel-header">
+              <p className="panel-title" style={{ margin: 0 }}>Ranking nacional</p>
+              {activeVariableIds.length > 1 && (
+                <select
+                  className="ranking-var-select"
+                  value={effectiveRankingVarId ?? ""}
+                  onChange={(e) => setRankingVarId(e.target.value)}
+                >
+                  {activeVariableIds.map((varId) => {
+                    const lbl = dataset.metricCatalog.find((m) => m.id === varId)?.label ?? varId;
+                    return (
+                      <option key={varId} value={varId}>{lbl}</option>
+                    );
+                  })}
+                </select>
+              )}
+            </div>
+            <div className="toggle-pill ranking-panel__toggle" role="group" aria-label="Vista del ranking">
+              <button
+                type="button"
+                className={`toggle-pill__btn${rankingView === "table" ? " active" : ""}`}
+                onClick={() => setRankingView("table")}
+              >
+                Tabla
+              </button>
+              <button
+                type="button"
+                className={`toggle-pill__btn${rankingView === "bars" ? " active" : ""}`}
+                onClick={() => setRankingView("bars")}
+              >
+                Barras
+              </button>
+            </div>
             {rankingRows.length > 0 ? (
               <RankingTable
                 rows={rankingRows}
                 highlightState={primaryState}
-                metricLabel={primaryMetricDef?.label ?? primaryVarId}
-                unit={primaryMetricDef?.unit}
+                metricLabel={rankingMetricDef?.label ?? effectiveRankingVarId ?? ""}
+                unit={rankingMetricDef?.unit}
+                view={rankingView}
+                direction={effectiveRankingVarId ? getMetricDirection(effectiveRankingVarId, appData.variablesCatalog) : undefined}
               />
             ) : (
               <EmptyState
