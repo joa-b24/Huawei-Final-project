@@ -2,21 +2,30 @@ import { useMemo, useState } from "react";
 import type { AppData } from "../services/DataService";
 import type { ImportedData } from "../app/App";
 import type { VariableCatalogEntry } from "../types/dataStandard";
-import { applyCatalogOverrides, loadCatalogOverrides, saveCatalogOverride } from "../lib/dataStorage";
+import {
+  applyCatalogOverrides, loadCatalogOverrides,
+  loadHiddenIds, toggleHiddenId,
+} from "../lib/dataStorage";
 import CatalogBrowser from "../components/datos/CatalogBrowser";
+import VariablePanel from "../components/datos/VariablePanel";
 import OperationWizard from "../components/datos/OperationWizard";
 
-type Mode = "catalog" | "wizard";
+type Mode = "catalog" | "panel" | "wizard";
 
 type Props = {
   appData: AppData;
   onImport: (d: ImportedData) => void;
+  onCatalogChange: () => void;
 };
 
-export default function DatosTab({ appData }: Props) {
+export default function DatosTab({ appData, onCatalogChange }: Props) {
   const [mode, setMode] = useState<Mode>("catalog");
+  const [selectedVar, setSelectedVar] = useState<VariableCatalogEntry | undefined>();
   const [wizardInitialVar, setWizardInitialVar] = useState<VariableCatalogEntry | undefined>();
   const [overrideVersion, setOverrideVersion] = useState(0);
+  const [localVersion, setLocalVersion] = useState(0);
+
+  const bump = () => { setLocalVersion((v) => v + 1); onCatalogChange(); };
 
   const catalog = useMemo(() => {
     const base = appData.variablesCatalog.length > 0
@@ -35,10 +44,18 @@ export default function DatosTab({ appData }: Props) {
     return applyCatalogOverrides(base);
   }, [appData.variablesCatalog, appData.dataset.metricCatalog, overrideVersion]);
 
-  const editedIds = useMemo(
-    () => new Set(Object.keys(loadCatalogOverrides())),
-    [overrideVersion]
-  );
+  const editedIds = useMemo(() => new Set(Object.keys(loadCatalogOverrides())), [overrideVersion]);
+  const hiddenIds = useMemo(() => loadHiddenIds(), [localVersion]);
+
+  function handleToggleHidden(id: string) {
+    toggleHiddenId(id);
+    bump();
+  }
+
+  function openPanel(v: VariableCatalogEntry) {
+    setSelectedVar(v);
+    setMode("panel");
+  }
 
   function openWizardForVariable(v: VariableCatalogEntry) {
     setWizardInitialVar(v);
@@ -55,6 +72,13 @@ export default function DatosTab({ appData }: Props) {
     setMode("catalog");
   }
 
+  const statesWithData = useMemo(() => {
+    if (!selectedVar) return 0;
+    return appData.dataset.records.filter(
+      (r) => r.metrics[selectedVar.variable_id] != null
+    ).length;
+  }, [selectedVar, appData.dataset.records]);
+
   return (
     <div className="tab-content">
       {mode === "catalog" && (
@@ -62,8 +86,22 @@ export default function DatosTab({ appData }: Props) {
           <CatalogBrowser
             catalog={catalog}
             editedIds={editedIds}
-            onSelectVariable={openWizardForVariable}
+            hiddenIds={hiddenIds}
+            onSelectVariable={openPanel}
             onNewOperation={openWizardNew}
+            onToggleHidden={handleToggleHidden}
+          />
+        </section>
+      )}
+
+      {mode === "panel" && selectedVar && (
+        <section className="panel">
+          <VariablePanel
+            variable={selectedVar}
+            statesWithData={statesWithData}
+            totalStates={appData.dataset.records.length}
+            onUpdateData={() => openWizardForVariable(selectedVar)}
+            onBack={() => setMode("catalog")}
           />
         </section>
       )}

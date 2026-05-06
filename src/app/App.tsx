@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Database } from "lucide-react";
 import { AppProvider, actions, useAppContext, type TabId } from "../context/AppContext";
 import { loadAppData, type AppData } from "../services/DataService";
+import { loadHiddenIds } from "../lib/dataStorage";
 import type { MetricDefinition, StateMetricRecord } from "../types/dataset";
 import AppShell from "../components/layout/AppShell";
 import Sidebar from "../components/layout/Sidebar";
@@ -51,16 +52,28 @@ function mergeImport(base: AppData, imported: ImportedData): AppData {
 function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: ImportedData) => void }) {
   const { state, dispatch } = useAppContext();
   const [datosOpen, setDatosOpen] = useState(false);
+  const [catalogVersion, setCatalogVersion] = useState(0);
 
   const allStateNames = useMemo(
     () => appData.dataset.records.map((r) => r.state),
     [appData.dataset.records]
   );
 
-  const allVars = useMemo(
-    () => appData.dataset.metricCatalog.map((m) => ({ id: m.id, label: m.label, category: m.category })),
-    [appData.dataset.metricCatalog]
-  );
+  const allVars = useMemo(() => {
+    const hidden = loadHiddenIds();
+    return appData.dataset.metricCatalog
+      .filter((m) => !hidden.has(m.id))
+      .map((m) => ({ id: m.id, label: m.label, category: m.category }));
+  }, [appData.dataset.metricCatalog, catalogVersion]);
+
+  // Deactivate any variable that got hidden
+  useEffect(() => {
+    const hidden = loadHiddenIds();
+    const filtered = state.activeVariableIds.filter((id) => !hidden.has(id));
+    if (filtered.length !== state.activeVariableIds.length) {
+      dispatch(actions.setVariables(filtered));
+    }
+  }, [catalogVersion]);
 
   return (
     <AppShell>
@@ -71,6 +84,7 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
         vars={allVars}
         activeVarIds={state.activeVariableIds}
         onToggleVar={(id) => dispatch(actions.toggleVariable(id))}
+        onClearVars={() => dispatch(actions.setVariables([]))}
       />
       <MainContent>
         <h1 className="page-title">Análisis de Indicadores Estatales</h1>
@@ -90,7 +104,7 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
           </button>
         </div>
         {datosOpen ? (
-          <DatosTab appData={appData} onImport={onImport} />
+          <DatosTab appData={appData} onImport={onImport} onCatalogChange={() => setCatalogVersion((v) => v + 1)} />
         ) : (
           <>
             <TabPanel id="diagnostico" activeTab={state.activeTab}>

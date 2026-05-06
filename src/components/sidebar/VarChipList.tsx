@@ -15,13 +15,19 @@ type Props = {
   activeIds: string[];
   maxActive?: number;
   onToggle: (id: string) => void;
+  onClearAll?: () => void;
 };
 
-export default function VarChipList({ vars, activeIds, maxActive = 5, onToggle }: Props) {
+export default function VarChipList({ vars, activeIds, maxActive = 5, onToggle, onClearAll }: Props) {
   const atLimit = activeIds.length >= maxActive;
 
   return (
     <div className="var-chip-list">
+      {activeIds.length > 0 && onClearAll && (
+        <button type="button" className="var-chip-clear" onClick={onClearAll}>
+          Limpiar selección
+        </button>
+      )}
       {vars.map(({ id, label, category }) => {
         const isActive = activeIds.includes(id);
         const isDisabled = !isActive && atLimit;

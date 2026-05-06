@@ -11,6 +11,7 @@ type Props = {
   vars: VarItem[];
   activeVarIds: string[];
   onToggleVar: (id: string) => void;
+  onClearVars: () => void;
 };
 
 export default function Sidebar({
@@ -20,6 +21,7 @@ export default function Sidebar({
   vars,
   activeVarIds,
   onToggleVar,
+  onClearVars,
 }: Props) {
   const [stateQuery, setStateQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -99,7 +101,7 @@ export default function Sidebar({
           <div className="sidebar-section">
             <p className="sidebar-label">Variables activas ({activeVarIds.length}/5)</p>
             <StateSearch value={varQuery} onChange={setVarQuery} placeholder="Buscar variable..." />
-            <VarChipList vars={filteredVars} activeIds={activeVarIds} onToggle={onToggleVar} />
+            <VarChipList vars={filteredVars} activeIds={activeVarIds} onToggle={onToggleVar} onClearAll={onClearVars} />
           </div>
         </>
       )}

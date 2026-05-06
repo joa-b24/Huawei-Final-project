@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import {
   CartesianGrid,
@@ -36,14 +36,36 @@ function linearReg(pts: ScatterPoint[]) {
   return { slope, intercept: ym - slope * xm, r2 };
 }
 
+function detectOutliers(pts: ScatterPoint[]): Set<string> {
+  if (pts.length < 6) return new Set();
+  const { slope, intercept } = linearReg(pts);
+  const residuals = pts.map((p) => p.y - (slope * p.x + intercept));
+  const sorted = [...residuals].sort((a, b) => a - b);
+  const n = sorted.length;
+  const q1 = sorted[Math.floor(n * 0.25)];
+  const q3 = sorted[Math.floor(n * 0.75)];
+  const iqr = q3 - q1;
+  if (iqr === 0) return new Set();
+  const lower = q1 - 1.5 * iqr;
+  const upper = q3 + 1.5 * iqr;
+  return new Set(pts.filter((_, i) => residuals[i] < lower || residuals[i] > upper).map((p) => p.state));
+}
+
 const CustomDot = (props: any) => {
-  const { cx, cy, payload, highlightState } = props;
+  const { cx, cy, payload, highlightState, outlierStates } = props;
   const isHighlight = payload.state === highlightState;
+  const isOutlier = outlierStates?.has(payload.state);
   return (
-    <g>
-      {isHighlight && <circle cx={cx} cy={cy} r={10} fill="var(--blue)" opacity={0.15} />}
-      <circle cx={cx} cy={cy} r={isHighlight ? 6 : 4} fill={isHighlight ? "var(--blue)" : "#93c5fd"} stroke="#fff" strokeWidth={1} />
-      {isHighlight && (
+    <g opacity={isOutlier ? 0.3 : 1}>
+      {isHighlight && !isOutlier && <circle cx={cx} cy={cy} r={10} fill="var(--blue)" opacity={0.15} />}
+      <circle
+        cx={cx} cy={cy}
+        r={isHighlight ? 6 : 4}
+        fill={isOutlier ? "var(--text-3)" : isHighlight ? "var(--blue)" : "#93c5fd"}
+        stroke="#fff"
+        strokeWidth={1}
+      />
+      {isHighlight && !isOutlier && (
         <text x={cx + 8} y={cy - 8} fontSize={10} fill="var(--text-2)" fontWeight={600}>
           {payload.state}
         </text>
@@ -57,10 +79,14 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panX, setPanX] = useState(0);
   const [panY, setPanY] = useState(0);
+  const [excludeOutliers, setExcludeOutliers] = useState(false);
   const dragStart = useRef<{ mx: number; my: number; px: number; py: number } | null>(null);
 
-  // Reset zoom + pan when variables change
-  useEffect(() => { setZoomLevel(1); setPanX(0); setPanY(0); }, [xLabel, yLabel]);
+  // Reset zoom + pan + outlier toggle when variables change
+  useEffect(() => { setZoomLevel(1); setPanX(0); setPanY(0); setExcludeOutliers(false); }, [xLabel, yLabel]);
+
+  const outlierStates = useMemo(() => detectOutliers(data), [data]);
+  const regressionData = excludeOutliers ? data.filter((p) => !outlierStates.has(p.state)) : data;
 
   // Non-passive wheel listener for zoom
   useEffect(() => {
@@ -79,7 +105,7 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
     return <EmptyState title="Datos insuficientes" description="Se necesitan al menos 3 estados con dato en ambas variables." />;
   }
 
-  const { slope, intercept, r2 } = linearReg(data);
+  const { slope, intercept, r2 } = linearReg(regressionData);
   const xs = data.map((d) => d.x);
   const ys = data.map((d) => d.y);
   const xMin = Math.min(...xs), xMax = Math.max(...xs);
@@ -138,7 +164,21 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 8 }}>
         <p style={{ fontSize: 12, color: "var(--text-3)", margin: 0 }}>
           R² = {r2.toFixed(2)}
+          {excludeOutliers && outlierStates.size > 0 && (
+            <span style={{ color: "var(--amber)", marginLeft: 6 }}>
+              (sin {outlierStates.size} atípico{outlierStates.size !== 1 ? "s" : ""})
+            </span>
+          )}
         </p>
+        {outlierStates.size > 0 && (
+          <button
+            type="button"
+            className={`btn-ghost scatter-outlier-toggle${excludeOutliers ? " active" : ""}`}
+            onClick={() => setExcludeOutliers((v) => !v)}
+          >
+            {excludeOutliers ? "Mostrando atípicos" : `Excluir atípicos (${outlierStates.size})`}
+          </button>
+        )}
         {zoomLevel > 1 && (
           <button
             type="button"
@@ -203,7 +243,7 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
           <Scatter
             dataKey="y"
             data={data}
-            shape={(props: any) => <CustomDot {...props} highlightState={highlightState} />}
+            shape={(props: any) => <CustomDot {...props} highlightState={highlightState} outlierStates={excludeOutliers ? outlierStates : undefined} />}
             isAnimationActive={false}
           />
         </ComposedChart>

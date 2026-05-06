@@ -82,3 +82,41 @@ export function deleteImportedEntry(id: string): void {
   const all = loadImportedData().filter((e) => e.id !== id);
   localStorage.setItem(IMPORTED_KEY, JSON.stringify(all));
 }
+
+// ── Deleted variable IDs ───────────────────────────────────────────────────────
+
+const DELETED_KEY = "deleted_variable_ids";
+
+export function loadDeletedIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(DELETED_KEY);
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+export function addDeletedId(id: string): void {
+  const ids = loadDeletedIds();
+  ids.add(id);
+  localStorage.setItem(DELETED_KEY, JSON.stringify([...ids]));
+}
+
+// ── Hidden variable IDs (ocultas en sidebar) ──────────────────────────────────
+
+const HIDDEN_KEY = "hidden_variable_ids";
+
+export function loadHiddenIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(HIDDEN_KEY);
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+export function toggleHiddenId(id: string): void {
+  const ids = loadHiddenIds();
+  if (ids.has(id)) ids.delete(id); else ids.add(id);
+  localStorage.setItem(HIDDEN_KEY, JSON.stringify([...ids]));
+}
