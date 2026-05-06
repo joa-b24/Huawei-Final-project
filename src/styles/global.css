@@ -674,7 +674,7 @@ select {
   font-size: 13px; color: var(--text-1); background: var(--surface);
 }
 
-.var-chip-list { display: flex; flex-direction: column; gap: 4px; max-height: 480px; overflow-y: auto; }
+.var-chip-list { display: flex; flex-direction: column; gap: 4px; max-height: 450px; overflow-y: auto; }
 .var-chip {
   display: flex; align-items: center; gap: 8px;
   padding: 6px 10px;

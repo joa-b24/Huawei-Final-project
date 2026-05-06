@@ -296,7 +296,7 @@ export default function DiagnosticoTab({ appData }: Props) {
 
       <section className="panel">
         <p className="panel-title">Mapa coroplético</p>
-        <ChoroplethMap />
+        <ChoroplethMap appData={appData} />
       </section>
 
       <section className="panel">

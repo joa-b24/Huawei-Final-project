@@ -2,10 +2,6 @@
 
 Es el único punto de contacto entre el pipeline Python y la app React.
 Ejecutar después de correr todos los scripts de etl/ y analytics/.
-
-Uso:
-    python pipeline/publish.py
-    python pipeline/publish.py --dry-run   # muestra qué copiaría sin hacerlo
 """
 from __future__ import annotations
 
@@ -32,6 +28,8 @@ PUBLISH_MAP: dict[str, str] = {
     "distributions.json": "distributions.json",
     "rankings.json": "rankings.json",
     "outliers_iqr.json": "outliers_iqr.json",
+    # GeoJSON para mapa coroplético
+    "estados.geojson": "estados.geojson",
 }
 
 
