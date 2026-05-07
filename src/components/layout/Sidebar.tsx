@@ -40,7 +40,7 @@ export default function Sidebar({
   }
 
   const filteredVars = varQuery
-    ? vars.filter((v) => v.label.toLowerCase().includes(varQuery.toLowerCase()))
+    ? vars.filter((v) => (v.label ?? "").toLowerCase().includes(varQuery.toLowerCase()))
     : vars;
 
   return (

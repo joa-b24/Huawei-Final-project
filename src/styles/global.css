@@ -904,6 +904,7 @@ select {
 .wizard-success { display: flex; align-items: center; gap: 16px; padding: 20px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; }
 .wizard-success__icon { font-size: 28px; color: var(--green); }
 .wizard-success__msg { margin: 0; font-size: 14px; color: var(--text-1); }
+.pipeline-log { margin: 12px 0 0; padding: 12px 14px; background: var(--surface-2, #f8f9fa); border: 1px solid var(--border); border-radius: 8px; font-size: 11px; line-height: 1.6; color: var(--text-2); white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
 
 /* Operation type cards */
 .op-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }

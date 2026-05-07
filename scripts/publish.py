@@ -69,6 +69,21 @@ def publish(dry_run: bool = False) -> None:
             print(f"  [ok]      {src.relative_to(PROJECT_ROOT)} -> {dst.relative_to(PROJECT_ROOT)}")
         ok += 1
 
+    # Historical time series (one JSON per variable)
+    hist_src = PROCESSED_DIR / "historical"
+    if hist_src.exists():
+        hist_dst = PUBLIC_DIR / "historical"
+        if not dry_run:
+            hist_dst.mkdir(parents=True, exist_ok=True)
+        for src in sorted(hist_src.glob("*.json")):
+            dst = hist_dst / src.name
+            if dry_run:
+                print(f"  [dry-run] {src.relative_to(PROJECT_ROOT)} -> {dst.relative_to(PROJECT_ROOT)}")
+            else:
+                shutil.copy2(src, dst)
+                print(f"  [ok]      {src.relative_to(PROJECT_ROOT)} -> {dst.relative_to(PROJECT_ROOT)}")
+            ok += 1
+
     print(f"\nPublish completo: {ok} archivos copiados, {missing} faltantes.")
     if missing:
         print("  Tip: corre primero pipeline/etl/*.py y pipeline/analytics/layer1_descriptive.py")

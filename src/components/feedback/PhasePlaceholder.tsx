@@ -3,7 +3,7 @@ type Props = {
   availableIn?: string;
 };
 
-export default function PhasePlaceholder({ message, availableIn = "Próximamente" }: Props) {
+export default function PhasePlaceholder({ message, availableIn = "No disponible (en desarrollo)" }: Props) {
   return (
     <div className="phase-placeholder" aria-label={availableIn}>
       <span className="phase-placeholder__badge">{availableIn}</span>

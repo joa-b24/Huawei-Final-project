@@ -13,6 +13,6 @@ storybook-static
 __pycache__/
 *.pyc
 
-# Notas locales del pipeline (no versionar)
-docs/*.local.md
-README-EXPOSICION.md
+# Pipeline outputs (generados, no son fuente de verdad)
+data/processed/*
+!data/processed/.gitkeep

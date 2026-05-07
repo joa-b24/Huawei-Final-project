@@ -24,7 +24,7 @@ function quartiles(sorted: number[]) {
   };
 }
 
-function BoxplotSvg({ values, highlightValue }: { values: number[]; highlightValue?: number | null }) {
+export function BoxplotSvg({ values, highlightValue }: { values: number[]; highlightValue?: number | null }) {
   const sorted = [...values].sort((a, b) => a - b);
   const { min, q1, median, q3, max } = quartiles(sorted);
   const iqr = q3 - q1;

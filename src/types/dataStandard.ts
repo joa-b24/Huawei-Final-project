@@ -127,7 +127,7 @@ export type TemporalStateSeries = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Outputs de modelos analíticos (Fase 2)
+// Outputs de modelos analíticos
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Resultado del PCA por estado: coordenadas en el espacio de componentes. */
@@ -139,9 +139,9 @@ export type PcaStateResult = {
 
 /** Metadata de un componente principal. */
 export type PcaComponent = {
-  component_id: string; // "pc1", "pc2", etc.
+  component_id: string;
   explained_variance_ratio: number;
-  loadings: Record<string, number>; // variable_id → loading
+  loadings: Record<string, number>;
 };
 
 /** Asignación de cluster por estado. */

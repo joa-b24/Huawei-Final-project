@@ -83,10 +83,6 @@ export function useAppContext(): AppContextValue {
   return ctx;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Action creators (convenientes para no escribir objetos a mano en componentes)
-// ─────────────────────────────────────────────────────────────────────────────
-
 export const actions = {
   setPrimaryState: (stateName: string | null): Action => ({ type: "SET_PRIMARY_STATE", stateName }),
   setTab: (tab: TabId): Action => ({ type: "SET_TAB", tab }),

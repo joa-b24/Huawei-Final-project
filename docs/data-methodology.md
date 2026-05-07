@@ -110,7 +110,6 @@ Opera sobre los outputs de ETL ya fusionados (contexto + digital). Genera:
 | `distributions.json` | Histogramas (10 bins) + test Shapiro-Wilk de normalidad |
 | `correlations.json` | Matrices Pearson y Spearman (32 estados × ~36 variables) |
 | `outliers_iqr.json` | Método IQR: `[Q1 − 1.5×IQR, Q3 + 1.5×IQR]` |
-| `gini.json` | Coeficiente de Gini por variable |
 | `rankings.json` | Ranking ascendente de estados por variable + delta vs. media |
 | `state_cards.json` | Perfil por estado: métricas fusionadas + overall_score (min-max normalizado) |
 | `univariate_stats.csv` | Estadísticos descriptivos (mean, std, quartiles, skewness, kurtosis) |

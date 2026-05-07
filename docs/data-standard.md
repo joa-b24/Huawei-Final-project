@@ -154,7 +154,6 @@ Generados por `scripts/analytics/layer1_descriptive.py`. Se guardan en `data/pro
 | `distributions.json` | Histogramas + test Shapiro-Wilk por variable |
 | `rankings.json` | Ranking de estados por variable |
 | `outliers_iqr.json` | Valores atípicos por método IQR |
-| `gini.json` | Coeficiente de Gini por variable |
 | `univariate_stats.csv` | Estadísticos descriptivos completos |
 | `combined_data.csv` | Dataset fusionado (contexto + digital) |
 | `estados.geojson` | Polígonos estatales simplificados en WGS84 para el mapa coroplético |

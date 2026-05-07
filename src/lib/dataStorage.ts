@@ -51,9 +51,15 @@ export function applyCatalogOverrides(
   entries: VariableCatalogEntry[]
 ): VariableCatalogEntry[] {
   const overrides = loadCatalogOverrides();
-  return entries.map((e) =>
+  const existingIds = new Set(entries.map((e) => e.variable_id));
+  const patched = entries.map((e) =>
     overrides[e.variable_id] ? { ...e, ...overrides[e.variable_id] } : e
   );
+  const added = Object.entries(overrides)
+    .filter(([id]) => !existingIds.has(id))
+    .map(([, patch]) => patch as VariableCatalogEntry)
+    .filter((v) => v.variable_id && v.nombre);
+  return [...patched, ...added];
 }
 
 // ── Imported data ─────────────────────────────────────────────────────────────

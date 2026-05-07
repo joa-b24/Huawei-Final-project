@@ -17,7 +17,7 @@ import DatosTab from "../views/DatosTab";
 const TABS: Tab[] = [
   { id: "diagnostico", label: "Diagnóstico" },
   { id: "relaciones", label: "Impacto" },
-  { id: "estructura", label: "Patrones" },
+  { id: "estructura", label: "Estructura" },
   { id: "temporal", label: "Evolución" },
 ];
 

@@ -5,7 +5,7 @@ Este documento describe el flujo de datos del pipeline Python hacia el dashboard
 ## Etapas implementadas
 
 1. **ETL por fuente** — Transformación y agregación a nivel estatal: ENDUTIH 2024, variables de contexto (CONEVAL + PIBE + ITER), cobertura de red Ookla/IFT, GeoJSON de polígonos estatales.
-2. **Analytics Layer 1** — Estadísticas descriptivas sobre el dataset fusionado: distribuciones, correlaciones Pearson/Spearman, rankings, outliers IQR, Gini por variable.
+2. **Analytics Layer 1** — Estadísticas descriptivas sobre el dataset fusionado: distribuciones, correlaciones Pearson/Spearman, rankings, outliers IQR.
 3. **Publish** — Copia selectiva de `data/processed/` a `public/data/` mediante `scripts/publish.py`.
 
 ## Etapas planificadas (no implementadas)
@@ -54,7 +54,6 @@ npm run data:publish                    # copia data/processed/ → public/data/
 | `data/processed/rankings.json` | Ranking de estados por variable + delta vs. media |
 | `data/processed/outliers_iqr.json` | Valores atípicos por método IQR |
 | `data/processed/state_cards.json` | Perfil completo por estado (métricas fusionadas) |
-| `data/processed/gini.json` | Coeficiente de Gini por variable |
 | `data/processed/univariate_stats.csv` | Estadísticos descriptivos (mean, std, quartiles, skewness) |
 | `data/processed/combined_data.csv` | DataFrame fusionado completo |
 

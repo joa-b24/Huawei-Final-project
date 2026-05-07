@@ -5,6 +5,7 @@ import type { AppData } from "../services/DataService";
 import KpiGrid from "../components/kpi/KpiGrid";
 import ComparisonRadarChart from "../components/charts/ComparisonRadarChart";
 import DistributionHistogram from "../components/charts/DistributionHistogram";
+import InlineBoxplot from "../components/charts/InlineBoxplot";
 import RankingTable from "../components/charts/RankingTable";
 import ChoroplethMap from "../components/charts/ChoroplethMap";
 import EmptyState from "../components/EmptyState";
@@ -132,6 +133,13 @@ export default function DiagnosticoTab({ appData }: Props) {
       ? (primaryRecord.metrics[effectiveHistVarId] ?? null)
       : null;
 
+  const histStateValues = useMemo(() => {
+    if (!effectiveHistVarId) return [];
+    return dataset.records
+      .map((r) => ({ state: r.state, value: r.metrics[effectiveHistVarId] }))
+      .filter((d): d is { state: string; value: number } => typeof d.value === "number" && !isNaN(d.value));
+  }, [effectiveHistVarId, dataset.records]);
+
   const histogramBinStates = useMemo(() => {
     if (!effectiveHistVarId || !distribution) return undefined;
     const { bins, counts } = distribution.histogram;
@@ -227,7 +235,6 @@ export default function DiagnosticoTab({ appData }: Props) {
                 histogram={distribution.histogram}
                 highlightValue={highlightValue}
                 nationalMean={nationalMeanHist}
-                label={primaryState}
                 binStates={histogramBinStates}
               />
             ) : (
@@ -236,7 +243,17 @@ export default function DiagnosticoTab({ appData }: Props) {
                 description="Ejecuta npm run pipeline:layer1 para generar distribuciones."
               />
             )}
-            <p style={{ margin: "6px 0 0", fontSize: 11, color: "var(--text-3)", textAlign: "center" }}>
+            {histStateValues.length >= 4 && (
+              <div style={{ padding: "0 16px 0 28px", marginTop: 2 }}>
+                <InlineBoxplot
+                  stateValues={histStateValues}
+                  highlightState={primaryState}
+                  domainMin={Math.min(...histStateValues.map((d) => d.value))}
+                  domainMax={Math.max(...histStateValues.map((d) => d.value))}
+                />
+              </div>
+            )}
+            <p style={{ margin: "2px 0 0", fontSize: 11, color: "var(--text-3)", textAlign: "center" }}>
               {histMetricDef?.label ?? effectiveHistVarId} — distribución entre los 32 estados
             </p>
           </section>

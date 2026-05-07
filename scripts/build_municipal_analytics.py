@@ -353,32 +353,6 @@ def load_ookla_municipios() -> pd.DataFrame:
     ]
 
 
-def _trapz(y: np.ndarray, x: np.ndarray) -> float:
-    if hasattr(np, "trapezoid"):
-        return float(np.trapezoid(y, x))
-    return float(np.trapz(y, x))  # type: ignore[attr-defined]
-
-
-def weighted_gini(values: np.ndarray, weights: np.ndarray) -> float:
-    v = np.asarray(values, dtype=float)
-    w = np.asarray(weights, dtype=float)
-    mask = np.isfinite(v) & np.isfinite(w) & (w > 0)
-    v, w = v[mask], w[mask]
-    if v.size == 0:
-        return float("nan")
-    order = np.argsort(v)
-    v, w = v[order], w[order]
-    cw = np.concatenate([[0], np.cumsum(w)])
-    cx = np.concatenate([[0], np.cumsum(v * w)])
-    total_w = cw[-1]
-    total_xw = cx[-1]
-    if total_xw <= 0:
-        return 0.0
-    cw_n = cw / total_w
-    cx_n = cx / total_xw
-    return float(1.0 - 2.0 * _trapz(cx_n, cw_n))
-
-
 def theil_l(values: np.ndarray, weights: np.ndarray) -> float:
     v = np.asarray(values, dtype=float)
     w = np.asarray(weights, dtype=float)
@@ -492,9 +466,7 @@ def main() -> None:
     df.loc[df_cluster.index, [f"{c}_z" for c in feature_cols]] = Xz
 
     nat_w = df["pobtot_iter"].to_numpy(dtype=float)
-    nat_gini_4g = weighted_gini(df["pob_pct_4g_garantizada"].to_numpy(), nat_w)
     nat_theil_4g = theil_l(df["pob_pct_4g_garantizada"].to_numpy(), nat_w)
-    nat_gini_3g = weighted_gini(df["pob_pct_3g_garantizada"].to_numpy(), nat_w)
     nat_spear = spearman_safe(df["graproes"], df["pob_pct_4g_garantizada"])
 
     state_rows: list[dict] = []
@@ -508,7 +480,6 @@ def main() -> None:
                 "estado": st.get("estado", g["nom_ent"].iloc[0]),
                 "region": st.get("region", ""),
                 "n_municipios": int(len(g)),
-                "gini_pob_pct_4g": round(weighted_gini(g["pob_pct_4g_garantizada"].to_numpy(), w), 6),
                 "theil_L_pob_pct_4g": round(theil_l(g["pob_pct_4g_garantizada"].to_numpy(), w), 6),
                 "p90_pob_pct_4g": round(float(np.percentile(g["pob_pct_4g_garantizada"], 90)), 4),
                 "p10_pob_pct_4g": round(float(np.percentile(g["pob_pct_4g_garantizada"], 10)), 4),
@@ -521,8 +492,6 @@ def main() -> None:
     state_rows.sort(key=lambda x: x["cve_ent"])
 
     national_payload = {
-        "gini_pob_pct_4g": round(nat_gini_4g, 6),
-        "gini_pob_pct_3g": round(nat_gini_3g, 6),
         "theil_L_pob_pct_4g": round(nat_theil_4g, 6),
         "spearman_graproes_vs_pob_4g": round(nat_spear, 6),
         "kmeans_k": int(k),
@@ -562,7 +531,6 @@ def main() -> None:
 
     print(f"Municipios en maestro: {len(df)}")
     print(f"Municipios en clustering: {len(df_cluster)} (k={k}, sil={sil:.4f})")
-    print(f"Gini nacional 4G (ponderado): {nat_gini_4g:.4f}")
     print(f"Salidas: {csv_path.name}, {json_mun_path.name}, {dash_path.name}")
 
 

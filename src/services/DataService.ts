@@ -108,23 +108,25 @@ function buildDataset(endutihPayload: any, contextPayload: any): DashboardDatase
   const metricMap = new Map<string, MetricDefinition>();
 
   for (const m of endutihPayload.metric_catalog) {
+    const label = m.label ?? m.nombre ?? m.variable_id;
     metricMap.set(m.variable_id, {
       id: m.variable_id,
-      label: m.label,
-      unit: m.unidad,
+      label,
+      unit: m.unidad ?? m.unidad_base ?? "",
       category: m.categoria_id,
-      description: `${m.label} — fuente: ${endutihPayload.source}`,
+      description: `${label} — fuente: ${endutihPayload.source}`,
     });
   }
 
   for (const m of contextPayload.metric_catalog) {
     if (!metricMap.has(m.variable_id)) {
+      const label = m.label ?? m.nombre ?? m.variable_id;
       metricMap.set(m.variable_id, {
         id: m.variable_id,
-        label: m.label,
-        unit: m.unidad,
+        label,
+        unit: m.unidad ?? m.unidad_base ?? "",
         category: m.categoria_id,
-        description: `${m.label} — fuente: ${contextPayload.source}`,
+        description: `${label} — fuente: ${contextPayload.source}`,
       });
     }
   }
