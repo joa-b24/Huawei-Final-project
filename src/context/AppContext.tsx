@@ -4,7 +4,7 @@ import { createContext, useContext, useReducer, type Dispatch, type ReactNode } 
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type TabId = "diagnostico" | "estructura" | "relaciones" | "temporal";
+export type TabId = "diagnostico" | "estructura" | "relaciones" | "temporal" | "territorial";
 
 export type AppState = {
   primaryState: string | null;

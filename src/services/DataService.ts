@@ -8,6 +8,7 @@ import type {
   VariableCatalogEntry,
 } from "../types/dataStandard";
 import type { DashboardDataset, MetricDefinition, StateMetricRecord } from "../types/dataset";
+import type { MunicipioAnalyticsRecord, StateAnalyticsPayload } from "../types/analytics";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Tipos de los payloads cargados
@@ -104,7 +105,12 @@ async function fetchJsonOptional<T>(path: string, fallback: T): Promise<T> {
   }
 }
 
-function buildDataset(endutihPayload: any, contextPayload: any): DashboardDataset {
+function buildDataset(
+  endutihPayload: any,
+  contextPayload: any,
+  stateAnalytics: StateAnalyticsPayload | null,
+  municipios: MunicipioAnalyticsRecord[]
+): DashboardDataset {
   const metricMap = new Map<string, MetricDefinition>();
 
   for (const m of endutihPayload.metric_catalog) {
@@ -153,6 +159,8 @@ function buildDataset(endutihPayload: any, contextPayload: any): DashboardDatase
     updatedAt: endutihPayload.updated_at,
     metricCatalog: Array.from(metricMap.values()),
     records,
+    stateAnalytics,
+    municipios,
   };
 }
 
@@ -160,7 +168,7 @@ export async function loadAppData(): Promise<AppData> {
   const EMPTY_CONTEXT = { metric_catalog: [], records: [], source: "", updated_at: "" };
   const EMPTY_CORRELATIONS: CorrelationsPayload = { pearson: { variables: [], matrix: [], note: "" }, spearman: { variables: [], matrix: [], note: "" } };
 
-  const [endutih, context, stateCards, correlations, distributions, rankings, outliers, catalogPayload] =
+  const [endutih, context, stateCards, correlations, distributions, rankings, outliers, catalogPayload, stateAnalytics, municipios] =
     await Promise.all([
       fetchJson<any>("/data/endutih_2024_state_dashboard.wide.json"),
       fetchJsonOptional<any>("/data/context_variables_state_dashboard.wide.json", EMPTY_CONTEXT),
@@ -170,10 +178,12 @@ export async function loadAppData(): Promise<AppData> {
       fetchJsonOptional<Record<string, RankingEntry[]>>("/data/rankings.json", {}),
       fetchJsonOptional<Record<string, OutlierEntry>>("/data/outliers_iqr.json", {}),
       fetchJsonOptional<{ variables: VariableCatalogEntry[] }>("/data/variables.catalog.json", { variables: [] }),
+      fetchJsonOptional<StateAnalyticsPayload | null>("/data/state_analytics_dashboard.json", null),
+      fetchJsonOptional<MunicipioAnalyticsRecord[]>("/data/municipios_master_analytics.json", []),
     ]);
 
   return {
-    dataset: buildDataset(endutih, context),
+    dataset: buildDataset(endutih, context, stateAnalytics, municipios),
     stateCards,
     correlations,
     distributions,

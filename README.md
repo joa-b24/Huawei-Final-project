@@ -5,8 +5,10 @@
 > - [docs/data-standard.md](./docs/data-standard.md) — esquemas JSON y convenciones de datos
 > - [docs/PIPELINE_ANALYTICS.md](./docs/PIPELINE_ANALYTICS.md) — flujo completo del pipeline
 > - [docs/ui-ux-specs.md](./docs/ui-ux-specs.md) — especificaciones de componentes y diseño
+> - [docs/GINI_ANALYSIS.md](./docs/GINI_ANALYSIS.md) — análisis Gini/Lorenz municipal
+> - [README-EXPOSICION.md](./README-EXPOSICION.md) — narrativa y guía de demo para la expo
 >
-> **Archivos grandes:** el repo usa [Git LFS](https://git-lfs.com). Tras clonar: `git lfs install && git lfs pull`.
+> **Archivos grandes:** el repo usa [Git LFS](https://git-lfs.com). Tras clonar: `git lfs install && git lfs pull`. Patrones en [`.gitattributes`](./.gitattributes).
 
 Aplicación web local para explorar indicadores territoriales de México a nivel estatal.  
 Combina datos de conectividad digital, cobertura de red, contexto socioeconómico y polígonos geográficos en un dashboard interactivo con análisis comparativo por entidad.

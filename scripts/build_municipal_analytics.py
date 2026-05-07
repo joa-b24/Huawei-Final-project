@@ -158,6 +158,8 @@ def load_iter_municipios() -> pd.DataFrame:
         "NOM_MUN",
         "LOC",
         "POBTOT",
+        "POBFEM",
+        "POBMAS",
         "GRAPROES",
         "P_15YMAS",
         "P_18YMAS",
@@ -184,6 +186,8 @@ def load_iter_municipios() -> pd.DataFrame:
     df["cvegeo"] = df["cve_ent"] + df["MUN"].str.strip().str.zfill(3)
     num = [
         "POBTOT",
+        "POBFEM",
+        "POBMAS",
         "GRAPROES",
         "P_15YMAS",
         "P_18YMAS",
@@ -212,6 +216,10 @@ def load_iter_municipios() -> pd.DataFrame:
     df["pct_pob_0_14"] = (df["POB0_14"] / pob * 100).round(4)
     df["pct_pob_15_64"] = (df["POB15_64"] / pob * 100).round(4)
     df["pct_pob_65_mas"] = (df["POB65_MAS"] / pob * 100).round(4)
+    fem = df["POBFEM"].replace(0, np.nan)
+    df["pct_mujeres"] = (df["POBFEM"] / pob * 100).round(4)
+    df["pct_hombres"] = (df["POBMAS"] / pob * 100).round(4)
+    df["indice_masculinidad"] = (df["POBMAS"] / fem * 100.0).round(4)
     df.rename(
         columns={
             "GRAPROES": "graproes",
@@ -233,6 +241,9 @@ def load_iter_municipios() -> pd.DataFrame:
             "pct_pob_0_14",
             "pct_pob_15_64",
             "pct_pob_65_mas",
+            "pct_mujeres",
+            "pct_hombres",
+            "indice_masculinidad",
         ]
     ]
 
@@ -468,6 +479,9 @@ def main() -> None:
     nat_w = df["pobtot_iter"].to_numpy(dtype=float)
     nat_theil_4g = theil_l(df["pob_pct_4g_garantizada"].to_numpy(), nat_w)
     nat_spear = spearman_safe(df["graproes"], df["pob_pct_4g_garantizada"])
+    nat_spear_mujeres = spearman_safe(df["pct_mujeres"], df["pob_pct_4g_garantizada"])
+    nat_spear_65 = spearman_safe(df["pct_pob_65_mas"], df["pob_pct_4g_garantizada"])
+    nat_spear_014 = spearman_safe(df["pct_pob_0_14"], df["pob_pct_4g_garantizada"])
 
     state_rows: list[dict] = []
     for cve_ent, g in df.groupby("cve_ent"):
@@ -485,7 +499,17 @@ def main() -> None:
                 "p10_pob_pct_4g": round(float(np.percentile(g["pob_pct_4g_garantizada"], 10)), 4),
                 "mean_graproes": round(float(g["graproes"].mean()), 4),
                 "mean_pob_pct_4g": round(float(g["pob_pct_4g_garantizada"].mean()), 4),
+                "mean_pct_mujeres": round(float(g["pct_mujeres"].mean()), 4),
                 "spearman_graproes_vs_pob_4g": round(spearman_safe(g["graproes"], g["pob_pct_4g_garantizada"]), 6),
+                "spearman_pct_mujeres_vs_pob_4g": round(
+                    spearman_safe(g["pct_mujeres"], g["pob_pct_4g_garantizada"]), 6
+                ),
+                "spearman_pct_pob_65_mas_vs_pob_4g": round(
+                    spearman_safe(g["pct_pob_65_mas"], g["pob_pct_4g_garantizada"]), 6
+                ),
+                "spearman_pct_pob_0_14_vs_pob_4g": round(
+                    spearman_safe(g["pct_pob_0_14"], g["pob_pct_4g_garantizada"]), 6
+                ),
                 "ookla_municipios_cubiertos": int(g["ookla_cubierto"].sum()),
             }
         )
@@ -494,6 +518,9 @@ def main() -> None:
     national_payload = {
         "theil_L_pob_pct_4g": round(nat_theil_4g, 6),
         "spearman_graproes_vs_pob_4g": round(nat_spear, 6),
+        "spearman_pct_mujeres_vs_pob_4g": round(nat_spear_mujeres, 6),
+        "spearman_pct_pob_65_mas_vs_pob_4g": round(nat_spear_65, 6),
+        "spearman_pct_pob_0_14_vs_pob_4g": round(nat_spear_014, 6),
         "kmeans_k": int(k),
         "kmeans_silhouette": round(sil, 6),
         "n_municipios_modelados": int(len(df)),

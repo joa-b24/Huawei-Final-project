@@ -5,14 +5,15 @@ Este documento describe el flujo de datos del pipeline Python hacia el dashboard
 ## Etapas implementadas
 
 1. **ETL por fuente** — Transformación y agregación a nivel estatal: ENDUTIH 2024, variables de contexto (CONEVAL + PIBE + ITER), cobertura de red Ookla/IFT, GeoJSON de polígonos estatales.
-2. **Analytics Layer 1** — Estadísticas descriptivas sobre el dataset fusionado: distribuciones, correlaciones Pearson/Spearman, rankings, outliers IQR.
-3. **Publish** — Copia selectiva de `data/processed/` a `public/data/` mediante `scripts/publish.py`.
+2. **Dataset maestro municipal** — Cruce de fuentes oficiales (INEGI ITER 2020, CONEVAL IRS 2020, brechas de conectividad por localidad INEGI/IFT 2024, Ookla 2025 cuando exista observación). Features derivadas: educación, brechas 3G/4G, demografía por sexo.
+3. **Analytics Layer 1** — Estadísticas descriptivas sobre el dataset fusionado: distribuciones, correlaciones Pearson/Spearman, rankings, outliers IQR.
+4. **Estandarización + Clustering** — `StandardScaler` + `KMeans` (k=2..7, selección por silhouette score). Perfil de cada cluster por medias de variables clave.
+5. **Desigualdad territorial** — **Theil L** ponderado por población municipal. **Gini** por municipio para análisis de exposición.
+6. **Publish** — Copia selectiva de `data/processed/` a `public/data/` mediante `scripts/publish.py`.
 
-## Etapas planificadas (no implementadas)
+## Vista web (tab Territorial)
 
-- **Clustering** — `KMeans` con silhouette score para agrupar estados por perfil multidimensional.
-- **Desigualdad territorial** — Theil L ponderado por población municipal sobre indicadores de cobertura 4G.
-- **Dataset municipal integrado** — Cruce ITER + CONEVAL IRS + conectividad por localidad a nivel `id_cvegeo`.
+En la app (`npm run dev`), el tab **«Territorial»** permite elegir un estado y muestra Lorenz + Gini, matriz Spearman entre municipios, dispersión configurable y tabla municipal.
 
 ## Cómo ejecutarlo
 
@@ -44,6 +45,14 @@ npm run data:publish                    # copia data/processed/ → public/data/
 | `data/processed/cobertura_red_por_estado_2025.json` | `build_cobertura_red.py` | Velocidad y cobertura Ookla/IFT estatal |
 | `data/processed/cobertura_red_por_municipio_2025.json` | `build_cobertura_red.py` | Ídem a nivel municipal |
 | `data/processed/estados.geojson` | `build_geojson.py` | Polígonos WGS84 para mapa coroplético |
+
+### Variables del dataset municipal (`scripts/build_municipal_analytics.py`)
+
+- **Educación (ITER)**: `graproes`, `pct_sin_escolaridad_15ymas`, `pct_posbasica_18ymas`, `pct_analfabetismo_15ymas`.
+- **Población por sexo (ITER)**: `pct_mujeres`, `pct_hombres`, `indice_masculinidad`.
+- **Rezago / carencias (CONEVAL IRS 2020)**: índice y componentes (`pct_*` IRS).
+- **Conectividad (localidades 2024)**: `loc_pct_4g_garantizada`, `pob_pct_4g_garantizada`, `brecha_4g_pp`, `brecha_3g_pp`.
+- **Ookla (2025, parcial)**: velocidad y cobertura donde `id_cvegeo` coincide; resto `null`.
 
 ### Analytics Layer 1 (`scripts/analytics/layer1_descriptive.py`)
 

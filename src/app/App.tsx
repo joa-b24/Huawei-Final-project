@@ -13,12 +13,14 @@ import PhasePlaceholder from "../components/feedback/PhasePlaceholder";
 import DiagnosticoTab from "../views/DiagnosticoTab";
 import RelacionesTab from "../views/RelacionesTab";
 import DatosTab from "../views/DatosTab";
+import StateTerritorialAnalysis from "../components/state-analysis/StateTerritorialAnalysis";
 
 const TABS: Tab[] = [
   { id: "diagnostico", label: "Diagnóstico" },
   { id: "relaciones", label: "Impacto" },
   { id: "estructura", label: "Estructura" },
   { id: "temporal", label: "Evolución" },
+  { id: "territorial", label: "Territorial" },
 ];
 
 export type ImportedData = {
@@ -121,6 +123,12 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
             <TabPanel id="temporal" activeTab={state.activeTab}>
               <PhasePlaceholder
                 message="Series de tiempo y análisis de tendencias — no disponible aún."
+              />
+            </TabPanel>
+            <TabPanel id="territorial" activeTab={state.activeTab}>
+              <StateTerritorialAnalysis
+                stateAnalytics={appData.dataset.stateAnalytics}
+                municipios={appData.dataset.municipios}
               />
             </TabPanel>
           </>
