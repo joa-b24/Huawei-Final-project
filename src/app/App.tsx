@@ -9,7 +9,9 @@ import OpportunityKpiGrid from "../components/OpportunityKpiGrid";
 import ComparisonBarChart from "../components/charts/ComparisonBarChart";
 import CorrelationScatter from "../components/charts/CorrelationScatter";
 import DumbbellComparisonChart from "../components/charts/DumbbellComparisonChart";
+import MetricHeatmapChart from "../components/charts/MetricHeatmapChart";
 import { loadDataset } from "../data/loadDataset";
+import StateTerritorialAnalysis from "../components/state-analysis/StateTerritorialAnalysis";
 import type { DashboardDataset, MetricDefinition, StateMetricRecord } from "../types/dataset";
 import { buildOpportunityRecords, getMetricAverage, getTopRecordByMetric } from "../utils/dashboard";
 import { getMetricDefinition } from "../utils/metrics";
@@ -37,6 +39,13 @@ const ADOPTION_COVERAGE_IDS = [
   "personas_conexion_datos_celular_pct",
   "personas_compras_internet_pct",
   "personas_usan_banca_movil_pct"
+];
+
+const ADOPTION_COMPARISON_IDS = [
+  "personas_usuarias_internet_pct",
+  "personas_con_smartphone_pct",
+  "personas_conexion_datos_celular_pct",
+  "poblacion_en_localidades_con_4g_garantizada_pct"
 ];
 
 const GAP_METRICS: MetricDefinition[] = [
@@ -203,6 +212,17 @@ export default function App() {
     [selectedAdoptionMetricId]
   );
 
+  const adoptionScatter = useMemo(
+    () =>
+      filteredRecords.map((record) => ({
+        state: record.state,
+        x: record.metrics[adoptionCoveragePair.coverageMetricId] ?? 0,
+        y: record.metrics[selectedAdoptionMetricId] ?? 0,
+        z: record.metrics.poblacion_en_localidades_con_5g_garantizada_pct ?? 0
+      })),
+    [adoptionCoveragePair.coverageMetricId, filteredRecords, selectedAdoptionMetricId]
+  );
+
   const opportunityScatter = useMemo(
     () =>
       opportunityRecords.map((record) => ({
@@ -332,6 +352,15 @@ export default function App() {
                 statLabel: "Top Oportunidad",
                 statValue: [...opportunityRecords].sort((a,b) => b.opportunityScore - a.opportunityScore)[0]?.state || "N/D",
                 color: "#ea580c"
+              },
+              {
+                id: "analisis-estatal",
+                title: "6. Análisis territorial por estado",
+                icon: "📊",
+                desc: "Gini, Lorenz, Spearman y municipios por estado (Censo + conectividad).",
+                statLabel: "Estados en analítica",
+                statValue: dataset.stateAnalytics ? String(dataset.stateAnalytics.states.length) : "N/D",
+                color: "#0d9488"
               }
             ].map((section) => (
               <div 
@@ -693,6 +722,13 @@ export default function App() {
                   />
                 )}
               </DashboardSection>
+            )}
+
+            {activeSection === "analisis-estatal" && (
+              <StateTerritorialAnalysis
+                stateAnalytics={dataset.stateAnalytics}
+                municipios={dataset.municipios}
+              />
             )}
           </div>
         )}

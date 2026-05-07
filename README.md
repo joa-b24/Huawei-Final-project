@@ -2,6 +2,7 @@
 
 > **Presentación / expo (ES, paso a paso):** [README-EXPOSICION.md](./README-EXPOSICION.md) — narrativa, demo, pipeline y **Git LFS**.  
 > **Pipeline analítico municipal:** [docs/PIPELINE_ANALYTICS.md](./docs/PIPELINE_ANALYTICS.md) — estandarización → clustering → Gini/Theil.  
+> **Gini / Lorenz (qué decir en la expo):** [docs/GINI_ANALYSIS.md](./docs/GINI_ANALYSIS.md).  
 > **Archivos grandes:** el repo usa [Git LFS](https://git-lfs.com). Tras clonar: `git lfs install` y `git lfs pull`. Patrones en [`.gitattributes`](./.gitattributes).
 
 Aplicación local para explorar variables territoriales de México con foco en análisis comparativo por entidad.  

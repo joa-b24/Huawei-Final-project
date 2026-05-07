@@ -46,7 +46,7 @@ Catálogo extendido: **`data/SOURCES.md`**.
    - **`public/data/state_analytics_dashboard.json`** — por estado: Gini y Theil sobre cobertura 4G (poblacional), percentiles, Spearman, conteo de municipios con Ookla, etc.  
    Ideal para **texto dinámico** (merge fields) al lado del mapa.
 
-En la expo: *“El front ya consume datos estatales; la salida municipal está reproducible con un comando y lista para enchufarse al UI.”*
+En la expo: *“Las secciones 1–5 usan ENDUTIH estatal; la **sección 6** integra el maestro municipal: selector de estado, Lorenz, Spearman (educación, edades, sexo) y tabla por municipio.”*
 
 ---
 
@@ -139,6 +139,7 @@ git lfs pull
 README-EXPOSICION.md          ← esta guía
 README.md                     ← índice del proyecto + LFS
 docs/PIPELINE_ANALYTICS.md    ← pipeline detallado
+docs/GINI_ANALYSIS.md         ← Gini, Lorenz y cómo contarlo en la expo
 data/SOURCES.md               ← catálogo de fuentes
 scripts/build_municipal_analytics.py
 requirements-pipeline.txt

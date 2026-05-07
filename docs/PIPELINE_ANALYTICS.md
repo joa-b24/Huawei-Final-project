@@ -9,7 +9,11 @@ Este documento describe el flujo acordado para que el entregable tenga **base ex
 3. **Estandarización** — `StandardScaler` (media 0, varianza 1) sobre las columnas usadas en clustering. Los valores crudos se conservan en el dataset; las columnas `_z` son las escaladas.
 4. **Clustering** — `KMeans` con \(k = 2..7\), selección de \(k\) por **silhouette score** (máximo en el rango). Perfil de cada cluster: medias de variables clave; etiqueta corta generada por reglas (no LLM).
 5. **Desigualdad** — **Gini** y **Theil L** (mean log deviation) **ponderados por población municipal** sobre indicadores de cobertura 4G (y 3G como referencia).
-6. **Salida para dashboard** — JSON en `public/data/` listo para `fetch()` desde el front: tabla municipal enriquecida, KPIs nacionales y por estado, correlación Spearman educación–cobertura (asociación, no causalidad).
+6. **Salida para dashboard** — JSON en `public/data/` listo para `fetch()` desde el front: tabla municipal enriquecida, KPIs nacionales y por estado, correlación Spearman educación–cobertura y con **% mujeres**, **% 65+** y **% 0–14** (asociación, no causalidad).
+
+## Vista web (sección 6)
+
+En la app (`npm run dev`), la tarjeta **«6. Análisis territorial por estado»** carga esos JSON, permite elegir un estado y muestra Lorenz + Gini, matriz Spearman entre municipios del estado, dispersión configurable y tabla municipal.
 
 ## Cómo ejecutarlo
 
@@ -40,6 +44,7 @@ npm run data:build:analytics
 ## Variables principales (municipio)
 
 - **Educación (ITER)**: `graproes`, `pct_sin_escolaridad_15ymas`, `pct_posbasica_18ymas`, `pct_analfabetismo_15ymas`.
+- **Población por sexo (ITER, `POBFEM` / `POBMAS`)**: `pct_mujeres`, `pct_hombres`, `indice_masculinidad` (hombres por cada 100 mujeres).
 - **Rezago / carencias (CONEVAL IRS 2020)**: índice y componentes (`pct_*` IRS).
 - **Conectividad (localidades 2024)**: `loc_pct_4g_garantizada`, `pob_pct_4g_garantizada`, `loc_pct_3g_garantizada`, `pob_pct_3g_garantizada`, `brecha_4g_pp`, `brecha_3g_pp`.
 - **Ookla (2025, parcial)**: velocidad y `%` 3G/4G/5G donde `id_cvegeo` coincide; resto `null` + bandera `ookla_cubierto`.

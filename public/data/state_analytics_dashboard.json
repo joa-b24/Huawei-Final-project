@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-29",
+  "updated_at": "2026-05-06",
   "schema_version": "1.0.0",
   "dataset_id": "state_analytics_dashboard",
   "national": {
@@ -7,6 +7,9 @@
     "gini_pob_pct_3g": 0.035106,
     "theil_L_pob_pct_4g": 0.01296,
     "spearman_graproes_vs_pob_4g": 0.36264,
+    "spearman_pct_mujeres_vs_pob_4g": 0.178181,
+    "spearman_pct_pob_65_mas_vs_pob_4g": -0.137577,
+    "spearman_pct_pob_0_14_vs_pob_4g": -0.287461,
     "kmeans_k": 2,
     "kmeans_silhouette": 0.335889,
     "n_municipios_modelados": 2469,
@@ -30,7 +33,11 @@
       "p10_pob_pct_4g": 97.8772,
       "mean_graproes": 9.2364,
       "mean_pob_pct_4g": 98.8342,
+      "mean_pct_mujeres": 50.9558,
       "spearman_graproes_vs_pob_4g": 0.385337,
+      "spearman_pct_mujeres_vs_pob_4g": -0.082572,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.165145,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.321114,
       "ookla_municipios_cubiertos": 10
     },
     {
@@ -45,7 +52,11 @@
       "p10_pob_pct_4g": 98.6281,
       "mean_graproes": 9.7083,
       "mean_pob_pct_4g": 99.4688,
+      "mean_pct_mujeres": 49.1767,
       "spearman_graproes_vs_pob_4g": 0.485714,
+      "spearman_pct_mujeres_vs_pob_4g": 0.314286,
+      "spearman_pct_pob_65_mas_vs_pob_4g": 0.085714,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.542857,
       "ookla_municipios_cubiertos": 6
     },
     {
@@ -60,7 +71,11 @@
       "p10_pob_pct_4g": 92.678,
       "mean_graproes": 9.926,
       "mean_pob_pct_4g": 95.4462,
+      "mean_pct_mujeres": 49.0473,
       "spearman_graproes_vs_pob_4g": 0.8,
+      "spearman_pct_mujeres_vs_pob_4g": 0.4,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.1,
+      "spearman_pct_pob_0_14_vs_pob_4g": 0.0,
       "ookla_municipios_cubiertos": 5
     },
     {
@@ -75,7 +90,11 @@
       "p10_pob_pct_4g": 61.4669,
       "mean_graproes": 8.695,
       "mean_pob_pct_4g": 86.0843,
+      "mean_pct_mujeres": 50.1255,
       "spearman_graproes_vs_pob_4g": 0.72028,
+      "spearman_pct_mujeres_vs_pob_4g": 0.559441,
+      "spearman_pct_pob_65_mas_vs_pob_4g": 0.405594,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.79021,
       "ookla_municipios_cubiertos": 12
     },
     {
@@ -90,7 +109,11 @@
       "p10_pob_pct_4g": 89.3434,
       "mean_graproes": 9.1876,
       "mean_pob_pct_4g": 95.4792,
+      "mean_pct_mujeres": 49.5459,
       "spearman_graproes_vs_pob_4g": 0.322074,
+      "spearman_pct_mujeres_vs_pob_4g": 0.246442,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.292314,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.317276,
       "ookla_municipios_cubiertos": 30
     },
     {
@@ -105,7 +128,11 @@
       "p10_pob_pct_4g": 96.2039,
       "mean_graproes": 9.214,
       "mean_pob_pct_4g": 97.6631,
+      "mean_pct_mujeres": 49.9814,
       "spearman_graproes_vs_pob_4g": -0.078788,
+      "spearman_pct_mujeres_vs_pob_4g": 0.369697,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.151515,
+      "spearman_pct_pob_0_14_vs_pob_4g": 0.260606,
       "ookla_municipios_cubiertos": 10
     },
     {
@@ -120,7 +147,11 @@
       "p10_pob_pct_4g": 66.6825,
       "mean_graproes": 6.9324,
       "mean_pob_pct_4g": 85.8518,
+      "mean_pct_mujeres": 50.7504,
       "spearman_graproes_vs_pob_4g": 0.305666,
+      "spearman_pct_mujeres_vs_pob_4g": 0.242744,
+      "spearman_pct_pob_65_mas_vs_pob_4g": 0.148766,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.350686,
       "ookla_municipios_cubiertos": 78
     },
     {
@@ -135,7 +166,11 @@
       "p10_pob_pct_4g": 18.8437,
       "mean_graproes": 7.6816,
       "mean_pob_pct_4g": 72.6566,
+      "mean_pct_mujeres": 49.6808,
       "spearman_graproes_vs_pob_4g": 0.805818,
+      "spearman_pct_mujeres_vs_pob_4g": 0.103734,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.133768,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.228642,
       "ookla_municipios_cubiertos": 33
     },
     {
@@ -150,7 +185,11 @@
       "p10_pob_pct_4g": 99.9975,
       "mean_graproes": 11.5862,
       "mean_pob_pct_4g": 99.9994,
+      "mean_pct_mujeres": 52.2363,
       "spearman_graproes_vs_pob_4g": 0.14896,
+      "spearman_pct_mujeres_vs_pob_4g": 0.021573,
+      "spearman_pct_pob_65_mas_vs_pob_4g": 0.163952,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.13375,
       "ookla_municipios_cubiertos": 16
     },
     {
@@ -165,7 +204,11 @@
       "p10_pob_pct_4g": 1.4735,
       "mean_graproes": 8.1941,
       "mean_pob_pct_4g": 65.6657,
+      "mean_pct_mujeres": 49.6983,
       "spearman_graproes_vs_pob_4g": 0.800385,
+      "spearman_pct_mujeres_vs_pob_4g": 0.605395,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.065489,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.282808,
       "ookla_municipios_cubiertos": 25
     },
     {
@@ -180,7 +223,11 @@
       "p10_pob_pct_4g": 91.3713,
       "mean_graproes": 8.1567,
       "mean_pob_pct_4g": 95.0715,
+      "mean_pct_mujeres": 51.8104,
       "spearman_graproes_vs_pob_4g": 0.257906,
+      "spearman_pct_mujeres_vs_pob_4g": -0.353175,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.010267,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.378499,
       "ookla_municipios_cubiertos": 41
     },
     {
@@ -195,7 +242,11 @@
       "p10_pob_pct_4g": 64.7718,
       "mean_graproes": 7.0904,
       "mean_pob_pct_4g": 82.9942,
+      "mean_pct_mujeres": 51.7688,
       "spearman_graproes_vs_pob_4g": 0.445112,
+      "spearman_pct_mujeres_vs_pob_4g": 0.121658,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.149097,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.219874,
       "ookla_municipios_cubiertos": 56
     },
     {
@@ -210,7 +261,11 @@
       "p10_pob_pct_4g": 77.1034,
       "mean_graproes": 8.4469,
       "mean_pob_pct_4g": 92.8302,
+      "mean_pct_mujeres": 51.8107,
       "spearman_graproes_vs_pob_4g": 0.71075,
+      "spearman_pct_mujeres_vs_pob_4g": 0.07922,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.655306,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.312523,
       "ookla_municipios_cubiertos": 75
     },
     {
@@ -225,7 +280,11 @@
       "p10_pob_pct_4g": 70.8417,
       "mean_graproes": 8.1638,
       "mean_pob_pct_4g": 90.4977,
+      "mean_pct_mujeres": 50.6711,
       "spearman_graproes_vs_pob_4g": 0.485398,
+      "spearman_pct_mujeres_vs_pob_4g": 0.241276,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.511762,
+      "spearman_pct_pob_0_14_vs_pob_4g": 0.074625,
       "ookla_municipios_cubiertos": 101
     },
     {
@@ -240,7 +299,11 @@
       "p10_pob_pct_4g": 94.4946,
       "mean_graproes": 9.2666,
       "mean_pob_pct_4g": 98.2203,
+      "mean_pct_mujeres": 51.3265,
       "spearman_graproes_vs_pob_4g": 0.564566,
+      "spearman_pct_mujeres_vs_pob_4g": 0.011176,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.157236,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.532588,
       "ookla_municipios_cubiertos": 114
     },
     {
@@ -255,7 +318,11 @@
       "p10_pob_pct_4g": 74.011,
       "mean_graproes": 7.4118,
       "mean_pob_pct_4g": 92.1741,
+      "mean_pct_mujeres": 51.2071,
       "spearman_graproes_vs_pob_4g": 0.478954,
+      "spearman_pct_mujeres_vs_pob_4g": 0.462448,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.159837,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.293136,
       "ookla_municipios_cubiertos": 79
     },
     {
@@ -270,7 +337,11 @@
       "p10_pob_pct_4g": 98.1507,
       "mean_graproes": 9.0547,
       "mean_pob_pct_4g": 99.5902,
+      "mean_pct_mujeres": 51.4952,
       "spearman_graproes_vs_pob_4g": 0.110262,
+      "spearman_pct_mujeres_vs_pob_4g": 0.19184,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.083441,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.014155,
       "ookla_municipios_cubiertos": 28
     },
     {
@@ -285,7 +356,11 @@
       "p10_pob_pct_4g": 67.0599,
       "mean_graproes": 8.68,
       "mean_pob_pct_4g": 88.2968,
+      "mean_pct_mujeres": 49.9643,
       "spearman_graproes_vs_pob_4g": 0.729598,
+      "spearman_pct_mujeres_vs_pob_4g": 0.230075,
+      "spearman_pct_pob_65_mas_vs_pob_4g": 0.142857,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.554887,
       "ookla_municipios_cubiertos": 15
     },
     {
@@ -300,7 +375,11 @@
       "p10_pob_pct_4g": 84.4168,
       "mean_graproes": 8.9331,
       "mean_pob_pct_4g": 95.7719,
+      "mean_pct_mujeres": 49.6836,
       "spearman_graproes_vs_pob_4g": 0.708507,
+      "spearman_pct_mujeres_vs_pob_4g": 0.177278,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.419018,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.076307,
       "ookla_municipios_cubiertos": 34
     },
     {
@@ -315,7 +394,11 @@
       "p10_pob_pct_4g": 65.0619,
       "mean_graproes": 6.9754,
       "mean_pob_pct_4g": 89.2365,
+      "mean_pct_mujeres": 52.2347,
       "spearman_graproes_vs_pob_4g": 0.187663,
+      "spearman_pct_mujeres_vs_pob_4g": 0.132175,
+      "spearman_pct_pob_65_mas_vs_pob_4g": 0.10008,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.310736,
       "ookla_municipios_cubiertos": 156
     },
     {
@@ -330,7 +413,11 @@
       "p10_pob_pct_4g": 83.5679,
       "mean_graproes": 7.4354,
       "mean_pob_pct_4g": 95.0895,
+      "mean_pct_mujeres": 51.8651,
       "spearman_graproes_vs_pob_4g": 0.315368,
+      "spearman_pct_mujeres_vs_pob_4g": 0.019467,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.359994,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.007768,
       "ookla_municipios_cubiertos": 99
     },
     {
@@ -345,7 +432,11 @@
       "p10_pob_pct_4g": 78.181,
       "mean_graproes": 8.6056,
       "mean_pob_pct_4g": 91.2678,
+      "mean_pct_mujeres": 51.7598,
       "spearman_graproes_vs_pob_4g": 0.722001,
+      "spearman_pct_mujeres_vs_pob_4g": -0.551875,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.652498,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.458512,
       "ookla_municipios_cubiertos": 18
     },
     {
@@ -360,7 +451,11 @@
       "p10_pob_pct_4g": 78.9003,
       "mean_graproes": 9.3609,
       "mean_pob_pct_4g": 91.4967,
+      "mean_pct_mujeres": 49.3413,
       "spearman_graproes_vs_pob_4g": 0.845455,
+      "spearman_pct_mujeres_vs_pob_4g": 0.045455,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.636364,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.863636,
       "ookla_municipios_cubiertos": 11
     },
     {
@@ -375,7 +470,11 @@
       "p10_pob_pct_4g": 71.4073,
       "mean_graproes": 7.9019,
       "mean_pob_pct_4g": 86.2761,
+      "mean_pct_mujeres": 50.9402,
       "spearman_graproes_vs_pob_4g": 0.562782,
+      "spearman_pct_mujeres_vs_pob_4g": 0.497585,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.510323,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.022062,
       "ookla_municipios_cubiertos": 44
     },
     {
@@ -390,7 +489,11 @@
       "p10_pob_pct_4g": 75.0357,
       "mean_graproes": 8.9117,
       "mean_pob_pct_4g": 90.708,
+      "mean_pct_mujeres": 49.6722,
       "spearman_graproes_vs_pob_4g": 0.824561,
+      "spearman_pct_mujeres_vs_pob_4g": 0.760578,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.382869,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.692466,
       "ookla_municipios_cubiertos": 16
     },
     {
@@ -405,7 +508,11 @@
       "p10_pob_pct_4g": 73.7853,
       "mean_graproes": 8.7261,
       "mean_pob_pct_4g": 92.7409,
+      "mean_pct_mujeres": 48.4355,
       "spearman_graproes_vs_pob_4g": 0.512428,
+      "spearman_pct_mujeres_vs_pob_4g": 0.200052,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.277809,
+      "spearman_pct_pob_0_14_vs_pob_4g": 0.160255,
       "ookla_municipios_cubiertos": 32
     },
     {
@@ -420,7 +527,11 @@
       "p10_pob_pct_4g": 77.5307,
       "mean_graproes": 9.2071,
       "mean_pob_pct_4g": 92.7577,
+      "mean_pct_mujeres": 50.8526,
       "spearman_graproes_vs_pob_4g": 0.789184,
+      "spearman_pct_mujeres_vs_pob_4g": 0.633909,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.515972,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.297298,
       "ookla_municipios_cubiertos": 17
     },
     {
@@ -435,7 +546,11 @@
       "p10_pob_pct_4g": 76.3958,
       "mean_graproes": 8.4167,
       "mean_pob_pct_4g": 91.341,
+      "mean_pct_mujeres": 49.529,
       "spearman_graproes_vs_pob_4g": 0.762664,
+      "spearman_pct_mujeres_vs_pob_4g": 0.381081,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.532119,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.178307,
       "ookla_municipios_cubiertos": 34
     },
     {
@@ -450,7 +565,11 @@
       "p10_pob_pct_4g": 99.642,
       "mean_graproes": 9.5418,
       "mean_pob_pct_4g": 99.8661,
+      "mean_pct_mujeres": 51.4268,
       "spearman_graproes_vs_pob_4g": 0.206362,
+      "spearman_pct_mujeres_vs_pob_4g": 0.035505,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.018811,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.25733,
       "ookla_municipios_cubiertos": 43
     },
     {
@@ -465,7 +584,11 @@
       "p10_pob_pct_4g": 83.3895,
       "mean_graproes": 7.5171,
       "mean_pob_pct_4g": 93.9851,
+      "mean_pct_mujeres": 51.4259,
       "spearman_graproes_vs_pob_4g": 0.422794,
+      "spearman_pct_mujeres_vs_pob_4g": 0.252048,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.069654,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.288498,
       "ookla_municipios_cubiertos": 143
     },
     {
@@ -480,7 +603,11 @@
       "p10_pob_pct_4g": 94.9835,
       "mean_graproes": 7.6934,
       "mean_pob_pct_4g": 98.5891,
+      "mean_pct_mujeres": 49.8012,
       "spearman_graproes_vs_pob_4g": 0.198236,
+      "spearman_pct_mujeres_vs_pob_4g": 0.062886,
+      "spearman_pct_pob_65_mas_vs_pob_4g": 0.189118,
+      "spearman_pct_pob_0_14_vs_pob_4g": -0.436757,
       "ookla_municipios_cubiertos": 56
     },
     {
@@ -495,7 +622,11 @@
       "p10_pob_pct_4g": 70.4482,
       "mean_graproes": 8.2783,
       "mean_pob_pct_4g": 89.4486,
+      "mean_pct_mujeres": 50.9778,
       "spearman_graproes_vs_pob_4g": 0.530641,
+      "spearman_pct_mujeres_vs_pob_4g": 0.294576,
+      "spearman_pct_pob_65_mas_vs_pob_4g": -0.595035,
+      "spearman_pct_pob_0_14_vs_pob_4g": 0.237072,
       "ookla_municipios_cubiertos": 38
     }
   ]
