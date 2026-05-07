@@ -1,203 +1,154 @@
 # Huawei Territorial Dashboard
 
-> **Presentación / expo (ES, paso a paso):** [README-EXPOSICION.md](./README-EXPOSICION.md) — narrativa, demo, pipeline y **Git LFS**.  
-> **Pipeline analítico municipal:** [docs/PIPELINE_ANALYTICS.md](./docs/PIPELINE_ANALYTICS.md) — estandarización → clustering → Gini/Theil.  
-> **Gini / Lorenz (qué decir en la expo):** [docs/GINI_ANALYSIS.md](./docs/GINI_ANALYSIS.md).  
-> **Archivos grandes:** el repo usa [Git LFS](https://git-lfs.com). Tras clonar: `git lfs install` y `git lfs pull`. Patrones en [`.gitattributes`](./.gitattributes).
+> **Documentación técnica:**
+> - [docs/data-methodology.md](./docs/data-methodology.md) — fuentes, ETL y fórmulas de cálculo
+> - [docs/data-standard.md](./docs/data-standard.md) — esquemas JSON y convenciones de datos
+> - [docs/PIPELINE_ANALYTICS.md](./docs/PIPELINE_ANALYTICS.md) — flujo completo del pipeline
+> - [docs/ui-ux-specs.md](./docs/ui-ux-specs.md) — especificaciones de componentes y diseño
+> - [docs/GINI_ANALYSIS.md](./docs/GINI_ANALYSIS.md) — análisis Gini/Lorenz municipal
+> - [README-EXPOSICION.md](./README-EXPOSICION.md) — narrativa y guía de demo para la expo
+>
+> **Archivos grandes:** el repo usa [Git LFS](https://git-lfs.com). Tras clonar: `git lfs install && git lfs pull`. Patrones en [`.gitattributes`](./.gitattributes).
 
-Aplicación local para explorar variables territoriales de México con foco en análisis comparativo por entidad.  
-La base combina indicadores procesados de ENDUTIH 2024, teledensidad de internet móvil, métricas territoriales de cobertura y un **maestro municipal analítico** (`npm run data:build:analytics`).
+Aplicación web local para explorar indicadores territoriales de México a nivel estatal.  
+Combina datos de conectividad digital, cobertura de red, contexto socioeconómico y polígonos geográficos en un dashboard interactivo con análisis comparativo por entidad.
 
-## Qué contiene 
+---
 
-- una aplicación web local en `React + Vite`
-- un flujo de datos con archivos crudos, catálogos y salidas procesadas
-- indicadores estatales de ENDUTIH 2024
-- una variable estatal adicional de teledensidad de internet móvil
+## Stack
 
-## Estructura general
+- **Frontend:** React 18 + TypeScript + Vite
+- **Visualización:** Recharts, react-simple-maps
+- **Pipeline:** Python 3 (pandas, numpy, pyshp, pyproj, scikit-learn, scipy)
+
+---
+
+## Fuentes integradas
+
+| Fuente | Año | Granularidad | Variables principales |
+|--------|-----|--------------|----------------------|
+| INEGI ENDUTIH | 2024 | Persona (microdato → estatal) | Internet, dispositivos, banca móvil, redes sociales |
+| IFT Teledensidad | 2024 | Estatal | `teledensidad_internet_movil` |
+| BIT / IFT Localidades | 2024 | Localidad → estatal | Cobertura 3G/4G/5G por localidad y población |
+| Ookla Open Datasets | 2025 | Hexágono → municipal/estatal | Velocidad de descarga, tecnología estimada |
+| CONEVAL | 2022 | Estatal | Pobreza, carencias sociales, rezago educativo |
+| INEGI PIBE | 2024 | Estatal | PIB total, PIB per cápita (k MXN) |
+| INEGI ITER | 2020 | Estatal | Población total, PEA, afiliación IMSS |
+| INEGI Marco Geoestadístico | 2020 | Estatal (polígonos) | Fronteras estatales para mapa coroplético |
+
+---
+
+## Estructura del proyecto
 
 ```text
 .
-|-- README.md
-|-- package.json
-|-- scripts/
-|   |-- build_endutih_2024.py
-|   |-- build_municipal_analytics.py
-|   `-- build_data_quality_report.py
-|-- data/
-|   |-- raw/
-|   |   |-- tr_endutih_usuarios_anual_2024.csv
-|   |   |-- tr_endutih_usuarios2_anual_2024.csv
-|   |   |-- TD_TELEDENSIDAD_INTMOVIL_ITE_VA.csv
-|   |   |-- diccionarios
-|   |   `-- metadatos
-|   |-- catalogs/
-|   |   |-- states.master.json
-|   |   `-- variables.catalog.json
-|   `-- processed/
-|       |-- endutih_2024_state_observations.long.json
-|       |-- endutih_2024_state_observations.long.csv
-|       `-- endutih_2024_state_dashboard.wide.json
-|-- public/
-|   `-- data/
-|       `-- endutih_2024_state_dashboard.wide.json
-|-- docs/
-|   |-- data-standard.md
-|   `-- data-methodology.md
-`-- src/
-    |-- app/
-    |-- components/
-    |-- data/
-    |-- styles/
-    |-- types/
-    `-- utils/
+├── package.json
+├── requirements-pipeline.txt
+├── data/
+│   ├── raw/                        ← fuentes crudas (no modificar)
+│   ├── catalogs/
+│   │   ├── states.master.json      ← 32 estados: state_code, cve_ent, región, aliases
+│   │   └── variables.catalog.json  ← catálogo de variables: label, unidad, direction
+│   └── processed/                  ← outputs del pipeline (staging)
+├── public/
+│   └── data/                       ← serving layer: lo que lee el frontend
+├── scripts/
+│   ├── etl/
+│   │   ├── build_endutih_2024.py
+│   │   ├── build_context_variables.py
+│   │   ├── build_cobertura_red.py
+│   │   └── build_geojson.py
+│   ├── analytics/
+│   │   └── layer1_descriptive.py
+│   └── publish.py
+├── docs/
+│   ├── data-methodology.md
+│   ├── data-standard.md
+│   ├── PIPELINE_ANALYTICS.md
+│   └── ui-ux-specs.md
+└── src/
+    ├── app/
+    ├── components/
+    ├── context/
+    ├── lib/
+    ├── services/
+    ├── styles/
+    ├── types/
+    └── views/
 ```
 
-## Cómo está organizada la data
+---
 
-### `data/raw`
+## Flujo de datos
 
-Aquí van los archivos originales.  
-No se editan manualmente.
+```
+data/raw/  →  scripts/etl/*.py  →  data/processed/  →  scripts/analytics/layer1_descriptive.py
+                                                     →  scripts/publish.py  →  public/data/  →  React app
+```
 
-Ejemplos:
-- microdatos `ENDUTIH`
-- diccionarios de variables
-- metadatos
-- archivos externos de servicio móvil como los `TD_*`
+El único punto de contacto entre el pipeline y el frontend es `public/data/`.  
+**Nunca escribir directamente en `public/data/`** — siempre pasar por `publish.py`.
 
-### `data/catalogs`
-
-Aquí están los catálogos que ordenan el proyecto:
-
-- `states.master.json`
-  - catálogo maestro de entidades
-  - incluye `state_code`, `cve_ent`, nombre normalizado y región
-
-- `variables.catalog.json`
-  - catálogo de variables analíticas
-  - define nombre, categoría, unidad y fuente sugerida
-
-### `data/processed`
-
-Aquí quedan las salidas generadas por los scripts.
-
-- `endutih_2024_state_observations.long.json`
-  - formato largo
-  - una fila por entidad y variable
-
-- `endutih_2024_state_observations.long.csv`
-  - misma información en CSV
-
-- `endutih_2024_state_dashboard.wide.json`
-  - formato ancho
-  - una fila por entidad con las métricas agrupadas
-  - este archivo es el que usa el frontend
-
-### `public/data`
-
-Contiene la copia pública del dataset que consume la UI.  
-La idea es que `src` no lea directamente desde `data/processed`, sino desde esta carpeta.
-
-## Flujo de trabajo
-
-El flujo actual es simple:
-
-1. se colocan archivos fuente en `data/raw`
-2. el script `scripts/build_endutih_2024.py` los transforma
-3. el script `scripts/build_data_quality_report.py` genera validaciones y perfil estadístico
-4. las salidas se guardan en `data/processed`
-5. el dataset ancho se publica en `public/data`
-6. el frontend carga ese JSON y construye los dashboards
-
-## Proceso de ciencia de datos visible en el repo
-
-Además del dashboard, el proyecto deja evidencia de una capa de trabajo analítico:
-
-- limpieza de registros sin claves válidas
-- uso de factores de expansión `FAC_PER` en ENDUTIH
-- agregación estadística por entidad
-- cruce territorial por `CVEGEO`
-- validaciones de cobertura, duplicados y rangos
-- perfil descriptivo de las métricas finales
-
-La metodología resumida está en:
-
-- [docs/data-methodology.md](/Users/luismorales/HauweI_final-project/Huawei-Final-project/docs/data-methodology.md:1)
-
-Y el reporte automático queda en:
-
-- [data/processed/endutih_2024_data_quality_report.md](/Users/luismorales/HauweI_final-project/Huawei-Final-project/data/processed/endutih_2024_data_quality_report.md:1)
-- [data/processed/endutih_2024_data_quality_report.json](/Users/luismorales/HauweI_final-project/Huawei-Final-project/data/processed/endutih_2024_data_quality_report.json:1)
-
-## Variables que ya están integradas
-
-Hoy el proyecto ya trae variables reales como:
-
-- personas usuarias de internet
-- personas usuarias de computadora
-- personas con celular
-- personas con smartphone
-- personas que usan banca electrónica
-- personas que realizan compras por internet
-- personas que realizan pagos por internet
-- personas que usan apps de banca móvil
-- teledensidad de internet móvil
+---
 
 ## Cómo correrlo
 
-Instalar dependencias:
+### 1. Instalar dependencias
 
 ```bash
 npm install
+pip install -r requirements-pipeline.txt
 ```
 
-### Pipeline analítico municipal (clustering, Gini, maestro por municipio)
-
-Requiere Python y dependencias del archivo `requirements-pipeline.txt` (recomendado: `python3 -m venv .venv-pipeline && .venv-pipeline/bin/pip install -r requirements-pipeline.txt`).
+### 2. Correr el pipeline
 
 ```bash
-npm run data:build:analytics
-```
-
-### Pipeline ENDUTIH + reporte
-
-Regenerar los datos procesados ENDUTIH:
-
-```bash
+# ETL — fuentes digitales
 npm run data:build:endutih
+
+# ETL — variables de contexto (CONEVAL + PIBE + ITER)
+npm run data:build:context
+
+# ETL — GeoJSON estatal para mapa coroplético
+npm run data:build:geojson
+
+# Analytics Layer 1 — distribuciones, correlaciones, rankings, outliers
+npm run data:build:analytics
+
+# Publish — copia processed/ → public/data/
+npm run data:publish
 ```
 
-Generar el reporte de calidad:
-
-```bash
-npm run data:report:endutih
-```
-
-Ejecutar el flujo completo:
-
-```bash
-npm run data:build:all
-```
-
-Levantar la aplicación:
+### 3. Levantar la aplicación
 
 ```bash
 npm run dev
 ```
 
-Build de validación:
+### 4. Build de validación TypeScript
 
 ```bash
 npm run build
 ```
 
-## Nota de trabajo
+---
 
-Si entra una fuente nueva, la regla es:
+## Proceso de ciencia de datos
 
-- guardar el archivo original en `data/raw`
-- documentar o mapear la variable en `variables.catalog.json`
-- transformar con script
-- publicar solo la salida procesada que realmente usa la UI
+El pipeline deja evidencia explícita de trabajo analítico:
+
+- Uso de factores de expansión `FAC_PER` (ENDUTIH) para agregar microdatos a nivel estatal
+- Cruce territorial por `cve_ent` usando `states.master.json` como fuente de verdad de nombres
+- PIB per cápita calculado como `(pib_total_MDP × 1,000) / poblacion_total` → unidad: k MXN
+- Histogramas, correlaciones Pearson/Spearman, outliers IQR.
+- Reproyección cartográfica LCC ITRF2008 → WGS84 y simplificación de polígonos para el mapa
+
+---
+
+## Regla para agregar una fuente nueva
+
+1. Guardar el archivo original en `data/raw/`
+2. Crear o reusar un script en `scripts/etl/`
+3. Registrar las variables nuevas en `data/catalogs/variables.catalog.json`
+4. Añadir la salida al `PUBLISH_MAP` en `scripts/publish.py`
+5. Correr `python3 scripts/publish.py`

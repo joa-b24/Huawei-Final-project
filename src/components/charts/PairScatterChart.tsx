@@ -1,0 +1,253 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
+import {
+  CartesianGrid,
+  ComposedChart,
+  Line,
+  ResponsiveContainer,
+  Scatter,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import EmptyState from "../EmptyState";
+
+export type ScatterPoint = { state: string; x: number; y: number };
+
+type Props = {
+  data: ScatterPoint[];
+  xLabel: string;
+  yLabel: string;
+  highlightState?: string;
+  xUnit?: string;
+  yUnit?: string;
+};
+
+function linearReg(pts: ScatterPoint[]) {
+  const n = pts.length;
+  if (n < 2) return { slope: 0, intercept: 0, r2: 0 };
+  const xm = pts.reduce((s, p) => s + p.x, 0) / n;
+  const ym = pts.reduce((s, p) => s + p.y, 0) / n;
+  const ssxy = pts.reduce((s, p) => s + (p.x - xm) * (p.y - ym), 0);
+  const ssx = pts.reduce((s, p) => s + (p.x - xm) ** 2, 0);
+  const ssy = pts.reduce((s, p) => s + (p.y - ym) ** 2, 0);
+  const slope = ssx === 0 ? 0 : ssxy / ssx;
+  const r2 = ssx === 0 || ssy === 0 ? 0 : ssxy ** 2 / (ssx * ssy);
+  return { slope, intercept: ym - slope * xm, r2 };
+}
+
+function detectOutliers(pts: ScatterPoint[]): Set<string> {
+  if (pts.length < 6) return new Set();
+  const { slope, intercept } = linearReg(pts);
+  const residuals = pts.map((p) => p.y - (slope * p.x + intercept));
+  const sorted = [...residuals].sort((a, b) => a - b);
+  const n = sorted.length;
+  const q1 = sorted[Math.floor(n * 0.25)];
+  const q3 = sorted[Math.floor(n * 0.75)];
+  const iqr = q3 - q1;
+  if (iqr === 0) return new Set();
+  const lower = q1 - 1.5 * iqr;
+  const upper = q3 + 1.5 * iqr;
+  return new Set(pts.filter((_, i) => residuals[i] < lower || residuals[i] > upper).map((p) => p.state));
+}
+
+const CustomDot = (props: any) => {
+  const { cx, cy, payload, highlightState, outlierStates } = props;
+  const isHighlight = payload.state === highlightState;
+  const isOutlier = outlierStates?.has(payload.state);
+  return (
+    <g opacity={isOutlier ? 0.3 : 1}>
+      {isHighlight && !isOutlier && <circle cx={cx} cy={cy} r={10} fill="var(--blue)" opacity={0.15} />}
+      <circle
+        cx={cx} cy={cy}
+        r={isHighlight ? 6 : 4}
+        fill={isOutlier ? "var(--text-3)" : isHighlight ? "var(--blue)" : "#93c5fd"}
+        stroke="#fff"
+        strokeWidth={1}
+      />
+      {isHighlight && !isOutlier && (
+        <text x={cx + 8} y={cy - 8} fontSize={10} fill="var(--text-2)" fontWeight={600}>
+          {payload.state}
+        </text>
+      )}
+    </g>
+  );
+};
+
+export default function PairScatterChart({ data, xLabel, yLabel, highlightState, xUnit = "", yUnit = "" }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panX, setPanX] = useState(0);
+  const [panY, setPanY] = useState(0);
+  const [excludeOutliers, setExcludeOutliers] = useState(false);
+  const dragStart = useRef<{ mx: number; my: number; px: number; py: number } | null>(null);
+
+  // Reset zoom + pan + outlier toggle when variables change
+  useEffect(() => { setZoomLevel(1); setPanX(0); setPanY(0); setExcludeOutliers(false); }, [xLabel, yLabel]);
+
+  const outlierStates = useMemo(() => detectOutliers(data), [data]);
+  const regressionData = excludeOutliers ? data.filter((p) => !outlierStates.has(p.state)) : data;
+
+  // Non-passive wheel listener for zoom
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const handler = (e: WheelEvent) => {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.5 : 1 / 1.5;
+      setZoomLevel((z) => Math.min(20, Math.max(1, z * factor)));
+    };
+    el.addEventListener("wheel", handler, { passive: false });
+    return () => el.removeEventListener("wheel", handler);
+  }, []);
+
+  if (data.length < 3) {
+    return <EmptyState title="Datos insuficientes" description="Se necesitan al menos 3 estados con dato en ambas variables." />;
+  }
+
+  const { slope, intercept, r2 } = linearReg(regressionData);
+  const xs = data.map((d) => d.x);
+  const ys = data.map((d) => d.y);
+  const xMin = Math.min(...xs), xMax = Math.max(...xs);
+  const yMin = Math.min(...ys), yMax = Math.max(...ys);
+  const xPad = Math.max((xMax - xMin) * 0.08, 1);
+  const yPad = Math.max((yMax - yMin) * 0.08, 1);
+
+  const xCenter = (xMin + xMax) / 2;
+  const yCenter = (yMin + yMax) / 2;
+  const xHalf = (xMax - xMin) / 2 + xPad;
+  const yHalf = (yMax - yMin) / 2 + yPad;
+  const xDomain: [number, number] = [xCenter + panX - xHalf / zoomLevel, xCenter + panX + xHalf / zoomLevel];
+  const yDomain: [number, number] = [yCenter + panY - yHalf / zoomLevel, yCenter + panY + yHalf / zoomLevel];
+
+  function handleMouseDown(e: ReactMouseEvent) {
+    if (zoomLevel <= 1) return;
+    dragStart.current = { mx: e.clientX, my: e.clientY, px: panX, py: panY };
+  }
+
+  function handleMouseMove(e: ReactMouseEvent) {
+    if (!dragStart.current || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const chartW = Math.max(rect.width - 96, 1); // subtract margins + YAxis width
+    const chartH = 264; // 300 - top(8) - bottom(28) margins
+    const dx = e.clientX - dragStart.current.mx;
+    const dy = e.clientY - dragStart.current.my;
+    setPanX(dragStart.current.px - (dx / chartW) * (2 * xHalf / zoomLevel));
+    setPanY(dragStart.current.py + (dy / chartH) * (2 * yHalf / zoomLevel));
+  }
+
+  function handleMouseUp() { dragStart.current = null; }
+  function handleMouseLeave() { dragStart.current = null; }
+
+  const trendPoints = [
+    { x: xMin, yTrend: slope * xMin + intercept },
+    { x: xMax, yTrend: slope * xMax + intercept },
+  ];
+
+  const combined = [
+    ...data.map((d) => ({ x: d.x, y: d.y, state: d.state, yTrend: undefined as number | undefined })),
+    ...trendPoints.map((t) => ({ x: t.x, y: undefined as number | undefined, state: "", yTrend: t.yTrend })),
+  ];
+
+  const isDragging = dragStart.current !== null;
+  const cursor = zoomLevel > 1 ? (isDragging ? "grabbing" : "grab") : "default";
+
+  return (
+    <div
+      ref={containerRef}
+      style={{ userSelect: "none", cursor }}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 8 }}>
+        <p style={{ fontSize: 12, color: "var(--text-3)", margin: 0 }}>
+          R² = {r2.toFixed(2)}
+          {excludeOutliers && outlierStates.size > 0 && (
+            <span style={{ color: "var(--amber)", marginLeft: 6 }}>
+              (sin {outlierStates.size} atípico{outlierStates.size !== 1 ? "s" : ""})
+            </span>
+          )}
+        </p>
+        {outlierStates.size > 0 && (
+          <button
+            type="button"
+            className={`btn-ghost scatter-outlier-toggle${excludeOutliers ? " active" : ""}`}
+            onClick={() => setExcludeOutliers((v) => !v)}
+          >
+            {excludeOutliers ? "Mostrando atípicos" : `Excluir atípicos (${outlierStates.size})`}
+          </button>
+        )}
+        {zoomLevel > 1 && (
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{ fontSize: 11, padding: "2px 8px" }}
+            onClick={() => { setZoomLevel(1); setPanX(0); setPanY(0); }}
+          >
+            Restablecer zoom
+          </button>
+        )}
+      </div>
+      <ResponsiveContainer width="100%" height={300}>
+        <ComposedChart data={combined} margin={{ top: 8, right: 24, bottom: 28, left: 16 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+          <XAxis
+            type="number"
+            dataKey="x"
+            name={xLabel}
+            domain={xDomain}
+            allowDataOverflow
+            tickFormatter={(v: number) => (+v.toFixed(1)).toString()}
+            label={{ value: `${xLabel}${xUnit ? ` (${xUnit})` : ""}`, position: "insideBottom", offset: -14, fontSize: 11, fill: "var(--text-3)" }}
+            tick={{ fontSize: 11, fill: "var(--text-3)" }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            type="number"
+            dataKey="y"
+            name={yLabel}
+            domain={yDomain}
+            allowDataOverflow
+            tickFormatter={(v: number) => (+v.toFixed(1)).toString()}
+            label={{ value: `${yLabel}${yUnit ? ` (${yUnit})` : ""}`, angle: -90, position: "insideLeft", offset: 0, style: { textAnchor: "middle" }, fontSize: 11, fill: "var(--text-3)" }}
+            tick={{ fontSize: 11, fill: "var(--text-3)" }}
+            axisLine={false}
+            tickLine={false}
+            width={56}
+          />
+          <Tooltip
+            content={({ payload }) => {
+              const p = payload?.[0]?.payload;
+              if (!p || !p.state) return null;
+              return (
+                <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "8px 12px", fontSize: 12 }}>
+                  <strong>{p.state}</strong>
+                  <div>{xLabel}: {p.x?.toFixed(1)}</div>
+                  <div>{yLabel}: {p.y?.toFixed(1)}</div>
+                </div>
+              );
+            }}
+          />
+          <Line
+            dataKey="yTrend"
+            dot={false}
+            stroke="var(--text-3)"
+            strokeDasharray="5 4"
+            strokeWidth={1.5}
+            isAnimationActive={false}
+            connectNulls={false}
+          />
+          <Scatter
+            dataKey="y"
+            data={data}
+            shape={(props: any) => <CustomDot {...props} highlightState={highlightState} outlierStates={excludeOutliers ? outlierStates : undefined} />}
+            isAnimationActive={false}
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}

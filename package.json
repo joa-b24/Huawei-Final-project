@@ -11,11 +11,18 @@
     "data:build:endutih": "python3 scripts/build_endutih_2024.py",
     "data:report:endutih": "python3 scripts/build_data_quality_report.py",
     "data:build:all": "python3 scripts/build_endutih_2024.py && python3 scripts/build_data_quality_report.py",
-    "data:build:analytics": "python3 scripts/build_municipal_analytics.py"
+    "data:build:analytics": "python3 scripts/build_municipal_analytics.py",
+    "data:build:context": "python3 scripts/etl/build_context_variables.py",
+    "data:build:geojson": "python3 scripts/etl/build_geojson.py",
+    "data:import": "python3 scripts/import_variable.py",
+    "data:layer1": "python3 scripts/analytics/layer1_descriptive.py",
+    "data:publish": "python3 scripts/publish.py"
   },
   "dependencies": {
+    "lucide-react": "^1.14.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-simple-maps": "^3.0.0",
     "recharts": "^2.15.1"
   },
   "devDependencies": {
