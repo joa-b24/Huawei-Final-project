@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import { getMetricDirection } from "../services/DataService";
+import { getMetricPolaridad } from "../services/DataService";
 import type { AppData } from "../services/DataService";
 import KpiGrid from "../components/kpi/KpiGrid";
 import ComparisonRadarChart from "../components/charts/ComparisonRadarChart";
@@ -68,15 +68,23 @@ export default function DiagnosticoTab({ appData }: Props) {
         unit: metricDef?.unit,
         tipoValor: guessTipoValor(varId, metricDef?.unit ?? ""),
         delta,
-        direction: getMetricDirection(varId, appData.variablesCatalog),
+        direction: getMetricPolaridad(varId, appData.variablesCatalog),
         isOutlier: stateIsOutlier,
       };
     });
   }, [primaryRecord, activeVariableIds, dataset, outliers]);
 
+  const polaridadMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const varId of activeVariableIds) {
+      map[varId] = getMetricPolaridad(varId, appData.variablesCatalog);
+    }
+    return map;
+  }, [activeVariableIds, appData.variablesCatalog]);
+
   const normalizedMap = useMemo(
-    () => normalizeForRadar(dataset.records, activeVariableIds),
-    [dataset.records, activeVariableIds]
+    () => normalizeForRadar(dataset.records, activeVariableIds, polaridadMap),
+    [dataset.records, activeVariableIds, polaridadMap]
   );
 
   const stateRegionMap = useMemo(
@@ -303,7 +311,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                 metricLabel={rankingMetricDef?.label ?? effectiveRankingVarId ?? ""}
                 unit={rankingMetricDef?.unit}
                 view={rankingView}
-                direction={effectiveRankingVarId ? getMetricDirection(effectiveRankingVarId, appData.variablesCatalog) : undefined}
+                direction={effectiveRankingVarId ? getMetricPolaridad(effectiveRankingVarId, appData.variablesCatalog) : undefined}
               />
             ) : (
               <EmptyState

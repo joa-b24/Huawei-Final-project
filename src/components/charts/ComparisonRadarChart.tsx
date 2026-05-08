@@ -280,6 +280,9 @@ export default function ComparisonRadarChart({
           </BarChart>
         </ResponsiveContainer>
       )}
+      <p style={{ margin: "10px 0 0", fontSize: 11, color: "var(--text-3)", textAlign: "center" }}>
+        Valores normalizados 0–100 (min-max). En métricas de polaridad negativa (ej. pobreza) se invierte para que mayor puntuación indique mejor desempeño.
+      </p>
     </div>
   );
 }

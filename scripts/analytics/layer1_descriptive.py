@@ -140,45 +140,122 @@ class Layer1Descriptive:
 
     def state_profile_cards(self) -> dict:
         numeric = self._numeric_cols()
-        col_min = self.combined[numeric].min()
-        col_max = self.combined[numeric].max()
-        col_range = (col_max - col_min).replace(0, float("nan"))
-        normalized = (self.combined[numeric] - col_min) / col_range
-
         cards: dict = {}
-        for idx, row in self.combined.iterrows():
+        for _, row in self.combined.iterrows():
             state = row["state_code"]
-            norm_vals = normalized.loc[idx].dropna().values
-            overall = float(np.mean(norm_vals) * 100) if len(norm_vals) > 0 else 0.0
             cards[state] = {
                 "estado": row.get("estado", state),
                 "region": row.get("region", ""),
                 "metrics": {col: float(row[col]) for col in numeric if not _isnan(row[col])},
-                "overall_score": round(overall, 2),
-                "color_code": "green" if overall > 70 else "yellow" if overall > 50 else "red",
             }
         return cards
 
     # ── Export ───────────────────────────────────────────────────────────────
 
-    def export(self, output_dir: Path = OUTPUT_DIR) -> Path:
+    def export(
+        self,
+        output_dir: Path = OUTPUT_DIR,
+        new_vars: set[str] | None = None,
+    ) -> Path:
+        """Escribe los JSONs de Layer1.
+
+        Si `new_vars` es None → recalcula todo.
+        Si `new_vars` es un set de variable_ids → actualiza solo esas variables
+        en cada archivo, preservando las demás entradas existentes.
+        """
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        analyses = {
+        if new_vars is None:
+            self._export_full(output_dir)
+        else:
+            self._export_partial(output_dir, new_vars)
+
+        self.combined.to_csv(output_dir / "combined_data.csv", index=False)
+        self.univariate_stats().to_csv(output_dir / "univariate_stats.csv")
+        print(f"Layer1 finalizado en: {output_dir}")
+        return output_dir
+
+    def _export_full(self, output_dir: Path) -> None:
+        files = {
             "distributions.json": self.distribution_analysis(),
             "correlations.json": self.correlation_matrices(),
             "outliers_iqr.json": self.outlier_detection(method="iqr"),
             "rankings.json": self.state_rankings(),
             "state_cards.json": self.state_profile_cards(),
         }
-        for filename, data in analyses.items():
+        for filename, data in files.items():
             (output_dir / filename).write_text(
                 json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
             )
-        self.univariate_stats().to_csv(output_dir / "univariate_stats.csv")
-        self.combined.to_csv(output_dir / "combined_data.csv", index=False)
-        print(f"Layer1 outputs escritos en: {output_dir}")
-        return output_dir
+            print(f"  [ok] {filename}")
+
+    def _export_partial(self, output_dir: Path, new_vars: set[str]) -> None:
+        valid_vars = {v for v in new_vars if v in self.combined.columns}
+        if not valid_vars:
+            print("  [skip] Ninguna variable en new_vars existe en el dataset.")
+            return
+
+        # ── Archivos con estructura {variable_id: datos} ──────────────────
+        per_var_files: dict[str, dict] = {
+            "distributions.json": self.distribution_analysis(),
+            "outliers_iqr.json": self.outlier_detection(method="iqr"),
+            "rankings.json": self.state_rankings(),
+        }
+        for filename, fresh in per_var_files.items():
+            target = output_dir / filename
+            existing: dict = json.loads(target.read_text(encoding="utf-8")) if target.exists() else {}
+            for var_id in valid_vars:
+                if var_id in fresh:
+                    existing[var_id] = fresh[var_id]
+                    print(f"  [ok] {filename} ← {var_id}")
+            target.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        # ── state_cards: keyed por state_code, siempre se regenera completo ──
+        cards_target = output_dir / "state_cards.json"
+        cards_target.write_text(
+            json.dumps(self.state_profile_cards(), ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        print("  [ok] state_cards.json (completo)")
+
+        # ── Correlaciones: actualizar fila+columna de cada var cambiada ───
+        self._update_correlations_partial(output_dir / "correlations.json", valid_vars)
+
+    def _update_correlations_partial(self, target: Path, new_vars: set[str]) -> None:
+        existing: dict = json.loads(target.read_text(encoding="utf-8")) if target.exists() else {}
+
+        for method in ("pearson", "spearman"):
+            block = existing.get(method, {"matrix": [], "variables": [], "note": ""})
+            ex_vars: list[str] = block["variables"]
+            matrix: list[list] = block["matrix"]
+
+            for var_id in new_vars:
+                if var_id not in self.combined.columns:
+                    continue
+
+                # Añadir variable nueva si no estaba
+                if var_id not in ex_vars:
+                    ex_vars.append(var_id)
+                    for row in matrix:
+                        row.append(None)
+                    matrix.append([None] * len(ex_vars))
+
+                idx = ex_vars.index(var_id)
+                for j, other in enumerate(ex_vars):
+                    if other not in self.combined.columns:
+                        continue
+                    pair = self.combined[[var_id, other]].dropna()
+                    corr = float(pair.corr(method=method).iloc[0, 1]) if len(pair) > 2 else None
+                    if corr is not None and np.isnan(corr):
+                        corr = None
+                    matrix[idx][j] = corr
+                    matrix[j][idx] = corr
+
+            block["variables"] = ex_vars
+            block["matrix"] = matrix
+            existing[method] = block
+            print(f"  [ok] correlations.json ({method}) ← {new_vars}")
+
+        target.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # ── Helpers ──────────────────────────────────────────────────────────────
 

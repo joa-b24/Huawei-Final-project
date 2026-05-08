@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { useAppContext } from "../../context/AppContext";
 import type { AppData } from "../../services/DataService";
-import { getMetricDirection } from "../../services/DataService";
 
 const GEO_URL = "/data/estados.geojson";
 
@@ -10,29 +9,18 @@ type Props = {
   appData: AppData;
 };
 
-function interpolateColor(t: number, direction: "higher_better" | "lower_better"): string {
-  // t in [0,1]: 0=worst, 1=best
+function interpolateColor(t: number): string {
   const clamped = Math.max(0, Math.min(1, t));
-  if (direction === "higher_better") {
-    // low → grayish-blue, high → vibrant blue
-    const r = Math.round(210 - clamped * 150);
-    const g = Math.round(220 - clamped * 100);
-    const b = Math.round(235 - clamped * 10);
-    return `rgb(${r},${g},${b})`;
-  } else {
-    // low → good (blue), high → bad (red)
-    const flipped = 1 - clamped;
-    const r = Math.round(210 - flipped * 150);
-    const g = Math.round(220 - flipped * 100);
-    const b = Math.round(235 - flipped * 10);
-    return `rgb(${r},${g},${b})`;
-  }
+  const r = Math.round(210 - clamped * 150);
+  const g = Math.round(220 - clamped * 100);
+  const b = Math.round(235 - clamped * 10);
+  return `rgb(${r},${g},${b})`;
 }
 
 export default function ChoroplethMap({ appData }: Props) {
   const { state: appState, dispatch } = useAppContext();
   const { primaryState, activeVariableIds } = appState;
-  const { dataset, variablesCatalog } = appData;
+  const { dataset } = appData;
 
   const [selectedVarId, setSelectedVarId] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; content: string } | null>(null);
@@ -49,9 +37,6 @@ export default function ChoroplethMap({ appData }: Props) {
     }
   }, [activeVariableIds, effectiveVarId]);
 
-  const direction = effectiveVarId
-    ? getMetricDirection(effectiveVarId, variablesCatalog)
-    : "higher_better";
 
   const metricDef = effectiveVarId
     ? dataset.metricCatalog.find((m) => m.id === effectiveVarId)
@@ -163,7 +148,7 @@ export default function ChoroplethMap({ appData }: Props) {
                       value !== undefined && maxVal !== minVal
                         ? (value - minVal) / (maxVal - minVal)
                         : 0.5;
-                    const fill = value !== undefined ? interpolateColor(t, direction) : "var(--border)";
+                    const fill = value !== undefined ? interpolateColor(t) : "var(--border)";
                     return (
                       <Geography
                         key={geo.rsmKey}
@@ -236,19 +221,13 @@ export default function ChoroplethMap({ appData }: Props) {
         );
       })()}
 
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, justifyContent: "center" }}>
-        <span style={{ fontSize: 11, color: "var(--text-3)" }}>
-          {direction === "higher_better" ? "Menor" : "Mejor"}
-        </span>
+      <div className="legend-map" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, justifyContent: "center" }}>
+        <span style={{ fontSize: 11, color: "var(--text-3)" }}>Menor</span>
         <div style={{
           width: 140, height: 10, borderRadius: 5,
-          background: direction === "higher_better"
-            ? "linear-gradient(to right, rgb(60,120,225), rgb(210,220,235))"
-            : "linear-gradient(to right, rgb(60,120,225), rgb(210,220,235))",
+          background: "linear-gradient(to right, rgb(210,220,235), rgb(60,120,225))",
         }} />
-        <span style={{ fontSize: 11, color: "var(--text-3)" }}>
-          {direction === "higher_better" ? "Mayor" : "Peor"}
-        </span>
+        <span style={{ fontSize: 11, color: "var(--text-3)" }}>Mayor</span>
       </div>
 
       <p style={{ textAlign: "center", fontSize: 11, color: "var(--text-3)", margin: "4px 0 0" }}>

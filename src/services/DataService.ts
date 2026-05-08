@@ -1,7 +1,7 @@
 import type {
   CorrelationsPayload,
   DistributionEntry,
-  MetricDirection,
+  MetricPolaridad,
   OutlierEntry,
   RankingEntry,
   StateCard,
@@ -29,7 +29,7 @@ export type AppData = {
 // Derived from variables.catalog.json — ampliar aquí cuando entren variables nuevas.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const METRIC_DIRECTION: Record<string, MetricDirection> = {
+const METRIC_DIRECTION: Record<string, MetricPolaridad> = {
   // higher = better
   personas_usuarias_internet_pct: "higher_better",
   personas_usuarias_computadora_pct: "higher_better",
@@ -74,10 +74,10 @@ const METRIC_DIRECTION: Record<string, MetricDirection> = {
   int_pct_3g_coverage: "lower_better",
 };
 
-export function getMetricDirection(
+export function getMetricPolaridad(
   metricId: string,
   catalog?: VariableCatalogEntry[]
-): MetricDirection {
+): MetricPolaridad {
   if (catalog) {
     const entry = catalog.find((v) => v.variable_id === metricId);
     if (entry?.direction) return entry.direction;

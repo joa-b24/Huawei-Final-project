@@ -1,4 +1,4 @@
-import type { MetricDirection, TipoValor } from "../types/dataStandard";
+import type { MetricPolaridad, TipoValor } from "../types/dataStandard";
 
 export function formatValue(val: number | null | undefined, tipoValor: TipoValor = "number"): string {
   if (val === null || val === undefined || isNaN(val)) return "N/D";
@@ -23,7 +23,7 @@ export type DeltaDisplay = {
 
 export function formatDelta(
   delta: number | null | undefined,
-  direction: MetricDirection,
+  direction: MetricPolaridad,
   tipoValor?: TipoValor
 ): DeltaDisplay {
   if (delta === null || delta === undefined || isNaN(delta)) {

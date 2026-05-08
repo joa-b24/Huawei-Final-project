@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { VariableCatalogEntry, CategoryId, TipoValor, AgregacionDefault, MetricDirection } from "../../../types/dataStandard";
+import type { VariableCatalogEntry, CategoryId, TipoValor, AgregacionDefault, MetricPolaridad } from "../../../types/dataStandard";
 import type { OperationType } from "../../../lib/dataStorage";
 
 type Props = {
@@ -108,7 +108,7 @@ export default function Step2Variable({ operation, catalog, selected, onSelect, 
               </datalist>
             </label>
             <label>Dirección
-              <select value={draft.direction ?? "higher_better"} onChange={(e) => handleDraftChange("direction", e.target.value as MetricDirection)}>
+              <select value={draft.direction ?? "higher_better"} onChange={(e) => handleDraftChange("direction", e.target.value as MetricPolaridad)}>
                 <option value="higher_better">↑ Mayor es mejor</option>
                 <option value="lower_better">↓ Menor es mejor</option>
               </select>

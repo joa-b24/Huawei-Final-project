@@ -1,5 +1,5 @@
 import { formatDelta, formatValue } from "../../lib/format";
-import type { MetricDirection, TipoValor } from "../../types/dataStandard";
+import type { MetricPolaridad, TipoValor } from "../../types/dataStandard";
 
 export type KpiCardProps = {
   label: string;
@@ -7,7 +7,7 @@ export type KpiCardProps = {
   unit?: string;
   tipoValor?: TipoValor;
   delta?: number | null;
-  direction?: MetricDirection;
+  direction?: MetricPolaridad;
   isOutlier?: boolean;
 };
 

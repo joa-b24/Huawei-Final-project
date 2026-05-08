@@ -1,5 +1,5 @@
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { MetricDirection, RankingEntry } from "../../types/dataStandard";
+import type { MetricPolaridad, RankingEntry } from "../../types/dataStandard";
 import MissingDataNote from "../feedback/MissingDataNote";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   unit?: string;
   total?: number;
   view?: "table" | "bars";
-  direction?: MetricDirection;
+  direction?: MetricPolaridad;
 };
 
 export default function RankingTable({ rows, highlightState, metricLabel, unit = "", total = 32, view = "table", direction }: Props) {
@@ -81,7 +81,7 @@ export default function RankingTable({ rows, highlightState, metricLabel, unit =
             <tr>
               <th>#</th>
               <th>Estado</th>
-              <th>{metricLabel}{unit && ` (${unit})`}</th>
+              <th>Variable{unit && ` (${unit})`}</th>
               <th>vs media</th>
             </tr>
           </thead>

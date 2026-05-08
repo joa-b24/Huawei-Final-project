@@ -17,8 +17,6 @@ function buildStateCardsFromRecords(records: StateMetricRecord[]): Record<string
       estado: r.state,
       region: r.region ?? "",
       metrics: r.metrics,
-      overall_score: 0,
-      color_code: "yellow",
     };
   }
   return result;

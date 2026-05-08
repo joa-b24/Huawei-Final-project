@@ -15,9 +15,12 @@ export type TipoValor = "number" | "integer" | "percentage" | "currency";
 
 export type AgregacionDefault = "avg" | "sum" | "latest";
 
-/** "higher_better": más alto = mejor (ej. cobertura internet).
- *  "lower_better": más bajo = mejor (ej. pobreza, carencia). */
-export type MetricDirection = "higher_better" | "lower_better";
+/** "higher_better": polaridad positiva — más alto = mejor (ej. cobertura internet).
+ *  "lower_better": polaridad negativa — más bajo = mejor (ej. pobreza, carencia). */
+export type MetricPolaridad = "higher_better" | "lower_better";
+
+/** @deprecated Usa MetricPolaridad */
+export type MetricDirection = MetricPolaridad;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Catálogo de variables
@@ -31,7 +34,7 @@ export type VariableCatalogEntry = {
   unidad_base: string;
   tipo_valor: TipoValor;
   agregacion_default: AgregacionDefault;
-  direction?: MetricDirection;
+  direction?: MetricPolaridad;
   fuente_sugerida: string;
   sinonimos: string[];
 };
@@ -212,8 +215,6 @@ export type StateCard = {
   estado: string;
   region: string;
   metrics: Record<string, number>;
-  overall_score: number;
-  color_code: "green" | "yellow" | "red";
 };
 
 /** Shape de dashboard_data/correlations.json */
