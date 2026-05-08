@@ -187,10 +187,6 @@ export default function DiagnosticoTab({ appData }: Props) {
 
   return (
     <div className="tab-content">
-      <p className="tab-section-label">
-        Perfil de <strong>{primaryState}</strong>
-      </p>
-
       {kpiCards.length > 0 ? (
         <KpiGrid cards={kpiCards} />
       ) : (
@@ -276,7 +272,15 @@ export default function DiagnosticoTab({ appData }: Props) {
                 </select>
               )}
             </div>
-            <div className="toggle-pill ranking-panel__toggle" role="group" aria-label="Vista del ranking">
+            <div
+              className="toggle-pill ranking-panel__toggle"
+              role="group"
+              aria-label="Vista del ranking"
+              onKeyDown={(e) => {
+                if (e.key === "ArrowLeft") setRankingView("table");
+                if (e.key === "ArrowRight") setRankingView("bars");
+              }}
+            >
               <button
                 type="button"
                 className={`toggle-pill__btn${rankingView === "table" ? " active" : ""}`}

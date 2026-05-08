@@ -100,6 +100,7 @@ select {
   border-radius: 24px;
   background: var(--surface-plain);
   backdrop-filter: blur(10px);
+  position: relative;
 }
 
 .controls-panel {
@@ -561,6 +562,7 @@ select {
   top: 0;
   background: var(--bg);
   z-index: 50;
+  flex-direction: column;
 }
 .tab-bar-row .tab-bar {
   flex: 1;
@@ -779,7 +781,7 @@ select {
    Tab content layout
 ───────────────────────────────────────────────────────────────────────────── */
 .tab-content { display: flex; flex-direction: column; }
-.tab-section-label { margin: 0 0 16px; font-size: 13px; font-weight: 600; color: var(--text-3); }
+.tab-section-label { margin: 12px 0 16px; font-size: 16px; font-weight: 600; color: var(--text-3); }
 .tab-section-label strong { color: var(--text-1); font-weight: 700; }
 .panel-title { margin: 0 0 16px; font-size: 14px; font-weight: 600; color: var(--text-1); }
 
@@ -791,11 +793,11 @@ select {
 .ranking-var-select { font-size: 12px; font-weight: 600; color: var(--text-2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 5px; background: var(--surface-plain); cursor: pointer; max-width: 320px; margin-top: 10px; }
 
 /* Toggle pill */
-.toggle-pill { display: inline-flex; border: 2px solid var(--blue); border-radius: 100px; overflow: hidden; flex-shrink: 0; }
+.toggle-pill { display: inline-flex; ; border: 2px solid var(--blue); border-radius: 100px; overflow: hidden; flex-shrink: 0; position: absolute; top: 18px; right: 24px; }
 .toggle-pill__btn { padding: 2px 14px; background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-3); white-space: nowrap; transition: background 0.12s, color 0.12s; }
 .toggle-pill__btn.active { background: var(--blue); color: #fff; }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 0; }
-.two-col > .panel { margin-top: 0; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px;}
+.two-col > .panel { margin-top: 24; }
 
 @media (max-width: 900px) {
   .dashboard-block-header {
@@ -973,4 +975,3 @@ select {
 .btn-ghost:hover { background: var(--blue-light); color: var(--blue); }
 .scatter-outlier-toggle { font-size: 11px; padding: 2px 10px; }
 .scatter-outlier-toggle.active { background: color-mix(in srgb, var(--amber) 12%, transparent); color: var(--amber); border-color: var(--amber); }
-}

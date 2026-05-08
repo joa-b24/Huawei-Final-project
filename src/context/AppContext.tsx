@@ -60,7 +60,7 @@ const DEFAULT_VARIABLES = [
 ];
 
 const initialState: AppState = {
-  primaryState: "Nuevo Leon",
+  primaryState: "Ciudad de Mexico",
   activeTab: "diagnostico",
   activeVariableIds: DEFAULT_VARIABLES,
 };

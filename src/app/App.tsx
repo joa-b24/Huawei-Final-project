@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Database } from "lucide-react";
+import { Database, Download } from "lucide-react";
 import { AppProvider, actions, useAppContext, type TabId } from "../context/AppContext";
 import { loadAppData, type AppData } from "../services/DataService";
 import { loadHiddenIds } from "../lib/dataStorage";
@@ -56,6 +56,32 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
   const [datosOpen, setDatosOpen] = useState(false);
   const [catalogVersion, setCatalogVersion] = useState(0);
 
+  function exportSnapshot() {
+    const styles = Array.from(document.styleSheets)
+      .map((sheet) => {
+        try {
+          return Array.from(sheet.cssRules).map((r) => r.cssText).join("\n");
+        } catch { return ""; }
+      }).join("\n");
+    const content = document.querySelector(".layout-main")?.outerHTML ?? document.body.innerHTML;
+    const date = new Date().toISOString().slice(0, 10);
+    const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Snapshot ${date}</title>
+<style>${styles}</style>
+<style>button,select,input{pointer-events:none!important;cursor:default!important}.sidebar-toggle{display:none}</style>
+</head>
+<body>${content}</body>
+</html>`;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+    a.download = `dashboard-snapshot-${date}.html`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   const allStateNames = useMemo(
     () => appData.dataset.records.map((r) => r.state),
     [appData.dataset.records]
@@ -91,19 +117,33 @@ function Dashboard({ appData, onImport }: { appData: AppData; onImport: (d: Impo
       <MainContent>
         <h1 className="page-title">Análisis de Indicadores Estatales</h1>
         <div className="tab-bar-row">
-          <TabBar
-            tabs={TABS}
-            activeTab={datosOpen ? "__none__" : state.activeTab}
-            onTabChange={(id) => { setDatosOpen(false); dispatch(actions.setTab(id as TabId)); }}
-          />
-          <button
-            className={`btn-datos${datosOpen ? " active" : ""}`}
-            onClick={() => setDatosOpen((v) => !v)}
-            type="button"
-          >
-            <Database size={14} />
-            Datos
-          </button>
+          <p className="tab-section-label">
+            Perfil de <strong>{state.primaryState}</strong>
+          </p>
+          <div style={{ display: "flex", alignItems: "stretch" }}>
+            <TabBar
+              tabs={TABS}
+              activeTab={datosOpen ? "__none__" : state.activeTab}
+              onTabChange={(id) => { setDatosOpen(false); dispatch(actions.setTab(id as TabId)); }}
+            />
+            <button
+              className={`btn-datos${datosOpen ? " active" : ""}`}
+              onClick={() => setDatosOpen((v) => !v)}
+              type="button"
+            >
+              <Database size={14} />
+              Datos
+            </button>
+            <button
+              className="btn-datos"
+              onClick={exportSnapshot}
+              type="button"
+              title="Exportar snapshot HTML"
+            >
+              <Download size={14} />
+              Exportar
+            </button>
+          </div>
         </div>
         {datosOpen ? (
           <DatosTab appData={appData} onImport={onImport} onCatalogChange={() => setCatalogVersion((v) => v + 1)} />

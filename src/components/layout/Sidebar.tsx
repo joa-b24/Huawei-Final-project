@@ -99,9 +99,14 @@ export default function Sidebar({
           </div>
 
           <div className="sidebar-section">
-            <p className="sidebar-label">Variables activas ({activeVarIds.length}/5)</p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <p className="sidebar-label" style={{ margin: 0 }}>Variables activas ({activeVarIds.length}/5)</p>
+              {activeVarIds.length > 0 && (
+                <button type="button" className="var-chip-clear" onClick={onClearVars} style={{ margin: 0 }}>×</button>
+              )}
+            </div>
             <StateSearch value={varQuery} onChange={setVarQuery} placeholder="Buscar variable..." />
-            <VarChipList vars={filteredVars} activeIds={activeVarIds} onToggle={onToggleVar} onClearAll={onClearVars} />
+            <VarChipList vars={filteredVars} activeIds={activeVarIds} onToggle={onToggleVar} />
           </div>
         </>
       )}

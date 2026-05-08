@@ -86,13 +86,13 @@ export default function InlineBoxplot({ stateValues, highlightState, domainMin, 
       {/* Tooltip */}
       {tooltip && (() => {
         const label = `${tooltip.state}: ${tooltip.value.toFixed(1)}`;
-        const charW = 7.5;
+        const charW = 16;
         const tw = label.length * charW + 16;
         const tx = Math.min(Math.max(tooltip.sx - tw / 2, 0), W - tw);
         return (
           <g>
-            <rect x={tx} y={2} width={tw} height={22} rx={4} fill="var(--surface)" stroke="var(--border)" strokeWidth={1} />
-            <text x={tx + tw / 2} y={17} textAnchor="middle" fontSize={11} fill="var(--text-1)" fontWeight={600}>
+            <rect x={tx} y={-6} width={tw} height={32} rx={4} fill="var(--surface)" stroke="var(--border)" strokeWidth={1} />
+            <text x={tx + tw / 2} y={17} textAnchor="middle" fontSize={25} fill="var(--text-1)" fontWeight={500}>
               {label}
             </text>
           </g>

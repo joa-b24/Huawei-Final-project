@@ -1,3 +1,4 @@
+import { useAppContext } from "../../context/AppContext";
 export type Tab = { id: string; label: string };
 
 type Props = {
@@ -6,7 +7,9 @@ type Props = {
   onTabChange: (id: string) => void;
 };
 
-export default function TabBar({ tabs, activeTab, onTabChange }: Props) {
+export default function TabBar({ tabs, activeTab, onTabChange}: Props) {
+  const { state: appState } = useAppContext();
+  const { primaryState } = appState;
   return (
     <nav className="tab-bar" aria-label="Secciones del dashboard">
       {tabs.map((tab) => (
@@ -20,7 +23,7 @@ export default function TabBar({ tabs, activeTab, onTabChange }: Props) {
         >
           {tab.label}
         </button>
-      ))}
+        ))}
     </nav>
   );
 }

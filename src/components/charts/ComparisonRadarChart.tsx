@@ -183,7 +183,15 @@ export default function ComparisonRadarChart({
       </div>
 
       {/* Toggle pill */}
-      <div className="toggle-pill" role="group" style={{ marginBottom: 16 }}>
+      <div
+        className="toggle-pill"
+        role="group"
+        style={{ marginBottom: 16 }}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") setView("radar");
+          if (e.key === "ArrowRight") setView("barras");
+        }}
+      >
         <button
           type="button"
           className={`toggle-pill__btn${view === "radar" ? " active" : ""}`}
