@@ -11,6 +11,7 @@ import ChoroplethMap from "../components/charts/ChoroplethMap";
 import EmptyState from "../components/EmptyState";
 import InsightBox from "../components/feedback/InsightBox";
 import PhasePlaceholder from "../components/feedback/PhasePlaceholder";
+import InfoTooltip from "../components/feedback/InfoTooltip";
 import { calcNationalMean, calcDelta, isStateOutlier, normalizeForRadar } from "../lib/stats";
 import type { RankingEntry, TipoValor } from "../types/dataStandard";
 import type { StateMetricRecord } from "../types/dataset";
@@ -204,7 +205,10 @@ export default function DiagnosticoTab({ appData }: Props) {
       )}
 
       <section className="panel">
-        <p className="panel-title">Perfil comparativo</p>
+        <div className="panel-title-row">
+          <p className="panel-title" style={{ margin: 0 }}>Perfil comparativo</p>
+          <InfoTooltip text="Normaliza los valores de cada variable en escala 0–100 (min-max) y los compara entre el estado seleccionado, el promedio nacional y grupos adicionales. En métricas de polaridad negativa (ej. pobreza) se invierte para que mayor puntuación = mejor desempeño." />
+        </div>
         <ComparisonRadarChart
           primaryState={primaryState}
           stateRegion={stateRegion}
@@ -220,7 +224,10 @@ export default function DiagnosticoTab({ appData }: Props) {
         <div className="two-col">
           <section className="panel">
             <div className="ranking-panel-header">
-              <p className="panel-title" style={{ margin: 0 }}>Distribución nacional</p>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <p className="panel-title" style={{ margin: 0 }}>Distribución nacional</p>
+                <InfoTooltip text="Histograma que muestra cómo se distribuyen los valores de la variable entre los 32 estados. La línea vertical indica el promedio nacional; el punto destacado corresponde al estado seleccionado." />
+              </div>
               {activeVariableIds.length > 1 && (
                 <select
                   className="ranking-var-select"
@@ -264,7 +271,10 @@ export default function DiagnosticoTab({ appData }: Props) {
 
           <section className="panel ranking-panel">
             <div className="ranking-panel-header">
-              <p className="panel-title" style={{ margin: 0 }}>Ranking nacional</p>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <p className="panel-title" style={{ margin: 0 }}>Ranking nacional</p>
+                <InfoTooltip text="Ordena los 32 estados de mayor a menor valor en la variable seleccionada. El porcentaje indica la diferencia respecto al promedio nacional. El estado seleccionado se resalta y se desplaza automáticamente a la vista." />
+              </div>
               {activeVariableIds.length > 1 && (
                 <select
                   className="ranking-var-select"
@@ -324,7 +334,10 @@ export default function DiagnosticoTab({ appData }: Props) {
       )}
 
       <section className="panel">
-        <p className="panel-title">Mapa coroplético</p>
+        <div className="panel-title-row">
+          <p className="panel-title" style={{ margin: 0 }}>Mapa coroplético</p>
+          <InfoTooltip text="Colorea cada estado según el valor de la variable seleccionada. Los tonos más oscuros representan valores más altos. Haz clic en cualquier estado para seleccionarlo como estado de análisis." />
+        </div>
         <ChoroplethMap appData={appData} />
       </section>
 
@@ -337,3 +350,4 @@ export default function DiagnosticoTab({ appData }: Props) {
     </div>
   );
 }
+    

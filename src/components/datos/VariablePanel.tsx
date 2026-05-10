@@ -11,15 +11,17 @@ const CATEGORY_LABELS: Record<CategoryId, string> = {
   demografia: "Demografía",
 };
 
+
 type Props = {
   variable: VariableCatalogEntry;
   statesWithData: number;
   totalStates: number;
   onUpdateData: () => void;
+  lastYearWithData: number | null;
   onBack: () => void;
 };
 
-export default function VariablePanel({ variable: v, statesWithData, totalStates, onUpdateData, onBack }: Props) {
+export default function VariablePanel({ variable: v, statesWithData, lastYearWithData, totalStates, onUpdateData, onBack }: Props) {
   return (
     <div className="var-panel">
       <button className="btn-ghost wizard-back-link" onClick={onBack} type="button">
@@ -81,7 +83,7 @@ export default function VariablePanel({ variable: v, statesWithData, totalStates
       </div>
 
       <div className="var-panel__coverage">
-        <span className="var-panel__meta-label">Cobertura estatal</span>
+        <span className="var-panel__meta-label">Cobertura estatal ({lastYearWithData})</span>
         <div className="var-panel__coverage-bar">
           <div
             className="var-panel__coverage-fill"

@@ -73,8 +73,8 @@
 - **Dato esperado:** array de nombres de estado desde `state_cards.json`.
 
 ### 3.2 `VarChipList`
-- Lista de variables disponibles como chips con checkbox
-- Máximo 5 activas simultáneamente (evita sobrecarga visual en charts de araña/radar)
+- Lista de variables disponibles como chips
+- Máximo 5 activas simultáneamente (evita sobrecarga visual en charts de radar)
 - Variables activas por defecto: las 5 más relevantes según `univariate_stats.csv` (mayor varianza)
 - **Dato esperado:** catálogo de `metric_catalog` del dataset activo
 
@@ -86,7 +86,7 @@
 
 #### 4.1.1 KPI Grid (4 cards)
 Cada card muestra:
-- **Label:** nombre corto de la métrica (uppercase, 11px)
+- **Label:** nombre de la métrica (uppercase, 11px)
 - **Value:** valor del estado seleccionado (DM Mono, 28px)
 - **Compare:** delta vs benchmark (Nacional o Cluster seleccionado)
 

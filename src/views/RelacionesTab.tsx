@@ -5,6 +5,7 @@ import CorrelationBarChart from "../components/charts/CorrelationBarChart";
 import PairScatterChart from "../components/charts/PairScatterChart";
 import MultivariateRegressionPlot from "../components/charts/MultivariateRegressionPlot";
 import EmptyState from "../components/EmptyState";
+import InfoTooltip from "../components/feedback/InfoTooltip";
 import InsightBox from "../components/feedback/InsightBox";
 import { corrPValue } from "../lib/stats";
 import type { StateCard } from "../types/dataStandard";
@@ -140,7 +141,10 @@ export default function RelacionesTab({ appData }: Props) {
 
         <div className="two-col">
           <section className="panel">
-            <p className="panel-title">Correlaciones con: {yLabel}</p>
+            <div className="panel-title-row">
+              <p className="panel-title" style={{ margin: 0 }}>Correlaciones con: {yLabel}</p>
+              <InfoTooltip text="Coeficiente de correlación de Pearson entre la variable Y y cada una de las demás variables activas. Valores cercanos a ±1 indican relación fuerte; cercanos a 0, relación débil o inexistente." />
+            </div>
             {corrRows.length > 0 ? (
               <CorrelationBarChart rows={corrRows} />
             ) : hasCorrData ? (
@@ -157,7 +161,10 @@ export default function RelacionesTab({ appData }: Props) {
           </section>
 
           <section className="panel">
-            <p className="panel-title">{xLabel} vs {yLabel}</p>
+            <div className="panel-title-row">
+              <p className="panel-title" style={{ margin: 0 }}>{xLabel} vs {yLabel}</p>
+              <InfoTooltip text="Diagrama de dispersión donde cada punto es un estado. Muestra la relación entre dos variables. Una tendencia diagonal sugiere correlación; la ausencia de patrón indica independencia." />
+            </div>
             <PairScatterChart
               data={scatterData}
               xLabel={xLabel}
@@ -172,7 +179,10 @@ export default function RelacionesTab({ appData }: Props) {
       )}
 
       <section className="panel">
-        <p className="panel-title">Regresión multivariada (OLS estandarizado)</p>
+        <div className="panel-title-row">
+          <p className="panel-title" style={{ margin: 0 }}>Regresión multivariada (OLS estandarizado)</p>
+          <InfoTooltip text="Estima el efecto de cada variable independiente sobre la variable dependiente, controlando las demás. Los coeficientes beta están estandarizados, por lo que son comparables entre sí. Un coeficiente positivo indica que al aumentar esa variable, la dependiente también tiende a aumentar." />
+        </div>
         <MultivariateRegressionPlot
           stateCards={effectiveStateCards}
           metricOptions={metricOptions}

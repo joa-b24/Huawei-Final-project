@@ -4,7 +4,7 @@ import type { ImportedData } from "../app/App";
 import type { VariableCatalogEntry } from "../types/dataStandard";
 import {
   applyCatalogOverrides, loadCatalogOverrides,
-  loadHiddenIds, toggleHiddenId,
+  loadHiddenIds, loadImportedData, toggleHiddenId,
 } from "../lib/dataStorage";
 import CatalogBrowser from "../components/datos/CatalogBrowser";
 import VariablePanel from "../components/datos/VariablePanel";
@@ -79,6 +79,14 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
     ).length;
   }, [selectedVar, appData.dataset.records]);
 
+  const lastYearWithData = useMemo(() => {
+    if (!selectedVar) return null;
+    const recordYear = appData.dataset.records.find(
+      (r) => r.metrics[selectedVar.variable_id] != null
+    )?.year;
+    if (recordYear) return recordYear;
+  }, [selectedVar, appData.dataset.records]);
+
   return (
     <div className="tab-content">
       {mode === "catalog" && (
@@ -100,6 +108,7 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
             variable={selectedVar}
             statesWithData={statesWithData}
             totalStates={appData.dataset.records.length}
+            lastYearWithData={lastYearWithData}
             onUpdateData={() => openWizardForVariable(selectedVar)}
             onBack={() => setMode("catalog")}
           />

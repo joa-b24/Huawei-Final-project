@@ -231,7 +231,6 @@ export default function ChoroplethMap({ appData }: Props) {
       </div>
 
       <p style={{ textAlign: "center", fontSize: 11, color: "var(--text-3)", margin: "4px 0 0" }}>
-        {metricDef?.label ?? effectiveVarId} — haz clic en un estado para seleccionarlo
       </p>
     </div>
   );
