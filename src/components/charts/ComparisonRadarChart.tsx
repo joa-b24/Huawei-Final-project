@@ -13,6 +13,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  type TooltipProps,
 } from "recharts";
 import EmptyState from "../EmptyState";
 
@@ -24,12 +25,21 @@ const MAX_GROUPS = 3;
 type Props = {
   primaryState: string | null;
   stateRegion: string | null;
-  variables: { id: string; label: string }[];
+  variables: { id: string; label: string; unit?: string }[];
   normalizedMap: Map<string, Record<string, number | null>>;
+  rawMap?: Map<string, Record<string, number | null>>;
   nationalValues: Record<string, number | null>;
   stateRegionMap: Record<string, string>;
   allStateNames: string[];
 };
+
+function fmtRaw(v: number, unit: string): string {
+  const u = unit.trim();
+  if (u === "%" || u.endsWith("%")) return `${v.toFixed(1)}%`;
+  if (Math.abs(v) >= 1_000_000) return `${(v / 1_000_000).toFixed(2)} M${u ? ` ${u}` : ""}`;
+  if (Math.abs(v) >= 1_000) return `${(v / 1_000).toFixed(1)} K${u ? ` ${u}` : ""}`;
+  return `${Number.isInteger(v) ? v : v.toFixed(2)}${u ? ` ${u}` : ""}`;
+}
 
 type GroupDef = { id: string; label: string; color: string };
 
@@ -38,6 +48,7 @@ export default function ComparisonRadarChart({
   stateRegion,
   variables,
   normalizedMap,
+  rawMap,
   nationalValues,
   stateRegionMap,
   allStateNames,
@@ -120,11 +131,53 @@ export default function ComparisonRadarChart({
 
   const chartData = variables.map((v) => {
     const shortLabel = v.label.length > 26 ? v.label.slice(0, 26) + "…" : v.label;
-    const entry: Record<string, string | number> = { axis: shortLabel };
+    const entry: Record<string, string | number> = { axis: shortLabel, varId: v.id };
     entry[primaryState] = primaryValues[v.id] ?? 0;
     for (const g of groupDefs) entry[g.label] = getGroupValues(g.id)[v.id] ?? 0;
     return entry;
   });
+
+  function getRawValueByName(name: string, varId: string): number | null {
+    if (!rawMap) return null;
+    if (rawMap.has(name)) return rawMap.get(name)?.[varId] ?? null;
+    if (name === "Nacional") {
+      const vals = [...rawMap.values()].map((m) => m[varId]).filter((v): v is number => typeof v === "number");
+      return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
+    }
+    if (name.startsWith("Región ")) {
+      const region = name.slice("Región ".length);
+      const states = Object.entries(stateRegionMap).filter(([, r]) => r === region).map(([s]) => s);
+      const vals = states.map((s) => rawMap?.get(s)?.[varId]).filter((v): v is number => typeof v === "number");
+      return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
+    }
+    return null;
+  }
+
+  function renderTooltip({ payload }: TooltipProps<number, string>) {
+    if (!payload?.length) return null;
+    const varId = payload[0]?.payload?.varId as string | undefined;
+    const varMeta = variables.find((v) => v.id === varId);
+    const unit = varMeta?.unit ?? "";
+    return (
+      <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "8px 12px", fontSize: 12, minWidth: 200 }}>
+        <div style={{ fontWeight: 600, marginBottom: 6 }}>{varMeta?.label ?? varId}</div>
+        {payload.map((p) => {
+          const name = p.name ?? "";
+          const normVal = p.value ?? 0;
+          const rawVal = varId ? getRawValueByName(name, varId) : null;
+          return (
+            <div key={name} style={{ display: "flex", justifyContent: "space-between", gap: 12, marginBottom: 2 }}>
+              <span><span style={{ color: p.color ?? p.fill }}>■ </span>{name}</span>
+              <span style={{ textAlign: "right" }}>
+                {rawVal !== null ? <strong>{fmtRaw(rawVal, unit)}</strong> : <em style={{ color: "var(--text-3)" }}>—</em>}
+                <span style={{ color: "var(--text-3)", marginLeft: 6 }}>({normVal.toFixed(0)} pts)</span>
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -235,7 +288,7 @@ export default function ComparisonRadarChart({
               />
             ))}
             <Legend wrapperStyle={{ fontSize: 12 }} />
-            <Tooltip formatter={(v: number) => `${(+v).toFixed(1)} pts`} />
+            <Tooltip content={renderTooltip} />
           </RadarChart>
         </ResponsiveContainer>
       ) : (
@@ -260,7 +313,7 @@ export default function ComparisonRadarChart({
               tickLine={false}
               unit=" pts"
             />
-            <Tooltip formatter={(v: number, name: string) => [`${(+v).toFixed(1)} pts`, name]} />
+            <Tooltip content={renderTooltip} />
             <Legend verticalAlign="top" wrapperStyle={{ fontSize: 12, paddingBottom: 12 }} />
             <Bar
               dataKey={primaryState}

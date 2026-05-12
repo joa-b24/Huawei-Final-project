@@ -160,9 +160,20 @@ export default function MultivariateRegressionPlot({ stateCards, metricOptions, 
     ? result.fitted.map((yhat, i) => ({
         yhat,
         yreal: result.fitted[i] + result.residuals[i],
+        residual: result.residuals[i],
         state: usedStateNames[i],
       }))
     : [];
+
+  const rmse = result && result.residuals.length > 0
+    ? Math.sqrt(result.residuals.reduce((s, r) => s + r * r, 0) / result.residuals.length)
+    : null;
+
+  const [rmseLabel, rmseColor] = !rmse ? ["", ""]
+    : rmse < 0.5 ? ["excelente", "#16a34a"]
+    : rmse < 0.7 ? ["bueno", "#ca8a04"]
+    : rmse < 0.9 ? ["moderado", "#ea580c"]
+    : ["débil", "#dc2626"];
 
   const fittedCombined = fittedData.length > 0 ? (() => {
     const allVals = fittedData.flatMap((d) => [d.yhat, d.yreal]);
@@ -370,12 +381,20 @@ export default function MultivariateRegressionPlot({ stateCards, metricOptions, 
                 content={({ payload }) => {
                   const p = payload?.find((e) => e.dataKey === "yreal");
                   if (!p) return null;
-                  const d = p.payload;
+                  const d = p.payload as typeof fittedData[number];
+                  const absRes = Math.abs(d.residual);
+                  const [qLabel, qColor] = absRes < 0.5
+                    ? ["bien predicho", "#16a34a"]
+                    : absRes < 1.0
+                    ? ["predicción moderada", "#ca8a04"]
+                    : ["predicción débil", "#dc2626"];
                   return (
                     <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "6px 10px", fontSize: 12 }}>
-                      {d.state && <strong style={{ display: "block", marginBottom: 2 }}>{d.state}</strong>}
-                      <div>Predicho: {(d.yhat as number).toFixed(2)}</div>
-                      <div>Real: {(d.yreal as number).toFixed(2)}</div>
+                      {d.state && <strong style={{ display: "block", marginBottom: 4 }}>{d.state}</strong>}
+                      <div>Predicho: {d.yhat.toFixed(3)}σ</div>
+                      <div>Real: {d.yreal.toFixed(3)}σ</div>
+                      <div>Residuo: {d.residual > 0 ? "+" : ""}{d.residual.toFixed(3)}σ</div>
+                      <div style={{ marginTop: 4, color: qColor, fontWeight: 600 }}>▸ {qLabel}</div>
                     </div>
                   );
                 }}
@@ -384,6 +403,13 @@ export default function MultivariateRegressionPlot({ stateCards, metricOptions, 
               <Scatter dataKey="yreal" data={fittedData} fill="var(--blue)" opacity={0.7} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
+          {rmse !== null && (
+            <p style={{ fontSize: 12, color: "var(--text-3)", margin: "4px 0 0", textAlign: "center" }}>
+              RMSE = <strong style={{ color: rmseColor }}>{rmse.toFixed(3)}σ</strong>
+              {" "}— ajuste <strong style={{ color: rmseColor }}>{rmseLabel}</strong>
+              <span style={{ opacity: 0.7 }}>{" "}(escala estandarizada; RMSE = 1σ equivale a no mejorar sobre la media)</span>
+            </p>
+          )}
         </>
       )}
     </div>

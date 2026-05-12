@@ -16,12 +16,13 @@ type Props = {
   variable: VariableCatalogEntry;
   statesWithData: number;
   totalStates: number;
-  onUpdateData: () => void;
   lastYearWithData: number | null;
+  municipalStatesCount: number;
+  onUpdateData: () => void;
   onBack: () => void;
 };
 
-export default function VariablePanel({ variable: v, statesWithData, lastYearWithData, totalStates, onUpdateData, onBack }: Props) {
+export default function VariablePanel({ variable: v, statesWithData, lastYearWithData, totalStates, municipalStatesCount, onUpdateData, onBack }: Props) {
   return (
     <div className="var-panel">
       <button className="btn-ghost wizard-back-link" onClick={onBack} type="button">
@@ -83,17 +84,34 @@ export default function VariablePanel({ variable: v, statesWithData, lastYearWit
       </div>
 
       <div className="var-panel__coverage">
-        <span className="var-panel__meta-label">Cobertura estatal ({lastYearWithData})</span>
+        <span className="var-panel__meta-label">Cobertura estatal{lastYearWithData ? ` (${lastYearWithData})` : ""}</span>
         <div className="var-panel__coverage-bar">
           <div
             className="var-panel__coverage-fill"
             style={{ width: totalStates > 0 ? `${(statesWithData / totalStates) * 100}%` : "0%" }}
           />
         </div>
-        <span className="var-panel__coverage-text">
-          {statesWithData} / {totalStates} estados
-        </span>
+        <span className="var-panel__coverage-text">{statesWithData} / {totalStates} estados</span>
       </div>
+
+      {municipalStatesCount > 0 && (
+        <div className="var-panel__coverage">
+          <span className="var-panel__meta-label">Cobertura municipal</span>
+          <div className="var-panel__coverage-bar">
+            <div
+              className="var-panel__coverage-fill"
+              style={{ width: `${(municipalStatesCount / totalStates) * 100}%` }}
+            />
+          </div>
+          <span className="var-panel__coverage-text">
+            {municipalStatesCount} / {totalStates} estados con datos municipales
+          </span>
+        </div>
+      )}
+
+      {lastYearWithData == null && municipalStatesCount === 0 && (
+        <p className="wizard-warn" style={{ marginTop: 8 }}>Sin datos importados aún.</p>
+      )}
     </div>
   );
 }

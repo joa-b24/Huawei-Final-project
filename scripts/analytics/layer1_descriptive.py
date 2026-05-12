@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -9,13 +10,13 @@ import pandas as pd
 from scipy.stats import shapiro, zscore
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+PUBLIC_DATA_DIR = PROJECT_ROOT / "public" / "data"
 CATALOG_PATH = PROJECT_ROOT / "data" / "catalogs" / "variables.catalog.json"
-OUTPUT_DIR = PROCESSED_DIR  # Layer1 escribe en processed/; publish.py copia a public/data/
+COMBINED_PATH = PUBLIC_DATA_DIR / "state_dashboard.combined.json"
+OUTPUT_DIR = PUBLIC_DATA_DIR / "outputs" / "state"
 
 
 def _load_direction_map() -> dict[str, str]:
-    """Lee variables.catalog.json y devuelve {variable_id: direction}."""
     if not CATALOG_PATH.exists():
         return {}
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
@@ -27,18 +28,10 @@ def _load_direction_map() -> dict[str, str]:
 
 
 class Layer1Descriptive:
-    """Capa descriptiva: estadísticas univariadas, distribuciones, correlaciones,
-    outliers y rankings sobre el dataset combinado de 32 estados."""
+    """Estadísticas descriptivas sobre el dataset combinado de 32 estados."""
 
-    def __init__(self, context_df: pd.DataFrame, digital_df: pd.DataFrame,
-                 direction_map: dict[str, str] | None = None) -> None:
-        meta_cols = ["cve_ent", "estado", "region"]
-        self.combined = pd.merge(
-            context_df,
-            digital_df.drop(columns=[c for c in meta_cols if c in digital_df.columns], errors="ignore"),
-            on="state_code",
-            how="outer",
-        )
+    def __init__(self, df: pd.DataFrame, direction_map: dict[str, str] | None = None) -> None:
+        self.combined = df
         self.direction_map: dict[str, str] = direction_map or {}
 
     # ── A. Estadísticas univariadas ──────────────────────────────────────────
@@ -136,7 +129,7 @@ class Layer1Descriptive:
             ]
         return rankings
 
-    # ── G. State profile cards ───────────────────────────────────────────────
+    # ── F. State profile cards ───────────────────────────────────────────────
 
     def state_profile_cards(self) -> dict:
         numeric = self._numeric_cols()
@@ -152,24 +145,12 @@ class Layer1Descriptive:
 
     # ── Export ───────────────────────────────────────────────────────────────
 
-    def export(
-        self,
-        output_dir: Path = OUTPUT_DIR,
-        new_vars: set[str] | None = None,
-    ) -> Path:
-        """Escribe los JSONs de Layer1.
-
-        Si `new_vars` es None → recalcula todo.
-        Si `new_vars` es un set de variable_ids → actualiza solo esas variables
-        en cada archivo, preservando las demás entradas existentes.
-        """
+    def export(self, output_dir: Path = OUTPUT_DIR, new_vars: set[str] | None = None) -> Path:
         output_dir.mkdir(parents=True, exist_ok=True)
-
         if new_vars is None:
             self._export_full(output_dir)
         else:
             self._export_partial(output_dir, new_vars)
-
         self.combined.to_csv(output_dir / "combined_data.csv", index=False)
         self.univariate_stats().to_csv(output_dir / "univariate_stats.csv")
         print(f"Layer1 finalizado en: {output_dir}")
@@ -192,10 +173,10 @@ class Layer1Descriptive:
     def _export_partial(self, output_dir: Path, new_vars: set[str]) -> None:
         valid_vars = {v for v in new_vars if v in self.combined.columns}
         if not valid_vars:
-            print("  [skip] Ninguna variable en new_vars existe en el dataset.")
+            print("  [warn] Variables no encontradas en el dataset combinado, ejecutando recálculo completo...")
+            self._export_full(output_dir)
             return
 
-        # ── Archivos con estructura {variable_id: datos} ──────────────────
         per_var_files: dict[str, dict] = {
             "distributions.json": self.distribution_analysis(),
             "outliers_iqr.json": self.outlier_detection(method="iqr"),
@@ -210,14 +191,12 @@ class Layer1Descriptive:
                     print(f"  [ok] {filename} ← {var_id}")
             target.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
 
-        # ── state_cards: keyed por state_code, siempre se regenera completo ──
         cards_target = output_dir / "state_cards.json"
         cards_target.write_text(
             json.dumps(self.state_profile_cards(), ensure_ascii=False, indent=2), encoding="utf-8"
         )
         print("  [ok] state_cards.json (completo)")
 
-        # ── Correlaciones: actualizar fila+columna de cada var cambiada ───
         self._update_correlations_partial(output_dir / "correlations.json", valid_vars)
 
     def _update_correlations_partial(self, target: Path, new_vars: set[str]) -> None:
@@ -231,8 +210,6 @@ class Layer1Descriptive:
             for var_id in new_vars:
                 if var_id not in self.combined.columns:
                     continue
-
-                # Añadir variable nueva si no estaba
                 if var_id not in ex_vars:
                     ex_vars.append(var_id)
                     for row in matrix:
@@ -270,7 +247,7 @@ def _isnan(x: object) -> bool:
         return True
 
 
-def load_wide_json(path: Path) -> pd.DataFrame:
+def load_combined_json(path: Path) -> pd.DataFrame:
     data = json.loads(path.read_text(encoding="utf-8"))
     rows = []
     for r in data["records"]:
@@ -286,13 +263,34 @@ def load_wide_json(path: Path) -> pd.DataFrame:
 
 
 def main() -> None:
-    context_df = load_wide_json(PROCESSED_DIR / "context_variables_state_dashboard.wide.json")
-    digital_df = load_wide_json(PROCESSED_DIR / "endutih_2024_state_dashboard.wide.json")
-    digital_df = digital_df.drop(columns=["anio"], errors="ignore")
+    parser = argparse.ArgumentParser(description="Layer1: estadísticas descriptivas sobre el dataset combinado.")
+    parser.add_argument(
+        "--new-vars",
+        default=None,
+        help="IDs de variables nuevas separados por coma (activa recálculo parcial).",
+    )
+    parser.add_argument(
+        "--input",
+        default=str(COMBINED_PATH),
+        help=f"Ruta del combined JSON (default: {COMBINED_PATH})",
+    )
+    args = parser.parse_args()
 
+    input_path = Path(args.input)
+    if not input_path.exists():
+        print(f"✗ No se encontró el combined JSON: {input_path}")
+        print("  Ejecuta primero: python scripts/combine_data.py")
+        return
+
+    new_vars: set[str] | None = None
+    if args.new_vars:
+        new_vars = {v.strip() for v in args.new_vars.split(",") if v.strip()}
+        print(f"Recálculo parcial: {new_vars}")
+
+    df = load_combined_json(input_path)
     direction_map = _load_direction_map()
-    layer1 = Layer1Descriptive(context_df, digital_df, direction_map=direction_map)
-    layer1.export()
+    layer1 = Layer1Descriptive(df, direction_map=direction_map)
+    layer1.export(new_vars=new_vars)
 
 
 if __name__ == "__main__":

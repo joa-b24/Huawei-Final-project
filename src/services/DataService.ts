@@ -14,6 +14,38 @@ import type { MunicipioAnalyticsRecord, StateAnalyticsPayload } from "../types/a
 // Tipos de los payloads cargados
 // ─────────────────────────────────────────────────────────────────────────────
 
+export type MunicipalManifestEntry = {
+  variables: string[];
+  analytics_available: boolean;
+};
+
+export type MunicipalManifest = {
+  updated_at: string;
+  states: Record<string, MunicipalManifestEntry>;
+};
+
+export type MunicipalVariableAnalytics = {
+  year: number | null;
+  stats: {
+    count: number;
+    mean: number;
+    median: number;
+    std: number;
+    min: number;
+    max: number;
+    q1: number;
+    q3: number;
+  };
+  rankings: { rank: number; cve_mun: string; value: number }[];
+  outliers: { cve_mun: string; value: number }[];
+};
+
+export type MunicipalAnalytics = {
+  state_code: string;
+  updated_at: string;
+  variables: Record<string, MunicipalVariableAnalytics>;
+};
+
 export type AppData = {
   dataset: DashboardDataset;
   stateCards: Record<string, StateCard>;
@@ -22,6 +54,7 @@ export type AppData = {
   rankings: Record<string, RankingEntry[]>;
   outliers: Record<string, OutlierEntry>;
   variablesCatalog: VariableCatalogEntry[];
+  municipalManifest: MunicipalManifest | null;
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -89,12 +122,6 @@ export function getMetricPolaridad(
 // Carga de datos
 // ─────────────────────────────────────────────────────────────────────────────
 
-async function fetchJson<T>(path: string): Promise<T> {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error(`No se pudo cargar ${path} (${res.status})`);
-  return res.json() as Promise<T>;
-}
-
 async function fetchJsonOptional<T>(path: string, fallback: T): Promise<T> {
   try {
     const res = await fetch(path);
@@ -106,57 +133,35 @@ async function fetchJsonOptional<T>(path: string, fallback: T): Promise<T> {
 }
 
 function buildDataset(
-  endutihPayload: any,
-  contextPayload: any,
+  combinedPayload: any,
   stateAnalytics: StateAnalyticsPayload | null,
   municipios: MunicipioAnalyticsRecord[]
 ): DashboardDataset {
   const metricMap = new Map<string, MetricDefinition>();
 
-  for (const m of endutihPayload.metric_catalog) {
+  for (const m of combinedPayload.metric_catalog) {
     const label = m.label ?? m.nombre ?? m.variable_id;
     metricMap.set(m.variable_id, {
       id: m.variable_id,
       label,
       unit: m.unidad ?? m.unidad_base ?? "",
       category: m.categoria_id,
-      description: `${label} — fuente: ${endutihPayload.source}`,
+      description: label,
+      year: m.anio ?? undefined,
     });
   }
 
-  for (const m of contextPayload.metric_catalog) {
-    if (!metricMap.has(m.variable_id)) {
-      const label = m.label ?? m.nombre ?? m.variable_id;
-      metricMap.set(m.variable_id, {
-        id: m.variable_id,
-        label,
-        unit: m.unidad ?? m.unidad_base ?? "",
-        category: m.categoria_id,
-        description: `${label} — fuente: ${contextPayload.source}`,
-      });
-    }
-  }
-
-  // Fusionar records: ENDUTIH como base, context_variables como capa adicional
-  const contextByState = new Map<string, Record<string, number>>();
-  for (const r of contextPayload.records) {
-    contextByState.set(r.cve_ent ?? r.state_code, r.metrics ?? {});
-  }
-
-  const records: StateMetricRecord[] = endutihPayload.records.map((r: any) => ({
+  const records: StateMetricRecord[] = combinedPayload.records.map((r: any) => ({
     state: r.estado,
     region: r.region,
     stateCode: r.state_code,
     cveEnt: r.cve_ent,
     year: r.anio,
-    metrics: {
-      ...r.metrics,
-      ...(contextByState.get(r.cve_ent) ?? {}),
-    },
+    metrics: r.metrics ?? {},
   }));
 
   return {
-    updatedAt: endutihPayload.updated_at,
+    updatedAt: combinedPayload.updated_at,
     metricCatalog: Array.from(metricMap.values()),
     records,
     stateAnalytics,
@@ -165,30 +170,31 @@ function buildDataset(
 }
 
 export async function loadAppData(): Promise<AppData> {
-  const EMPTY_CONTEXT = { metric_catalog: [], records: [], source: "", updated_at: "" };
+  const EMPTY_COMBINED = { metric_catalog: [], records: [], sources: [], updated_at: "" };
   const EMPTY_CORRELATIONS: CorrelationsPayload = { pearson: { variables: [], matrix: [], note: "" }, spearman: { variables: [], matrix: [], note: "" } };
 
-  const [endutih, context, stateCards, correlations, distributions, rankings, outliers, catalogPayload, stateAnalytics, municipios] =
+  const [combined, stateCards, correlations, distributions, rankings, outliers, catalogPayload, stateAnalytics, municipios, municipalManifest] =
     await Promise.all([
-      fetchJson<any>("/data/endutih_2024_state_dashboard.wide.json"),
-      fetchJsonOptional<any>("/data/context_variables_state_dashboard.wide.json", EMPTY_CONTEXT),
-      fetchJsonOptional<Record<string, StateCard>>("/data/state_cards.json", {}),
-      fetchJsonOptional<CorrelationsPayload>("/data/correlations.json", EMPTY_CORRELATIONS),
-      fetchJsonOptional<Record<string, DistributionEntry>>("/data/distributions.json", {}),
-      fetchJsonOptional<Record<string, RankingEntry[]>>("/data/rankings.json", {}),
-      fetchJsonOptional<Record<string, OutlierEntry>>("/data/outliers_iqr.json", {}),
+      fetchJsonOptional<any>("/data/state_dashboard.combined.json", EMPTY_COMBINED),
+      fetchJsonOptional<Record<string, StateCard>>("/data/outputs/state/state_cards.json", {}),
+      fetchJsonOptional<CorrelationsPayload>("/data/outputs/state/correlations.json", EMPTY_CORRELATIONS),
+      fetchJsonOptional<Record<string, DistributionEntry>>("/data/outputs/state/distributions.json", {}),
+      fetchJsonOptional<Record<string, RankingEntry[]>>("/data/outputs/state/rankings.json", {}),
+      fetchJsonOptional<Record<string, OutlierEntry>>("/data/outputs/state/outliers_iqr.json", {}),
       fetchJsonOptional<{ variables: VariableCatalogEntry[] }>("/data/variables.catalog.json", { variables: [] }),
       fetchJsonOptional<StateAnalyticsPayload | null>("/data/state_analytics_dashboard.json", null),
       fetchJsonOptional<MunicipioAnalyticsRecord[]>("/data/municipios_master_analytics.json", []),
+      fetchJsonOptional<MunicipalManifest | null>("/data/municipal_manifest.json", null),
     ]);
 
   return {
-    dataset: buildDataset(endutih, context, stateAnalytics, municipios),
+    dataset: buildDataset(combined, stateAnalytics, municipios),
     stateCards,
     correlations,
     distributions,
     rankings,
     outliers,
     variablesCatalog: catalogPayload.variables,
+    municipalManifest,
   };
 }

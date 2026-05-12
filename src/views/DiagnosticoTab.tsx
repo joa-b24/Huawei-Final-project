@@ -98,30 +98,34 @@ export default function DiagnosticoTab({ appData }: Props) {
     ? (stateRegionMap[primaryState] ?? null)
     : null;
 
+  // National average in normalized space = mean of all states' percentile ranks ≈ 50
   const nationalValues = useMemo(() => {
     const result: Record<string, number | null> = {};
     for (const varId of activeVariableIds) {
       const vals = dataset.records
-        .map((r) => r.metrics[varId])
-        .filter((v): v is number => typeof v === "number" && !isNaN(v));
-      if (!vals.length) {
-        result[varId] = null;
-        continue;
-      }
-      const min = Math.min(...vals);
-      const max = Math.max(...vals);
-      const mean = vals.reduce((s, v) => s + v, 0) / vals.length;
-      result[varId] = max === min ? 50 : ((mean - min) / (max - min)) * 100;
+        .map((r) => normalizedMap.get(r.state)?.[varId])
+        .filter((v): v is number => typeof v === "number");
+      result[varId] = vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
     }
     return result;
+  }, [dataset.records, activeVariableIds, normalizedMap]);
+
+  const rawMap = useMemo(() => {
+    const map = new Map<string, Record<string, number | null>>();
+    for (const r of dataset.records) {
+      const entry: Record<string, number | null> = {};
+      for (const id of activeVariableIds) entry[id] = r.metrics[id] ?? null;
+      map.set(r.state, entry);
+    }
+    return map;
   }, [dataset.records, activeVariableIds]);
 
   const radarVars = useMemo(
     () =>
-      activeVariableIds.map((id) => ({
-        id,
-        label: dataset.metricCatalog.find((m) => m.id === id)?.label ?? id,
-      })),
+      activeVariableIds.map((id) => {
+        const m = dataset.metricCatalog.find((m) => m.id === id);
+        return { id, label: m?.label ?? id, unit: m?.unit ?? "" };
+      }),
     [activeVariableIds, dataset.metricCatalog]
   );
 
@@ -229,13 +233,14 @@ export default function DiagnosticoTab({ appData }: Props) {
       <section className="panel">
         <div className="panel-title-row">
           <p className="panel-title" style={{ margin: 0 }}>Perfil comparativo</p>
-          <InfoTooltip text="Normaliza los valores de cada variable en escala 0–100 (min-max) y los compara entre el estado seleccionado, el promedio nacional y grupos adicionales. En métricas de polaridad negativa (ej. pobreza) se invierte para que mayor puntuación = mejor desempeño." />
+          <InfoTooltip text="Normaliza cada variable por rango percentil (0–100 pts, donde 100 = estado con el valor más alto entre los 32). En métricas de polaridad negativa (ej. pobreza) se invierte para que mayor puntuación = mejor desempeño. El tooltip muestra el valor real en unidades originales." />
         </div>
         <ComparisonRadarChart
           primaryState={primaryState}
           stateRegion={stateRegion}
           variables={radarVars}
           normalizedMap={normalizedMap}
+          rawMap={rawMap}
           nationalValues={nationalValues}
           stateRegionMap={stateRegionMap}
           allStateNames={dataset.records.map((r) => r.state)}
@@ -399,8 +404,6 @@ function DiagnosticoNarrative({
   const withData = kpiCards.filter((c) => c.value !== null);
   if (!withData.length) return null;
 
-  const above = withData.filter((c) => (c.delta ?? 0) > 0);
-  const below = withData.filter((c) => (c.delta ?? 0) < 0);
   const outliers = withData.filter((c) => c.isOutlier);
 
   const goodPerformers = withData
@@ -417,14 +420,14 @@ function DiagnosticoNarrative({
         En <strong>{primaryState}</strong>
         {stateRegion ? <>, región <strong>{stateRegion}</strong>,</> : ","}{" "}
         de las <strong>{withData.length}</strong> variable{withData.length !== 1 ? "s" : ""} con datos,{" "}
-        <strong>{above.length}</strong> {above.length === 1 ? "se ubica" : "se ubican"} por encima del promedio
-        nacional y <strong>{below.length}</strong> por debajo.
+        <strong>{goodPerformers.length}</strong> {goodPerformers.length === 1 ? "muestra" : "muestran"} desempeño favorable respecto a la media nacional{" "}
+        y <strong>{badPerformers.length}</strong> {badPerformers.length === 1 ? "presenta" : "presentan"} oportunidad de mejora.
         {goodPerformers.length > 0 && (
-          <> El mejor desempeño relativo es{" "}
+          <> El mayor avance relativo es{" "}
           <strong>{goodPerformers[0].label}</strong> ({fmtPct(goodPerformers[0].delta)} vs media).</>
         )}
         {badPerformers.length > 0 && (
-          <> El mayor rezago aparece en{" "}
+          <> La mayor brecha aparece en{" "}
           <strong>{badPerformers[0].label}</strong> ({fmtPct(badPerformers[0].delta)} vs media).</>
         )}
       </p>

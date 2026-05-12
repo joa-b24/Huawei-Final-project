@@ -13,6 +13,6 @@ storybook-static
 __pycache__/
 *.pyc
 
-# Pipeline outputs (generados, no son fuente de verdad)
-data/processed/*
-!data/processed/.gitkeep
+/test_data/
+scripts/municipal_test_data.py
+/data/processed/imports/

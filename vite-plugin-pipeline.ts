@@ -6,7 +6,7 @@ import { join } from "path";
 export default function pipelinePlugin(): Plugin {
   return {
     name: "local-pipeline",
-    apply: "serve", // solo en dev
+    apply: "serve",
     configureServer(server) {
       server.middlewares.use("/api/pipeline/import", (req, res) => {
         if (req.method !== "POST") {
@@ -32,26 +32,20 @@ export default function pipelinePlugin(): Plugin {
             writeFileSync(filepath, JSON.stringify(data, null, 2), "utf-8");
             log.push(`✓ Archivo escrito: data/processed/imports/${filename}`);
 
+            // import_variable.py ejecuta combine síncrono + dispara layer1 en background
             const python = process.env.PYTHON_CMD ?? "python";
-            const scripts = [
-              `${python} scripts/import_variable.py`,
-              `${python} scripts/analytics/layer1_descriptive.py`,
-              `${python} scripts/publish.py`,
-            ];
-
-            for (const cmd of scripts) {
-              log.push(`\n$ ${cmd}`);
-              try {
-                const out = execSync(cmd, { cwd: root, encoding: "utf-8", stderr: "pipe" });
-                log.push(out.trim());
-              } catch (err: any) {
-                const msg = err.stderr ?? err.stdout ?? String(err);
-                log.push(`✗ Error:\n${msg}`);
-                res.setHeader("Content-Type", "application/json");
-                res.statusCode = 500;
-                res.end(JSON.stringify({ ok: false, log }));
-                return;
-              }
+            const cmd = `${python} scripts/import_variable.py`;
+            log.push(`\n$ ${cmd}`);
+            try {
+              const out = execSync(cmd, { cwd: root, encoding: "utf-8", stderr: "pipe", timeout: 120_000 });
+              log.push(out.trim());
+            } catch (err: any) {
+              const msg = err.stderr ?? err.stdout ?? String(err);
+              log.push(`✗ Error:\n${msg}`);
+              res.setHeader("Content-Type", "application/json");
+              res.statusCode = 500;
+              res.end(JSON.stringify({ ok: false, log }));
+              return;
             }
 
             res.setHeader("Content-Type", "application/json");

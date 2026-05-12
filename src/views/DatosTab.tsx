@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react";
 import type { AppData } from "../services/DataService";
-import type { ImportedData } from "../app/App";
 import type { VariableCatalogEntry } from "../types/dataStandard";
 import {
   applyCatalogOverrides, loadCatalogOverrides,
-  loadHiddenIds, loadImportedData, toggleHiddenId,
+  loadHiddenIds, toggleHiddenId,
 } from "../lib/dataStorage";
 import CatalogBrowser from "../components/datos/CatalogBrowser";
 import VariablePanel from "../components/datos/VariablePanel";
@@ -14,7 +13,6 @@ type Mode = "catalog" | "panel" | "wizard";
 
 type Props = {
   appData: AppData;
-  onImport: (d: ImportedData) => void;
   onCatalogChange: () => void;
 };
 
@@ -72,6 +70,14 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
     setMode("catalog");
   }
 
+  const metricYears = useMemo(() => {
+    const result: Record<string, number> = {};
+    for (const m of appData.dataset.metricCatalog) {
+      if (m.year != null) result[m.id] = m.year;
+    }
+    return result;
+  }, [appData.dataset.metricCatalog]);
+
   const statesWithData = useMemo(() => {
     if (!selectedVar) return 0;
     return appData.dataset.records.filter(
@@ -84,8 +90,15 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
     const recordYear = appData.dataset.records.find(
       (r) => r.metrics[selectedVar.variable_id] != null
     )?.year;
-    if (recordYear) return recordYear;
+    return recordYear ?? null;
   }, [selectedVar, appData.dataset.records]);
+
+  const municipalStatesCount = useMemo(() => {
+    if (!selectedVar || !appData.municipalManifest) return 0;
+    return Object.values(appData.municipalManifest.states).filter(
+      (e) => e.variables.includes(selectedVar.variable_id)
+    ).length;
+  }, [selectedVar, appData.municipalManifest]);
 
   return (
     <div className="tab-content">
@@ -109,6 +122,7 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
             statesWithData={statesWithData}
             totalStates={appData.dataset.records.length}
             lastYearWithData={lastYearWithData}
+            municipalStatesCount={municipalStatesCount}
             onUpdateData={() => openWizardForVariable(selectedVar)}
             onBack={() => setMode("catalog")}
           />
@@ -127,6 +141,7 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
           <OperationWizard
             catalog={catalog}
             initialVariable={wizardInitialVar}
+            metricYears={metricYears}
             onDone={handleWizardDone}
           />
         </section>

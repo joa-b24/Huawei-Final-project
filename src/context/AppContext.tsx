@@ -52,8 +52,8 @@ function reducer(state: AppState, action: Action): AppState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DEFAULT_VARIABLES = [
-  "personas_usuarias_internet_pct",
-  "localidades_con_4g_garantizada_pct",
+  "test_data",
+  "carencia_servicios_basicos_pct",
   "pobreza_pct",
   "pib_per_capita",
   "poblacion_en_localidades_con_5g_garantizada_pct",
