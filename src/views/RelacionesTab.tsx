@@ -7,6 +7,7 @@ import MultivariateRegressionPlot from "../components/charts/MultivariateRegress
 import EmptyState from "../components/EmptyState";
 import InfoTooltip from "../components/feedback/InfoTooltip";
 import InsightBox from "../components/feedback/InsightBox";
+import TabNarrative from "../components/feedback/TabNarrative";
 import { corrPValue } from "../lib/stats";
 import type { StateCard } from "../types/dataStandard";
 import type { StateMetricRecord } from "../types/dataset";
@@ -95,7 +96,7 @@ export default function RelacionesTab({ appData }: Props) {
   const metricOptions = useMemo(
     () => activeVariableIds.map((id) => {
       const m = dataset.metricCatalog.find((mc) => mc.id === id);
-      return { id, label: m?.label ?? id };
+      return { id, label: m?.label ?? id, unit: m?.unit ?? "" };
     }),
     [activeVariableIds, dataset.metricCatalog]
   );
@@ -104,6 +105,17 @@ export default function RelacionesTab({ appData }: Props) {
 
   return (
     <div className="tab-content">
+      <TabNarrative
+        title="Análisis de impacto"
+        description="Relaciones estadísticas entre variables activas: correlación de Pearson, dispersión por par de estados y regresión OLS multivariada estandarizada."
+      >
+        {corrRows.length > 0 ? (
+          <ImpactoNarrative yLabel={yLabel} corrRows={corrRows} n={dataset.records.length} />
+        ) : (
+          <p>Activa al menos 2 variables con datos de correlación para ver el análisis.</p>
+        )}
+      </TabNarrative>
+
       {activeVariableIds.length < 2 && (
         <InsightBox title="Activa más variables">
           Selecciona al menos 2 variables en el panel lateral para ver correlaciones y scatter.
@@ -189,6 +201,58 @@ export default function RelacionesTab({ appData }: Props) {
           defaultDependentVar={xVarId}
         />
       </section>
+    </div>
+  );
+}
+
+// ── Narrativa automática ──────────────────────────────────────────────────────
+
+function corrStrength(r: number): string {
+  const abs = Math.abs(r);
+  if (abs >= 0.7) return "fuerte";
+  if (abs >= 0.4) return "moderada";
+  if (abs >= 0.2) return "débil";
+  return "muy débil";
+}
+
+function ImpactoNarrative({
+  yLabel,
+  corrRows,
+  n,
+}: {
+  yLabel: string;
+  corrRows: { label: string; r: number; pValue: number }[];
+  n: number;
+}) {
+  const sorted = [...corrRows].sort((a, b) => Math.abs(b.r) - Math.abs(a.r));
+  const top = sorted[0];
+  const significant = corrRows.filter((c) => c.pValue < 0.05);
+  const posSignif = significant.filter((c) => c.r > 0);
+  const negSignif = significant.filter((c) => c.r < 0);
+
+  return (
+    <div>
+      <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 8px" }}>
+        Respecto a <strong>{yLabel}</strong>, la asociación lineal más fuerte entre las{" "}
+        {corrRows.length} variable{corrRows.length !== 1 ? "s" : ""} analizadas corresponde a{" "}
+        <strong>{top.label}</strong> (r = <strong>{top.r.toFixed(2)}</strong>,{" "}
+        asociación <strong>{corrStrength(top.r)} {top.r > 0 ? "positiva" : "negativa"}</strong>).{" "}
+        {significant.length > 0 ? (
+          <><strong>{significant.length}</strong> de {corrRows.length} alcanzan significancia estadística (p &lt; 0.05) con n = {n} entidades.</>
+        ) : (
+          <>Ninguna correlación alcanza significancia estadística con n = {n} entidades; interpreta las tendencias con cautela.</>
+        )}
+      </p>
+      {(posSignif.length > 0 || negSignif.length > 0) && (
+        <p style={{ lineHeight: 1.65, color: "#334155", margin: 0 }}>
+          {posSignif.length > 0 && (
+            <>Asociación positiva significativa: <strong>{posSignif.map((c) => c.label).join(", ")}</strong>.{" "}</>
+          )}
+          {negSignif.length > 0 && (
+            <>Asociación negativa significativa: <strong>{negSignif.map((c) => c.label).join(", ")}</strong>.</>
+          )}
+        </p>
+      )}
     </div>
   );
 }

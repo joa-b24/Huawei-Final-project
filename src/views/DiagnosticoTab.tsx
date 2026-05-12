@@ -12,6 +12,7 @@ import EmptyState from "../components/EmptyState";
 import InsightBox from "../components/feedback/InsightBox";
 import PhasePlaceholder from "../components/feedback/PhasePlaceholder";
 import InfoTooltip from "../components/feedback/InfoTooltip";
+import TabNarrative from "../components/feedback/TabNarrative";
 import { calcNationalMean, calcDelta, isStateOutlier, normalizeForRadar } from "../lib/stats";
 import type { RankingEntry, TipoValor } from "../types/dataStandard";
 import type { StateMetricRecord } from "../types/dataset";
@@ -194,8 +195,29 @@ export default function DiagnosticoTab({ appData }: Props) {
     );
   }
 
+  const primaryRankingRow = rankingRows.find((r) => r.state === primaryState) ?? null;
+  const rankingLabel = rankingMetricDef?.label ?? effectiveRankingVarId ?? "";
+
   return (
     <div className="tab-content">
+      <TabNarrative
+        title="Diagnóstico estatal"
+        description="Vista del estado seleccionado frente al conjunto nacional: indicadores clave vs media, perfil comparativo normalizado, distribución estadística y posición en el ranking."
+      >
+        {kpiCards.length > 0 ? (
+          <DiagnosticoNarrative
+            primaryState={primaryState}
+            stateRegion={stateRegion}
+            kpiCards={kpiCards}
+            rankingRow={primaryRankingRow}
+            rankingLabel={rankingLabel}
+            totalStates={dataset.records.length}
+          />
+        ) : (
+          <p>Activa variables en el panel lateral para ver el análisis del estado seleccionado.</p>
+        )}
+      </TabNarrative>
+
       {kpiCards.length > 0 ? (
         <KpiGrid cards={kpiCards} />
       ) : (
@@ -340,13 +362,87 @@ export default function DiagnosticoTab({ appData }: Props) {
         </div>
         <ChoroplethMap appData={appData} />
       </section>
+    </div>
+  );
+}
 
-      <section className="panel">
-        <p className="panel-title">Distribución del ingreso — Curva de Lorenz / Gini</p>
-        <PhasePlaceholder
-          message="Curva de Lorenz y coeficiente de Gini — no disponible aún."
-        />
-      </section>
+// ── Narrativa automática ──────────────────────────────────────────────────────
+
+type KpiCardSummary = {
+  label: string;
+  value: number | null;
+  delta: number | null;
+  direction: string;
+  isOutlier: boolean;
+};
+
+function fmtPct(d: number | null): string {
+  if (d === null) return "—";
+  return `${d > 0 ? "+" : ""}${d.toFixed(1)}%`;
+}
+
+function DiagnosticoNarrative({
+  primaryState,
+  stateRegion,
+  kpiCards,
+  rankingRow,
+  rankingLabel,
+  totalStates,
+}: {
+  primaryState: string;
+  stateRegion: string | null;
+  kpiCards: KpiCardSummary[];
+  rankingRow: import("../types/dataStandard").RankingEntry | null;
+  rankingLabel: string;
+  totalStates: number;
+}) {
+  const withData = kpiCards.filter((c) => c.value !== null);
+  if (!withData.length) return null;
+
+  const above = withData.filter((c) => (c.delta ?? 0) > 0);
+  const below = withData.filter((c) => (c.delta ?? 0) < 0);
+  const outliers = withData.filter((c) => c.isOutlier);
+
+  const goodPerformers = withData
+    .filter((c) => c.direction === "lower_better" ? (c.delta ?? 0) < 0 : (c.delta ?? 0) > 0)
+    .sort((a, b) => Math.abs(b.delta ?? 0) - Math.abs(a.delta ?? 0));
+
+  const badPerformers = withData
+    .filter((c) => c.direction === "lower_better" ? (c.delta ?? 0) > 0 : (c.delta ?? 0) < 0)
+    .sort((a, b) => Math.abs(b.delta ?? 0) - Math.abs(a.delta ?? 0));
+
+  return (
+    <div>
+      <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 8px" }}>
+        En <strong>{primaryState}</strong>
+        {stateRegion ? <>, región <strong>{stateRegion}</strong>,</> : ","}{" "}
+        de las <strong>{withData.length}</strong> variable{withData.length !== 1 ? "s" : ""} con datos,{" "}
+        <strong>{above.length}</strong> {above.length === 1 ? "se ubica" : "se ubican"} por encima del promedio
+        nacional y <strong>{below.length}</strong> por debajo.
+        {goodPerformers.length > 0 && (
+          <> El mejor desempeño relativo es{" "}
+          <strong>{goodPerformers[0].label}</strong> ({fmtPct(goodPerformers[0].delta)} vs media).</>
+        )}
+        {badPerformers.length > 0 && (
+          <> El mayor rezago aparece en{" "}
+          <strong>{badPerformers[0].label}</strong> ({fmtPct(badPerformers[0].delta)} vs media).</>
+        )}
+      </p>
+      {rankingRow && rankingLabel && (
+        <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 10px" }}>
+          En <strong>{rankingLabel}</strong>, el estado ocupa el{" "}
+          <strong>lugar {rankingRow.rank} de {totalStates}</strong>, con un valor{" "}
+          <strong>{fmtPct(rankingRow.pct_vs_mean)}</strong> respecto al promedio nacional.
+        </p>
+      )}
+      {outliers.length > 0 && (
+        <p style={{ lineHeight: 1.65, color: "#334155", margin: 0 }}>
+          Se detecta comportamiento atípico (criterio IQR) en:{" "}
+          <strong>{outliers.map((c) => c.label).join(", ")}</strong>.
+          {" "}Esto indica que la entidad se aleja significativamente
+          de la distribución del resto de estados en {outliers.length === 1 ? "esa variable" : "esas variables"}.
+        </p>
+      )}
     </div>
   );
 }

@@ -981,3 +981,33 @@ select {
 .info-tooltip-btn:hover { color: var(--blue); background: var(--blue-light); }
 .info-tooltip-popover { width: 240px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 12px; line-height: 1.55; color: var(--text-2); box-shadow: 0 4px 20px rgba(0,0,0,0.14); z-index: 9999; }
 .panel-title-row { display: flex; align-items: center; gap: 6px; margin: 0 0 12px; }
+
+/* TabNarrative */
+.tab-narrative { margin-bottom: 16px; }
+.tab-narrative__header { display: flex; align-items: baseline; gap: 8px; width: 100%; background: none; border: none; padding: 0 0 8px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: left; }
+.tab-narrative__header:hover .tab-narrative__desc { color: var(--text-1); }
+.tab-narrative__label { font-size: 10px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0; }
+.tab-narrative__desc { font-size: 12px; color: var(--text-3); flex: 1; line-height: 1.4; transition: color 0.15s; }
+.tab-narrative__chevron { flex-shrink: 0; color: var(--text-3); display: flex; align-items: center; margin-left: auto; }
+.tab-narrative__body { padding: 10px 0 4px 12px; border-left: 2px solid color-mix(in srgb, var(--blue) 30%, transparent); margin-bottom: 8px; }
+.tab-narrative__body p { font-size: 12px; line-height: 1.65; color: var(--text-2); margin: 0 0 8px; }
+.tab-narrative__body p:last-child { margin-bottom: 0; }
+.tab-narrative__body strong { color: var(--text-1); }
+
+/* Scatter summary */
+.scatter-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.scatter-summary__left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.scatter-summary__badge { font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
+.scatter-summary__badge--strong { background: color-mix(in srgb, var(--blue) 12%, transparent); color: var(--blue); }
+.scatter-summary__badge--moderate { background: color-mix(in srgb, var(--green) 12%, transparent); color: var(--green); }
+.scatter-summary__badge--weak { background: color-mix(in srgb, var(--amber) 10%, transparent); color: var(--amber); }
+.scatter-summary__badge--none { background: var(--border); color: var(--text-3); }
+.scatter-summary__phrase { font-size: 12px; color: var(--text-2); }
+.scatter-summary__right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.scatter-summary__r2 { font-size: 11px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+
+/* Regression summary & detail toggle */
+.regression-summary { font-size: 13px; line-height: 1.65; color: var(--text-2); margin: 0 0 16px; }
+.regression-summary strong { color: var(--text-1); }
+.regression-detail-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; font-size: 12px; color: var(--text-3); padding: 6px 0; margin-bottom: 8px; transition: color 0.15s; }
+.regression-detail-btn:hover { color: var(--text-1); }
