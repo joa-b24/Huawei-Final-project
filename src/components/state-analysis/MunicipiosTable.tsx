@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { MunicipioAnalyticsRecord } from "../../types/analytics";
+import InterpretationHelp from "./InterpretationHelp";
 
 type SortKey = "nom_mun" | "pobtot_iter" | "pob_pct_4g_garantizada" | "graproes" | "pct_mujeres" | "pct_pob_65_mas";
 
@@ -43,6 +44,29 @@ export default function MunicipiosTable({ municipios }: Props) {
         <h2>Municipios del estado</h2>
         <p>Haz clic en el encabezado para ordenar. Cobertura 4G: población en localidades con 4G garantizada (2024).</p>
       </div>
+      <InterpretationHelp
+        topic="Tabla de municipios del estado (cobertura, escolaridad, cluster)"
+        caption="Ayuda: tabla"
+        heading="Lectura de las columnas"
+      >
+        <p>
+          Cada fila corresponde a un municipio del estado. Ordenando por cualquier columna se pueden detectar
+          patrones (por ejemplo, contrastar población vs cobertura, o escolaridad vs estructura etaria).
+        </p>
+        <p>
+          <strong>4G pob. %</strong> — porcentaje de la población que residiría en localidades con señal 4G
+          verificada. Un valor del 30% indicaría que aproximadamente el 70% de la población del municipio vive
+          en localidades sin cobertura registrada.
+        </p>
+        <p>
+          <strong>Escolaridad</strong> — promedio de años escolares completados a nivel municipal. Como referencia:
+          6.0 equivale a primaria completa, 9.0 a secundaria, 12.0 a preparatoria.
+        </p>
+        <p>
+          <strong>Cluster</strong> — grupo asignado por K-medias a partir de varias variables. Dos municipios
+          del mismo cluster comparten perfil multivariado, no necesariamente ubicación geográfica.
+        </p>
+      </InterpretationHelp>
       <div style={{ overflowX: "auto", maxHeight: 420, overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: 8 }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.8rem" }}>
           <thead style={{ position: "sticky", top: 0, background: "#f8fafc", zIndex: 1 }}>

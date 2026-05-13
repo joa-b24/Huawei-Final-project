@@ -103,6 +103,10 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
             rango (Spearman) con escolaridad, estructura por edades y composición por sexo. Cobertura:
             localidades 2024 (IFT/INEGI); demografía y sexo: Censo 2020 (ITER).
           </p>
+          <p style={{ marginTop: 8, fontSize: "0.88rem", color: "#475569" }}>
+            <strong>Tip:</strong> junto a cada gráfico o tabla verás el texto <em>«Ayuda: …»</em> y un botón circular con
+            la letra <strong>i</strong>: pulsa el botón para ver la explicación técnica (dinámica según el estado y las variables).
+          </p>
         </div>
         <div className="metric-control">
           <label htmlFor="state-territorial-select">Estado</label>
@@ -138,12 +142,18 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
         <div className="panel panel-nested">
           <LorenzCurveChart
             title="Curva de Lorenz — cobertura 4G poblacional"
-            description={`Municipios del estado ordenados por cobertura; población acumulada vs cobertura acumulada ponderada. Gini (cliente) ≈ ${Number.isFinite(giniClient) ? giniClient.toFixed(4) : "—"}; en JSON estatal: ${stateRow ? stateRow.gini_pob_pct_4g.toFixed(4) : "—"}.`}
+            description="Eje X: población acumulada (municipios ordenados de menor a mayor cobertura). Eje Y: cobertura 4G acumulada. Mayor separación respecto a la diagonal implica mayor desigualdad territorial."
             points={lorenz}
+            gini={giniClient}
+            nationalGini={stateAnalytics.national.gini_pob_pct_4g}
           />
         </div>
         <div className="panel panel-nested">
-          <SpearmanHeatmap labels={ANALYSIS_METRICS.map((m) => m.label)} matrix={spearmanMatrix} />
+          <SpearmanHeatmap
+            labels={ANALYSIS_METRICS.map((m) => m.label)}
+            matrix={spearmanMatrix}
+            nMunicipios={municipiosEstado.length}
+          />
         </div>
       </div>
 
@@ -183,30 +193,39 @@ function StateNarrative({
       : "";
 
   const natGini = national.gini_pob_pct_4g;
+  const gDelta = g - natGini;
+  const gVsNational =
+    Math.abs(gDelta) < 0.002
+      ? "muy similar al promedio nacional"
+      : gDelta > 0
+        ? "por encima del promedio nacional"
+        : "por debajo del promedio nacional";
+  const spearmanDirection =
+    Number.isFinite(spE) && spE !== 0 ? (spE > 0 ? "positiva" : "negativa") : "nula";
 
   return (
     <div>
-      <h3 style={{ marginTop: 0, fontSize: "1.05rem" }}>Lectura automática</h3>
+      <h3 style={{ marginTop: 0, fontSize: "1.05rem" }}>Resumen estadístico del estado</h3>
       <p style={{ lineHeight: 1.65, color: "#334155" }}>
         En <strong>{stateRow.estado}</strong> se modelan <strong>{nMunicipiosFiltrados}</strong> municipios
         con población censal y cobertura 4G por localidades ({national.connectivity_year}). El coeficiente de
-        Gini de la cobertura 4G poblacional entre municipios es <strong>{g.toFixed(4)}</strong> (referencia
-        nacional <strong>{natGini.toFixed(4)}</strong>). Un Gini más bajo indica reparto más parejo de la
-        cobertura entre municipios ponderado por población.{pRankText}
+        Gini es <strong>{g.toFixed(3)}</strong> ({gVsNational}; nacional <strong>{natGini.toFixed(3)}</strong>,
+        delta {gDelta >= 0 ? "+" : ""}
+        {gDelta.toFixed(3)}).{pRankText}
       </p>
       <p style={{ lineHeight: 1.65, color: "#334155" }}>
-        Correlación de Spearman (asociación monótona, no causal) entre escolaridad promedio y cobertura 4G
-        poblacional: <strong>{formatSpearman(spE)}</strong>
+        La correlación de Spearman entre escolaridad promedio y cobertura 4G es{" "}
+        <strong>{formatSpearman(spE)}</strong>
         {Number.isFinite(spE)
-          ? ` (asociación ${strengthLabel(spE)} ${spE < 0 ? "negativa" : "positiva"})`
+          ? ` (${strengthLabel(spE)} y ${spearmanDirection})`
           : ""}
-        . Respecto al porcentaje de mujeres:{" "}
-        <strong>{formatSpearman(spM ?? null)}</strong>. Con % de población de 65 años y más:{" "}
+        . Para contexto, con % de mujeres es <strong>{formatSpearman(spM ?? null)}</strong>; con % de
+        población de 65 años y más es{" "}
         <strong>{formatSpearman(sp65 ?? null)}</strong>; con % de 0 a 14 años:{" "}
         <strong>{formatSpearman(sp014 ?? null)}</strong>.
       </p>
       <p style={{ fontSize: "0.85rem", color: "#64748b" }}>
-        Gini recalculado en el navegador ({Number.isFinite(giniClient) ? giniClient.toFixed(4) : "—"}) debe
+        Gini recalculado en el navegador ({Number.isFinite(giniClient) ? giniClient.toFixed(3) : "—"}) debe
         coincidir con el del JSON; diferencias mínimas pueden deberse a redondeo.
       </p>
     </div>
