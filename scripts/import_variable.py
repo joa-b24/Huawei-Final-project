@@ -265,9 +265,10 @@ def merge_municipal(imp: dict) -> None:
     for r in records:
         raw_sc = str(r.get("state_code", "")).strip()
         cve_mun = str(r.get("cve_mun", "")).strip()
-        # Derive state_code from cve_mun if missing (cvegeo: first 2 digits = INEGI state)
-        if not raw_sc and len(cve_mun) >= 2:
-            raw_sc = cve_mun[:2]
+        # Derive state_code from cve_mun: zero-pad to 5 digits first so that
+        # 4-digit codes (states 1-9, e.g. "5012") resolve correctly to "05"
+        if not raw_sc and len(cve_mun) >= 4:
+            raw_sc = cve_mun.zfill(5)[:2]
         sc = _normalize_state_code(raw_sc) if raw_sc else ""
         val = r.get("metrics", {}).get(variable_id)
         yr = r.get("anio") or r.get("year")

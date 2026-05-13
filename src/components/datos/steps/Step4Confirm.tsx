@@ -15,9 +15,10 @@ function coerceRows(rows: ParsedRow[]): CoercedRow[] {
   return rows
     .map((r) => {
       const cveMun = strOrUndef(r.cve_mun ?? r.cvegeo ?? r.cve_geo);
-      // Derive state_code from cvegeo first 2 chars if not explicitly provided
+      // Derive state_code from cvegeo: zero-pad to 5 digits first so that
+      // 4-digit codes (states 1-9, e.g. "5012") resolve correctly to "05"
       const rawSc = str(r.state_code ?? r.estado);
-      const state_code = rawSc || (cveMun && cveMun.length >= 2 ? cveMun.slice(0, 2) : "");
+      const state_code = rawSc || (cveMun && cveMun.length >= 4 ? cveMun.padStart(5, "0").slice(0, 2) : "");
       return {
         state_code,
         cve_mun: cveMun,
