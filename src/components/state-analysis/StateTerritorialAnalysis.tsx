@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { MunicipioAnalyticsRecord, StateAnalyticsPayload } from "../../types/analytics";
 import { lorenzCurve, weightedGini } from "../../utils/gini";
 import { spearmanSafe } from "../../utils/spearman";
@@ -13,8 +13,9 @@ import LorenzCurveChart from "./LorenzCurveChart";
 import MunicipioScatterExplore from "./MunicipioScatterExplore";
 import MunicipiosTable from "./MunicipiosTable";
 import SpearmanHeatmap from "./SpearmanHeatmap";
+import { useAppContext, actions } from "../../context/AppContext";
 
-const DEFAULT_CVE_ENT = "19";
+const FALLBACK_CVE_ENT = "09";
 
 export type { AnalysisMetricKey } from "./analysisMetrics";
 export { ANALYSIS_METRICS };
@@ -30,7 +31,18 @@ type Props = {
 };
 
 export default function StateTerritorialAnalysis({ stateAnalytics, municipios }: Props) {
-  const [cveEnt, setCveEnt] = useState(DEFAULT_CVE_ENT);
+  const { state: appState, dispatch } = useAppContext();
+  const { primaryState } = appState;
+
+  const cveEnt = useMemo(() => {
+    if (!stateAnalytics || !primaryState) return FALLBACK_CVE_ENT;
+    return stateAnalytics.states.find((s) => s.estado === primaryState)?.cve_ent ?? FALLBACK_CVE_ENT;
+  }, [stateAnalytics, primaryState]);
+
+  const handleStateChange = (newCveEnt: string) => {
+    const row = stateAnalytics?.states.find((s) => s.cve_ent === newCveEnt);
+    if (row) dispatch(actions.setPrimaryState(row.estado));
+  };
 
   const stateRow = useMemo(
     () => stateAnalytics?.states.find((s) => s.cve_ent === cveEnt) ?? null,
@@ -113,7 +125,7 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
           <select
             id="state-territorial-select"
             value={cveEnt}
-            onChange={(e) => setCveEnt(e.target.value)}
+            onChange={(e) => handleStateChange(e.target.value)}
           >
             {[...stateAnalytics.states]
               .sort((a, b) => a.estado.localeCompare(b.estado, "es"))

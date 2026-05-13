@@ -15,11 +15,7 @@ import type { StateMetricRecord } from "../types/dataset";
 function buildStateCardsFromRecords(records: StateMetricRecord[]): Record<string, StateCard> {
   const result: Record<string, StateCard> = {};
   for (const r of records) {
-    result[r.state] = {
-      estado: r.state,
-      region: r.region ?? "",
-      metrics: r.metrics,
-    };
+    result[r.state] = { estado: r.state, region: r.region ?? "", metrics: r.metrics };
   }
   return result;
 }
@@ -29,14 +25,11 @@ type Props = { appData: AppData };
 export default function RelacionesTab({ appData }: Props) {
   const { state: appState } = useAppContext();
   const { primaryState, activeVariableIds } = appState;
-  const { dataset, correlations, stateCards } = appData;
+  const { dataset, correlations } = appData;
 
   const effectiveStateCards = useMemo(
-    () =>
-      Object.keys(stateCards).length > 0
-        ? stateCards
-        : buildStateCardsFromRecords(dataset.records),
-    [stateCards, dataset.records]
+    () => buildStateCardsFromRecords(dataset.records),
+    [dataset.records]
   );
 
   const [selectedX, setSelectedX] = useState<string | null>(null);

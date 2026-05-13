@@ -38,7 +38,7 @@ class Layer1Descriptive:
 
     def univariate_stats(self) -> pd.DataFrame:
         numeric = self._numeric_cols()
-        stats = self.combined[numeric].describe(percentiles=[0.25, 0.75]).T
+        stats = self.combined[numeric].describe(percentiles=[0.25, 0.50, 0.75]).T
         stats["skewness"] = self.combined[numeric].skew()
         stats["kurtosis"] = self.combined[numeric].kurtosis()
         return stats.round(4)
@@ -145,6 +145,33 @@ class Layer1Descriptive:
 
     # ── Export ───────────────────────────────────────────────────────────────
 
+    def univariate_stats_json(self) -> dict:
+        import math
+
+        def _f(v) -> float | None:
+            try:
+                f = float(v)
+                return None if (math.isnan(f) or math.isinf(f)) else f
+            except (TypeError, ValueError):
+                return None
+
+        stats = self.univariate_stats()
+        result: dict = {}
+        for col, row in stats.iterrows():
+            result[str(col)] = {
+                "count": int(row.get("count", 0)),
+                "mean": _f(row.get("mean")),
+                "std": _f(row.get("std")),
+                "min": _f(row.get("min")),
+                "q25": _f(row.get("25%")),
+                "q50": _f(row.get("50%")),
+                "q75": _f(row.get("75%")),
+                "max": _f(row.get("max")),
+                "skewness": _f(row.get("skewness")),
+                "kurtosis": _f(row.get("kurtosis")),
+            }
+        return result
+
     def export(self, output_dir: Path = OUTPUT_DIR, new_vars: set[str] | None = None) -> Path:
         output_dir.mkdir(parents=True, exist_ok=True)
         if new_vars is None:
@@ -152,7 +179,12 @@ class Layer1Descriptive:
         else:
             self._export_partial(output_dir, new_vars)
         self.combined.to_csv(output_dir / "combined_data.csv", index=False)
-        self.univariate_stats().to_csv(output_dir / "univariate_stats.csv")
+        stats_df = self.univariate_stats()
+        stats_df.to_csv(output_dir / "univariate_stats.csv")
+        (output_dir / "univariate_stats.json").write_text(
+            json.dumps(self.univariate_stats_json(), ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        print(f"  [ok] univariate_stats.json")
         print(f"Layer1 finalizado en: {output_dir}")
         return output_dir
 
@@ -162,7 +194,6 @@ class Layer1Descriptive:
             "correlations.json": self.correlation_matrices(),
             "outliers_iqr.json": self.outlier_detection(method="iqr"),
             "rankings.json": self.state_rankings(),
-            "state_cards.json": self.state_profile_cards(),
         }
         for filename, data in files.items():
             (output_dir / filename).write_text(
@@ -190,12 +221,6 @@ class Layer1Descriptive:
                     existing[var_id] = fresh[var_id]
                     print(f"  [ok] {filename} ← {var_id}")
             target.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
-
-        cards_target = output_dir / "state_cards.json"
-        cards_target.write_text(
-            json.dumps(self.state_profile_cards(), ensure_ascii=False, indent=2), encoding="utf-8"
-        )
-        print("  [ok] state_cards.json (completo)")
 
         self._update_correlations_partial(output_dir / "correlations.json", valid_vars)
 

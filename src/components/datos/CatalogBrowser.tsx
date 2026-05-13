@@ -115,7 +115,7 @@ export default function CatalogBrowser({
             <th>Nombre</th>
             <th>Categoría</th>
             <th>Unidad</th>
-            <th>Dirección</th>
+            <th>Polaridad</th>
             <th>Fuente</th>
             <th></th>
           </tr>

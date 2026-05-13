@@ -635,7 +635,7 @@ select {
 ───────────────────────────────────────────────────────────────────────────── */
 .page-title {
   margin: 0 0 16px;
-  font-size: 20px; font-weight: 700; color: var(--text-1);
+  font-size: 22px; font-weight: 700; color: var(--text-1);
   letter-spacing: -0.01em;
 }
 
@@ -663,7 +663,7 @@ select {
   display: flex; align-items: center; gap: 6px;
   padding: 10px 16px;
   background: none; border: none; border-left: 1px solid var(--border);
-  color: var(--text-3); font-size: 13px; font-weight: 600;
+  color: var(--text-3); font-size: 14px; font-weight: 600;
   cursor: pointer; white-space: nowrap; flex-shrink: 0;
 }
 .btn-datos.active { color: var(--blue); background: var(--blue-light); }
@@ -684,7 +684,7 @@ select {
   background: none; border: none;
   border-bottom: 2px solid transparent;
   color: var(--text-3);
-  font-size: 13px; font-weight: 600;
+  font-size: 14px; font-weight: 600;
   cursor: pointer; margin-bottom: -1px;
   white-space: nowrap;
 }
@@ -867,7 +867,7 @@ select {
    Tab content layout
 ───────────────────────────────────────────────────────────────────────────── */
 .tab-content { display: flex; flex-direction: column; }
-.tab-section-label { margin: 12px 0 16px; font-size: 16px; font-weight: 600; color: var(--text-3); }
+.tab-section-label { margin: 20px 0 16px; font-size: 18px; font-weight: 600; color: var(--text-3); }
 .tab-section-label strong { color: var(--text-1); font-weight: 700; }
 .panel-title { margin: 0 0 16px; font-size: 14px; font-weight: 600; color: var(--text-1); }
 
@@ -1072,11 +1072,11 @@ select {
 .tab-narrative { margin-bottom: 16px; }
 .tab-narrative__header { display: flex; align-items: baseline; gap: 8px; width: 100%; background: none; border: none; padding: 0 0 8px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: left; }
 .tab-narrative__header:hover .tab-narrative__desc { color: var(--text-1); }
-.tab-narrative__label { font-size: 10px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0; }
-.tab-narrative__desc { font-size: 12px; color: var(--text-3); flex: 1; line-height: 1.4; transition: color 0.15s; }
+.tab-narrative__label { font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0; }
+.tab-narrative__desc { font-size: 13px; color: var(--text-3); flex: 1; line-height: 1.4; transition: color 0.15s; }
 .tab-narrative__chevron { flex-shrink: 0; color: var(--text-3); display: flex; align-items: center; margin-left: auto; }
 .tab-narrative__body { padding: 10px 0 4px 12px; border-left: 2px solid color-mix(in srgb, var(--blue) 30%, transparent); margin-bottom: 8px; }
-.tab-narrative__body p { font-size: 12px; line-height: 1.65; color: var(--text-2); margin: 0 0 8px; }
+.tab-narrative__body p { font-size: 13px; line-height: 1.65; color: var(--text-2); margin: 0 0 8px; }
 .tab-narrative__body p:last-child { margin-bottom: 0; }
 .tab-narrative__body strong { color: var(--text-1); }
 

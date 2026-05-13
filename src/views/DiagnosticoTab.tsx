@@ -10,7 +10,6 @@ import RankingTable from "../components/charts/RankingTable";
 import ChoroplethMap from "../components/charts/ChoroplethMap";
 import EmptyState from "../components/EmptyState";
 import InsightBox from "../components/feedback/InsightBox";
-import PhasePlaceholder from "../components/feedback/PhasePlaceholder";
 import InfoTooltip from "../components/feedback/InfoTooltip";
 import TabNarrative from "../components/feedback/TabNarrative";
 import { calcNationalMean, calcDelta, isStateOutlier, normalizeForRadar } from "../lib/stats";
@@ -44,7 +43,7 @@ type Props = { appData: AppData };
 export default function DiagnosticoTab({ appData }: Props) {
   const { state: appState } = useAppContext();
   const { primaryState, activeVariableIds } = appState;
-  const { dataset, outliers, distributions, rankings } = appData;
+  const { dataset, outliers, distributions, univariateStats, rankings } = appData;
 
   const primaryRecord = useMemo(
     () => dataset.records.find((r) => r.state === primaryState),
@@ -205,8 +204,8 @@ export default function DiagnosticoTab({ appData }: Props) {
   return (
     <div className="tab-content">
       <TabNarrative
-        title="Diagnóstico estatal"
-        description="Vista del estado seleccionado frente al conjunto nacional: indicadores clave vs media, perfil comparativo normalizado, distribución estadística y posición en el ranking."
+        title="Descripción general"
+        description="Vista del estado seleccionado frente al conjunto nacional, regiones, clusters o estados: indicadores clave vs media, perfil comparativo normalizado, distribución estadística y posición en el ranking."
       >
         {kpiCards.length > 0 ? (
           <DiagnosticoNarrative
@@ -249,6 +248,7 @@ export default function DiagnosticoTab({ appData }: Props) {
 
       {primaryVarId && (
         <div className="two-col">
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <section className="panel">
             <div className="ranking-panel-header">
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -295,6 +295,20 @@ export default function DiagnosticoTab({ appData }: Props) {
               {histMetricDef?.label ?? effectiveHistVarId} — distribución entre los 32 estados
             </p>
           </section>
+          {effectiveHistVarId && (
+            <TabNarrative
+              title="Estadísticos de distribución"
+              description="Forma, dispersión y posición del estado en la distribución nacional de la variable seleccionada."
+            >
+              <DistributionInsights
+                varId={effectiveHistVarId}
+                stateValue={highlightValue}
+                uniStat={univariateStats[effectiveHistVarId] ?? null}
+                normality={distribution?.normality ?? null}
+              />
+            </TabNarrative>
+          )}
+          </div>
 
           <section className="panel ranking-panel">
             <div className="ranking-panel-header">
@@ -367,6 +381,77 @@ export default function DiagnosticoTab({ appData }: Props) {
         </div>
         <ChoroplethMap appData={appData} />
       </section>
+    </div>
+  );
+}
+
+// ── Insights distribución ─────────────────────────────────────────────────────
+
+import type { UnivariateStat } from "../services/DataService";
+import type { DistributionEntry } from "../types/dataStandard";
+
+function DistributionInsights({
+  stateValue,
+  uniStat,
+  normality,
+}: {
+  varId: string;
+  stateValue: number | null;
+  uniStat: UnivariateStat | null;
+  normality: DistributionEntry["normality"] | null;
+}) {
+  if (!uniStat) return null;
+
+  const { mean, std, skewness, q25, q50, q75 } = uniStat;
+  if (mean === null || std === null || skewness === null) return null;
+
+  const zScore = stateValue !== null && std > 0 ? (stateValue - mean) / std : null;
+
+  const skewDesc =
+    Math.abs(skewness) < 0.5
+      ? "aproximadamente simétrica, lo que indica que los valores se distribuyen de forma equilibrada alrededor de la media"
+      : skewness > 0
+        ? "sesgada a la derecha: la mayoría de los estados tiene valores por debajo de la media, con algunos casos que elevan el promedio"
+        : "sesgada a la izquierda: la mayoría de los estados tiene valores por encima de la media, con algunos rezagados que la arrastran hacia abajo";
+
+  const normalityDesc =
+    normality?.is_normal === true
+      ? `La prueba de Shapiro-Wilk no rechaza la hipótesis de normalidad (p = ${normality.p_value?.toFixed(3)}), por lo que comparar el estado con la media y desviación estándar tiene validez estadística.`
+      : normality?.is_normal === false
+        ? `La prueba de Shapiro-Wilk rechaza la normalidad (p = ${normality.p_value?.toFixed(3)}), lo que indica heterogeneidad marcada entre estados; la posición relativa es orientativa y debe interpretarse con cautela.`
+        : null;
+
+  let statePositionDesc: string | null = null;
+  if (stateValue !== null && zScore !== null) {
+    const direction = zScore >= 0 ? "por encima" : "por debajo";
+    const absZ = Math.abs(zScore).toFixed(2);
+    let quartileDesc = "";
+    if (q25 !== null && q50 !== null && q75 !== null) {
+      if (stateValue >= q75) quartileDesc = ", ubicándose en el cuartil superior (top 25 % de los estados)";
+      else if (stateValue >= q50) quartileDesc = ", por encima de la mediana nacional";
+      else if (stateValue >= q25) quartileDesc = ", por debajo de la mediana pero dentro del segundo cuartil";
+      else quartileDesc = ", en el cuartil inferior (bottom 25 % de los estados)";
+    }
+    statePositionDesc = `El estado seleccionado se sitúa ${direction} de la media nacional por ${absZ} desviaciones estándar${quartileDesc}.`;
+  }
+
+  return (
+    <div style={{ marginTop: 12, padding: "0 4px" }}>
+      <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 6px" }}>
+        Entre los 32 estados, la variable presenta una media de <strong>{mean.toFixed(2)}</strong> con
+        una dispersión de <strong>{std.toFixed(2)}</strong> (desv. estándar). La distribución es{" "}
+        <strong>{skewDesc}</strong>.
+      </p>
+      {normalityDesc && (
+        <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 6px" }}>
+          {normalityDesc}
+        </p>
+      )}
+      {statePositionDesc && (
+        <p style={{ lineHeight: 1.65, color: "#334155", margin: 0 }}>
+          {statePositionDesc}
+        </p>
+      )}
     </div>
   );
 }

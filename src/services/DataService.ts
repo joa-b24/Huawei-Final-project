@@ -4,7 +4,6 @@ import type {
   MetricPolaridad,
   OutlierEntry,
   RankingEntry,
-  StateCard,
   VariableCatalogEntry,
 } from "../types/dataStandard";
 import type { DashboardDataset, MetricDefinition, StateMetricRecord } from "../types/dataset";
@@ -46,11 +45,24 @@ export type MunicipalAnalytics = {
   variables: Record<string, MunicipalVariableAnalytics>;
 };
 
+export type UnivariateStat = {
+  count: number;
+  mean: number;
+  std: number;
+  min: number;
+  q25: number;
+  q50: number;
+  q75: number;
+  max: number;
+  skewness: number;
+  kurtosis: number;
+};
+
 export type AppData = {
   dataset: DashboardDataset;
-  stateCards: Record<string, StateCard>;
   correlations: CorrelationsPayload;
   distributions: Record<string, DistributionEntry>;
+  univariateStats: Record<string, UnivariateStat>;
   rankings: Record<string, RankingEntry[]>;
   outliers: Record<string, OutlierEntry>;
   variablesCatalog: VariableCatalogEntry[];
@@ -173,12 +185,12 @@ export async function loadAppData(): Promise<AppData> {
   const EMPTY_COMBINED = { metric_catalog: [], records: [], sources: [], updated_at: "" };
   const EMPTY_CORRELATIONS: CorrelationsPayload = { pearson: { variables: [], matrix: [], note: "" }, spearman: { variables: [], matrix: [], note: "" } };
 
-  const [combined, stateCards, correlations, distributions, rankings, outliers, catalogPayload, stateAnalytics, municipios, municipalManifest] =
+  const [combined, correlations, distributions, univariateStats, rankings, outliers, catalogPayload, stateAnalytics, municipios, municipalManifest] =
     await Promise.all([
       fetchJsonOptional<any>("/data/state_dashboard.combined.json", EMPTY_COMBINED),
-      fetchJsonOptional<Record<string, StateCard>>("/data/outputs/state/state_cards.json", {}),
       fetchJsonOptional<CorrelationsPayload>("/data/outputs/state/correlations.json", EMPTY_CORRELATIONS),
       fetchJsonOptional<Record<string, DistributionEntry>>("/data/outputs/state/distributions.json", {}),
+      fetchJsonOptional<Record<string, UnivariateStat>>("/data/outputs/state/univariate_stats.json", {}),
       fetchJsonOptional<Record<string, RankingEntry[]>>("/data/outputs/state/rankings.json", {}),
       fetchJsonOptional<Record<string, OutlierEntry>>("/data/outputs/state/outliers_iqr.json", {}),
       fetchJsonOptional<{ variables: VariableCatalogEntry[] }>("/data/variables.catalog.json", { variables: [] }),
@@ -189,9 +201,9 @@ export async function loadAppData(): Promise<AppData> {
 
   return {
     dataset: buildDataset(combined, stateAnalytics, municipios),
-    stateCards,
     correlations,
     distributions,
+    univariateStats,
     rankings,
     outliers,
     variablesCatalog: catalogPayload.variables,
