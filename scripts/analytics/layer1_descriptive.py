@@ -11,7 +11,7 @@ from scipy.stats import shapiro, zscore
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 PUBLIC_DATA_DIR = PROJECT_ROOT / "public" / "data"
-CATALOG_PATH = PROJECT_ROOT / "data" / "catalogs" / "variables.catalog.json"
+CATALOG_PATH = PUBLIC_DATA_DIR / "variables.catalog.json"
 COMBINED_PATH = PUBLIC_DATA_DIR / "state_dashboard.combined.json"
 OUTPUT_DIR = PUBLIC_DATA_DIR / "outputs" / "state"
 

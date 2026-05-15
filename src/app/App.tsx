@@ -34,7 +34,7 @@ function Dashboard({ appData }: { appData: AppData }) {
           return Array.from(sheet.cssRules).map((r) => r.cssText).join("\n");
         } catch { return ""; }
       }).join("\n");
-    const content = document.querySelector(".layout-main")?.outerHTML ?? document.body.innerHTML;
+    const content = document.querySelector(".layout-shell")?.outerHTML ?? document.body.innerHTML;
     const date = new Date().toISOString().slice(0, 10);
     const html = `<!DOCTYPE html>
 <html lang="es">

@@ -49,13 +49,13 @@ STATE_OPS = {"nueva_variable", "actualizar", "completar"}
 # Mapping from INEGI 2-digit numeric codes to 3-letter abbreviations used in combined JSON
 _INEGI_TO_CODE: dict[str, str] = {
     "01": "AGS", "02": "BCN", "03": "BCS", "04": "CAM",
-    "05": "COA", "06": "COL", "07": "CHP", "08": "CHI",
-    "09": "CMX", "10": "DGO", "11": "GTO", "12": "GRO",
-    "13": "HGO", "14": "JAL", "15": "MEX", "16": "MCH",
+    "05": "COA", "06": "COL", "07": "CHP", "08": "CHH",
+    "09": "CMX", "10": "DUR", "11": "GUA", "12": "GRO",
+    "13": "HID", "14": "JAL", "15": "MEX", "16": "MIC",
     "17": "MOR", "18": "NAY", "19": "NLE", "20": "OAX",
-    "21": "PUE", "22": "QRO", "23": "ROO", "24": "SLP",
+    "21": "PUE", "22": "QUE", "23": "ROO", "24": "SLP",
     "25": "SIN", "26": "SON", "27": "TAB", "28": "TAM",
-    "29": "TLX", "30": "VER", "31": "YUC", "32": "ZAC",
+    "29": "TLA", "30": "VER", "31": "YUC", "32": "ZAC",
 }
 
 
