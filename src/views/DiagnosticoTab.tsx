@@ -445,51 +445,58 @@ function DistributionInsights({
 
   const zScore = stateValue !== null && std > 0 ? (stateValue - mean) / std : null;
 
+  // Plain-language position
+  let quartileLabel: string | null = null;
+  let quartileContext: string | null = null;
+  if (stateValue !== null && q25 !== null && q50 !== null && q75 !== null) {
+    if (stateValue >= q75) {
+      quartileLabel = "en el cuartil superior (25 % de estados con mayor valor)";
+      quartileContext = "El estado muestra un nivel alto de esta variable en el contexto nacional.";
+    } else if (stateValue >= q50) {
+      quartileLabel = "por encima de la mediana, en el segundo cuartil";
+      quartileContext = "El estado supera al 50 % de los estados, situándose en la mitad alta de la distribución.";
+    } else if (stateValue >= q25) {
+      quartileLabel = "por debajo de la mediana, en el tercer cuartil";
+      quartileContext = "El estado se ubica en la mitad baja de la distribución, aunque supera al 25 % inferior.";
+    } else {
+      quartileLabel = "en el cuartil inferior (25 % de estados con menor valor)";
+      quartileContext = "El estado presenta uno de los valores más bajos de la distribución nacional.";
+    }
+  }
+
+  // Plain-language shape
   const skewDesc =
     Math.abs(skewness) < 0.5
-      ? "aproximadamente simétrica, lo que indica que los valores se distribuyen de forma equilibrada alrededor de la media"
+      ? "aproximadamente simétrica: la media y la mediana nacionales son cercanas, por lo que el promedio es un buen punto de referencia para la comparación."
       : skewness > 0
-        ? "sesgada a la derecha: la mayoría de los estados tiene valores por debajo de la media, con algunos casos que elevan el promedio"
-        : "sesgada a la izquierda: la mayoría de los estados tiene valores por encima de la media, con algunos rezagados que la arrastran hacia abajo";
+        ? "sesgada hacia valores altos (cola derecha): la mayoría de los estados concentra valores bajos y unos pocos elevan el promedio. La mediana puede ser más representativa del estado 'típico' que la media."
+        : "sesgada hacia valores bajos (cola izquierda): la mayoría de los estados tiene valores altos y algunos rezagados arrastran el promedio. Considera comparar el estado también contra la mediana.";
 
-  const normalityDesc =
+  const normalityNote =
     normality?.is_normal === true
-      ? `La prueba de Shapiro-Wilk no rechaza la hipótesis de normalidad (p = ${normality.p_value?.toFixed(3)}), por lo que comparar el estado con la media y desviación estándar tiene validez estadística.`
+      ? `normal (Shapiro-Wilk p = ${normality.p_value?.toFixed(3)})`
       : normality?.is_normal === false
-        ? `La prueba de Shapiro-Wilk rechaza la normalidad (p = ${normality.p_value?.toFixed(3)}), lo que indica heterogeneidad marcada entre estados; la posición relativa es orientativa y debe interpretarse con cautela.`
+        ? `no normal (Shapiro-Wilk p = ${normality.p_value?.toFixed(3)}) — precaución con comparaciones basadas en σ`
         : null;
 
-  let statePositionDesc: string | null = null;
-  if (stateValue !== null && zScore !== null) {
-    const direction = zScore >= 0 ? "por encima" : "por debajo";
-    const absZ = Math.abs(zScore).toFixed(2);
-    let quartileDesc = "";
-    if (q25 !== null && q50 !== null && q75 !== null) {
-      if (stateValue >= q75) quartileDesc = ", ubicándose en el cuartil superior (top 25 % de los estados)";
-      else if (stateValue >= q50) quartileDesc = ", por encima de la mediana nacional";
-      else if (stateValue >= q25) quartileDesc = ", por debajo de la mediana pero dentro del segundo cuartil";
-      else quartileDesc = ", en el cuartil inferior (bottom 25 % de los estados)";
-    }
-    statePositionDesc = `El estado seleccionado se sitúa ${direction} de la media nacional por ${absZ} desviaciones estándar${quartileDesc}.`;
-  }
+  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
 
   return (
     <div style={{ marginTop: 12, padding: "0 4px" }}>
-      <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 6px" }}>
-        Entre los 32 estados, la variable presenta una media de <strong>{mean.toFixed(2)}</strong> con
-        una dispersión de <strong>{std.toFixed(2)}</strong> (desv. estándar). La distribución es{" "}
-        <strong>{skewDesc}</strong>.
+      {quartileLabel && (
+        <p style={S}>
+          En la distribución nacional, el estado seleccionado se ubica <strong>{quartileLabel}</strong>.{" "}
+          {quartileContext}
+        </p>
+      )}
+      <p style={S}>
+        La distribución entre los 32 estados es <strong>{skewDesc}</strong>
       </p>
-      {normalityDesc && (
-        <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 6px" }}>
-          {normalityDesc}
-        </p>
-      )}
-      {statePositionDesc && (
-        <p style={{ lineHeight: 1.65, color: "#334155", margin: 0 }}>
-          {statePositionDesc}
-        </p>
-      )}
+      <p style={{ lineHeight: 1.5, color: "var(--text-3)", fontSize: 11, margin: 0, borderTop: "1px solid var(--border)", paddingTop: 6 }}>
+        Media: <strong>{mean.toFixed(2)}</strong> · σ: <strong>{std.toFixed(2)}</strong>
+        {zScore !== null && <> · z del estado: <strong>{zScore >= 0 ? "+" : ""}{zScore.toFixed(2)}</strong></>}
+        {normalityNote && <> · Distribución: {normalityNote}</>}
+      </p>
     </div>
   );
 }
@@ -537,36 +544,76 @@ function DiagnosticoNarrative({
     .filter((c) => c.direction === "lower_better" ? (c.delta ?? 0) > 0 : (c.delta ?? 0) < 0)
     .sort((a, b) => Math.abs(b.delta ?? 0) - Math.abs(a.delta ?? 0));
 
+  const rankPct = rankingRow ? (rankingRow.rank / totalStates) * 100 : null;
+  const rankTercile =
+    rankPct !== null
+      ? rankPct <= 33 ? "tercio superior" : rankPct <= 66 ? "tercio medio" : "tercio inferior"
+      : null;
+
+  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
+
   return (
     <div>
-      <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 8px" }}>
-        En <strong>{primaryState}</strong>
-        {stateRegion ? <>, región <strong>{stateRegion}</strong>,</> : ","}{" "}
-        de las <strong>{withData.length}</strong> variable{withData.length !== 1 ? "s" : ""} con datos,{" "}
-        <strong>{goodPerformers.length}</strong> {goodPerformers.length === 1 ? "muestra" : "muestran"} desempeño favorable respecto a la media nacional{" "}
-        y <strong>{badPerformers.length}</strong> {badPerformers.length === 1 ? "presenta" : "presentan"} oportunidad de mejora.
-        {goodPerformers.length > 0 && (
-          <> El mayor avance relativo es{" "}
-          <strong>{goodPerformers[0].label}</strong> ({fmtPct(goodPerformers[0].delta)} vs media).</>
-        )}
-        {badPerformers.length > 0 && (
-          <> La mayor brecha aparece en{" "}
-          <strong>{badPerformers[0].label}</strong> ({fmtPct(badPerformers[0].delta)} vs media).</>
-        )}
+      <p style={S}>
+        El perfil de <strong>{primaryState}</strong>
+        {stateRegion ? <>, región <strong>{stateRegion}</strong>,</> : ""}{" "}
+        se analiza a partir de <strong>{withData.length}</strong> variable{withData.length !== 1 ? "s" : ""} con datos disponibles.{" "}
+        {goodPerformers.length === withData.length
+          ? "El estado supera la media nacional en todas las variables analizadas."
+          : badPerformers.length === withData.length
+          ? "El estado se ubica por debajo de la media nacional en todas las variables analizadas."
+          : <>
+              <strong>{goodPerformers.length}</strong> {goodPerformers.length === 1 ? "presenta" : "presentan"} desempeño favorable frente a la media nacional
+              y <strong>{badPerformers.length}</strong> {badPerformers.length === 1 ? "muestra" : "muestran"} oportunidad de mejora.
+            </>
+        }
       </p>
-      {rankingRow && rankingLabel && (
-        <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 10px" }}>
-          En <strong>{rankingLabel}</strong>, el estado ocupa el{" "}
-          <strong>lugar {rankingRow.rank} de {totalStates}</strong>, con un valor{" "}
-          <strong>{fmtPct(rankingRow.pct_vs_mean)}</strong> respecto al promedio nacional.
+
+      {goodPerformers.length > 0 && (
+        <p style={S}>
+          {goodPerformers.length === 1
+            ? <>La variable con mejor desempeño relativo es <strong>{goodPerformers[0].label}</strong> ({fmtPct(goodPerformers[0].delta)} vs media).</>
+            : <>
+                Las variables con mayor ventaja frente a la media nacional son{" "}
+                <strong>{goodPerformers[0].label}</strong> ({fmtPct(goodPerformers[0].delta)})
+                {goodPerformers[1] && <> y <strong>{goodPerformers[1].label}</strong> ({fmtPct(goodPerformers[1].delta)})</>}
+                {goodPerformers.length > 2 && <>, entre otras {goodPerformers.length - 2}</>}.
+              </>
+          }
         </p>
       )}
+
+      {badPerformers.length > 0 && (
+        <p style={S}>
+          {badPerformers.length === 1
+            ? <>La variable con mayor brecha respecto a la media es <strong>{badPerformers[0].label}</strong> ({fmtPct(badPerformers[0].delta)} vs media).</>
+            : <>
+                Las variables con mayor brecha respecto a la media nacional son{" "}
+                <strong>{badPerformers[0].label}</strong> ({fmtPct(badPerformers[0].delta)})
+                {badPerformers[1] && <> y <strong>{badPerformers[1].label}</strong> ({fmtPct(badPerformers[1].delta)})</>}
+                {badPerformers.length > 2 && <>, entre otras {badPerformers.length - 2}</>}.
+              </>
+          }
+        </p>
+      )}
+
+      {rankingRow && rankingLabel && (
+        <p style={S}>
+          En <strong>{rankingLabel}</strong>, el estado ocupa el{" "}
+          <strong>lugar {rankingRow.rank} de {totalStates}</strong>
+          {rankTercile ? <> ({rankTercile} nacional)</> : ""},{" "}
+          con un valor <strong>{fmtPct(rankingRow.pct_vs_mean)}</strong> respecto al promedio nacional.
+        </p>
+      )}
+
       {outliers.length > 0 && (
-        <p style={{ lineHeight: 1.65, color: "#334155", margin: 0 }}>
-          Se detecta comportamiento atípico (criterio IQR) en:{" "}
-          <strong>{outliers.map((c) => c.label).join(", ")}</strong>.
-          {" "}Esto indica que la entidad se aleja significativamente
-          de la distribución del resto de estados en {outliers.length === 1 ? "esa variable" : "esas variables"}.
+        <p style={{ ...S, margin: 0 }}>
+          Se detecta comportamiento atípico (criterio IQR ×1.5) en:{" "}
+          <strong>{outliers.map((c) => c.label).join(", ")}</strong>.{" "}
+          {outliers.length === 1
+            ? "El estado se aleja significativamente de la distribución del resto en esta variable, lo que puede reflejar una condición estructural o una política pública diferenciada."
+            : "El estado se aleja de la distribución del resto en estas variables, lo que puede reflejar condiciones estructurales diferenciadas o efectos de políticas públicas específicas."
+          }
         </p>
       )}
     </div>

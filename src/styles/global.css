@@ -1021,6 +1021,10 @@ select {
 .var-form input:focus, .var-form select:focus, .var-form textarea:focus { outline: none; border-color: var(--blue); }
 .var-form textarea { resize: vertical; }
 .var-form__row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.var-form__section { border-top: 1px solid var(--border); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.var-form__section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--blue); margin: 0; }
+.var-form__hint { font-size: 11px; font-weight: 400; color: var(--text-3); line-height: 1.4; }
+.var-form__hint code { font-family: monospace; font-size: 11px; background: var(--blue-light); color: var(--blue); padding: 1px 4px; border-radius: 3px; }
 .required { color: var(--red); font-weight: 700; line-height: 1; }
 
 /* Variable select list */
@@ -1102,3 +1106,23 @@ select {
 /* App footer */
 .app-footer { margin-top: 40px; padding: 14px 24px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-3); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .app-footer__sep { color: var(--border); }
+
+/* Evolución tab — variable pill selector */
+.var-pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 0; padding: 16px 24px 0; }
+.var-pill { padding: 5px 14px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface); font-size: 12px; font-weight: 500; color: var(--text-2); cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+.var-pill:hover { border-color: var(--blue-mid); color: var(--blue); }
+.var-pill--active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); font-weight: 600; }
+
+/* Evolución tab — trend summary row */
+.evolucion-trend { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 8px 12px; border-radius: var(--radius); background: var(--surface-2, var(--surface)); border: 1px solid var(--border); font-size: 13px; flex-wrap: wrap; }
+.evolucion-trend__state { font-weight: 700; color: var(--text-1); }
+.evolucion-trend__delta { font-weight: 700; font-variant-numeric: tabular-nums; }
+.evolucion-trend__range { color: var(--text-3); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+/* Evolución tab — custom tooltip */
+.evolucion-tooltip { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; font-size: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-width: 180px; }
+.evolucion-tooltip__year { margin: 0 0 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
+.evolucion-tooltip__primary { margin: 0 0 4px; color: var(--blue); display: flex; align-items: center; gap: 6px; }
+.evolucion-tooltip__row { margin: 0 0 2px; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
+.evolucion-tooltip__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+.evolucion-tooltip__dot--primary { background: var(--blue); }

@@ -11,6 +11,7 @@ import TabPanel from "../components/layout/TabPanel";
 import PhasePlaceholder from "../components/feedback/PhasePlaceholder";
 import DiagnosticoTab from "../views/DiagnosticoTab";
 import RelacionesTab from "../views/RelacionesTab";
+import EvolucionTab from "../views/EvolucionTab";
 import DatosTab from "../views/DatosTab";
 import StateTerritorialAnalysis from "../components/state-analysis/StateTerritorialAnalysis";
 
@@ -132,9 +133,7 @@ function Dashboard({ appData }: { appData: AppData }) {
               />
             </TabPanel>
             <TabPanel id="temporal" activeTab={state.activeTab}>
-              <PhasePlaceholder
-                message="Series de tiempo y análisis de tendencias — no disponible aún."
-              />
+              <EvolucionTab appData={appData} />
             </TabPanel>
             <TabPanel id="territorial" activeTab={state.activeTab}>
               <StateTerritorialAnalysis

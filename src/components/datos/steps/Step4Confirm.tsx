@@ -207,6 +207,26 @@ export default function Step4Confirm({
               : `${coerced.length} filas (${stateCount} estado${stateCount !== 1 ? "s" : ""})`}
           </strong>
         </div>
+        {isMunicipal && (
+          <>
+            <div className="confirm-summary__row">
+              <span>Campo municipal</span>
+              <strong>{variable.campo_municipal ?? <span style={{ color: "var(--text-3)", fontWeight: 400 }}>no especificado</span>}</strong>
+            </div>
+            {variable.agregacion_default === "avg" && (
+              <div className="confirm-summary__row">
+                <span>Peso municipal</span>
+                <strong>
+                  {variable.peso_municipal === "localidades"
+                    ? "Localidades (localidades_n)"
+                    : variable.peso_municipal === "uniforme"
+                    ? "Uniforme (promedio simple)"
+                    : "Población (pobtot_iter)"}
+                </strong>
+              </div>
+            )}
+          </>
+        )}
         {coerced.length < rows.length && (
           <p className="wizard-warn">
             {rows.length - coerced.length} filas descartadas por valores inválidos o sin año.

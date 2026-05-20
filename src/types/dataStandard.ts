@@ -15,6 +15,12 @@ export type TipoValor = "number" | "integer" | "percentage" | "currency";
 
 export type AgregacionDefault = "avg" | "sum" | "latest";
 
+/** Método de ponderación al agregar valores municipales a nivel estatal.
+ *  - poblacion:   peso = pobtot_iter (población total INEGI 2020) — "¿qué experimenta el habitante promedio?"
+ *  - localidades: peso = localidades_n — "¿qué porcentaje de comunidades tiene el indicador?"
+ *  - uniforme:    peso = 1 por municipio — promedio simple entre unidades administrativas */
+export type AgregacionMunicipal = "poblacion" | "localidades" | "uniforme";
+
 /** "higher_better": polaridad positiva — más alto = mejor (ej. cobertura internet).
  *  "lower_better": polaridad negativa — más bajo = mejor (ej. pobreza, carencia). */
 export type MetricPolaridad = "higher_better" | "lower_better";
@@ -37,6 +43,11 @@ export type VariableCatalogEntry = {
   direction?: MetricPolaridad;
   fuente_sugerida: string;
   sinonimos: string[];
+  /** Nombre del campo correspondiente en MunicipioAnalyticsRecord.
+   *  Presente solo en variables con fuente de granularidad municipal. */
+  campo_municipal?: string;
+  /** Peso aplicado al promediar municipios → estatal. Solo aplica cuando agregacion_default = "avg". */
+  peso_municipal?: AgregacionMunicipal;
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

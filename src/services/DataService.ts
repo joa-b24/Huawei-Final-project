@@ -4,6 +4,7 @@ import type {
   MetricPolaridad,
   OutlierEntry,
   RankingEntry,
+  TerritorialWideRecord,
   VariableCatalogEntry,
 } from "../types/dataStandard";
 import type { DashboardDataset, MetricDefinition, StateMetricRecord } from "../types/dataset";
@@ -67,6 +68,7 @@ export type AppData = {
   outliers: Record<string, OutlierEntry>;
   variablesCatalog: VariableCatalogEntry[];
   municipalManifest: MunicipalManifest | null;
+  historical: TerritorialWideRecord[];
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -185,7 +187,7 @@ export async function loadAppData(): Promise<AppData> {
   const EMPTY_COMBINED = { metric_catalog: [], records: [], sources: [], updated_at: "" };
   const EMPTY_CORRELATIONS: CorrelationsPayload = { pearson: { variables: [], matrix: [], note: "" }, spearman: { variables: [], matrix: [], note: "" } };
 
-  const [combined, correlations, distributions, univariateStats, rankings, outliers, catalogPayload, stateAnalytics, municipios, municipalManifest] =
+  const [combined, correlations, distributions, univariateStats, rankings, outliers, catalogPayload, stateAnalytics, municipios, municipalManifest, historical] =
     await Promise.all([
       fetchJsonOptional<any>("/data/state_dashboard.combined.json", EMPTY_COMBINED),
       fetchJsonOptional<CorrelationsPayload>("/data/outputs/state/correlations.json", EMPTY_CORRELATIONS),
@@ -197,6 +199,7 @@ export async function loadAppData(): Promise<AppData> {
       fetchJsonOptional<StateAnalyticsPayload | null>("/data/state_analytics_dashboard.json", null),
       fetchJsonOptional<MunicipioAnalyticsRecord[]>("/data/municipios_master_analytics.json", []),
       fetchJsonOptional<MunicipalManifest | null>("/data/municipal_manifest.json", null),
+      fetchJsonOptional<TerritorialWideRecord[]>("/data/outputs/state/historical_state.json", []),
     ]);
 
   return {
@@ -208,5 +211,6 @@ export async function loadAppData(): Promise<AppData> {
     outliers,
     variablesCatalog: catalogPayload.variables,
     municipalManifest,
+    historical,
   };
 }

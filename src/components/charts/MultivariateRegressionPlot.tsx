@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import TabNarrative from "../feedback/TabNarrative";
 import {
   Bar,
   BarChart,
@@ -250,6 +251,20 @@ export default function MultivariateRegressionPlot({ stateCards, metricOptions, 
 
       {result && (
         <>
+          <TabNarrative
+            title="Interpretación del modelo"
+            description={`R² ajustado ${Math.round(result.r2adj * 100)} % · ${betaData.filter((d) => d.pValue < 0.05).length} predictor(es) significativo(s) · ajuste ${rmseLabel || "—"}`}
+          >
+            <RegresionInsights
+              result={result}
+              betaData={betaData}
+              yLabel={yLabelShort}
+              rmse={rmse}
+              rmseLabel={rmseLabel}
+              n={usedStateNames.length}
+            />
+          </TabNarrative>
+
           {/* Model summary */}
           <p className="regression-summary">
             El modelo explica el{" "}
@@ -411,6 +426,83 @@ export default function MultivariateRegressionPlot({ stateCards, metricOptions, 
             </p>
           )}
         </>
+      )}
+    </div>
+  );
+}
+
+// ── Narrativa del modelo ──────────────────────────────────────────────────────
+
+type BetaItem = { label: string; beta: number; pValue: number; vif?: number };
+
+function RegresionInsights({
+  result,
+  betaData,
+  yLabel,
+  rmse,
+  rmseLabel,
+  n,
+}: {
+  result: NonNullable<ReturnType<typeof import("../../lib/regression").olsRegression>>;
+  betaData: BetaItem[];
+  yLabel: string;
+  rmse: number | null;
+  rmseLabel: string;
+  n: number;
+}) {
+  const r2pct = Math.round(result.r2 * 100);
+  const r2adjPct = Math.round(result.r2adj * 100);
+  const r2Quality = r2adjPct >= 70 ? "alto" : r2adjPct >= 40 ? "moderado" : "bajo";
+
+  const sigPredictors = betaData.filter((d) => d.pValue < 0.05);
+  const sorted = [...betaData].sort((a, b) => Math.abs(b.beta) - Math.abs(a.beta));
+  const top = sorted[0];
+  const highVif = betaData.filter((d) => (d.vif ?? 0) > 5);
+
+  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
+
+  return (
+    <div>
+      <p style={S}>
+        El modelo explica el <strong>{r2pct}&nbsp;%</strong> de la variación en <strong>{yLabel}</strong> entre
+        los {n} estados (R² ajustado: <strong>{r2adjPct}&nbsp;%</strong> — poder explicativo <strong>{r2Quality}</strong>).{" "}
+        {result.fPValue < 0.05
+          ? <>El conjunto de predictores es <strong>estadísticamente significativo</strong> (prueba F, p&nbsp;&lt;&nbsp;0.05).</>
+          : <>El conjunto de predictores <strong>no alcanza significancia estadística</strong> — interpreta los coeficientes con cautela.</>
+        }
+      </p>
+
+      {top && (
+        <p style={S}>
+          El predictor con mayor contribución marginal es <strong>{top.label}</strong>{" "}
+          (β&nbsp;=&nbsp;{top.beta.toFixed(2)}, efecto {top.beta > 0 ? "positivo" : "negativo"},{" "}
+          {top.pValue < 0.05 ? "estadísticamente significativo" : `no significativo con n = ${n}`}).{" "}
+          {sigPredictors.length > 1 && (
+            <>Predictores significativos: <strong>{sigPredictors.map((d) => d.label).join(", ")}</strong>.</>
+          )}
+          {sigPredictors.length === 0 && betaData.length > 0 && (
+            <>Ningún predictor individual alcanza significancia estadística con la muestra disponible; el patrón puede ser indicativo pero no concluyente.</>
+          )}
+        </p>
+      )}
+
+      {highVif.length > 0 && (
+        <p style={S}>
+          <strong>Alerta de multicolinealidad:</strong>{" "}
+          <strong>{highVif.map((d) => d.label).join(", ")}</strong>{" "}
+          {highVif.length === 1 ? "presenta" : "presentan"} VIF&nbsp;&gt;&nbsp;5, lo que indica correlación alta entre predictores.
+          Los coeficientes beta de estas variables pueden estar inflados o ser inestables.
+        </p>
+      )}
+
+      {rmse !== null && (
+        <p style={{ ...S, margin: 0 }}>
+          El ajuste es <strong>{rmseLabel}</strong> (RMSE&nbsp;=&nbsp;{rmse.toFixed(3)}σ).{" "}
+          {rmseLabel === "excelente" || rmseLabel === "bueno"
+            ? "El modelo captura bien la variación entre estados para este conjunto de predictores."
+            : "Considera incluir predictores teóricamente relevantes o revisar la especificación del modelo."
+          }
+        </p>
       )}
     </div>
   );

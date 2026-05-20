@@ -4,6 +4,7 @@ import type {
   CategoryId,
   TipoValor,
   AgregacionDefault,
+  AgregacionMunicipal,
   MetricPolaridad,
 } from "../../../types/dataStandard";
 import type { Granularity } from "./Step1OperationType";
@@ -48,10 +49,13 @@ const CATEGORIES: { id: CategoryId; label: string }[] = [
 function NewVariableForm({
   draft,
   onChange,
+  granularity,
 }: {
   draft: VariableCatalogEntry;
   onChange: (f: keyof VariableCatalogEntry, v: string) => void;
+  granularity: Granularity;
 }) {
+  const isMunicipal = granularity === "municipal";
   return (
     <div className="var-form">
       <label>
@@ -59,7 +63,7 @@ function NewVariableForm({
         <input
           value={draft.variable_id}
           onChange={(e) => onChange("variable_id", e.target.value)}
-          placeholder="ej: cobertura_fibra_pct"
+          placeholder="ej: nombre_variable_pct"
         />
       </label>
       <label>
@@ -67,7 +71,7 @@ function NewVariableForm({
         <input
           value={draft.nombre}
           onChange={(e) => onChange("nombre", e.target.value)}
-          placeholder="ej: Cobertura de fibra óptica"
+          placeholder="ej: Nombre de la variable"
         />
       </label>
       <div className="var-form__row">
@@ -153,6 +157,41 @@ function NewVariableForm({
           placeholder="Descripción detallada del indicador..."
         />
       </label>
+
+      {isMunicipal && (
+        <div className="var-form__section">
+          <p className="var-form__section-label">Agregación municipal → estatal</p>
+          <div className="var-form__row">
+            <label>
+              Campo en municipio
+              <input
+                value={draft.campo_municipal ?? ""}
+                onChange={(e) => onChange("campo_municipal", e.target.value)}
+                placeholder="ej: pob_pct_4g_garantizada"
+              />
+              <span className="var-form__hint">
+                Nombre del campo en <code>MunicipioAnalyticsRecord</code> que corresponde a esta variable (opcional).
+              </span>
+            </label>
+            {draft.agregacion_default === "avg" && (
+              <label>
+                Peso municipal
+                <select
+                  value={draft.peso_municipal ?? "poblacion"}
+                  onChange={(e) => onChange("peso_municipal", e.target.value as AgregacionMunicipal)}
+                >
+                  <option value="poblacion">Población — pobtot_iter</option>
+                  <option value="localidades">Localidades — localidades_n</option>
+                  <option value="uniforme">Uniforme — promedio simple</option>
+                </select>
+                <span className="var-form__hint">
+                  Cómo se pondera cada municipio al calcular el promedio estatal.
+                </span>
+              </label>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -263,7 +302,7 @@ export default function Step2Variable({
     return (
       <div className="wizard-step-body">
         <p className="wizard-step-title">Define la nueva variable</p>
-        <NewVariableForm draft={draft} onChange={handleDraftChange} />
+        <NewVariableForm draft={draft} onChange={handleDraftChange} granularity={granularity} />
         <div className="wizard-nav">
           <button className="btn-ghost" onClick={() => onSetIsNew(null as unknown as boolean)} type="button">← Atrás</button>
           <button className="btn-primary" disabled={!canContinue} onClick={onNext} type="button">Siguiente →</button>

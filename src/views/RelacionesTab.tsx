@@ -249,34 +249,63 @@ function ImpactoNarrative({
   n: number;
 }) {
   const sorted = [...corrRows].sort((a, b) => Math.abs(b.r) - Math.abs(a.r));
-  const top = sorted[0];
+  const top3 = sorted.slice(0, 3);
   const significant = corrRows.filter((c) => c.pValue < 0.05);
   const posSignif = significant.filter((c) => c.r > 0);
   const negSignif = significant.filter((c) => c.r < 0);
 
+  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
+
   return (
     <div>
-      <p style={{ lineHeight: 1.65, color: "#334155", margin: "0 0 8px" }}>
-        Respecto a <strong>{yLabel}</strong>, la asociación lineal más fuerte entre las{" "}
-        {corrRows.length} variable{corrRows.length !== 1 ? "s" : ""} analizadas corresponde a{" "}
-        <strong>{top.label}</strong> (r = <strong>{top.r.toFixed(2)}</strong>,{" "}
-        asociación <strong>{corrStrength(top.r)} {top.r > 0 ? "positiva" : "negativa"}</strong>).{" "}
+      <p style={S}>
+        Se analiza la relación lineal de <strong>{corrRows.length}</strong> variable{corrRows.length !== 1 ? "s" : ""} con{" "}
+        <strong>{yLabel}</strong>, usando los {n} estados como observaciones.{" "}
         {significant.length > 0 ? (
-          <><strong>{significant.length}</strong> de {corrRows.length} alcanzan significancia estadística (p &lt; 0.05) con n = {n} entidades.</>
+          <><strong>{significant.length}</strong> de {corrRows.length} {significant.length === 1 ? "alcanza" : "alcanzan"} significancia estadística (p&nbsp;&lt;&nbsp;0.05).</>
         ) : (
-          <>Ninguna correlación alcanza significancia estadística con n = {n} entidades; interpreta las tendencias con cautela.</>
+          <>Ninguna correlación alcanza significancia estadística con n&nbsp;=&nbsp;{n}; las tendencias son indicativas.</>
         )}
       </p>
+
+      {top3.length > 0 && (
+        <p style={S}>
+          Las asociaciones más fuertes son:{" "}
+          {top3.map((c, i) => (
+            <span key={c.label}>
+              {i > 0 && "; "}
+              <strong>{c.label}</strong>{" "}(r&nbsp;=&nbsp;{c.r.toFixed(2)},{" "}
+              {corrStrength(c.r)} {c.r > 0 ? "positiva" : "negativa"}{c.pValue < 0.05 ? ", p&nbsp;&lt;&nbsp;0.05" : ""})
+            </span>
+          ))}.
+        </p>
+      )}
+
       {(posSignif.length > 0 || negSignif.length > 0) && (
-        <p style={{ lineHeight: 1.65, color: "#334155", margin: 0 }}>
+        <p style={S}>
           {posSignif.length > 0 && (
-            <>Asociación positiva significativa: <strong>{posSignif.map((c) => c.label).join(", ")}</strong>.{" "}</>
+            <>
+              Asociación <strong>positiva</strong> significativa con:{" "}
+              <strong>{posSignif.map((c) => c.label).join(", ")}</strong> —{" "}
+              {posSignif.length === 1 ? "cuando esta variable aumenta" : "cuando estas variables aumentan"},{" "}
+              <strong>{yLabel}</strong> tiende a aumentar también.{" "}
+            </>
           )}
           {negSignif.length > 0 && (
-            <>Asociación negativa significativa: <strong>{negSignif.map((c) => c.label).join(", ")}</strong>.</>
+            <>
+              Asociación <strong>negativa</strong> significativa con:{" "}
+              <strong>{negSignif.map((c) => c.label).join(", ")}</strong> —{" "}
+              {negSignif.length === 1 ? "cuando esta variable aumenta" : "cuando estas variables aumentan"},{" "}
+              <strong>{yLabel}</strong> tiende a disminuir.
+            </>
           )}
         </p>
       )}
+
+      <p style={{ lineHeight: 1.55, color: "var(--text-3)", fontSize: 12, margin: 0 }}>
+        Correlación no implica causalidad. Con n&nbsp;=&nbsp;{n} estados, se necesita |r|&nbsp;&gt;&nbsp;~0.35 para alcanzar p&nbsp;&lt;&nbsp;0.05.
+        Explora el diagrama de dispersión para identificar estados atípicos que puedan estar influyendo en el coeficiente.
+      </p>
     </div>
   );
 }
