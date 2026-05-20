@@ -266,6 +266,7 @@ export default function DiagnosticoTab({ appData }: Props) {
           nationalValues={nationalValues}
           stateRegionMap={stateRegionMap}
           allStateNames={dataset.records.map((r) => r.state)}
+          pcaResults={appData.pcaResults}
         />
       </section>
 

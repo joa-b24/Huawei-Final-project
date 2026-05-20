@@ -16,6 +16,7 @@ import {
   type TooltipProps,
 } from "recharts";
 import EmptyState from "../EmptyState";
+import type { PcaResults } from "../../services/DataService";
 
 const PRIMARY_COLOR = "#1d4ed8";
 const GROUP_COLORS = ["#64748b", "#059669", "#7c3aed", "#dc2626", "#0891b2"];
@@ -31,6 +32,7 @@ type Props = {
   nationalValues: Record<string, number | null>;
   stateRegionMap: Record<string, string>;
   allStateNames: string[];
+  pcaResults?: PcaResults | null;
 };
 
 function fmtRaw(v: number, unit: string): string {
@@ -52,6 +54,7 @@ export default function ComparisonRadarChart({
   nationalValues,
   stateRegionMap,
   allStateNames,
+  pcaResults,
 }: Props) {
   const [view, setView] = useState<"radar" | "barras">("radar");
   const [groups, setGroups] = useState<string[]>(["nacional"]);
@@ -61,6 +64,18 @@ export default function ComparisonRadarChart({
   }, [primaryState]);
 
   const regionGroupId = stateRegion ? `r:${stateRegion}` : null;
+
+  const primaryPcaRecord = useMemo(
+    () => pcaResults?.records.find((r) => r.state === primaryState) ?? null,
+    [pcaResults, primaryState]
+  );
+  const primaryClusterGroupId =
+    primaryPcaRecord !== null ? `c:${primaryPcaRecord.cluster}` : null;
+  const primaryClusterLabel =
+    primaryPcaRecord !== null
+      ? (pcaResults?.cluster_stats[String(primaryPcaRecord.cluster)]?.label ??
+        `Cluster ${primaryPcaRecord.cluster}`)
+      : null;
 
   const regionValues = useMemo(() => {
     if (!stateRegion) return {};
@@ -77,12 +92,25 @@ export default function ComparisonRadarChart({
     return result;
   }, [stateRegion, stateRegionMap, normalizedMap, variables]);
 
+  function getClusterValues(clusterId: number): Record<string, number> {
+    const clusterStates = pcaResults?.cluster_stats[String(clusterId)]?.states ?? [];
+    const result: Record<string, number> = {};
+    for (const v of variables) {
+      const vals = clusterStates
+        .map((s) => normalizedMap.get(s)?.[v.id])
+        .filter((x): x is number => typeof x === "number");
+      if (vals.length) result[v.id] = vals.reduce((a, b) => a + b, 0) / vals.length;
+    }
+    return result;
+  }
+
   function getGroupValues(g: string): Record<string, number> {
     if (g === "nacional")
       return Object.fromEntries(
         Object.entries(nationalValues).map(([k, v]) => [k, v ?? 0])
       );
     if (g.startsWith("r:")) return regionValues;
+    if (g.startsWith("c:")) return getClusterValues(parseInt(g.slice(2), 10));
     return Object.fromEntries(
       Object.entries(normalizedMap.get(g) ?? {}).map(([k, v]) => [k, v ?? 0])
     );
@@ -91,6 +119,10 @@ export default function ComparisonRadarChart({
   function getGroupLabel(g: string): string {
     if (g === "nacional") return "Nacional";
     if (g.startsWith("r:")) return `Región ${g.slice(2)}`;
+    if (g.startsWith("c:")) {
+      const id = parseInt(g.slice(2), 10);
+      return pcaResults?.cluster_stats[String(id)]?.label ?? `Cluster ${id}`;
+    }
     return g;
   }
 
@@ -150,6 +182,15 @@ export default function ComparisonRadarChart({
       const vals = states.map((s) => rawMap?.get(s)?.[varId]).filter((v): v is number => typeof v === "number");
       return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
     }
+    const clusterStat = Object.values(pcaResults?.cluster_stats ?? {}).find(
+      (cs) => cs.label === name
+    );
+    if (clusterStat) {
+      const vals = clusterStat.states
+        .map((s) => rawMap?.get(s)?.[varId])
+        .filter((v): v is number => typeof v === "number");
+      return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
+    }
     return null;
   }
 
@@ -202,6 +243,20 @@ export default function ComparisonRadarChart({
               disabled={!groups.includes(regionGroupId) && groups.length >= MAX_GROUPS}
             />
             <span>Región {stateRegion}</span>
+          </label>
+        )}
+
+        {primaryClusterGroupId && (
+          <label className="comparison-group-option">
+            <input
+              type="checkbox"
+              checked={groups.includes(primaryClusterGroupId)}
+              onChange={() => toggleGroup(primaryClusterGroupId)}
+              disabled={
+                !groups.includes(primaryClusterGroupId) && groups.length >= MAX_GROUPS
+              }
+            />
+            <span>{primaryClusterLabel}</span>
           </label>
         )}
 

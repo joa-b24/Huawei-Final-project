@@ -8,9 +8,9 @@ import Sidebar from "../components/layout/Sidebar";
 import MainContent from "../components/layout/MainContent";
 import TabBar, { type Tab } from "../components/layout/TabBar";
 import TabPanel from "../components/layout/TabPanel";
-import PhasePlaceholder from "../components/feedback/PhasePlaceholder";
 import DiagnosticoTab from "../views/DiagnosticoTab";
 import RelacionesTab from "../views/RelacionesTab";
+import EstructuraTab from "../views/EstructuraTab";
 import EvolucionTab from "../views/EvolucionTab";
 import DatosTab from "../views/DatosTab";
 import StateTerritorialAnalysis from "../components/state-analysis/StateTerritorialAnalysis";
@@ -128,9 +128,7 @@ function Dashboard({ appData }: { appData: AppData }) {
               <RelacionesTab appData={appData} />
             </TabPanel>
             <TabPanel id="estructura" activeTab={state.activeTab}>
-              <PhasePlaceholder
-                message="Análisis de estructura latente (PCA + Clustering) — no disponible aún."
-              />
+              <EstructuraTab appData={appData} />
             </TabPanel>
             <TabPanel id="temporal" activeTab={state.activeTab}>
               <EvolucionTab appData={appData} />
