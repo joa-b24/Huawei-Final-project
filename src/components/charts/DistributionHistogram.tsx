@@ -21,28 +21,37 @@ function BinTooltip({ active, payload }: any) {
     if (b === selected) return 1;
     return a.localeCompare(b, "es");
   });
+  const twoCol = sorted.length > 5;
   return (
     <div style={{
       background: "var(--surface)", border: "1px solid var(--border)",
-      borderRadius: 8, padding: "8px 12px", fontSize: 12, maxWidth: 240,
+      borderRadius: 8, padding: "10px 12px", fontSize: 12,
+      maxWidth: twoCol ? 300 : 200,
+      boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
     }}>
-      <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--text-1)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+      <p style={{ margin: "0 0 1px", fontWeight: 700, color: "var(--text-1)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em" }}>
         Intervalo: {range}
       </p>
-      <p style={{ margin: "0 0 6px", color: "var(--text-3)", fontSize: 11 }}>
+      <p style={{ margin: "0 0 8px", color: "var(--text-3)", fontSize: 11 }}>
         {d.count} estado{d.count !== 1 ? "s" : ""}
       </p>
       {sorted.length > 0 && (
-        <p style={{ margin: 0, color: "var(--text-2)", lineHeight: 1.65, fontSize: 12 }}>
-          {sorted.map((s, i) => (
-            <span key={s}>
-              {i > 0 && <span style={{ color: "var(--border)", margin: "0 2px" }}>·</span>}
-              {s === selected
-                ? <strong style={{ color: "var(--blue)" }}>{s}</strong>
-                : s}
+        <div style={twoCol ? { display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: 10, rowGap: 1 } : {}}>
+          {sorted.map((s) => (
+            <span
+              key={s}
+              style={{
+                display: "block",
+                fontSize: 11,
+                lineHeight: 1.7,
+                fontWeight: s === selected ? 700 : 400,
+                color: s === selected ? "var(--blue)" : "var(--text-2)",
+              }}
+            >
+              {s}
             </span>
           ))}
-        </p>
+        </div>
       )}
     </div>
   );

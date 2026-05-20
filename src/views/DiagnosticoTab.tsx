@@ -172,7 +172,7 @@ export default function DiagnosticoTab({ appData }: Props) {
   }, [effectiveHistVarId, distribution, dataset.records]);
 
   const [rankingVarId, setRankingVarId] = useState<string | null>(null);
-  const [rankingView, setRankingView] = useState<"table" | "bars">("table");
+  const [rankingView, setRankingView] = useState<"table" | "lollipop">("lollipop");
 
   const effectiveRankingVarId =
     rankingVarId && activeVariableIds.includes(rankingVarId)
@@ -188,6 +188,18 @@ export default function DiagnosticoTab({ appData }: Props) {
     if (fromData?.length) return fromData;
     return buildRankingFromRecords(dataset.records, effectiveRankingVarId);
   }, [effectiveRankingVarId, rankings, dataset.records]);
+
+  const primaryCveEnt = useMemo(
+    () => dataset.records.find((r) => r.state === primaryState)?.cveEnt ?? null,
+    [dataset.records, primaryState]
+  );
+
+  const hasMunicipalData = useMemo(
+    () => primaryCveEnt
+      ? appData.dataset.municipios.some((m) => m.cve_ent === primaryCveEnt)
+      : false,
+    [primaryCveEnt, appData.dataset.municipios]
+  );
 
   if (!primaryState) {
     return (
@@ -258,70 +270,8 @@ export default function DiagnosticoTab({ appData }: Props) {
       </section>
 
       {primaryVarId && (
-        <div className="two-col">
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <section className="panel">
-            <div className="ranking-panel-header">
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <p className="panel-title" style={{ margin: 0 }}>Distribución nacional</p>
-                <InfoTooltip wide text={
-                  <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Histograma</p>
-                    <p style={{ margin: "0 0 10px" }}>
-                      Cada barra agrupa los estados cuyos valores caen en ese intervalo. La <strong>línea punteada</strong> es la media nacional; la <strong>barra resaltada</strong> contiene al estado seleccionado. Pasa el cursor sobre una barra para ver los estados de ese intervalo.
-                    </p>
-                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Diagrama de caja (boxplot)</p>
-                    <p style={{ margin: 0 }}>
-                      La <strong>caja</strong> cubre Q₁–Q₃ (el 50&nbsp;% central de los estados).
-                      La <strong>línea sólida</strong> dentro de la caja es la mediana.
-                      La <strong>línea punteada</strong> sobre la caja es la media nacional.
-                      Los bigotes se extienden hasta 1.5&nbsp;×&nbsp;IQR; los <strong style={{ color: "var(--amber)" }}>puntos naranjas</strong> son estados atípicos fuera de ese umbral. El <strong style={{ color: "var(--blue)" }}>punto azul</strong> es el estado seleccionado. Pasa el cursor sobre cualquier línea o punto para ver su valor.
-                    </p>
-                  </div>
-                } />
-              </div>
-              {activeVariableIds.length > 1 && (
-                <select
-                  className="ranking-var-select"
-                  value={effectiveHistVarId ?? ""}
-                  onChange={(e) => setHistVarId(e.target.value)}
-                >
-                  {activeVariableIds.map((varId) => {
-                    const lbl = dataset.metricCatalog.find((m) => m.id === varId)?.label ?? varId;
-                    return <option key={varId} value={varId}>{lbl}</option>;
-                  })}
-                </select>
-              )}
-            </div>
-            {distribution ? (
-              <DistributionHistogram
-                histogram={distribution.histogram}
-                highlightValue={highlightValue}
-                nationalMean={nationalMeanHist}
-                binStates={histogramBinStates}
-                highlightState={primaryState}
-              />
-            ) : (
-              <EmptyState
-                title="Sin histograma"
-                description="Ejecuta npm run pipeline:layer1 para generar distribuciones."
-              />
-            )}
-            {histStateValues.length >= 4 && (
-              <div style={{ padding: "0 16px 0 28px", marginTop: 2 }}>
-                <InlineBoxplot
-                  stateValues={histStateValues}
-                  highlightState={primaryState}
-                  domainMin={Math.min(...histStateValues.map((d) => d.value))}
-                  domainMax={Math.max(...histStateValues.map((d) => d.value))}
-                  nationalMean={nationalMeanHist ?? undefined}
-                />
-              </div>
-            )}
-            <p style={{ margin: "2px 0 0", fontSize: 11, color: "var(--text-3)", textAlign: "center" }}>
-              {histMetricDef?.label ?? effectiveHistVarId} — distribución entre los 32 estados
-            </p>
-          </section>
+        <>
+          {/* Distribution narrative — full width above two-column */}
           {effectiveHistVarId && (
             <TabNarrative
               title="Estadísticos de distribución"
@@ -335,8 +285,92 @@ export default function DiagnosticoTab({ appData }: Props) {
               />
             </TabNarrative>
           )}
+
+          {/* Two-column: distribution (left) + map (right) */}
+          <div className="two-col">
+            {/* Left: histogram + boxplot + narrative */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <section className="panel">
+                <div className="ranking-panel-header">
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <p className="panel-title" style={{ margin: 0 }}>Distribución nacional</p>
+                    <InfoTooltip wide text={
+                      <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                        <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Histograma</p>
+                        <p style={{ margin: "0 0 10px" }}>
+                          Cada barra agrupa los estados cuyos valores caen en ese intervalo. La <strong>línea punteada</strong> es la media nacional; la <strong>barra resaltada</strong> contiene al estado seleccionado. Pasa el cursor sobre una barra para ver los estados de ese intervalo.
+                        </p>
+                        <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Diagrama de caja (boxplot)</p>
+                        <p style={{ margin: 0 }}>
+                          La <strong>caja</strong> cubre Q₁–Q₃ (el 50&nbsp;% central de los estados).
+                          La <strong>línea sólida</strong> dentro de la caja es la mediana.
+                          La <strong>línea punteada</strong> sobre la caja es la media nacional.
+                          Los bigotes se extienden hasta 1.5&nbsp;×&nbsp;IQR; los <strong style={{ color: "var(--amber)" }}>puntos naranjas</strong> son estados atípicos fuera de ese umbral. El <strong style={{ color: "var(--blue)" }}>punto azul</strong> es el estado seleccionado. Pasa el cursor sobre cualquier línea o punto para ver su valor.
+                        </p>
+                      </div>
+                    } />
+                  </div>
+                  {activeVariableIds.length > 1 && (
+                    <select
+                      className="ranking-var-select"
+                      value={effectiveHistVarId ?? ""}
+                      onChange={(e) => setHistVarId(e.target.value)}
+                    >
+                      {activeVariableIds.map((varId) => {
+                        const lbl = dataset.metricCatalog.find((m) => m.id === varId)?.label ?? varId;
+                        return <option key={varId} value={varId}>{lbl}</option>;
+                      })}
+                    </select>
+                  )}
+                </div>
+                {distribution ? (
+                  <DistributionHistogram
+                    histogram={distribution.histogram}
+                    highlightValue={highlightValue}
+                    nationalMean={nationalMeanHist}
+                    binStates={histogramBinStates}
+                    highlightState={primaryState}
+                  />
+                ) : (
+                  <EmptyState
+                    title="Sin histograma"
+                    description="Ejecuta npm run pipeline:layer1 para generar distribuciones."
+                  />
+                )}
+                {histStateValues.length >= 4 && (
+                  <div style={{ padding: "0 16px 0 28px", marginTop: 2 }}>
+                    <InlineBoxplot
+                      stateValues={histStateValues}
+                      highlightState={primaryState}
+                      domainMin={Math.min(...histStateValues.map((d) => d.value))}
+                      domainMax={Math.max(...histStateValues.map((d) => d.value))}
+                      nationalMean={nationalMeanHist ?? undefined}
+                    />
+                  </div>
+                )}
+                <p style={{ margin: "2px 0 0", fontSize: 11, color: "var(--text-3)", textAlign: "center" }}>
+                  {histMetricDef?.label ?? effectiveHistVarId} — distribución entre los 32 estados
+                </p>
+              </section>
+            </div>
+
+            {/* Right: choropleth map */}
+            <section className="panel">
+              <div className="panel-title-row">
+                <p className="panel-title" style={{ margin: 0 }}>Mapa coroplético</p>
+                <InfoTooltip text="Cada estado se colorea según su valor en la variable seleccionada. La escala de color va del tono más claro (valor menor) al más oscuro (valor mayor). Busca patrones espaciales: estados contiguos con colores similares sugieren agrupamientos regionales. Haz clic en cualquier estado para seleccionarlo como estado de análisis." />
+              </div>
+              <ChoroplethMap appData={appData} />
+              {hasMunicipalData && (
+                <div className="mun-available-badge">
+                  <span className="mun-available-badge__dot" />
+                  Datos municipales disponibles para este estado
+                </div>
+              )}
+            </section>
           </div>
 
+          {/* Ranking panel — full width */}
           <section className="panel ranking-panel">
             <div className="ranking-panel-header">
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -345,7 +379,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                   <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
                     <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Posición relativa</p>
                     <p style={{ margin: "0 0 10px" }}>
-                      Los 32 estados ordenados de mayor a menor valor. El <strong>% vs media</strong> indica cuánto se aleja el estado del promedio nacional: positivo = por encima, negativo = por debajo. El estado seleccionado se resalta y centra automáticamente.
+                      Los 32 estados ordenados de mayor a menor valor. El <strong>% vs media</strong> indica cuánto se aleja el estado del promedio nacional: positivo = por encima, negativo = por debajo. El estado seleccionado se resalta.
                     </p>
                     <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Polaridad</p>
                     <p style={{ margin: 0 }}>
@@ -362,9 +396,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                 >
                   {activeVariableIds.map((varId) => {
                     const lbl = dataset.metricCatalog.find((m) => m.id === varId)?.label ?? varId;
-                    return (
-                      <option key={varId} value={varId}>{lbl}</option>
-                    );
+                    return <option key={varId} value={varId}>{lbl}</option>;
                   })}
                 </select>
               )}
@@ -375,7 +407,7 @@ export default function DiagnosticoTab({ appData }: Props) {
               aria-label="Vista del ranking"
               onKeyDown={(e) => {
                 if (e.key === "ArrowLeft") setRankingView("table");
-                if (e.key === "ArrowRight") setRankingView("bars");
+                if (e.key === "ArrowRight") setRankingView("lollipop");
               }}
             >
               <button
@@ -387,10 +419,10 @@ export default function DiagnosticoTab({ appData }: Props) {
               </button>
               <button
                 type="button"
-                className={`toggle-pill__btn${rankingView === "bars" ? " active" : ""}`}
-                onClick={() => setRankingView("bars")}
+                className={`toggle-pill__btn${rankingView === "lollipop" ? " active" : ""}`}
+                onClick={() => setRankingView("lollipop")}
               >
-                Barras
+                Lollipop
               </button>
             </div>
             {rankingRows.length > 0 ? (
@@ -409,16 +441,8 @@ export default function DiagnosticoTab({ appData }: Props) {
               />
             )}
           </section>
-        </div>
+        </>
       )}
-
-      <section className="panel">
-        <div className="panel-title-row">
-          <p className="panel-title" style={{ margin: 0 }}>Mapa coroplético</p>
-          <InfoTooltip text="Cada estado se colorea según su valor en la variable seleccionada. La escala de color va del tono más claro (valor menor) al más oscuro (valor mayor). Busca patrones espaciales: estados contiguos con colores similares sugieren agrupamientos regionales. Haz clic en cualquier estado para seleccionarlo como estado de análisis." />
-        </div>
-        <ChoroplethMap appData={appData} />
-      </section>
     </div>
   );
 }

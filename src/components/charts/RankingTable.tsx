@@ -1,4 +1,4 @@
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { MetricPolaridad, RankingEntry } from "../../types/dataStandard";
 import MissingDataNote from "../feedback/MissingDataNote";
 
@@ -8,9 +8,56 @@ type Props = {
   metricLabel: string;
   unit?: string;
   total?: number;
-  view?: "table" | "bars";
+  view?: "table" | "bars" | "lollipop";
   direction?: MetricPolaridad;
 };
+
+function LollipopTooltip({ active, payload, label, metricLabel, unit, direction }: any) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0]?.payload;
+  if (!d) return null;
+  const unitStr = unit ? ` ${unit}` : "";
+  const isGood = direction === "lower_better" ? d.pct < 0 : d.pct >= 0;
+  const pctColor = isGood ? "var(--green)" : "var(--red)";
+  return (
+    <div style={{
+      background: "var(--surface)", border: "1px solid var(--border)",
+      borderRadius: 8, padding: "10px 14px", fontSize: 12,
+      boxShadow: "0 4px 12px rgba(0,0,0,0.1)", minWidth: 180,
+    }}>
+      <p style={{ margin: "0 0 8px", fontWeight: 700, fontSize: 14, color: d.isHighlighted ? "var(--blue)" : "var(--text-1)" }}>
+        {label}
+      </p>
+      <div style={{ display: "flex", gap: 16, alignItems: "flex-end", marginBottom: 6 }}>
+        <div>
+          <span style={{ display: "block", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--text-3)", marginBottom: 1 }}>Valor</span>
+          <span style={{ fontSize: 20, fontWeight: 700, fontVariantNumeric: "tabular-nums", color: "var(--text-1)" }}>
+            {d.value.toFixed(1)}<span style={{ fontSize: 12, fontWeight: 400, color: "var(--text-3)" }}>{unitStr}</span>
+          </span>
+        </div>
+        <div style={{ paddingBottom: 2 }}>
+          <span style={{ display: "block", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--text-3)", marginBottom: 1 }}>Posición</span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: "var(--text-2)" }}>#{d.rank}</span>
+        </div>
+      </div>
+      <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: pctColor }}>
+        {d.pct >= 0 ? "+" : ""}{d.pct.toFixed(1)}% vs media nacional
+      </p>
+      <p style={{ margin: "3px 0 0", fontSize: 10, color: "var(--text-3)" }}>{metricLabel}</p>
+    </div>
+  );
+}
+
+function LollipopShapeColumn({ x, y, width, height, fill }: any) {
+  if (!height || height <= 0) return null;
+  const cx = x + width / 2;
+  return (
+    <g>
+      <line x1={cx} y1={y + height} x2={cx} y2={y} stroke={fill} strokeWidth={2} opacity={0.8} />
+      <circle cx={cx} cy={y} r={5} fill={fill} stroke="var(--surface)" strokeWidth={1.5} />
+    </g>
+  );
+}
 
 export default function RankingTable({ rows, highlightState, metricLabel, unit = "", total = 32, view = "table", direction }: Props) {
   const topThird = Math.ceil(total / 3);
@@ -38,6 +85,14 @@ export default function RankingTable({ rows, highlightState, metricLabel, unit =
     isHighlighted: highlightState === row.estado,
   }));
 
+  const chartTooltipFormatter = (v: number, _: string, props: { payload?: { rank?: number; pct?: number } }) => {
+    const rank = props.payload?.rank;
+    const pct = props.payload?.pct;
+    const unitStr = unit ? ` ${unit}` : "";
+    const pctStr = pct !== undefined ? `  (${pct >= 0 ? "+" : ""}${pct.toFixed(1)}% vs media)` : "";
+    return [`#${rank}  ${v.toFixed(1)}${unitStr}${pctStr}`, metricLabel];
+  };
+
   if (view === "bars") {
     return (
       <div>
@@ -52,20 +107,55 @@ export default function RankingTable({ rows, highlightState, metricLabel, unit =
               tickLine={false}
               width={130}
             />
-            <Tooltip
-              formatter={(v: number, _: string, props: { payload?: { rank?: number; pct?: number } }) => {
-                const rank = props.payload?.rank;
-                const pct = props.payload?.pct;
-                const unitStr = unit ? ` ${unit}` : "";
-                const pctStr = pct !== undefined ? `  (${pct >= 0 ? "+" : ""}${pct.toFixed(1)}% vs media)` : "";
-                return [`#${rank}  ${v.toFixed(1)}${unitStr}${pctStr}`, metricLabel];
-              }}
-            />
+            <Tooltip formatter={chartTooltipFormatter} />
             <Bar dataKey="value" radius={[0, 3, 3, 0]} isAnimationActive={false}>
               {barData.map((d, i) => (
                 <Cell key={i} fill={barFill(d.rank, d.isHighlighted)} opacity={d.isHighlighted ? 1 : 0.8} />
               ))}
             </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+        <MissingDataNote count={missing} total={total} />
+      </div>
+    );
+  }
+
+  if (view === "lollipop") {
+    return (
+      <div>
+        <ResponsiveContainer width="100%" height={480}>
+          <BarChart data={barData} margin={{ top: 16, right: 16, bottom: 80, left: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+            <XAxis
+              dataKey="name"
+              tick={{ fontSize: 9, fill: "var(--text-2)" }}
+              tickLine={false}
+              axisLine={false}
+              angle={-45}
+              textAnchor="end"
+              interval={0}
+              height={80}
+            />
+            <YAxis
+              tick={{ fontSize: 10, fill: "var(--text-3)" }}
+              tickLine={false}
+              axisLine={false}
+              width={40}
+            />
+            <Tooltip
+              content={(props) => (
+                <LollipopTooltip {...props} metricLabel={metricLabel} unit={unit} direction={direction} />
+              )}
+            />
+            <Bar
+              dataKey="value"
+              isAnimationActive={false}
+              shape={(props: any) => {
+                const d = barData[props.index];
+                const fill = d ? barFill(d.rank, d.isHighlighted) : "var(--border)";
+                return <LollipopShapeColumn {...props} fill={fill} />;
+              }}
+            />
           </BarChart>
         </ResponsiveContainer>
         <MissingDataNote count={missing} total={total} />
