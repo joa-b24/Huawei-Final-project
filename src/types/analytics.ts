@@ -1,3 +1,9 @@
+export type RfFeatureImportance = {
+  key: string;
+  label: string;
+  importance: number;
+};
+
 export type StateAnalyticsNational = {
   gini_pob_pct_4g: number;
   gini_pob_pct_3g?: number;
@@ -12,6 +18,7 @@ export type StateAnalyticsNational = {
   n_municipios_en_clustering: number;
   connectivity_year: string;
   cluster_labels: Record<string, string>;
+  rf_feature_importances?: RfFeatureImportance[];
 };
 
 export type StateAnalyticsRow = {
@@ -32,6 +39,7 @@ export type StateAnalyticsRow = {
   spearman_pct_pob_65_mas_vs_pob_4g?: number;
   spearman_pct_pob_0_14_vs_pob_4g?: number;
   ookla_municipios_cubiertos: number;
+  rf_feature_importances?: RfFeatureImportance[];
 };
 
 export type StateAnalyticsPayload = {
@@ -63,4 +71,7 @@ export type MunicipioAnalyticsRecord = {
   cluster_id?: number | null;
   cluster_label?: string;
   irs_indice?: number;
+  rf_4g_esperada?: number;
+  rf_brecha_4g_pp?: number;
+  rf_factor_principal?: string;
 };

@@ -17,3 +17,24 @@ __pycache__/
 /test_data/
 scripts/municipal_test_data.py
 /data/processed/imports/
+# Paper, exposición y figuras didácticas (no versionar en el repo principal)
+docs/paper_analisis_territorial.tex
+docs/references.bib
+README-EXPOSICION.md
+docs/slides_figuras/
+.mplconfig/
+
+# Artefactos LaTeX del paper (docs/)
+docs/*.aux
+docs/*.log
+docs/*.out
+docs/*.pdf
+docs/*.bbl
+docs/*.blg
+docs/*.bcf
+docs/*.run.xml
+docs/*.synctex.gz
+
+# Pipeline outputs (generados, no son fuente de verdad)
+data/processed/*
+!data/processed/.gitkeep
