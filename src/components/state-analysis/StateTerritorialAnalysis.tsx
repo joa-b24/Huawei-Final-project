@@ -11,6 +11,7 @@ import { ANALYSIS_METRICS } from "./analysisMetrics";
 import EmptyState from "../EmptyState";
 import LorenzCurveChart from "./LorenzCurveChart";
 import MunicipioScatterExplore from "./MunicipioScatterExplore";
+import MunicipioRfDiagnostico from "./MunicipioRfDiagnostico";
 import MunicipiosTable from "./MunicipiosTable";
 import SpearmanHeatmap from "./SpearmanHeatmap";
 
@@ -161,8 +162,17 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
         <MunicipioScatterExplore municipios={municipiosEstado} />
       </div>
 
-      <div className="panel panel-nested">
+      <div className="panel panel-nested" style={{ marginBottom: 16 }}>
         <MunicipiosTable municipios={municipiosEstado} />
+      </div>
+
+      <div className="panel panel-nested">
+        <MunicipioRfDiagnostico
+          municipios={municipiosEstado}
+          featureImportances={
+            stateRow?.rf_feature_importances ?? stateAnalytics.national.rf_feature_importances ?? []
+          }
+        />
       </div>
     </section>
   );
