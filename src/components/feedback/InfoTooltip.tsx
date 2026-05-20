@@ -1,10 +1,11 @@
+import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Info } from "lucide-react";
 
-type Props = { text: string };
+type Props = { text: ReactNode; wide?: boolean };
 
-export default function InfoTooltip({ text }: Props) {
+export default function InfoTooltip({ text, wide }: Props) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0, flipUp: false });
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -12,8 +13,8 @@ export default function InfoTooltip({ text }: Props) {
   function calcPos() {
     if (!btnRef.current) return;
     const r = btnRef.current.getBoundingClientRect();
-    const popoverW = 240;
-    const popoverH = 120; // estimated
+    const popoverW = wide ? 320 : 240;
+    const popoverH = wide ? 200 : 120;
     const gap = 8;
 
     let left = r.left + r.width / 2 - popoverW / 2;
@@ -62,7 +63,7 @@ export default function InfoTooltip({ text }: Props) {
       </button>
       {open && createPortal(
         <div
-          className="info-tooltip-popover"
+          className={`info-tooltip-popover${wide ? " info-tooltip-popover--wide" : ""}`}
           style={{ position: "fixed", top: pos.top, left: pos.left }}
         >
           {text}

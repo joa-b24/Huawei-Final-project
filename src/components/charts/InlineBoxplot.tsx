@@ -5,6 +5,7 @@ type Props = {
   highlightState?: string | null;
   domainMin: number;
   domainMax: number;
+  nationalMean?: number | null;
 };
 
 function quartiles(sorted: number[]) {
@@ -20,8 +21,8 @@ function quartiles(sorted: number[]) {
   };
 }
 
-export default function InlineBoxplot({ stateValues, highlightState, domainMin, domainMax }: Props) {
-  const [tooltip, setTooltip] = useState<{ state: string; value: number; sx: number } | null>(null);
+export default function InlineBoxplot({ stateValues, highlightState, domainMin, domainMax, nationalMean }: Props) {
+  const [tooltip, setTooltip] = useState<{ label: string; sx: number } | null>(null);
 
   const sorted = [...stateValues].sort((a, b) => a.value - b.value);
   const sortedVals = sorted.map((d) => d.value);
@@ -31,11 +32,15 @@ export default function InlineBoxplot({ stateValues, highlightState, domainMin, 
   const upperFence = q3 + 1.5 * iqr;
   const whiskerLo = sortedVals.find((v) => v >= lowerFence) ?? lowerFence;
   const whiskerHi = [...sortedVals].reverse().find((v) => v <= upperFence) ?? upperFence;
-  const outliers = stateValues.filter((d) => d.value < lowerFence || d.value > upperFence);
+  const outlierPoints = stateValues.filter((d) => d.value < lowerFence || d.value > upperFence);
 
   const W = 1000, H = 80, CY = 46, BOX_H = 48;
   const domainRange = domainMax - domainMin || 1;
   const sx = (v: number) => ((v - domainMin) / domainRange) * W;
+
+  function showTip(label: string, x: number) {
+    setTooltip({ label, sx: x });
+  }
 
   return (
     <svg
@@ -55,17 +60,47 @@ export default function InlineBoxplot({ stateValues, highlightState, domainMin, 
         width={sx(q3) - sx(q1)} height={BOX_H}
         fill="var(--blue-light)" stroke="var(--blue-mid)" strokeWidth={2} rx={3}
       />
-      {/* Median */}
-      <line x1={sx(median)} y1={CY - BOX_H / 2} x2={sx(median)} y2={CY + BOX_H / 2} stroke="var(--blue)" strokeWidth={3} />
 
-      {/* Outliers */}
-      {outliers.map((d) => (
+      {/* National mean line */}
+      {nationalMean !== null && nationalMean !== undefined && (
+        <>
+          <line
+            x1={sx(nationalMean)} y1={CY - BOX_H / 2 - 4}
+            x2={sx(nationalMean)} y2={CY + BOX_H / 2 + 4}
+            stroke="var(--text-3)" strokeDasharray="5 3" strokeWidth={1.5}
+          />
+          <rect
+            x={sx(nationalMean) - 12} y={CY - BOX_H / 2 - 4}
+            width={24} height={BOX_H + 8}
+            fill="transparent"
+            style={{ cursor: "crosshair" }}
+            onMouseEnter={() => showTip(`Media nacional: ${nationalMean.toFixed(2)}`, sx(nationalMean))}
+            onMouseLeave={() => setTooltip(null)}
+          />
+        </>
+      )}
+
+      {/* Median line */}
+      <line x1={sx(median)} y1={CY - BOX_H / 2} x2={sx(median)} y2={CY + BOX_H / 2} stroke="var(--blue)" strokeWidth={3} />
+      {/* Median hit area */}
+      <rect
+        x={sx(median) - 10} y={CY - BOX_H / 2}
+        width={20} height={BOX_H}
+        fill="transparent"
+        style={{ cursor: "crosshair" }}
+        onMouseEnter={() => showTip(`Mediana: ${median.toFixed(2)}`, sx(median))}
+        onMouseLeave={() => setTooltip(null)}
+      />
+
+      {/* Outlier points */}
+      {outlierPoints.map((d) => (
         <circle
           key={d.state}
           cx={sx(d.value)} cy={CY} r={9}
           fill="none" stroke="var(--amber)" strokeWidth={4}
           style={{ cursor: "pointer" }}
-          onMouseEnter={() => setTooltip({ state: d.state, value: d.value, sx: sx(d.value) })}
+          onMouseEnter={() => showTip(`${d.state}: ${d.value.toFixed(2)} ⚠ atípico`, sx(d.value))}
+          onMouseLeave={() => setTooltip(null)}
         />
       ))}
 
@@ -78,14 +113,15 @@ export default function InlineBoxplot({ stateValues, highlightState, domainMin, 
             cx={sx(d.value)} cy={CY} r={10}
             fill="var(--blue)" stroke="#fff" strokeWidth={4}
             style={{ cursor: "pointer" }}
-            onMouseEnter={() => setTooltip({ state: d.state, value: d.value, sx: sx(d.value) })}
+            onMouseEnter={() => showTip(`${d.state}: ${d.value.toFixed(2)}`, sx(d.value))}
+            onMouseLeave={() => setTooltip(null)}
           />
         );
       })()}
 
       {/* Tooltip */}
       {tooltip && (() => {
-        const label = `${tooltip.state}: ${tooltip.value.toFixed(1)}`;
+        const label = tooltip.label;
         const charW = 16;
         const tw = label.length * charW + 16;
         const tx = Math.min(Math.max(tooltip.sx - tw / 2, 0), W - tw);

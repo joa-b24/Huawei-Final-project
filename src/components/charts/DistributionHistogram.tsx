@@ -7,30 +7,39 @@ type Props = {
   nationalMean?: number | null;
   label?: string;
   binStates?: string[][];
+  highlightState?: string | null;
 };
 
 function BinTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
-  const range = d.hi !== undefined ? `${d.lo.toFixed(1)} – ${d.hi.toFixed(1)}` : d.center.toFixed(1);
+  const range = d.hi !== undefined ? `${d.lo.toFixed(2)} – ${d.hi.toFixed(2)}` : d.center.toFixed(2);
   const states: string[] = d.states ?? [];
+  const selected: string | null = d.highlightState;
+  const sorted = [...states].sort((a, b) => {
+    if (a === selected) return -1;
+    if (b === selected) return 1;
+    return a.localeCompare(b, "es");
+  });
   return (
     <div style={{
       background: "var(--surface)", border: "1px solid var(--border)",
-      borderRadius: 8, padding: "8px 12px", fontSize: 12, maxWidth: 220,
+      borderRadius: 8, padding: "8px 12px", fontSize: 12, maxWidth: 240,
     }}>
-      <p style={{ margin: "0 0 4px", fontWeight: 600, color: "var(--text-1)" }}>
-        Rango: {range}
+      <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--text-1)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+        Intervalo: {range}
       </p>
-      <p style={{ margin: "0 0 4px", color: "var(--text-3)" }}>
+      <p style={{ margin: "0 0 6px", color: "var(--text-3)", fontSize: 11 }}>
         {d.count} estado{d.count !== 1 ? "s" : ""}
       </p>
-      {states.length > 0 && (
-        <p style={{ margin: 0, color: "var(--text-2)", lineHeight: 1.5 }}>
-          {states.map((s, i) => (
+      {sorted.length > 0 && (
+        <p style={{ margin: 0, color: "var(--text-2)", lineHeight: 1.65, fontSize: 12 }}>
+          {sorted.map((s, i) => (
             <span key={s}>
-              {i > 0 && ", "}
-              {d.highlightState === s ? <strong>{s}</strong> : s}
+              {i > 0 && <span style={{ color: "var(--border)", margin: "0 2px" }}>·</span>}
+              {s === selected
+                ? <strong style={{ color: "var(--blue)" }}>{s}</strong>
+                : s}
             </span>
           ))}
         </p>
@@ -39,7 +48,7 @@ function BinTooltip({ active, payload }: any) {
   );
 }
 
-export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label, binStates }: Props) {
+export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label, binStates, highlightState }: Props) {
   const { bins, counts } = histogram;
   const hasEdges = bins.length > counts.length; // n+1 edges vs n centers
 
@@ -47,7 +56,7 @@ export default function DistributionHistogram({ histogram, highlightValue, natio
     const lo = bins[i];
     const hi = hasEdges ? bins[i + 1] : bins[i];
     const center = hasEdges ? (lo + hi) / 2 : lo;
-    return { center, count, lo, hi, states: binStates?.[i] ?? [], highlightState: label ?? null };
+    return { center, count, lo, hi, states: binStates?.[i] ?? [], highlightState: highlightState ?? null };
   });
 
   const highlightIdx =

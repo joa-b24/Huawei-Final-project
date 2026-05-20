@@ -232,7 +232,18 @@ export default function DiagnosticoTab({ appData }: Props) {
       <section className="panel">
         <div className="panel-title-row">
           <p className="panel-title" style={{ margin: 0 }}>Perfil comparativo</p>
-          <InfoTooltip text="Normaliza cada variable por rango percentil (0–100 pts, donde 100 = estado con el valor más alto entre los 32). En métricas de polaridad negativa (ej. pobreza) se invierte para que mayor puntuación = mejor desempeño. El tooltip muestra el valor real en unidades originales." />
+          <InfoTooltip wide text={
+            <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Normalización</p>
+              <p style={{ margin: "0 0 10px" }}>
+                Cada variable se transforma a una escala de <strong>percentil 0–100</strong> sobre los 32 estados (100 = valor más alto). En variables de polaridad negativa (ej. pobreza, rezago) la escala se invierte: 100 = el estado con <em>menor</em> valor, es decir, mejor desempeño.
+              </p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo interpretar</p>
+              <p style={{ margin: 0 }}>
+                Cuanto más alejado del centro, mayor ventaja relativa en esa dimensión. El área encerrada refleja el desempeño agregado. El hover muestra el valor real en unidades originales para cada variable.
+              </p>
+            </div>
+          } />
         </div>
         <ComparisonRadarChart
           primaryState={primaryState}
@@ -253,7 +264,21 @@ export default function DiagnosticoTab({ appData }: Props) {
             <div className="ranking-panel-header">
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <p className="panel-title" style={{ margin: 0 }}>Distribución nacional</p>
-                <InfoTooltip text="Histograma que muestra cómo se distribuyen los valores de la variable entre los 32 estados. La línea vertical indica el promedio nacional; el punto destacado corresponde al estado seleccionado." />
+                <InfoTooltip wide text={
+                  <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Histograma</p>
+                    <p style={{ margin: "0 0 10px" }}>
+                      Cada barra agrupa los estados cuyos valores caen en ese intervalo. La <strong>línea punteada</strong> es la media nacional; la <strong>barra resaltada</strong> contiene al estado seleccionado. Pasa el cursor sobre una barra para ver los estados de ese intervalo.
+                    </p>
+                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Diagrama de caja (boxplot)</p>
+                    <p style={{ margin: 0 }}>
+                      La <strong>caja</strong> cubre Q₁–Q₃ (el 50&nbsp;% central de los estados).
+                      La <strong>línea sólida</strong> dentro de la caja es la mediana.
+                      La <strong>línea punteada</strong> sobre la caja es la media nacional.
+                      Los bigotes se extienden hasta 1.5&nbsp;×&nbsp;IQR; los <strong style={{ color: "var(--amber)" }}>puntos naranjas</strong> son estados atípicos fuera de ese umbral. El <strong style={{ color: "var(--blue)" }}>punto azul</strong> es el estado seleccionado. Pasa el cursor sobre cualquier línea o punto para ver su valor.
+                    </p>
+                  </div>
+                } />
               </div>
               {activeVariableIds.length > 1 && (
                 <select
@@ -274,6 +299,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                 highlightValue={highlightValue}
                 nationalMean={nationalMeanHist}
                 binStates={histogramBinStates}
+                highlightState={primaryState}
               />
             ) : (
               <EmptyState
@@ -288,6 +314,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                   highlightState={primaryState}
                   domainMin={Math.min(...histStateValues.map((d) => d.value))}
                   domainMax={Math.max(...histStateValues.map((d) => d.value))}
+                  nationalMean={nationalMeanHist ?? undefined}
                 />
               </div>
             )}
@@ -314,7 +341,18 @@ export default function DiagnosticoTab({ appData }: Props) {
             <div className="ranking-panel-header">
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <p className="panel-title" style={{ margin: 0 }}>Ranking nacional</p>
-                <InfoTooltip text="Ordena los 32 estados de mayor a menor valor en la variable seleccionada. El porcentaje indica la diferencia respecto al promedio nacional. El estado seleccionado se resalta y se desplaza automáticamente a la vista." />
+                <InfoTooltip wide text={
+                  <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Posición relativa</p>
+                    <p style={{ margin: "0 0 10px" }}>
+                      Los 32 estados ordenados de mayor a menor valor. El <strong>% vs media</strong> indica cuánto se aleja el estado del promedio nacional: positivo = por encima, negativo = por debajo. El estado seleccionado se resalta y centra automáticamente.
+                    </p>
+                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Polaridad</p>
+                    <p style={{ margin: 0 }}>
+                      En variables de polaridad negativa (ej. pobreza), ocupar el lugar 1 implica el <em>peor</em> desempeño. Revisa la etiqueta de la variable para interpretar correctamente la dirección del ranking.
+                    </p>
+                  </div>
+                } />
               </div>
               {activeVariableIds.length > 1 && (
                 <select
@@ -377,7 +415,7 @@ export default function DiagnosticoTab({ appData }: Props) {
       <section className="panel">
         <div className="panel-title-row">
           <p className="panel-title" style={{ margin: 0 }}>Mapa coroplético</p>
-          <InfoTooltip text="Colorea cada estado según el valor de la variable seleccionada. Los tonos más oscuros representan valores más altos. Haz clic en cualquier estado para seleccionarlo como estado de análisis." />
+          <InfoTooltip text="Cada estado se colorea según su valor en la variable seleccionada. La escala de color va del tono más claro (valor menor) al más oscuro (valor mayor). Busca patrones espaciales: estados contiguos con colores similares sugieren agrupamientos regionales. Haz clic en cualquier estado para seleccionarlo como estado de análisis." />
         </div>
         <ChoroplethMap appData={appData} />
       </section>

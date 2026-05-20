@@ -1066,6 +1066,7 @@ select {
 .info-tooltip-btn { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; padding: 0; background: transparent; border: none; border-radius: 50%; cursor: pointer; color: var(--text-3); transition: color 0.15s, background 0.15s; }
 .info-tooltip-btn:hover { color: var(--blue); background: var(--blue-light); }
 .info-tooltip-popover { width: 240px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 12px; line-height: 1.55; color: var(--text-2); box-shadow: 0 4px 20px rgba(0,0,0,0.14); z-index: 9999; }
+.info-tooltip-popover--wide { width: 320px; }
 .panel-title-row { display: flex; align-items: center; gap: 6px; margin: 0 0 12px; }
 
 /* TabNarrative */
@@ -1097,3 +1098,7 @@ select {
 .regression-summary strong { color: var(--text-1); }
 .regression-detail-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; font-size: 12px; color: var(--text-3); padding: 6px 0; margin-bottom: 8px; transition: color 0.15s; }
 .regression-detail-btn:hover { color: var(--text-1); }
+
+/* App footer */
+.app-footer { margin-top: 40px; padding: 14px 24px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-3); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.app-footer__sep { color: var(--border); }
