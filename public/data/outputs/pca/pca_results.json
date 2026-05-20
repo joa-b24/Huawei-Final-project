@@ -8,7 +8,7 @@
   ],
   "kmo": 0.7416,
   "bartlett_p": 0.0,
-  "n_clusters": 2,
+  "n_clusters": 3,
   "variance_explained": [
     0.664,
     0.1297
@@ -101,7 +101,7 @@
       "state": "Campeche",
       "index": 44.24,
       "ranking": 23,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.5191,
       "pc2": -0.5277,
@@ -112,7 +112,7 @@
       "index": 0.0,
       "ranking": 31,
       "cluster": 1,
-      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "cluster_label": "Cluster 3: Intermedio-Bajo",
       "pc1": -2.0667,
       "pc2": -0.066,
       "is_outlier": false
@@ -161,7 +161,7 @@
       "state": "Durango",
       "index": 39.38,
       "ranking": 27,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.5971,
       "pc2": -0.9473,
@@ -171,7 +171,7 @@
       "state": "Guanajuato",
       "index": 53.24,
       "ranking": 19,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.4102,
       "pc2": 0.4327,
@@ -182,7 +182,7 @@
       "index": 9.27,
       "ranking": 29,
       "cluster": 1,
-      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "cluster_label": "Cluster 3: Intermedio-Bajo",
       "pc1": -1.7563,
       "pc2": -0.0924,
       "is_outlier": false
@@ -191,7 +191,7 @@
       "state": "Hidalgo",
       "index": 52.55,
       "ranking": 21,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.363,
       "pc2": 0.0746,
@@ -211,7 +211,7 @@
       "state": "Michoacan",
       "index": 46.3,
       "ranking": 22,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.587,
       "pc2": 0.1684,
@@ -221,8 +221,8 @@
       "state": "Morelos",
       "index": 72.08,
       "ranking": 14,
-      "cluster": 0,
-      "cluster_label": "Cluster 1: Avanzado",
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": 0.1616,
       "pc2": 0.6825,
       "is_outlier": false
@@ -231,7 +231,7 @@
       "state": "Nayarit",
       "index": 52.74,
       "ranking": 20,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.2847,
       "pc2": -0.2945,
@@ -252,7 +252,7 @@
       "index": 1.69,
       "ranking": 30,
       "cluster": 1,
-      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "cluster_label": "Cluster 3: Intermedio-Bajo",
       "pc1": -2.0131,
       "pc2": -0.0545,
       "is_outlier": false
@@ -261,7 +261,7 @@
       "state": "Puebla",
       "index": 40.29,
       "ranking": 25,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.8743,
       "pc2": 0.6258,
@@ -291,7 +291,7 @@
       "state": "San Luis Potosi",
       "index": 40.49,
       "ranking": 24,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.6712,
       "pc2": -0.3822,
@@ -321,7 +321,7 @@
       "state": "Tabasco",
       "index": 60.95,
       "ranking": 18,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.1099,
       "pc2": 0.1965,
@@ -341,7 +341,7 @@
       "state": "Tlaxcala",
       "index": 63.57,
       "ranking": 17,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.1787,
       "pc2": 0.9911,
@@ -351,7 +351,7 @@
       "state": "Veracruz",
       "index": 32.46,
       "ranking": 28,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -1.0843,
       "pc2": 0.3798,
@@ -371,7 +371,7 @@
       "state": "Zacatecas",
       "index": 40.17,
       "ranking": 26,
-      "cluster": 1,
+      "cluster": 2,
       "cluster_label": "Cluster 2: Intermedio-Alto",
       "pc1": -0.7438,
       "pc2": -0.063,
@@ -390,7 +390,6 @@
         "Coahuila",
         "Colima",
         "Jalisco",
-        "Morelos",
         "Nuevo Leon",
         "Queretaro",
         "Quintana Roo",
@@ -399,20 +398,27 @@
         "Tamaulipas",
         "Yucatan"
       ],
-      "mean_index": 86.22
+      "mean_index": 87.16
     },
     "1": {
+      "label": "Cluster 3: Intermedio-Bajo",
+      "states": [
+        "Chiapas",
+        "Guerrero",
+        "Oaxaca"
+      ],
+      "mean_index": 3.65
+    },
+    "2": {
       "label": "Cluster 2: Intermedio-Alto",
       "states": [
         "Campeche",
-        "Chiapas",
         "Durango",
         "Guanajuato",
-        "Guerrero",
         "Hidalgo",
         "Michoacan",
+        "Morelos",
         "Nayarit",
-        "Oaxaca",
         "Puebla",
         "San Luis Potosi",
         "Tabasco",
@@ -420,7 +426,7 @@
         "Veracruz",
         "Zacatecas"
       ],
-      "mean_index": 38.49
+      "mean_index": 49.11
     }
   }
 }

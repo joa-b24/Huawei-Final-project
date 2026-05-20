@@ -43,7 +43,8 @@ function deriveOperation(
 async function runPipeline(
   variable: VariableCatalogEntry,
   operation: OperationType,
-  rows: CoercedRow[]
+  rows: CoercedRow[],
+  updateStateLevel: boolean
 ): Promise<{ ok: boolean; log: string[] }> {
   const payload: Record<string, unknown> = {
     variable_id: variable.variable_id,
@@ -57,8 +58,11 @@ async function runPipeline(
       metrics: { [variable.variable_id]: r.value },
     })),
   };
-  if (operation === "nueva_variable" || (payload.granularity !== "state" && variable.variable_id)) {
+  if (operation === "nueva_variable" || operation === "historico" || (payload.granularity !== "state" && variable.variable_id)) {
     payload.catalog_entry = variable;
+  }
+  if (operation === "historico") {
+    payload.update_state_level = updateStateLevel;
   }
   try {
     const res = await fetch("/api/pipeline/import", {
@@ -104,6 +108,7 @@ export default function Step4Confirm({
   const [status, setStatus] = useState<Status>("idle");
   const [log, setLog] = useState<string[]>([]);
   const [yearConfirmed, setYearConfirmed] = useState(false);
+  const [updateStateLevel, setUpdateStateLevel] = useState(true);
 
   const operation = deriveOperation(granularity, isNew, completarOnly);
   const coerced = coerceRows(rows);
@@ -123,6 +128,13 @@ export default function Step4Confirm({
     incomingYear !== undefined &&
     incomingYear <= existingYear;
 
+  // Historico: derive latest year and detect if variable already has state data
+  const maxIncomingYear =
+    granularity === "historico" && coerced.length > 0
+      ? Math.max(...coerced.map((r) => r.year))
+      : undefined;
+  const hasHistoricoConflict = granularity === "historico" && existingYear !== undefined;
+
   const modeLabel = isNew
     ? "Nueva variable"
     : completarOnly
@@ -132,7 +144,9 @@ export default function Step4Confirm({
   async function handleConfirm() {
     setStatus("running");
     setLog([]);
-    const result = await runPipeline(variable, operation, coerced);
+    const shouldUpdateState =
+      granularity === "historico" ? (hasHistoricoConflict ? updateStateLevel : true) : true;
+    const result = await runPipeline(variable, operation, coerced, shouldUpdateState);
     setLog(result.log);
     setStatus(result.ok ? "done" : "error");
   }
@@ -248,6 +262,24 @@ export default function Step4Confirm({
               onChange={(e) => setYearConfirmed(e.target.checked)}
             />
             Entiendo que el año importado ({incomingYear}) es {incomingYear === existingYear ? "igual al" : "anterior al"} existente ({existingYear}) y quiero continuar.
+          </label>
+        </div>
+      )}
+
+      {hasHistoricoConflict && maxIncomingYear !== undefined && (
+        <div className="wizard-warn-box" style={{ marginTop: 12, padding: "10px 14px", background: "var(--amber-bg, #fef3c7)", border: "1px solid var(--amber, #d97706)", borderRadius: "var(--radius)", fontSize: 13 }}>
+          <strong>Datos estatales existentes (año {existingYear})</strong>
+          <p style={{ margin: "4px 0 8px" }}>
+            La variable ya tiene un valor estatal del año <strong>{existingYear}</strong>. El año más
+            reciente de la serie importada es <strong>{maxIncomingYear}</strong>.
+          </p>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={updateStateLevel}
+              onChange={(e) => setUpdateStateLevel(e.target.checked)}
+            />
+            Actualizar el valor estatal con los datos del año {maxIncomingYear}.
           </label>
         </div>
       )}

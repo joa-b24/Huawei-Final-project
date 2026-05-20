@@ -392,6 +392,72 @@ def merge_historical(imp: dict) -> None:
     save_json(hist_path, existing)
     print(f"  ✓ {added} registros añadidos, {updated} actualizados → {hist_path.name}")
 
+    # ── Update combined.json ──────────────────────────────────────────────────
+    cat = imp.get("catalog_entry") or find_catalog_entry(variable_id) or {}
+    combined = _load_combined()
+    valid_codes = {r.get("state_code", "") for r in combined.get("records", [])}
+    combined_changed = False
+
+    # Register in metric_catalog if missing
+    existing_metric_ids = {m["variable_id"] for m in combined.get("metric_catalog", [])}
+    if variable_id not in existing_metric_ids:
+        combined.setdefault("metric_catalog", []).append({
+            "variable_id": variable_id,
+            "label": cat.get("nombre") or cat.get("label") or variable_id,
+            "unidad": cat.get("unidad_base") or cat.get("unidad") or "",
+            "categoria_id": cat.get("categoria_id", ""),
+        })
+        print(f"  + Registrada en metric_catalog: {variable_id}")
+        combined_changed = True
+
+    # Derive state-level values from the latest year in the imported series
+    latest_year = max(r["year"] for r in incoming)
+    latest_by_state = {
+        _normalize_state_code(r["state_code"], valid_codes): r["value"]
+        for r in incoming if r["year"] == latest_year
+    }
+
+    has_state_data = any(
+        r.get("metrics", {}).get(variable_id) is not None
+        for r in combined.get("records", [])
+    )
+    update_state = imp.get("update_state_level", True) if has_state_data else True
+
+    if update_state and latest_by_state:
+        state_updated = 0
+        for record in combined.get("records", []):
+            sc = record.get("state_code", "")
+            if sc in latest_by_state:
+                record.setdefault("metrics", {})[variable_id] = latest_by_state[sc]
+                state_updated += 1
+        for m in combined.get("metric_catalog", []):
+            if m.get("variable_id") == variable_id:
+                m["anio"] = latest_year
+                break
+        print(f"  + {state_updated} valores estatales actualizados desde año {latest_year}")
+        combined_changed = True
+
+    if combined_changed:
+        combined["updated_at"] = date.today().isoformat()
+        save_json(COMBINED_PATH, combined)
+
+    # Registrar en variables.catalog.json para que aparezca en DatosTab
+    full_cat_entry = {
+        "variable_id": variable_id,
+        "categoria_id": cat.get("categoria_id", ""),
+        "nombre": cat.get("nombre") or cat.get("label") or variable_id,
+        "descripcion": cat.get("descripcion", ""),
+        "unidad_base": cat.get("unidad_base") or cat.get("unidad") or "",
+        "tipo_valor": cat.get("tipo_valor", "number"),
+        "agregacion_default": cat.get("agregacion_default", "avg"),
+        "fuente_sugerida": cat.get("fuente_sugerida", ""),
+        "sinonimos": cat.get("sinonimos", []),
+    }
+    _save_to_catalog(full_cat_entry)
+
+    if update_state and latest_by_state:
+        trigger_layer1(variable_id)
+
 
 # ── Dispatcher ────────────────────────────────────────────────────────────────
 
@@ -404,7 +470,7 @@ def process(import_path: Path) -> None:
     print(f"  variable: {variable_id}  |  op: {operation}  |  granularity: {granularity}")
 
     cat_entry = imp.get("catalog_entry")
-    if cat_entry and cat_entry.get("variable_id"):
+    if cat_entry and cat_entry.get("variable_id") and operation != "historico":
         _save_to_catalog(cat_entry)
 
     if granularity == "municipal":

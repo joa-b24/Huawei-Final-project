@@ -396,7 +396,7 @@ for k in k_range:
     inertias.append(km.inertia_)
     sil.append(silhouette_score(scores_mixto, lbl))
 
-best_k = k_range.start + int(np.argmax(sil))
+best_k = max(3, k_range.start + int(np.argmax(sil)))
 print(f"  Silhouette: { {k: round(s, 3) for k, s in zip(k_range, sil)} }")
 print(f"  Mejor k = {best_k}  (silhouette = {max(sil):.3f})\n")
 
@@ -575,8 +575,7 @@ print("  ✓ pca_results.json")
 
  
 # 9. VISUALIZACIONES (panel 3×2)
- 
-"""
+
 print("\n  Generando visualizaciones...")
 
 CLUSTER_COLORS = ["#1565C0", "#2E7D32", "#F57F17", "#B71C1C", "#6A1B9A"]
@@ -760,7 +759,7 @@ ax6.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.savefig(OUTPUT_PCA / "pca_analysis.png", dpi=200, bbox_inches="tight")
 print("  ✓ pca_analysis.png")
-"""
+
 # ── Resumen final ────────────────────────────────────────────────────
 print("\n" + "=" * 65)
 print("✓  PCA COMPLETADO")

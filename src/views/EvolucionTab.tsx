@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -11,17 +11,26 @@ import {
 import { useAppContext } from "../context/AppContext";
 import type { AppData } from "../services/DataService";
 import EmptyState from "../components/EmptyState";
-import type { TerritorialWideRecord } from "../types/dataStandard";
 
 type ChartRow = { anio: number } & Record<string, number>;
 
-function buildChartData(historical: TerritorialWideRecord[], varId: string): ChartRow[] {
+type TemporalRecord = { state_code: string; year: number; value: number };
+type TemporalVarData = {
+  variable_id: string;
+  updated_at?: string;
+  records: TemporalRecord[];
+};
+
+function buildChartData(
+  varData: TemporalVarData,
+  codeToEstado: Record<string, string>
+): ChartRow[] {
   const byYear = new Map<number, ChartRow>();
-  for (const rec of historical) {
-    const val = rec.metrics[varId];
-    if (val === undefined || isNaN(val)) continue;
-    if (!byYear.has(rec.anio)) byYear.set(rec.anio, { anio: rec.anio });
-    byYear.get(rec.anio)![rec.estado] = val;
+  for (const r of varData.records) {
+    const estado = codeToEstado[r.state_code] ?? r.state_code;
+    if (isNaN(r.value)) continue;
+    if (!byYear.has(r.year)) byYear.set(r.year, { anio: r.year });
+    byYear.get(r.year)![estado] = r.value;
   }
   return Array.from(byYear.values()).sort((a, b) => a.anio - b.anio);
 }
@@ -76,7 +85,7 @@ type Props = { appData: AppData };
 export default function EvolucionTab({ appData }: Props) {
   const { state: appState } = useAppContext();
   const { primaryState, activeVariableIds } = appState;
-  const { historical, dataset } = appData;
+  const { dataset } = appData;
 
   const [selectedVarId, setSelectedVarId] = useState<string | null>(null);
   const varId =
@@ -90,14 +99,44 @@ export default function EvolucionTab({ appData }: Props) {
   );
   const varUnit = varMeta?.unit ?? "";
 
+  const codeToEstado = useMemo(
+    () => Object.fromEntries(dataset.records.map((r) => [r.stateCode, r.state])),
+    [dataset.records]
+  );
+
+  // Per-variable fetch cache: undefined = not fetched yet, null = not found / error
+  const [temporalCache, setTemporalCache] = useState<
+    Record<string, TemporalVarData | null | undefined>
+  >({});
+  const fetchingRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!varId || varId in temporalCache || fetchingRef.current.has(varId)) return;
+    fetchingRef.current.add(varId);
+    fetch(`/data/outputs/temporal/${varId}.json`)
+      .then((r) => (r.ok ? (r.json() as Promise<TemporalVarData>) : null))
+      .then((data) => setTemporalCache((prev) => ({ ...prev, [varId]: data ?? null })))
+      .catch(() => setTemporalCache((prev) => ({ ...prev, [varId]: null })))
+      .finally(() => fetchingRef.current.delete(varId));
+  }, [varId, temporalCache]);
+
+  const varData = varId !== null ? temporalCache[varId] : null;
+
   const states = useMemo(
-    () => [...new Set(historical.map((r) => r.estado))].sort(),
-    [historical]
+    () =>
+      varData
+        ? [
+            ...new Set(
+              varData.records.map((r) => codeToEstado[r.state_code] ?? r.state_code)
+            ),
+          ].sort()
+        : [],
+    [varData, codeToEstado]
   );
 
   const chartData = useMemo(
-    () => (varId && historical.length ? buildChartData(historical, varId) : []),
-    [historical, varId]
+    () => (varId && varData ? buildChartData(varData, codeToEstado) : []),
+    [varId, varData, codeToEstado]
   );
 
   const primaryTrend = useMemo(() => {
@@ -120,13 +159,23 @@ export default function EvolucionTab({ appData }: Props) {
     );
   }
 
-  if (!historical.length) {
+  // Fetching
+  if (varId && temporalCache[varId] === undefined) {
     return (
       <div className="panel" style={{ textAlign: "center", color: "var(--text-3)", padding: 32 }}>
-        <p style={{ margin: "0 0 6px" }}>No hay datos históricos disponibles.</p>
+        <p style={{ margin: 0 }}>Cargando datos históricos…</p>
+      </div>
+    );
+  }
+
+  // Not found
+  if (varId && temporalCache[varId] === null) {
+    return (
+      <div className="panel" style={{ textAlign: "center", color: "var(--text-3)", padding: 32 }}>
+        <p style={{ margin: "0 0 6px" }}>No hay datos históricos para esta variable.</p>
         <p style={{ fontSize: 13, margin: 0 }}>
-          Las series de tiempo se generarán a partir de{" "}
-          <code>historical_state.json</code>.
+          Importa series de tiempo usando el wizard de datos (operación:{" "}
+          <code>historico</code>).
         </p>
       </div>
     );
