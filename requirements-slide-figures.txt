@@ -1,0 +1,4 @@
+# Solo para scripts/generate_method_slide_figures.py (PNG didácticos en docs/slides_figuras/)
+matplotlib>=3.8
+numpy>=1.26
+scikit-learn>=1.4

@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import os
+import sys
 import warnings
 from collections import defaultdict
 from dataclasses import dataclass
@@ -20,6 +21,9 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 
+from analytics.geo_export import normalize_geo_columns
+from analytics.rf_coverage import apply_rf_coverage_diagnostics
+
 
 def _kmeans(n_clusters: int) -> KMeans:
     try:
@@ -31,6 +35,9 @@ def _kmeans(n_clusters: int) -> KMeans:
 warnings.filterwarnings("ignore", category=UserWarning, module="joblib")
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
 RAW = PROJECT_ROOT / "data" / "raw"
 PROCESSED = PROJECT_ROOT / "data" / "processed"
 PUBLIC_DATA = PROJECT_ROOT / "public" / "data"
@@ -472,6 +479,9 @@ def main() -> None:
     cluster_labels = label_clusters(df_cluster)
     df["cluster_label"] = df["cluster_id"].map(lambda x: cluster_labels.get(int(x), "") if pd.notna(x) else "")
 
+    df, rf_national_imps, rf_state_imps = apply_rf_coverage_diagnostics(df)
+    df = normalize_geo_columns(df)
+
     for c in feature_cols:
         df[f"{c}_z"] = np.nan
     df.loc[df_cluster.index, [f"{c}_z" for c in feature_cols]] = Xz
@@ -511,6 +521,7 @@ def main() -> None:
                     spearman_safe(g["pct_pob_0_14"], g["pob_pct_4g_garantizada"]), 6
                 ),
                 "ookla_municipios_cubiertos": int(g["ookla_cubierto"].sum()),
+                "rf_feature_importances": rf_state_imps.get(str(cve_ent), rf_national_imps),
             }
         )
     state_rows.sort(key=lambda x: x["cve_ent"])
@@ -527,6 +538,7 @@ def main() -> None:
         "n_municipios_en_clustering": int(len(df_cluster)),
         "connectivity_year": CONNECTIVITY_YEAR,
         "cluster_labels": cluster_labels,
+        "rf_feature_importances": rf_national_imps,
     }
 
     dashboard = {
