@@ -12,7 +12,6 @@ import EmptyState from "../EmptyState";
 import LorenzCurveChart from "./LorenzCurveChart";
 import MunicipioScatterExplore from "./MunicipioScatterExplore";
 import MunicipioRfDiagnostico from "./MunicipioRfDiagnostico";
-import MunicipiosTable from "./MunicipiosTable";
 import SpearmanHeatmap from "./SpearmanHeatmap";
 
 const DEFAULT_CVE_ENT = "19";
@@ -160,10 +159,6 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
 
       <div className="panel panel-nested" style={{ marginBottom: 16 }}>
         <MunicipioScatterExplore municipios={municipiosEstado} />
-      </div>
-
-      <div className="panel panel-nested" style={{ marginBottom: 16 }}>
-        <MunicipiosTable municipios={municipiosEstado} />
       </div>
 
       <div className="panel panel-nested">
