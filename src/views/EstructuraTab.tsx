@@ -14,6 +14,7 @@ import type { AppData, PcaRecord, PcaResults } from "../services/DataService";
 import EmptyState from "../components/EmptyState";
 import RankingTable from "../components/charts/RankingTable";
 import TabNarrative from "../components/feedback/TabNarrative";
+import InfoTooltip from "../components/feedback/InfoTooltip";
 import type { RankingEntry } from "../types/dataStandard";
 
 const CLUSTER_COLORS = ["#0d3d73", "#2E7D32", "#F57F17", "#B71C1C", "#6A1B9A"];
@@ -324,8 +325,26 @@ export default function EstructuraTab({ appData }: Props) {
       )}
 
       <section className="panel">
-        <p className="panel-title" style={{ marginBottom: 4 }}>PC1 vs PC2</p>
-        <p style={{ margin: "0 0 8px", fontSize: 12, color: "var(--text-3)" }}>
+        <div className="panel-title-row">
+          <p className="panel-title" style={{ margin: 0 }}>PC1 vs PC2</p>
+          <InfoTooltip wide text={
+            <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Componentes principales</p>
+              <p style={{ margin: "0 0 10px" }}>
+                Cada <strong>punto</strong> representa un estado en el espacio de dos componentes principales (PC1 y PC2) obtenidos por PCA sobre las variables activas normalizadas P5–P95. El <strong>punto azul</strong> es el estado seleccionado.
+              </p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Color y grupos</p>
+              <p style={{ margin: "0 0 10px" }}>
+                El color indica el <strong>grupo estructural</strong> asignado por k-means (mínimo 3 grupos). Estados del mismo color comparten un perfil latente similar de conectividad y desarrollo.
+              </p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Ejes</p>
+              <p style={{ margin: 0 }}>
+                El porcentaje entre paréntesis es la <strong>varianza explicada</strong> por cada componente. PC1 suele capturar el nivel general de desarrollo digital; PC2, contrastes secundarios entre dimensiones. Puntos alejados del centro tienen perfiles más extremos o atípicos.
+              </p>
+            </div>
+          } />
+        </div>
+        <p style={{ margin: "4px 0 8px", fontSize: 12, color: "var(--text-3)" }}>
           Cada punto es un estado, coloreado por grupo. El punto azul es{" "}
           {primaryState ?? "el estado seleccionado"}.
         </p>
@@ -338,7 +357,21 @@ export default function EstructuraTab({ appData }: Props) {
 
       <section className="panel ranking-panel">
         <div className="ranking-panel-header">
-          <p className="panel-title" style={{ margin: 0 }}>Ranking por índice</p>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <p className="panel-title" style={{ margin: 0 }}>Ranking por índice</p>
+            <InfoTooltip wide text={
+              <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Índice Digital-Territorial</p>
+                <p style={{ margin: "0 0 10px" }}>
+                  Puntuación compuesta (0–100) calculada como proyección de cada estado sobre el primer componente principal, reescalada para que el mayor valor sea 100. Sintetiza el perfil multivariado en una sola dimensión de orden.
+                </p>
+                <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Interpretación</p>
+                <p style={{ margin: 0 }}>
+                  Un índice alto no implica liderazgo en <em>todas</em> las variables, sino que el estado tiene en promedio un mejor posicionamiento relativo en las dimensiones capturadas por PC1. El <strong>% vs media</strong> muestra la distancia porcentual al promedio nacional del índice.
+                </p>
+              </div>
+            } />
+          </div>
           <div className="toggle-pill ranking-panel__toggle" role="group">
             <button
               type="button"

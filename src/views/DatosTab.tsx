@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { AppData } from "../services/DataService";
 import type { VariableCatalogEntry } from "../types/dataStandard";
 import {
@@ -100,6 +100,19 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
     ).length;
   }, [selectedVar, appData.municipalManifest]);
 
+  const [temporalYears, setTemporalYears] = useState<number[]>([]);
+  useEffect(() => {
+    if (mode !== "panel" || !selectedVar) { setTemporalYears([]); return; }
+    fetch(`/data/outputs/temporal/${selectedVar.variable_id}.json`)
+      .then((r) => r.ok ? r.json() as Promise<{ records: { year: number }[] }> : null)
+      .then((data) => {
+        if (!data) { setTemporalYears([]); return; }
+        const years = [...new Set(data.records.map((r) => r.year))].sort((a, b) => a - b);
+        setTemporalYears(years);
+      })
+      .catch(() => setTemporalYears([]));
+  }, [selectedVar?.variable_id, mode]);
+
   return (
     <div className="tab-content">
       {mode === "catalog" && (
@@ -123,6 +136,7 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
             totalStates={appData.dataset.records.length}
             lastYearWithData={lastYearWithData}
             municipalStatesCount={municipalStatesCount}
+            historicalYears={temporalYears}
             onUpdateData={() => openWizardForVariable(selectedVar)}
             onBack={() => setMode("catalog")}
           />

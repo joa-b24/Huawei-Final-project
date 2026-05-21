@@ -8,6 +8,8 @@ type Props = {
   label?: string;
   binStates?: string[][];
   highlightState?: string | null;
+  comparisonValue?: number | null;
+  comparisonLabel?: string;
 };
 
 function BinTooltip({ active, payload }: any) {
@@ -57,7 +59,7 @@ function BinTooltip({ active, payload }: any) {
   );
 }
 
-export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label, binStates, highlightState }: Props) {
+export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label, binStates, highlightState, comparisonValue, comparisonLabel }: Props) {
   const { bins, counts } = histogram;
   const hasEdges = bins.length > counts.length; // n+1 edges vs n centers
 
@@ -107,6 +109,14 @@ export default function DistributionHistogram({ histogram, highlightValue, natio
               stroke="var(--text-3)"
               strokeDasharray="4 4"
               label={{ value: "Media", fontSize: 10, fill: "var(--text-3)", position: "insideTopRight" }}
+            />
+          )}
+          {comparisonValue != null && (
+            <ReferenceLine
+              x={comparisonValue}
+              stroke="#64748b"
+              strokeDasharray="6 3"
+              label={{ value: comparisonLabel ?? "Comp.", fontSize: 10, fill: "#64748b", position: "insideTopLeft" }}
             />
           )}
           <Bar dataKey="count" radius={[3, 3, 0, 0]} isAnimationActive={false}>

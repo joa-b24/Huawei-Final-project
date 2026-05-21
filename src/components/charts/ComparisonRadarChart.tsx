@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -21,8 +21,6 @@ import type { PcaResults } from "../../services/DataService";
 const PRIMARY_COLOR = "#1d4ed8";
 const GROUP_COLORS = ["#64748b", "#059669", "#7c3aed", "#dc2626", "#0891b2"];
 
-const MAX_GROUPS = 3;
-
 type Props = {
   primaryState: string | null;
   stateRegion: string | null;
@@ -31,8 +29,8 @@ type Props = {
   rawMap?: Map<string, Record<string, number | null>>;
   nationalValues: Record<string, number | null>;
   stateRegionMap: Record<string, string>;
-  allStateNames: string[];
   pcaResults?: PcaResults | null;
+  groups: string[];
 };
 
 function fmtRaw(v: number, unit: string): string {
@@ -53,29 +51,10 @@ export default function ComparisonRadarChart({
   rawMap,
   nationalValues,
   stateRegionMap,
-  allStateNames,
   pcaResults,
+  groups,
 }: Props) {
   const [view, setView] = useState<"radar" | "barras">("radar");
-  const [groups, setGroups] = useState<string[]>(["nacional"]);
-
-  useEffect(() => {
-    setGroups(["nacional"]);
-  }, [primaryState]);
-
-  const regionGroupId = stateRegion ? `r:${stateRegion}` : null;
-
-  const primaryPcaRecord = useMemo(
-    () => pcaResults?.records.find((r) => r.state === primaryState) ?? null,
-    [pcaResults, primaryState]
-  );
-  const primaryClusterGroupId =
-    primaryPcaRecord !== null ? `c:${primaryPcaRecord.cluster}` : null;
-  const primaryClusterLabel =
-    primaryPcaRecord !== null
-      ? (pcaResults?.cluster_stats[String(primaryPcaRecord.cluster)]?.label ??
-        `Cluster ${primaryPcaRecord.cluster}`)
-      : null;
 
   const regionValues = useMemo(() => {
     if (!stateRegion) return {};
@@ -133,21 +112,6 @@ export default function ComparisonRadarChart({
       color: GROUP_COLORS[i] ?? GROUP_COLORS[GROUP_COLORS.length - 1],
     }));
   }
-
-  function toggleGroup(g: string) {
-    setGroups((prev) =>
-      prev.includes(g)
-        ? prev.filter((x) => x !== g)
-        : prev.length < MAX_GROUPS
-        ? [...prev, g]
-        : prev
-    );
-  }
-
-  const stateGroups = groups.filter((g) => g !== "nacional" && !g.startsWith("r:"));
-  const availableStateOptions = allStateNames.filter(
-    (s) => s !== primaryState && !groups.includes(s)
-  );
 
   if (!variables.length || !primaryState) {
     return (
@@ -222,74 +186,6 @@ export default function ComparisonRadarChart({
 
   return (
     <div>
-      {/* Group selector */}
-      <div className="comparison-group-selector">
-        <label className="comparison-group-option">
-          <input
-            type="checkbox"
-            checked={groups.includes("nacional")}
-            onChange={() => toggleGroup("nacional")}
-            disabled={groups.includes("nacional") && groups.length === 1}
-          />
-          <span>Nacional</span>
-        </label>
-
-        {regionGroupId && (
-          <label className="comparison-group-option">
-            <input
-              type="checkbox"
-              checked={groups.includes(regionGroupId)}
-              onChange={() => toggleGroup(regionGroupId)}
-              disabled={!groups.includes(regionGroupId) && groups.length >= MAX_GROUPS}
-            />
-            <span>Región {stateRegion}</span>
-          </label>
-        )}
-
-        {primaryClusterGroupId && (
-          <label className="comparison-group-option">
-            <input
-              type="checkbox"
-              checked={groups.includes(primaryClusterGroupId)}
-              onChange={() => toggleGroup(primaryClusterGroupId)}
-              disabled={
-                !groups.includes(primaryClusterGroupId) && groups.length >= MAX_GROUPS
-              }
-            />
-            <span>{primaryClusterLabel}</span>
-          </label>
-        )}
-
-        <div className="comparison-state-picker">
-          <select
-            className="comparison-select comparison-select--sm"
-            value=""
-            onChange={(e) => {
-              const s = e.target.value;
-              if (s && !groups.includes(s) && groups.length < MAX_GROUPS) {
-                setGroups((prev) => [...prev, s]);
-              }
-            }}
-            disabled={groups.length >= MAX_GROUPS}
-          >
-            <option value="">+ Estado…</option>
-            {availableStateOptions.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-          {stateGroups.map((s) => (
-            <span key={s} className="comparison-state-chip">
-              {s}
-              <button type="button" onClick={() => toggleGroup(s)}>
-                ×
-              </button>
-            </span>
-          ))}
-        </div>
-      </div>
-
       {/* Toggle pill */}
       <div
         className="toggle-pill"

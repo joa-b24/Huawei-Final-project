@@ -11,6 +11,7 @@ import {
 import { useAppContext } from "../context/AppContext";
 import type { AppData } from "../services/DataService";
 import EmptyState from "../components/EmptyState";
+import InfoTooltip from "../components/feedback/InfoTooltip";
 
 type ChartRow = { anio: number } & Record<string, number>;
 
@@ -212,11 +213,25 @@ export default function EvolucionTab({ appData }: Props) {
           <h3 className="panel-title" style={{ margin: 0 }}>
             {varMeta?.label ?? varId ?? "Variable"}
           </h3>
-          {varUnit && (
-            <span style={{ fontSize: 12, color: "var(--text-3)", fontWeight: 400 }}>
-              ({varUnit})
-            </span>
-          )}
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {varUnit && (
+              <span style={{ fontSize: 12, color: "var(--text-3)", fontWeight: 400 }}>
+                ({varUnit})
+              </span>
+            )}
+            <InfoTooltip wide text={
+              <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo leer el gráfico</p>
+                <p style={{ margin: "0 0 10px" }}>
+                  Cada línea gris es un estado. La <strong style={{ color: "var(--blue)" }}>línea azul</strong> es el estado seleccionado. Pasa el cursor sobre el gráfico para ver el valor exacto del estado y los extremos nacionales en ese año.
+                </p>
+                <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Barra de tendencia</p>
+                <p style={{ margin: 0 }}>
+                  El resumen inferior muestra el <strong>cambio absoluto</strong> del estado entre el primer y último año con dato: valor positivo (verde) indica mejora; negativo (rojo) indica retroceso. La dirección "mejor" depende de la polaridad de cada variable.
+                </p>
+              </div>
+            } />
+          </div>
         </div>
 
         <ResponsiveContainer width="100%" height={360}>

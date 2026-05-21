@@ -18,11 +18,12 @@ type Props = {
   totalStates: number;
   lastYearWithData: number | null;
   municipalStatesCount: number;
+  historicalYears?: number[];
   onUpdateData: () => void;
   onBack: () => void;
 };
 
-export default function VariablePanel({ variable: v, statesWithData, lastYearWithData, totalStates, municipalStatesCount, onUpdateData, onBack }: Props) {
+export default function VariablePanel({ variable: v, statesWithData, lastYearWithData, totalStates, municipalStatesCount, historicalYears = [], onUpdateData, onBack }: Props) {
   return (
     <div className="var-panel">
       <button className="btn-ghost wizard-back-link" onClick={onBack} type="button">
@@ -93,6 +94,20 @@ export default function VariablePanel({ variable: v, statesWithData, lastYearWit
         </div>
         <span className="var-panel__coverage-text">{statesWithData} / {totalStates} estados</span>
       </div>
+
+      {historicalYears.length > 0 && (
+        <div className="var-panel__coverage">
+          <span className="var-panel__meta-label">
+            Cobertura histórica · {historicalYears.length} año{historicalYears.length !== 1 ? "s" : ""}{" "}
+            ({historicalYears[0]}–{historicalYears[historicalYears.length - 1]})
+          </span>
+          <div className="var-panel__year-pills">
+            {historicalYears.map((y) => (
+              <span key={y} className="var-panel__year-pill">{y}</span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {municipalStatesCount > 0 && (
         <div className="var-panel__coverage">

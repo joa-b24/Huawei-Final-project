@@ -5,6 +5,7 @@ import MissingDataNote from "../feedback/MissingDataNote";
 type Props = {
   rows: RankingEntry[];
   highlightState?: string;
+  comparisonState?: string;
   metricLabel: string;
   unit?: string;
   total?: number;
@@ -59,7 +60,7 @@ function LollipopShapeColumn({ x, y, width, height, fill }: any) {
   );
 }
 
-export default function RankingTable({ rows, highlightState, metricLabel, unit = "", total = 32, view = "table", direction }: Props) {
+export default function RankingTable({ rows, highlightState, comparisonState, metricLabel, unit = "", total = 32, view = "table", direction }: Props) {
   const topThird = Math.ceil(total / 3);
   const bottomThird = Math.floor((2 * total) / 3);
   const missing = total - rows.length;
@@ -70,8 +71,9 @@ export default function RankingTable({ rows, highlightState, metricLabel, unit =
     return "rank-mid";
   }
 
-  function barFill(rank: number, isHighlighted: boolean) {
+  function barFill(rank: number, isHighlighted: boolean, isComparison: boolean) {
     if (isHighlighted) return "var(--blue)";
+    if (isComparison) return "#64748b";
     if (rank <= topThird) return "var(--green)";
     if (rank > bottomThird) return "var(--red)";
     return "var(--amber)";
@@ -83,6 +85,7 @@ export default function RankingTable({ rows, highlightState, metricLabel, unit =
     rank: row.rank,
     pct: row.pct_vs_mean,
     isHighlighted: highlightState === row.estado,
+    isComparison: comparisonState === row.estado && highlightState !== row.estado,
   }));
 
   const chartTooltipFormatter = (v: number, _: string, props: { payload?: { rank?: number; pct?: number } }) => {
@@ -110,7 +113,7 @@ export default function RankingTable({ rows, highlightState, metricLabel, unit =
             <Tooltip formatter={chartTooltipFormatter} />
             <Bar dataKey="value" radius={[0, 3, 3, 0]} isAnimationActive={false}>
               {barData.map((d, i) => (
-                <Cell key={i} fill={barFill(d.rank, d.isHighlighted)} opacity={d.isHighlighted ? 1 : 0.8} />
+                <Cell key={i} fill={barFill(d.rank, d.isHighlighted, d.isComparison)} opacity={d.isHighlighted ? 1 : 0.8} />
               ))}
             </Bar>
           </BarChart>
@@ -152,7 +155,7 @@ export default function RankingTable({ rows, highlightState, metricLabel, unit =
               isAnimationActive={false}
               shape={(props: any) => {
                 const d = barData[props.index];
-                const fill = d ? barFill(d.rank, d.isHighlighted) : "var(--border)";
+                const fill = d ? barFill(d.rank, d.isHighlighted, d.isComparison) : "var(--border)";
                 return <LollipopShapeColumn {...props} fill={fill} />;
               }}
             />
@@ -178,10 +181,11 @@ export default function RankingTable({ rows, highlightState, metricLabel, unit =
           <tbody>
             {rows.map((row) => {
               const isHighlighted = highlightState && row.estado === highlightState;
+              const isComparison = !isHighlighted && comparisonState && row.estado === comparisonState;
               const deltaPositive = row.pct_vs_mean >= 0;
               const isGood = direction === "lower_better" ? !deltaPositive : deltaPositive;
               return (
-                <tr key={row.rank} className={isHighlighted ? "highlighted" : ""}>
+                <tr key={row.rank} className={isHighlighted ? "highlighted" : isComparison ? "comparison" : ""}>
                   <td>
                     <span className={rankClass(row.rank)}>{row.rank}</span>
                   </td>

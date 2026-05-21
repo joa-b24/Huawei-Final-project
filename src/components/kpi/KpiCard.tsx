@@ -9,6 +9,8 @@ export type KpiCardProps = {
   delta?: number | null;
   direction?: MetricPolaridad;
   isOutlier?: boolean;
+  comparisonLabel?: string;
+  comparisonDelta?: number | null;
 };
 
 export default function KpiCard({
@@ -18,9 +20,12 @@ export default function KpiCard({
   delta,
   direction = "higher_better",
   isOutlier = false,
+  comparisonLabel,
+  comparisonDelta,
 }: KpiCardProps) {
   const isMissing = value === null || value === undefined;
   const deltaDisplay = formatDelta(delta, direction, tipoValor);
+  const compDisplay = comparisonLabel ? formatDelta(comparisonDelta, direction, tipoValor) : null;
 
   return (
     <article
@@ -37,6 +42,13 @@ export default function KpiCard({
         <p className="kpi-card-v2__delta" style={{ color: deltaDisplay.color }}>
           <span aria-hidden="true">{deltaDisplay.arrow}</span>
           {deltaDisplay.text} vs nacional
+        </p>
+      )}
+
+      {compDisplay?.text && comparisonLabel !== "Nacional" && (
+        <p className="kpi-card-v2__delta" style={{ color: compDisplay.color, opacity: 0.8, fontSize: "0.82em" }}>
+          <span aria-hidden="true">{compDisplay.arrow}</span>
+          {compDisplay.text} vs {comparisonLabel}
         </p>
       )}
 
