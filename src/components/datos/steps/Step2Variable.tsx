@@ -6,6 +6,7 @@ import type {
   AgregacionDefault,
   AgregacionMunicipal,
   MetricPolaridad,
+  VariableRole,
 } from "../../../types/dataStandard";
 import type { Granularity } from "./Step1OperationType";
 
@@ -34,7 +35,15 @@ const EMPTY_VAR: VariableCatalogEntry = {
   direction: "higher_better",
   fuente_sugerida: "",
   sinonimos: [],
+  role: "both",
 };
+
+const ROLE_OPTIONS: { value: VariableRole; label: string; desc: string }[] = [
+  { value: "both",        label: "Análisis (Y o X)",  desc: "Puede usarse como variable dependiente o predictor." },
+  { value: "target",      label: "Solo objetivo (Y)", desc: "Variable dependiente exclusiva; no se usa como predictor." },
+  { value: "explanatory", label: "Solo predictor (X)", desc: "Variable explicativa; no se usa como objetivo." },
+  { value: "contextual",  label: "Contextual",        desc: "Referencia/escala; excluida del análisis estadístico." },
+];
 
 const CATEGORIES: { id: CategoryId; label: string }[] = [
   { id: "infraestructura_digital", label: "Infraestructura digital" },
@@ -132,6 +141,20 @@ function NewVariableForm({
             <option value="higher_better">↑ Mayor es mejor</option>
             <option value="lower_better">↓ Menor es mejor</option>
           </select>
+        </label>
+        <label>
+          Rol analítico
+          <select
+            value={draft.role ?? "both"}
+            onChange={(e) => onChange("role", e.target.value as VariableRole)}
+          >
+            {ROLE_OPTIONS.map((r) => (
+              <option key={r.value} value={r.value} title={r.desc}>{r.label}</option>
+            ))}
+          </select>
+          <span className="var-form__hint">
+            {ROLE_OPTIONS.find((r) => r.value === (draft.role ?? "both"))?.desc}
+          </span>
         </label>
         <label>
           Agregación

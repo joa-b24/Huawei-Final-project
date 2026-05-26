@@ -16,11 +16,14 @@ import {
 } from "recharts";
 import { calcVif, olsRegression } from "../../lib/regression";
 import { formatPValue } from "../../lib/format";
-import type { StateCard, TipoValor } from "../../types/dataStandard";
+import type { StateCard, TipoValor, VariableRole } from "../../types/dataStandard";
 import InsightBox from "../feedback/InsightBox";
 import EmptyState from "../EmptyState";
 
-type MetricOption = { id: string; label: string; unit?: string; tipoValor?: TipoValor };
+type MetricOption = { id: string; label: string; unit?: string; tipoValor?: TipoValor; role?: VariableRole };
+
+function canBeY(role: VariableRole | undefined) { return !role || role === "target" || role === "both"; }
+function canBeX(role: VariableRole | undefined) { return !role || role === "explanatory" || role === "both"; }
 
 type Props = {
   stateCards: Record<string, StateCard>;
@@ -58,7 +61,13 @@ const MAX_PREDICTORS = 4;
 
 export default function MultivariateRegressionPlot({ stateCards, metricOptions, defaultDependentVar }: Props) {
   const states = useMemo(() => Object.values(stateCards), [stateCards]);
-  const [dependentVar, setDependentVar] = useState(defaultDependentVar ?? metricOptions[0]?.id ?? "");
+  const [dependentVar, setDependentVar] = useState(() => {
+    if (defaultDependentVar) {
+      const opt = metricOptions.find((m) => m.id === defaultDependentVar);
+      if (canBeY(opt?.role)) return defaultDependentVar;
+    }
+    return metricOptions.find((m) => canBeY(m.role))?.id ?? "";
+  });
   const [predictors, setPredictors] = useState<string[]>([]);
   const [result, setResult] = useState<ReturnType<typeof olsRegression>>(null);
   const [vifs, setVifs] = useState<number[]>([]);
@@ -69,7 +78,11 @@ export default function MultivariateRegressionPlot({ stateCards, metricOptions, 
   const [sdY, setSdY] = useState(0);
   const [sdXs, setSdXs] = useState<number[]>([]);
 
-  const availableX = metricOptions.filter((m) => m.id !== dependentVar);
+  const yOptions = useMemo(() => metricOptions.filter((m) => canBeY(m.role)), [metricOptions]);
+  const availableX = useMemo(
+    () => metricOptions.filter((m) => m.id !== dependentVar && canBeX(m.role)),
+    [metricOptions, dependentVar]
+  );
 
   function resetModelState() {
     setResult(null);
@@ -199,7 +212,7 @@ export default function MultivariateRegressionPlot({ stateCards, metricOptions, 
             onChange={(e) => { setDependentVar(e.target.value); setPredictors([]); resetModelState(); }}
             style={{ minWidth: 200 }}
           >
-            {metricOptions.map((m) => (
+            {yOptions.map((m) => (
               <option key={m.id} value={m.id}>{m.label}</option>
             ))}
           </select>

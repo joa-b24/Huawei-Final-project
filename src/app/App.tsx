@@ -74,10 +74,10 @@ function Dashboard({ appData }: { appData: AppData }) {
 
   const allVars = useMemo(() => {
     const hidden = loadHiddenIds();
-    const roleMap = new Map(appData.variablesCatalog.map((v) => [v.variable_id, v.role ?? "analysis"]));
+    const roleMap = new Map(appData.variablesCatalog.map((v) => [v.variable_id, v.role ?? "both"]));
     return appData.dataset.metricCatalog
       .filter((m) => !hidden.has(m.id))
-      .map((m) => ({ id: m.id, label: m.label, category: m.category, role: roleMap.get(m.id) ?? "analysis" }));
+      .map((m) => ({ id: m.id, label: m.label, category: m.category, role: roleMap.get(m.id) ?? "both" }));
   }, [appData.dataset.metricCatalog, appData.variablesCatalog, catalogVersion]);
 
   // Deactivate any variable that got hidden
@@ -172,7 +172,12 @@ function Dashboard({ appData }: { appData: AppData }) {
           </>
         )}
       </MainContent>
-      {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
+      {helpOpen && (
+        <HelpModal
+          onClose={() => setHelpOpen(false)}
+          currentContext={datosOpen ? "datos" : estructuraOpen ? "estructura" : state.activeTab}
+        />
+      )}
     </AppShell>
   );
 }

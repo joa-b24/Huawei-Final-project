@@ -21,6 +21,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CATALOG_PATH = PROJECT_ROOT / "data" / "catalogs" / "variables.catalog.json"
+PUBLIC_CATALOG_PATH = PROJECT_ROOT / "public" / "data" / "variables.catalog.json"
 
 LOWER_BETTER: set[str] = {
     "pobreza_pct",
@@ -48,9 +49,9 @@ def main(force: bool = False) -> None:
             print(f"  SKIP {vid}: ya tiene direction='{v['direction']}' (esperado '{new_dir}'). "
                   "Usa --force para sobreescribir.")
 
-    CATALOG_PATH.write_text(
-        json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    serialized = json.dumps(catalog, ensure_ascii=False, indent=2)
+    CATALOG_PATH.write_text(serialized, encoding="utf-8")
+    PUBLIC_CATALOG_PATH.write_text(serialized, encoding="utf-8")
     print(f"Catalogo actualizado: {changed} variable(s) modificadas en {CATALOG_PATH}")
 
     for v in catalog["variables"]:

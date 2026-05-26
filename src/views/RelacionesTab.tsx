@@ -86,13 +86,13 @@ export default function RelacionesTab({ appData }: Props) {
   const { label: xLabel, unit: xUnit } = getLabelAndUnit(xVarId ?? undefined);
   const { label: yLabel, unit: yUnit } = getLabelAndUnit(yVarId ?? undefined);
 
-  const metricOptions = useMemo(
-    () => activeVariableIds.map((id) => {
+  const metricOptions = useMemo(() => {
+    const roleMap = new Map(appData.variablesCatalog.map((v) => [v.variable_id, v.role ?? "both"]));
+    return activeVariableIds.map((id) => {
       const m = dataset.metricCatalog.find((mc) => mc.id === id);
-      return { id, label: m?.label ?? id, unit: m?.unit ?? "" };
-    }),
-    [activeVariableIds, dataset.metricCatalog]
-  );
+      return { id, label: m?.label ?? id, unit: m?.unit ?? "", role: roleMap.get(id) ?? "both" };
+    });
+  }, [activeVariableIds, dataset.metricCatalog, appData.variablesCatalog]);
 
   const hasCorrData = correlations.pearson.variables.length > 0;
 
@@ -291,7 +291,7 @@ function ImpactoNarrative({
             <span key={c.label}>
               {i > 0 && "; "}
               <strong>{c.label}</strong>{" "}(r&nbsp;=&nbsp;{c.r.toFixed(2)},{" "}
-              {corrStrength(c.r)} {c.r > 0 ? "positiva" : "negativa"}{c.pValue < 0.05 ? ", p&nbsp;&lt;&nbsp;0.05" : ""})
+              {corrStrength(c.r)} {c.r > 0 ? "positiva" : "negativa"}{c.pValue < 0.05 ? <>, p&nbsp;&lt;&nbsp;0.05</> : null})
             </span>
           ))}.
         </p>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Download, Eye, EyeOff, MoveDownRight, MoveUpRight, Plus } from "lucide-react";
-import type { VariableCatalogEntry, CategoryId } from "../../types/dataStandard";
+import type { VariableCatalogEntry, CategoryId, VariableRole } from "../../types/dataStandard";
 import { exportCatalog } from "../../lib/dataExport";
 
 type Props = {
@@ -10,6 +10,13 @@ type Props = {
   onSelectVariable: (v: VariableCatalogEntry) => void;
   onNewOperation: () => void;
   onToggleHidden: (id: string) => void;
+};
+
+const ROLE_LABELS: Record<VariableRole, string> = {
+  target:      "Objetivo",
+  explanatory: "Predictor",
+  both:        "Ambos",
+  contextual:  "Contextual",
 };
 
 const CATEGORY_LABELS: Record<CategoryId, string> = {
@@ -116,6 +123,7 @@ export default function CatalogBrowser({
             <th>Categoría</th>
             <th>Unidad</th>
             <th>Polaridad</th>
+            <th>Rol</th>
             <th>Fuente</th>
             <th></th>
           </tr>
@@ -147,6 +155,11 @@ export default function CatalogBrowser({
                     <span className="catalog-direction catalog-direction--down"><MoveDownRight size={14} /></span>
                   )}
                   {!v.direction && <span style={{ color: "var(--text-3)" }}>—</span>}
+                </td>
+                <td>
+                  {v.role && v.role !== "both"
+                    ? <span className={`catalog-role-badge catalog-role--${v.role}`}>{ROLE_LABELS[v.role]}</span>
+                    : <span style={{ color: "var(--text-3)" }}>—</span>}
                 </td>
                 <td>{v.fuente_sugerida || "—"}</td>
                 <td className="catalog-row-actions" onClick={(e) => e.stopPropagation()}>
