@@ -6,6 +6,7 @@ type Props = {
   domainMin: number;
   domainMax: number;
   nationalMean?: number | null;
+  groupMarkers?: { value: number; label: string; color: string }[];
 };
 
 function quartiles(sorted: number[]) {
@@ -21,7 +22,7 @@ function quartiles(sorted: number[]) {
   };
 }
 
-export default function InlineBoxplot({ stateValues, highlightState, domainMin, domainMax, nationalMean }: Props) {
+export default function InlineBoxplot({ stateValues, highlightState, domainMin, domainMax, nationalMean, groupMarkers }: Props) {
   const [tooltip, setTooltip] = useState<{ label: string; sx: number } | null>(null);
 
   const sorted = [...stateValues].sort((a, b) => a.value - b.value);
@@ -103,6 +104,23 @@ export default function InlineBoxplot({ stateValues, highlightState, domainMin, 
           onMouseLeave={() => setTooltip(null)}
         />
       ))}
+
+      {/* Group markers (diamonds) */}
+      {groupMarkers?.map((gm, i) => {
+        const cx = sx(gm.value);
+        const r = 8;
+        return (
+          <polygon
+            key={`gm-${i}`}
+            points={`${cx},${CY - r} ${cx + r},${CY} ${cx},${CY + r} ${cx - r},${CY}`}
+            fill={gm.color}
+            opacity={0.85}
+            style={{ cursor: "pointer" }}
+            onMouseEnter={() => showTip(`${gm.label}: ${gm.value.toFixed(2)}`, cx)}
+            onMouseLeave={() => setTooltip(null)}
+          />
+        );
+      })}
 
       {/* Highlight state */}
       {highlightState && (() => {

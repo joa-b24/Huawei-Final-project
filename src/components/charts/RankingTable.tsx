@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { MetricPolaridad, RankingEntry } from "../../types/dataStandard";
 import MissingDataNote from "../feedback/MissingDataNote";
 
@@ -6,11 +6,13 @@ type Props = {
   rows: RankingEntry[];
   highlightState?: string;
   comparisonState?: string;
+  comparisonStates?: string[];
   metricLabel: string;
   unit?: string;
   total?: number;
   view?: "table" | "bars" | "lollipop";
   direction?: MetricPolaridad;
+  groupLines?: { value: number; label: string; color: string }[];
 };
 
 function LollipopTooltip({ active, payload, label, metricLabel, unit, direction }: any) {
@@ -49,21 +51,28 @@ function LollipopTooltip({ active, payload, label, metricLabel, unit, direction 
   );
 }
 
-function LollipopShapeColumn({ x, y, width, height, fill }: any) {
+function LollipopShapeColumn({ x, y, width, height, fill, isHighlighted }: any) {
   if (!height || height <= 0) return null;
   const cx = x + width / 2;
+  const r = isHighlighted ? 7 : 5;
   return (
     <g>
-      <line x1={cx} y1={y + height} x2={cx} y2={y} stroke={fill} strokeWidth={2} opacity={0.8} />
-      <circle cx={cx} cy={y} r={5} fill={fill} stroke="var(--surface)" strokeWidth={1.5} />
+      <line x1={cx} y1={y + height} x2={cx} y2={y} stroke={fill} strokeWidth={isHighlighted ? 3 : 2} opacity={0.9} />
+      <circle cx={cx} cy={y} r={r} fill={fill} stroke="var(--surface)" strokeWidth={isHighlighted ? 2.5 : 1.5} />
+      {isHighlighted && <circle cx={cx} cy={y} r={r + 3} fill="none" stroke={fill} strokeWidth={1} opacity={0.35} />}
     </g>
   );
 }
 
-export default function RankingTable({ rows, highlightState, comparisonState, metricLabel, unit = "", total = 32, view = "table", direction }: Props) {
+export default function RankingTable({ rows, highlightState, comparisonState, comparisonStates, metricLabel, unit = "", total = 32, view = "table", direction, groupLines }: Props) {
   const topThird = Math.ceil(total / 3);
   const bottomThird = Math.floor((2 * total) / 3);
   const missing = total - rows.length;
+
+  const allComparisonStates = new Set([
+    ...(comparisonState ? [comparisonState] : []),
+    ...(comparisonStates ?? []),
+  ]);
 
   function rankClass(rank: number) {
     if (rank <= topThird) return "rank-good";
@@ -85,7 +94,7 @@ export default function RankingTable({ rows, highlightState, comparisonState, me
     rank: row.rank,
     pct: row.pct_vs_mean,
     isHighlighted: highlightState === row.estado,
-    isComparison: comparisonState === row.estado && highlightState !== row.estado,
+    isComparison: allComparisonStates.has(row.estado) && highlightState !== row.estado,
   }));
 
   const chartTooltipFormatter = (v: number, _: string, props: { payload?: { rank?: number; pct?: number } }) => {
@@ -156,9 +165,19 @@ export default function RankingTable({ rows, highlightState, comparisonState, me
               shape={(props: any) => {
                 const d = barData[props.index];
                 const fill = d ? barFill(d.rank, d.isHighlighted, d.isComparison) : "var(--border)";
-                return <LollipopShapeColumn {...props} fill={fill} />;
+                return <LollipopShapeColumn {...props} fill={fill} isHighlighted={d?.isHighlighted} />;
               }}
             />
+            {groupLines?.map((gl, i) => (
+              <ReferenceLine
+                key={`gl-${i}`}
+                y={gl.value}
+                stroke={gl.color}
+                strokeDasharray="5 3"
+                strokeWidth={1.5}
+                label={{ value: gl.label, fontSize: 10, fill: gl.color, position: i % 2 === 0 ? "insideTopLeft" : "insideTopRight" }}
+              />
+            ))}
           </BarChart>
         </ResponsiveContainer>
         <MissingDataNote count={missing} total={total} />
@@ -180,16 +199,26 @@ export default function RankingTable({ rows, highlightState, comparisonState, me
           </thead>
           <tbody>
             {rows.map((row) => {
-              const isHighlighted = highlightState && row.estado === highlightState;
-              const isComparison = !isHighlighted && comparisonState && row.estado === comparisonState;
+              const isHighlighted = !!highlightState && row.estado === highlightState;
+              const isComp = !isHighlighted && allComparisonStates.has(row.estado);
               const deltaPositive = row.pct_vs_mean >= 0;
               const isGood = direction === "lower_better" ? !deltaPositive : deltaPositive;
               return (
-                <tr key={row.rank} className={isHighlighted ? "highlighted" : isComparison ? "comparison" : ""}>
+                <tr
+                  key={row.rank}
+                  className={isHighlighted ? "highlighted" : isComp ? "comparison" : ""}
+                  style={
+                    isHighlighted
+                      ? { boxShadow: "inset 3px 0 0 var(--blue)", background: "color-mix(in srgb, var(--blue) 8%, transparent)" }
+                      : isComp
+                      ? { boxShadow: "inset 3px 0 0 #64748b", background: "color-mix(in srgb, #64748b 6%, transparent)" }
+                      : undefined
+                  }
+                >
                   <td>
                     <span className={rankClass(row.rank)}>{row.rank}</span>
                   </td>
-                  <td style={{ fontWeight: isHighlighted ? 600 : undefined }}>{row.estado}</td>
+                  <td style={{ fontWeight: isHighlighted ? 700 : isComp ? 600 : undefined }}>{row.estado}</td>
                   <td style={{ fontFamily: "var(--font-mono)" }}>{row.value.toFixed(1)}</td>
                   <td style={{ color: isGood ? "var(--green)" : "var(--red)", fontFamily: "var(--font-mono)" }}>
                     {deltaPositive ? "+" : ""}{row.pct_vs_mean.toFixed(1)} %

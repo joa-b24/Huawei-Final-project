@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Database, Download } from "lucide-react";
+import { Database, Download, HelpCircle, Layers } from "lucide-react";
 import { AppProvider, actions, useAppContext, type TabId } from "../context/AppContext";
 import { loadAppData, type AppData } from "../services/DataService";
 import { loadHiddenIds, syncNoDataAutoHidden } from "../lib/dataStorage";
@@ -14,19 +14,32 @@ import EstructuraTab from "../views/EstructuraTab";
 import EvolucionTab from "../views/EvolucionTab";
 import DatosTab from "../views/DatosTab";
 import StateTerritorialAnalysis from "../components/state-analysis/StateTerritorialAnalysis";
+import HelpModal from "../components/feedback/HelpModal";
 
-const TABS: Tab[] = [
-  { id: "diagnostico", label: "Diagnóstico" },
-  { id: "relaciones", label: "Impacto" },
-  { id: "estructura", label: "Estructura" },
-  { id: "temporal", label: "Evolución" },
-  { id: "territorial", label: "Territorial" },
-];
+function buildTabs(appData: AppData): Tab[] {
+  const hasMunicipal = appData.dataset.municipios.length > 0;
+  const hasTemporalData = (appData.temporalVariables?.length ?? 0) > 0;
+  return [
+    { id: "diagnostico", label: "Diagnóstico" },
+    { id: "relaciones", label: "Impacto" },
+    ...(hasTemporalData ? [{ id: "temporal", label: "Evolución" } as Tab] : []),
+    {
+      id: "territorial",
+      label: "Territorial",
+      disabled: !hasMunicipal,
+      disabledReason: "Requiere datos municipales (npm run data:build:analytics)",
+    },
+  ];
+}
 
 function Dashboard({ appData }: { appData: AppData }) {
   const { state, dispatch } = useAppContext();
   const [datosOpen, setDatosOpen] = useState(false);
+  const [estructuraOpen, setEstructuraOpen] = useState(false);
   const [catalogVersion, setCatalogVersion] = useState(0);
+  const [helpOpen, setHelpOpen] = useState(false);
+
+  const hasPca = appData.pcaResults !== null;
 
   function exportSnapshot() {
     const styles = Array.from(document.styleSheets)
@@ -61,10 +74,11 @@ function Dashboard({ appData }: { appData: AppData }) {
 
   const allVars = useMemo(() => {
     const hidden = loadHiddenIds();
+    const roleMap = new Map(appData.variablesCatalog.map((v) => [v.variable_id, v.role ?? "analysis"]));
     return appData.dataset.metricCatalog
       .filter((m) => !hidden.has(m.id))
-      .map((m) => ({ id: m.id, label: m.label, category: m.category }));
-  }, [appData.dataset.metricCatalog, catalogVersion]);
+      .map((m) => ({ id: m.id, label: m.label, category: m.category, role: roleMap.get(m.id) ?? "analysis" }));
+  }, [appData.dataset.metricCatalog, appData.variablesCatalog, catalogVersion]);
 
   // Deactivate any variable that got hidden
   useEffect(() => {
@@ -94,31 +108,50 @@ function Dashboard({ appData }: { appData: AppData }) {
           </p>
           <div style={{ display: "flex", alignItems: "stretch" }}>
             <TabBar
-              tabs={TABS}
-              activeTab={datosOpen ? "__none__" : state.activeTab}
-              onTabChange={(id) => { setDatosOpen(false); dispatch(actions.setTab(id as TabId)); }}
+              tabs={buildTabs(appData)}
+              activeTab={datosOpen || estructuraOpen ? "__none__" : state.activeTab}
+              onTabChange={(id) => { setDatosOpen(false); setEstructuraOpen(false); dispatch(actions.setTab(id as TabId)); }}
             />
             <button
+              className={`btn-datos${estructuraOpen ? " active" : ""}`}
+              onClick={() => { setEstructuraOpen((v) => !v); setDatosOpen(false); }}
+              type="button"
+              title={hasPca ? "Estructura latente y clusters" : "Requiere ejecutar el análisis PCA"}
+              style={!hasPca ? { opacity: 0.45, cursor: "not-allowed", pointerEvents: "none" } : undefined}
+            >
+              <Layers size={14} />
+              Estructura
+            </button>
+            <button
               className={`btn-datos${datosOpen ? " active" : ""}`}
-              onClick={() => setDatosOpen((v) => !v)}
+              onClick={() => { setDatosOpen((v) => !v); setEstructuraOpen(false); }}
               type="button"
             >
               <Database size={14} />
               Datos
             </button>
             <button
-              className="btn-datos"
+              className="btn-datos btn-datos--icon"
               onClick={exportSnapshot}
               type="button"
               title="Exportar snapshot HTML"
             >
               <Download size={14} />
-              Exportar
+            </button>
+            <button
+              className="btn-datos btn-datos--icon"
+              onClick={() => setHelpOpen(true)}
+              type="button"
+              title="Ayuda y tutoriales"
+            >
+              <HelpCircle size={14} />
             </button>
           </div>
         </div>
         {datosOpen ? (
           <DatosTab appData={appData} onCatalogChange={() => setCatalogVersion((v) => v + 1)} />
+        ) : estructuraOpen ? (
+          <EstructuraTab appData={appData} />
         ) : (
           <>
             <TabPanel id="diagnostico" activeTab={state.activeTab}>
@@ -126,9 +159,6 @@ function Dashboard({ appData }: { appData: AppData }) {
             </TabPanel>
             <TabPanel id="relaciones" activeTab={state.activeTab}>
               <RelacionesTab appData={appData} />
-            </TabPanel>
-            <TabPanel id="estructura" activeTab={state.activeTab}>
-              <EstructuraTab appData={appData} />
             </TabPanel>
             <TabPanel id="temporal" activeTab={state.activeTab}>
               <EvolucionTab appData={appData} />
@@ -142,6 +172,7 @@ function Dashboard({ appData }: { appData: AppData }) {
           </>
         )}
       </MainContent>
+      {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
     </AppShell>
   );
 }

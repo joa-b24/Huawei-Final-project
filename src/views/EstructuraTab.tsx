@@ -195,7 +195,21 @@ function EstructuraNarrative({
 
   const clusterStat = pcaResults.cluster_stats[String(record.cluster)];
   const peers = clusterStat?.states.filter((s) => s !== record.state) ?? [];
-  const peerSample = peers.slice(0, 3).join(", ") + (peers.length > 3 ? "…" : "");
+  const peerSample = peers.slice(0, 3).join(", ") + (peers.length > 3 ? " y otros" : "");
+
+  // Varianza explicada por PC1 y PC2
+  const [v1, v2] = pcaResults.variance_explained;
+  const v1pct = (v1 * 100).toFixed(0);
+  const v2pct = (v2 * 100).toFixed(0);
+
+  // Posición en el espacio de componentes
+  const pc1Dir = record.pc1 >= 0 ? "por encima" : "por debajo";
+  const pc2Dir = record.pc2 >= 0 ? "por encima" : "por debajo";
+
+  // Índice relativo al promedio del grupo
+  const indexVsGroup = clusterStat
+    ? record.index - clusterStat.mean_index
+    : null;
 
   const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
 
@@ -203,31 +217,40 @@ function EstructuraNarrative({
     <div>
       <p style={S}>
         <strong>{record.state}</strong> ocupa el lugar{" "}
-        <strong>
-          {record.ranking} de {nStates}
-        </strong>{" "}
-        en el índice Digital-Territorial ({tier} nacional), con un puntaje de{" "}
-        <strong>{record.index.toFixed(1)}/100</strong>.
+        <strong>{record.ranking} de {nStates}</strong> en el Índice Digital-Territorial
+        ({tier} nacional), con una puntuación de <strong>{record.index.toFixed(1)}/100</strong>.
+        {indexVsGroup !== null && (
+          <> Esto es <strong>{indexVsGroup >= 0 ? "+" : ""}{indexVsGroup.toFixed(1)} puntos</strong>{" "}
+          {indexVsGroup >= 0 ? "por encima" : "por debajo"} del promedio de su grupo estructural.</>
+        )}
       </p>
+
       {clusterStat && (
         <p style={S}>
-          Pertenece al grupo <strong>{clusterStat.label}</strong>
-          {peers.length > 0 && (
-            <>
-              , junto con <strong>{peers.length}</strong> estado
-              {peers.length !== 1 ? "s" : ""} de perfil similar
-              {peerSample ? ` (${peerSample})` : ""}
-            </>
-          )}
-          . El índice promedio del grupo es{" "}
-          <strong>{clusterStat.mean_index.toFixed(1)}</strong>.
+          Forma parte del grupo <strong>"{clusterStat.label}"</strong>
+          {peers.length > 0 ? (
+            <>, que agrupa a <strong>{peers.length + 1}</strong> estados con perfil latente similar
+            {peerSample ? ` — entre ellos ${peerSample}` : ""}</>
+          ) : (
+            <>, el único estado con este perfil estructural</>
+          )}. El índice promedio del grupo es <strong>{clusterStat.mean_index.toFixed(1)}</strong>.
         </p>
       )}
+
+      <p style={S}>
+        En el espacio de componentes principales, el estado se ubica{" "}
+        <strong>{pc1Dir} del centro</strong> en PC1 (el eje que concentra el{" "}
+        <strong>{v1pct}&nbsp;%</strong> de la variación entre estados — generalmente el nivel general de
+        desarrollo digital) y <strong>{pc2Dir} del centro</strong> en PC2 (contraste secundario entre
+        dimensiones, <strong>{v2pct}&nbsp;%</strong> de varianza). Juntos, ambos ejes resumen{" "}
+        <strong>{(Number(v1pct) + Number(v2pct)).toFixed(0)}&nbsp;%</strong> de la información multivariada.
+      </p>
+
       {record.is_outlier && (
-        <p style={{ ...S, margin: 0 }}>
-          El estado muestra un perfil estructural <strong>atípico</strong> respecto al
-          resto (distancia de Mahalanobis fuera del umbral χ² p=0.95), lo que sugiere
-          una combinación inusual de fortalezas y rezagos en el espacio de componentes.
+        <p style={{ ...S, margin: 0, padding: "8px 12px", background: "color-mix(in srgb, var(--amber) 10%, transparent)", borderRadius: 6, borderLeft: "3px solid var(--amber)" }}>
+          <strong>Perfil atípico:</strong> la distancia de Mahalanobis de este estado supera el umbral
+          esperado (χ² p&nbsp;=&nbsp;0.95), lo que indica una combinación <em>inusual</em> de fortalezas
+          y rezagos que no encaja completamente con ningún grupo. Requiere análisis complementario.
         </p>
       )}
     </div>
@@ -329,17 +352,17 @@ export default function EstructuraTab({ appData }: Props) {
           <p className="panel-title" style={{ margin: 0 }}>PC1 vs PC2</p>
           <InfoTooltip wide text={
             <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Componentes principales</p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo leer este gráfico</p>
               <p style={{ margin: "0 0 10px" }}>
-                Cada <strong>punto</strong> representa un estado en el espacio de dos componentes principales (PC1 y PC2) obtenidos por PCA sobre las variables activas normalizadas P5–P95. El <strong>punto azul</strong> es el estado seleccionado.
+                Cada <strong>punto</strong> es un estado ubicado en el espacio de dos componentes principales (PC1 horizontal, PC2 vertical). Estados <strong>cercanos entre sí</strong> tienen perfiles multivariados similares; estados alejados difieren estructuralmente.
               </p>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Color y grupos</p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Ejes — qué mide cada uno</p>
               <p style={{ margin: "0 0 10px" }}>
-                El color indica el <strong>grupo estructural</strong> asignado por k-means (mínimo 3 grupos). Estados del mismo color comparten un perfil latente similar de conectividad y desarrollo.
+                <strong>PC1</strong> (horizontal) captura la mayor parte de la variación entre estados: suele reflejar el <em>nivel general de conectividad y desarrollo digital</em>. Estados a la derecha tienden a tener mejores indicadores. <strong>PC2</strong> (vertical) captura contrastes secundarios — diferencias entre dimensiones dentro de un nivel similar de desarrollo.
               </p>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Ejes</p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Grupos y atípicos</p>
               <p style={{ margin: 0 }}>
-                El porcentaje entre paréntesis es la <strong>varianza explicada</strong> por cada componente. PC1 suele capturar el nivel general de desarrollo digital; PC2, contrastes secundarios entre dimensiones. Puntos alejados del centro tienen perfiles más extremos o atípicos.
+                El <strong>color</strong> indica el grupo k-means. El <strong>punto azul</strong> es el estado seleccionado. Los grupos son descriptivos: no implican clasificación oficial. Un punto muy separado del grupo puede ser estructuralmente atípico.
               </p>
             </div>
           } />

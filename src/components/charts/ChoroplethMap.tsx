@@ -7,6 +7,7 @@ const GEO_URL = "/data/estados.geojson";
 
 type Props = {
   appData: AppData;
+  groupStateNames?: Map<string, string>; // stateName → color
 };
 
 function interpolateColor(t: number): string {
@@ -17,7 +18,7 @@ function interpolateColor(t: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-export default function ChoroplethMap({ appData }: Props) {
+export default function ChoroplethMap({ appData, groupStateNames }: Props) {
   const { state: appState, dispatch } = useAppContext();
   const { primaryState, activeVariableIds } = appState;
   const { dataset } = appData;
@@ -173,6 +174,26 @@ export default function ChoroplethMap({ appData }: Props) {
                           if (tooltip) setTooltip((t) => t ? { ...t, ...getRelativePos(e) } : null);
                         }}
                         onMouseLeave={() => setTooltip(null)}
+                      />
+                    );
+                  })}
+                  {groupStateNames && groupStateNames.size > 0 && geographies.map((geo: any) => {
+                    const cve = String(geo.id ?? geo.properties?.cve_ent ?? "").padStart(2, "0");
+                    const sName = cveToState.get(cve);
+                    const color = sName ? groupStateNames.get(sName) : undefined;
+                    if (!color) return null;
+                    return (
+                      <Geography
+                        key={`group-hl-${cve}`}
+                        geography={geo}
+                        fill="none"
+                        stroke={color}
+                        strokeWidth={2.5}
+                        style={{
+                          default: { outline: "none", pointerEvents: "none" },
+                          hover: { outline: "none", pointerEvents: "none" },
+                          pressed: { outline: "none" },
+                        }}
                       />
                     );
                   })}

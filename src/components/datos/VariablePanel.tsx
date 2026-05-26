@@ -109,24 +109,18 @@ export default function VariablePanel({ variable: v, statesWithData, lastYearWit
         </div>
       )}
 
-      {municipalStatesCount > 0 && (
-        <div className="var-panel__coverage">
-          <span className="var-panel__meta-label">Cobertura municipal</span>
-          <div className="var-panel__coverage-bar">
-            <div
-              className="var-panel__coverage-fill"
-              style={{ width: `${(municipalStatesCount / totalStates) * 100}%` }}
-            />
-          </div>
-          <span className="var-panel__coverage-text">
-            {municipalStatesCount} / {totalStates} estados con datos municipales
-          </span>
+      <div className="var-panel__coverage">
+        <span className="var-panel__meta-label">Cobertura municipal</span>
+        <div className="var-panel__coverage-bar">
+          <div
+            className="var-panel__coverage-fill"
+            style={{ width: totalStates > 0 ? `${(municipalStatesCount / totalStates) * 100}%` : "0%" }}
+          />
         </div>
-      )}
-
-      {lastYearWithData == null && municipalStatesCount === 0 && (
-        <p className="wizard-warn" style={{ marginTop: 8 }}>Sin datos importados aún.</p>
-      )}
+        <span className="var-panel__coverage-text">
+          {municipalStatesCount} / {totalStates} estados con datos municipales
+        </span>
+      </div>
     </div>
   );
 }

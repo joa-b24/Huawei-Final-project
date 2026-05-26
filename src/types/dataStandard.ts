@@ -32,6 +32,12 @@ export type MetricDirection = MetricPolaridad;
 // Catálogo de variables
 // ─────────────────────────────────────────────────────────────────────────────
 
+/** Rol analítico de la variable:
+ *  - "analysis"  (default) — variable de análisis principal; válida como Y en OLS, en PCA, correlaciones.
+ *  - "context"   — variable contextual/escala; útil como X de referencia pero no como target de análisis.
+ */
+export type VariableRole = "analysis" | "context";
+
 export type VariableCatalogEntry = {
   variable_id: string;
   categoria_id: CategoryId;
@@ -43,6 +49,8 @@ export type VariableCatalogEntry = {
   direction?: MetricPolaridad;
   fuente_sugerida: string;
   sinonimos: string[];
+  /** Rol analítico. Omitido = "analysis". */
+  role?: VariableRole;
   /** Nombre del campo correspondiente en MunicipioAnalyticsRecord.
    *  Presente solo en variables con fuente de granularidad municipal. */
   campo_municipal?: string;

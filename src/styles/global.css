@@ -668,6 +668,7 @@ select {
 }
 .btn-datos.active { color: var(--blue); background: var(--blue-light); }
 .btn-datos:hover:not(.active) { color: var(--text-2); background: var(--blue-light); }
+.btn-datos--icon { padding: 10px 12px; }
 
 .tab-bar {
   display: flex;
@@ -728,11 +729,25 @@ select {
 .state-typeahead__option.selected { background: var(--blue); color: #fff; font-weight: 600; }
 
 /* Comparison group selector (inside radar panel) */
+/* Comparison groups panel */
+.comparison-panel {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--blue) 3%, var(--surface-plain));
+  padding: 10px 14px 12px;
+  margin-bottom: 16px;
+}
+.comparison-panel__header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.comparison-panel__title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--text-3);
+}
+
 .comparison-group-selector {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
-  margin-bottom: 12px; padding: 10px 12px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
 }
 .comparison-group-option {
   display: flex; align-items: center; gap: 6px; font-size: 13px;
@@ -749,11 +764,18 @@ select {
 .comparison-state-chip {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 3px 8px; background: var(--blue-light); border-radius: 999px;
+  border: 1px solid transparent;
   font-size: 12px; color: var(--blue);
 }
 .comparison-state-chip button {
   background: none; border: none; cursor: pointer; color: var(--blue);
   font-size: 14px; line-height: 1; padding: 0;
+}
+.comparison-group-dot {
+  display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.kpi-group-dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; flex-shrink: 0; vertical-align: middle;
 }
 
 .comparison-select {
@@ -775,7 +797,10 @@ select {
 }
 .var-chip.active { background: var(--blue-light); border-color: var(--blue-mid); color: var(--blue); font-weight: 600; }
 .var-chip.disabled { opacity: 0.4; cursor: not-allowed; }
+.var-chip--context { font-style: italic; opacity: 0.8; }
+.var-chip--context.active { opacity: 1; }
 .var-chip__dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.var-chip__role-tag { margin-left: auto; padding: 1px 5px; border-radius: 4px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; background: var(--border); color: var(--text-3); font-style: normal; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
    KPI v2
@@ -1132,3 +1157,35 @@ select {
 .evolucion-tooltip__row { margin: 0 0 2px; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
 .evolucion-tooltip__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
 .evolucion-tooltip__dot--primary { background: var(--blue); }
+
+/* Help modal */
+.help-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 24px; }
+.help-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; width: 100%; max-width: 520px; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 48px rgba(0,0,0,0.18); }
+.help-modal__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.help-modal__close { background: none; border: none; cursor: pointer; color: var(--text-3); display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; }
+.help-modal__close:hover { background: var(--surface-2, var(--bg)); color: var(--text-1); }
+.help-modal__list { display: flex; flex-direction: column; gap: 8px; }
+.help-modal__item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); text-align: left; cursor: default; opacity: 0.75; width: 100%; }
+.help-modal__item:not(:disabled) { cursor: pointer; opacity: 1; }
+.help-modal__item:not(:disabled):hover { border-color: var(--blue-mid); background: var(--blue-light); }
+.help-modal__item-icon { color: var(--blue); flex-shrink: 0; margin-top: 2px; }
+.help-modal__item-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.help-modal__item-title { font-size: 13px; font-weight: 600; color: var(--text-1); }
+.help-modal__item-desc { font-size: 12px; color: var(--text-3); line-height: 1.5; }
+.help-modal__item-tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); white-space: nowrap; margin-top: 2px; padding: 2px 6px; border-radius: 4px; background: var(--border); }
+
+/* Tab disabled state */
+.tab-btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+.tab-btn--disabled { opacity: 0.4; cursor: not-allowed; color: var(--text-3) !important; border-bottom-color: transparent !important; }
+
+/* Ranking highlight improvement */
+.ranking-table tr.highlighted td { background: color-mix(in srgb, var(--blue) 8%, transparent); }
+.ranking-table tr.highlighted { outline: none; box-shadow: inset 2px 0 0 var(--blue); font-weight: 600; }
+
+/* Municipal X-Ray panel */
+.mun-xray-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 5px 12px; border-radius: 99px; background: color-mix(in srgb, var(--blue) 10%, transparent); border: 1px solid color-mix(in srgb, var(--blue) 30%, transparent); font-size: 11px; font-weight: 600; color: var(--blue); cursor: pointer; }
+.mun-xray-btn:hover { background: color-mix(in srgb, var(--blue) 18%, transparent); }
+.mun-xray-panel { border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-top: 12px; background: var(--surface); }
+.groups-toggle-btn { padding: 3px 10px; border-radius: 99px; border: 1px solid var(--border); background: none; font-size: 11px; font-weight: 600; color: var(--text-3); cursor: pointer; white-space: nowrap; transition: background 0.12s, color 0.12s, border-color 0.12s; }
+.groups-toggle-btn:hover { border-color: var(--blue); color: var(--blue); }
+.groups-toggle-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }

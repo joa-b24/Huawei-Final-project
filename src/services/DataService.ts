@@ -96,6 +96,8 @@ export type AppData = {
   variablesCatalog: VariableCatalogEntry[];
   municipalManifest: MunicipalManifest | null;
   pcaResults: PcaResults | null;
+  /** Variable IDs that have temporal JSON files available */
+  temporalVariables: string[];
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -214,7 +216,7 @@ export async function loadAppData(): Promise<AppData> {
   const EMPTY_COMBINED = { metric_catalog: [], records: [], sources: [], updated_at: "" };
   const EMPTY_CORRELATIONS: CorrelationsPayload = { pearson: { variables: [], matrix: [], note: "" }, spearman: { variables: [], matrix: [], note: "" } };
 
-  const [combined, correlations, distributions, univariateStats, rankings, outliers, catalogPayload, stateAnalytics, municipios, municipalManifest, pcaResults] =
+  const [combined, correlations, distributions, univariateStats, rankings, outliers, catalogPayload, stateAnalytics, municipios, municipalManifest, pcaResults, temporalManifest] =
     await Promise.all([
       fetchJsonOptional<any>("/data/state_dashboard.combined.json", EMPTY_COMBINED),
       fetchJsonOptional<CorrelationsPayload>("/data/outputs/state/correlations.json", EMPTY_CORRELATIONS),
@@ -227,6 +229,7 @@ export async function loadAppData(): Promise<AppData> {
       fetchJsonOptional<MunicipioAnalyticsRecord[]>("/data/municipios_master_analytics.json", []),
       fetchJsonOptional<MunicipalManifest | null>("/data/municipal_manifest.json", null),
       fetchJsonOptional<PcaResults | null>("/data/outputs/pca/pca_results.json", null),
+      fetchJsonOptional<{ variables: string[] } | null>("/data/outputs/temporal/manifest.json", null),
     ]);
 
   return {
@@ -239,5 +242,6 @@ export async function loadAppData(): Promise<AppData> {
     variablesCatalog: catalogPayload.variables,
     municipalManifest,
     pcaResults,
+    temporalVariables: temporalManifest?.variables ?? [],
   };
 }

@@ -534,7 +534,8 @@
         "population",
         "poblacion total"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "context"
     },
     {
       "variable_id": "densidad_poblacional",
@@ -549,7 +550,8 @@
         "population density",
         "densidad"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "context"
     },
     {
       "variable_id": "edad_mediana",
@@ -564,7 +566,8 @@
         "median age",
         "edad mediana"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "context"
     },
     {
       "variable_id": "urbanizacion_pct",
@@ -724,7 +727,8 @@
         "PIBE",
         "producto interno bruto estatal"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "context"
     },
     {
       "variable_id": "pib_per_capita",

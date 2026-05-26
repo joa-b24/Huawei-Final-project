@@ -150,12 +150,28 @@ export default function RelacionesTab({ appData }: Props) {
               <p className="panel-title" style={{ margin: 0 }}>Correlaciones con: {yLabel}</p>
               <InfoTooltip wide text={
                 <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-                  <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Coeficiente de Pearson (r)</p>
-                  <p style={{ margin: "0 0 10px" }}>
-                    Mide la asociación <strong>lineal</strong> entre cada variable X y la variable Y seleccionada, usando los 32 estados como observaciones. Rango: −1 a +1. Referencia orientativa: |r|&nbsp;&gt;&nbsp;0.7 fuerte · 0.4–0.7 moderada · &lt;&nbsp;0.4 débil.
+                  <p style={{ fontWeight: 700, margin: "0 0 6px", color: "var(--text-1)" }}>Coeficiente de Pearson (r)</p>
+                  <p style={{ margin: "0 0 8px" }}>
+                    Mide la asociación <strong>lineal</strong> entre cada variable X y la Y seleccionada. Rango: −1 a +1.
                   </p>
-                  <p style={{ margin: 0, color: "var(--text-3)" }}>
-                    Correlación no implica causalidad. Una r alta puede reflejar un factor latente común (ej. nivel de desarrollo general del estado).
+                  <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 8, fontSize: 11 }}>
+                    <thead>
+                      <tr style={{ borderBottom: "1px solid var(--border)" }}>
+                        <th style={{ textAlign: "left", padding: "2px 6px 4px 0", color: "var(--text-3)", fontWeight: 600 }}>|r|</th>
+                        <th style={{ textAlign: "left", padding: "2px 0 4px", color: "var(--text-3)", fontWeight: 600 }}>Intensidad</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {([["≥ 0.7", "Fuerte"], ["0.4 – 0.7", "Moderada"], ["0.2 – 0.4", "Débil"], ["< 0.2", "Muy débil / nula"]] as const).map(([rng, lbl]) => (
+                        <tr key={rng} style={{ borderBottom: "1px solid var(--border)" }}>
+                          <td style={{ padding: "3px 6px 3px 0", fontVariantNumeric: "tabular-nums" }}>{rng}</td>
+                          <td style={{ padding: "3px 0" }}>{lbl}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <p style={{ margin: 0, color: "var(--text-3)", fontSize: 11 }}>
+                    Correlación no implica causalidad. Una r alta puede reflejar un factor latente común (p.ej. nivel de desarrollo general del estado).
                   </p>
                 </div>
               } />

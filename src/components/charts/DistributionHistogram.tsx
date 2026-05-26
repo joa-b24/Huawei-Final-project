@@ -1,6 +1,8 @@
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { HistogramData } from "../../types/dataStandard";
 
+type GroupLine = { value: number; label: string; color: string };
+
 type Props = {
   histogram: HistogramData;
   highlightValue?: number | null;
@@ -10,6 +12,7 @@ type Props = {
   highlightState?: string | null;
   comparisonValue?: number | null;
   comparisonLabel?: string;
+  groupLines?: GroupLine[];
 };
 
 function BinTooltip({ active, payload }: any) {
@@ -59,7 +62,7 @@ function BinTooltip({ active, payload }: any) {
   );
 }
 
-export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label, binStates, highlightState, comparisonValue, comparisonLabel }: Props) {
+export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label, binStates, highlightState, comparisonValue, comparisonLabel, groupLines }: Props) {
   const { bins, counts } = histogram;
   const hasEdges = bins.length > counts.length; // n+1 edges vs n centers
 
@@ -119,6 +122,16 @@ export default function DistributionHistogram({ histogram, highlightValue, natio
               label={{ value: comparisonLabel ?? "Comp.", fontSize: 10, fill: "#64748b", position: "insideTopLeft" }}
             />
           )}
+          {groupLines?.map((gl, i) => (
+            <ReferenceLine
+              key={`gl-${i}`}
+              x={gl.value}
+              stroke={gl.color}
+              strokeDasharray="6 3"
+              strokeWidth={2}
+              label={{ value: gl.label, fontSize: 10, fill: gl.color, position: i % 2 === 0 ? "insideBottomLeft" : "insideBottomRight" }}
+            />
+          ))}
           <Bar dataKey="count" radius={[3, 3, 0, 0]} isAnimationActive={false}>
             {data.map((_, i) => (
               <Cell

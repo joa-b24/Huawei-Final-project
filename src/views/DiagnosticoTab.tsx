@@ -21,21 +21,27 @@ function guessTipoValor(metricId: string, unit: string): TipoValor {
   return "number";
 }
 
-function buildRankingFromRecords(records: StateMetricRecord[], metricId: string): RankingEntry[] {
+function buildRankingFromRecords(
+  records: StateMetricRecord[],
+  metricId: string,
+  direction: import("../types/dataStandard").MetricPolaridad = "higher_better"
+): RankingEntry[] {
   const valid = records
     .filter((r) => r.metrics[metricId] !== undefined && !isNaN(r.metrics[metricId]))
     .map((r) => ({ state: r.state, value: r.metrics[metricId] }));
   if (!valid.length) return [];
   const mean = valid.reduce((s, r) => s + r.value, 0) / valid.length;
-  return valid
-    .sort((a, b) => b.value - a.value)
-    .map((r, i) => ({
-      rank: i + 1,
-      state: r.state,
-      estado: r.state,
-      value: r.value,
-      pct_vs_mean: mean !== 0 ? ((r.value - mean) / mean) * 100 : 0,
-    }));
+  // rank 1 = best: highest for higher_better, lowest for lower_better
+  const sorted = direction === "lower_better"
+    ? [...valid].sort((a, b) => a.value - b.value)
+    : [...valid].sort((a, b) => b.value - a.value);
+  return sorted.map((r, i) => ({
+    rank: i + 1,
+    state: r.state,
+    estado: r.state,
+    value: r.value,
+    pct_vs_mean: mean !== 0 ? ((r.value - mean) / mean) * 100 : 0,
+  }));
 }
 
 type Props = { appData: AppData };
@@ -62,6 +68,8 @@ export default function DiagnosticoTab({ appData }: Props) {
   const [comparisonGroups, setComparisonGroups] = useState<string[]>(["nacional"]);
   useEffect(() => { setComparisonGroups(["nacional"]); }, [primaryState]);
 
+  const [showGroups, setShowGroups] = useState(false);
+
   const secondaryGroup = comparisonGroups.find((g) => g !== "nacional") ?? null;
 
   const comparisonLabel: string | null = secondaryGroup
@@ -70,10 +78,6 @@ export default function DiagnosticoTab({ appData }: Props) {
       ? (appData.pcaResults?.cluster_stats[secondaryGroup.slice(2)]?.label ?? `Cluster ${secondaryGroup.slice(2)}`)
     : secondaryGroup
     : null;
-
-  const comparisonState: string | undefined =
-    secondaryGroup && !secondaryGroup.startsWith("r:") && !secondaryGroup.startsWith("c:")
-      ? secondaryGroup : undefined;
 
   const comparisonValues = useMemo(() => {
     if (!secondaryGroup || !activeVariableIds.length) return null;
@@ -110,6 +114,64 @@ export default function DiagnosticoTab({ appData }: Props) {
     return result;
   }, [secondaryGroup, activeVariableIds, dataset.records, appData.pcaResults]);
 
+  // Same palette as ComparisonRadarChart — groups are indexed by position in comparisonGroups
+  const GROUP_COLORS = ["#64748b", "#059669", "#7c3aed", "#dc2626", "#0891b2"];
+  type GroupLine = { value: number; label: string; color: string };
+
+  const nonNacionalGroups = comparisonGroups.filter((g) => g !== "nacional");
+
+  useEffect(() => {
+    if (!comparisonGroups.some((g) => g !== "nacional")) setShowGroups(false);
+  }, [comparisonGroups]);
+
+  // Single source of truth: groupId → color, indexed by position in comparisonGroups (matches radar)
+  const groupColorMap = useMemo(() => {
+    const map = new Map<string, string>();
+    comparisonGroups.forEach((g, i) => map.set(g, GROUP_COLORS[i] ?? GROUP_COLORS[GROUP_COLORS.length - 1]));
+    return map;
+  }, [comparisonGroups]);
+
+  function computeGroupValue(g: string, varId: string): number | null {
+    if (g.startsWith("r:")) {
+      const region = g.slice(2);
+      const vals = dataset.records
+        .filter((r) => r.region === region)
+        .map((r) => r.metrics[varId])
+        .filter((v): v is number => typeof v === "number" && !isNaN(v));
+      return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
+    }
+    if (g.startsWith("c:")) {
+      const clusterStates = appData.pcaResults?.cluster_stats[g.slice(2)]?.states ?? [];
+      const vals = clusterStates
+        .map((s) => dataset.records.find((r) => r.state === s)?.metrics[varId])
+        .filter((v): v is number => typeof v === "number" && !isNaN(v));
+      return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
+    }
+    return dataset.records.find((r) => r.state === g)?.metrics[varId] ?? null;
+  }
+
+  function groupLabel(g: string): string {
+    if (g.startsWith("r:")) return `R:${g.slice(2)}`;
+    if (g.startsWith("c:")) return appData.pcaResults?.cluster_stats[g.slice(2)]?.label ?? `C${g.slice(2)}`;
+    return g;
+  }
+
+  const groupStateColors = useMemo((): Map<string, string> => {
+    if (!showGroups || !nonNacionalGroups.length) return new Map();
+    const map = new Map<string, string>();
+    nonNacionalGroups.forEach((g) => {
+      const color = groupColorMap.get(g) ?? "#6b7280";
+      if (g.startsWith("r:")) {
+        dataset.records.filter((r) => r.region === g.slice(2)).forEach((r) => map.set(r.state, color));
+      } else if (g.startsWith("c:")) {
+        (appData.pcaResults?.cluster_stats[g.slice(2)]?.states ?? []).forEach((s) => map.set(s, color));
+      } else {
+        map.set(g, color);
+      }
+    });
+    return map;
+  }, [showGroups, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
+
   const kpiCards = useMemo(() => {
     if (!primaryRecord) return [];
     return activeVariableIds.map((varId) => {
@@ -125,6 +187,16 @@ export default function DiagnosticoTab({ appData }: Props) {
           : false;
       const compValue = comparisonValues?.[varId] ?? null;
       const compDelta = value !== null && compValue !== null ? calcDelta(value, compValue) : null;
+      const groupComparisons = showGroups && nonNacionalGroups.length > 0
+        ? nonNacionalGroups.map((g) => {
+            const gVal = computeGroupValue(g, varId);
+            return {
+              label: groupLabel(g),
+              delta: value !== null && gVal !== null ? calcDelta(value, gVal) : null,
+              color: groupColorMap.get(g) ?? "#6b7280",
+            };
+          })
+        : undefined;
       return {
         label: metricDef?.label ?? varId,
         value,
@@ -135,9 +207,10 @@ export default function DiagnosticoTab({ appData }: Props) {
         isOutlier: stateIsOutlier,
         comparisonLabel: comparisonLabel ?? undefined,
         comparisonDelta: compDelta,
+        groupComparisons,
       };
     });
-  }, [primaryRecord, activeVariableIds, dataset, outliers, comparisonValues, comparisonLabel]);
+  }, [primaryRecord, activeVariableIds, dataset, outliers, comparisonValues, comparisonLabel, showGroups, nonNacionalGroups, groupColorMap]);
 
   const polaridadMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -253,24 +326,35 @@ export default function DiagnosticoTab({ appData }: Props) {
     ? dataset.metricCatalog.find((m) => m.id === effectiveRankingVarId)
     : null;
 
+  const effectiveRankingDirection = effectiveRankingVarId
+    ? getMetricPolaridad(effectiveRankingVarId, appData.variablesCatalog)
+    : "higher_better";
+
+  const histGroupLines = useMemo((): GroupLine[] => {
+    if (!showGroups || !effectiveHistVarId || !nonNacionalGroups.length) return [];
+    return nonNacionalGroups.flatMap((g) => {
+      const value = computeGroupValue(g, effectiveHistVarId);
+      const color = groupColorMap.get(g) ?? "#6b7280";
+      return value !== null ? [{ value, label: groupLabel(g), color }] : [];
+    });
+  }, [showGroups, effectiveHistVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
+
+  const rankingGroupLines = useMemo((): GroupLine[] => {
+    if (!showGroups || !effectiveRankingVarId || !nonNacionalGroups.length) return [];
+    return nonNacionalGroups.flatMap((g) => {
+      if (!g.startsWith("r:") && !g.startsWith("c:")) return [];
+      const value = computeGroupValue(g, effectiveRankingVarId);
+      const color = groupColorMap.get(g) ?? "#6b7280";
+      return value !== null ? [{ value, label: groupLabel(g), color }] : [];
+    });
+  }, [showGroups, effectiveRankingVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
+
   const rankingRows = useMemo(() => {
     if (!effectiveRankingVarId) return [];
-    const fromData = rankings[effectiveRankingVarId];
-    if (fromData?.length) return fromData;
-    return buildRankingFromRecords(dataset.records, effectiveRankingVarId);
-  }, [effectiveRankingVarId, rankings, dataset.records]);
+    // Always rebuild from records to apply polarity-based sort
+    return buildRankingFromRecords(dataset.records, effectiveRankingVarId, effectiveRankingDirection);
+  }, [effectiveRankingVarId, dataset.records, effectiveRankingDirection]);
 
-  const primaryCveEnt = useMemo(
-    () => dataset.records.find((r) => r.state === primaryState)?.cveEnt ?? null,
-    [dataset.records, primaryState]
-  );
-
-  const hasMunicipalData = useMemo(
-    () => primaryCveEnt
-      ? appData.dataset.municipios.some((m) => m.cve_ent === primaryCveEnt)
-      : false,
-    [primaryCveEnt, appData.dataset.municipios]
-  );
 
   if (!primaryState) {
     return (
@@ -288,7 +372,7 @@ export default function DiagnosticoTab({ appData }: Props) {
     <div className="tab-content">
       <TabNarrative
         title="Descripción general"
-        description="Vista del estado seleccionado frente al conjunto nacional, regiones, clusters o estados: indicadores clave vs media, perfil comparativo normalizado, distribución estadística y posición en el ranking."
+        description="Vista del estado seleccionado frente al conjunto nacional, regiones, clusters o estados."
       >
         {kpiCards.length > 0 ? (
           <DiagnosticoNarrative
@@ -304,8 +388,20 @@ export default function DiagnosticoTab({ appData }: Props) {
         )}
       </TabNarrative>
 
-      <section className="panel" style={{ padding: "10px 16px", marginBottom: 16 }}>
-        <p className="panel-title" style={{ margin: "0 0 4px", fontSize: "0.85rem" }}>Grupos de comparación</p>
+      <section className="comparison-panel" style={{ marginTop: 8 }}>
+        <div className="comparison-panel__header">
+          <span className="comparison-panel__title">Grupos de comparación</span>
+          {nonNacionalGroups.length > 0 && (
+            <button
+              type="button"
+              className={`groups-toggle-btn${showGroups ? " active" : ""}`}
+              onClick={() => setShowGroups((v) => !v)}
+              title="Superponer grupos en distribución, mapa y ranking"
+            >
+              Mostrar en gráficas
+            </button>
+          )}
+        </div>
         <ComparisonGroupSelector
           groups={comparisonGroups}
           onGroupsChange={setComparisonGroups}
@@ -314,6 +410,7 @@ export default function DiagnosticoTab({ appData }: Props) {
           primaryClusterLabel={primaryClusterLabel}
           primaryState={primaryState}
           allStateNames={allStateNames}
+          groupColorMap={groupColorMap}
         />
       </section>
 
@@ -330,13 +427,16 @@ export default function DiagnosticoTab({ appData }: Props) {
           <p className="panel-title" style={{ margin: 0 }}>Perfil comparativo</p>
           <InfoTooltip wide text={
             <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Normalización</p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Vista y normalización</p>
               <p style={{ margin: "0 0 10px" }}>
-                Cada variable se transforma a una escala de <strong>percentil 0–100</strong> sobre los 32 estados (100 = valor más alto). En variables de polaridad negativa (ej. pobreza, rezago) la escala se invierte: 100 = el estado con <em>menor</em> valor, es decir, mejor desempeño.
+                Usa los botones <strong>Radar / Barras</strong> para cambiar el tipo de gráfico. Ambas vistas usan la misma escala de <strong>percentil 0–100</strong> sobre los 32 estados. En variables de polaridad negativa (ej. pobreza) la escala se invierte: 100 = mejor desempeño.
               </p>
               <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo interpretar</p>
+              <p style={{ margin: "0 0 8px" }}>
+                En el radar: cuanto más alejado del centro, mayor ventaja relativa. El área encerrada refleja el desempeño agregado.
+              </p>
               <p style={{ margin: 0 }}>
-                Cuanto más alejado del centro, mayor ventaja relativa en esa dimensión. El área encerrada refleja el desempeño agregado. El hover muestra el valor real en unidades originales para cada variable.
+                Los <strong>grupos de comparación</strong> se seleccionan en el panel superior (Nacional, Región, Cluster estructural o un estado específico). Selección máxima de 3 grupos. El hover muestra el valor real en unidades originales.
               </p>
             </div>
           } />
@@ -361,6 +461,7 @@ export default function DiagnosticoTab({ appData }: Props) {
             <TabNarrative
               title="Estadísticos de distribución"
               description="Forma, dispersión y posición del estado en la distribución nacional de la variable seleccionada."
+              style={{ marginTop: 16 }}
             >
               <DistributionInsights
                 varId={effectiveHistVarId}
@@ -382,15 +483,18 @@ export default function DiagnosticoTab({ appData }: Props) {
                     <InfoTooltip wide text={
                       <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
                         <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Histograma</p>
+                        <p style={{ margin: "0 0 4px" }}>
+                          Los <strong>10 intervalos</strong> son pre-calculados y fijos (igual amplitud sobre el rango nacional); cada barra muestra cuántos estados caen en ese rango de valores.
+                        </p>
                         <p style={{ margin: "0 0 10px" }}>
-                          Cada barra agrupa los estados cuyos valores caen en ese intervalo. La <strong>línea punteada</strong> es la media nacional; la <strong>barra resaltada</strong> contiene al estado seleccionado. Pasa el cursor sobre una barra para ver los estados de ese intervalo.
+                          La <strong>barra resaltada</strong> contiene al estado seleccionado. Pasa el cursor sobre una barra para ver qué estados pertenecen a ese intervalo.
                         </p>
                         <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Diagrama de caja (boxplot)</p>
+                        <p style={{ margin: "0 0 6px" }}>
+                          La <strong>caja</strong> enmarca el 50&nbsp;% central de los estados (Q₁ a Q₃). La línea sólida interior es la <strong>mediana</strong> (valor que divide exactamente a los 32 estados en dos mitades). La línea punteada es la <strong>media nacional</strong>.
+                        </p>
                         <p style={{ margin: 0 }}>
-                          La <strong>caja</strong> cubre Q₁–Q₃ (el 50&nbsp;% central de los estados).
-                          La <strong>línea sólida</strong> dentro de la caja es la mediana.
-                          La <strong>línea punteada</strong> sobre la caja es la media nacional.
-                          Los bigotes se extienden hasta 1.5&nbsp;×&nbsp;IQR; los <strong style={{ color: "var(--amber)" }}>puntos naranjas</strong> son estados atípicos fuera de ese umbral. El <strong style={{ color: "var(--blue)" }}>punto azul</strong> es el estado seleccionado. Pasa el cursor sobre cualquier línea o punto para ver su valor.
+                          Los <strong>bigotes</strong> se extienden hasta 1.5&nbsp;×&nbsp;IQR desde cada extremo de la caja — lo que cubre el rango "esperado" sin casos extremos. Los <strong style={{ color: "var(--amber)" }}>puntos naranjas</strong> más allá de los bigotes son estados <em>atípicos</em>. El <strong style={{ color: "var(--blue)" }}>punto azul</strong> es el estado seleccionado.
                         </p>
                       </div>
                     } />
@@ -415,8 +519,9 @@ export default function DiagnosticoTab({ appData }: Props) {
                     nationalMean={nationalMeanHist}
                     binStates={histogramBinStates}
                     highlightState={primaryState}
-                    comparisonValue={comparisonHistValue}
-                    comparisonLabel={comparisonLabel ?? undefined}
+                    comparisonValue={showGroups ? null : comparisonHistValue}
+                    comparisonLabel={showGroups ? undefined : (comparisonLabel ?? undefined)}
+                    groupLines={showGroups ? histGroupLines : undefined}
                   />
                 ) : (
                   <EmptyState
@@ -432,6 +537,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                       domainMin={Math.min(...histStateValues.map((d) => d.value))}
                       domainMax={Math.max(...histStateValues.map((d) => d.value))}
                       nationalMean={nationalMeanHist ?? undefined}
+                      groupMarkers={showGroups ? histGroupLines : undefined}
                     />
                   </div>
                 )}
@@ -447,13 +553,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                 <p className="panel-title" style={{ margin: 0 }}>Mapa coroplético</p>
                 <InfoTooltip text="Cada estado se colorea según su valor en la variable seleccionada. La escala de color va del tono más claro (valor menor) al más oscuro (valor mayor). Busca patrones espaciales: estados contiguos con colores similares sugieren agrupamientos regionales. Haz clic en cualquier estado para seleccionarlo como estado de análisis." />
               </div>
-              <ChoroplethMap appData={appData} />
-              {hasMunicipalData && (
-                <div className="mun-available-badge">
-                  <span className="mun-available-badge__dot" />
-                  Datos municipales disponibles para este estado
-                </div>
-              )}
+              <ChoroplethMap appData={appData} groupStateNames={groupStateColors} />
             </section>
           </div>
 
@@ -465,12 +565,8 @@ export default function DiagnosticoTab({ appData }: Props) {
                 <InfoTooltip wide text={
                   <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
                     <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Posición relativa</p>
-                    <p style={{ margin: "0 0 10px" }}>
-                      Los 32 estados ordenados de mayor a menor valor. El <strong>% vs media</strong> indica cuánto se aleja el estado del promedio nacional: positivo = por encima, negativo = por debajo. El estado seleccionado se resalta.
-                    </p>
-                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Polaridad</p>
                     <p style={{ margin: 0 }}>
-                      En variables de polaridad negativa (ej. pobreza), ocupar el lugar 1 implica el <em>peor</em> desempeño. Revisa la etiqueta de la variable para interpretar correctamente la dirección del ranking.
+                      Los 32 estados ordenados de <strong>mejor a peor</strong> desempeño según la dirección de la variable. El <strong>% vs media</strong> indica cuánto se aleja el estado del promedio nacional: verde = favorable, rojo = desfavorable. El estado seleccionado y los grupos de comparación activos se resaltan.
                     </p>
                   </div>
                 } />
@@ -516,11 +612,14 @@ export default function DiagnosticoTab({ appData }: Props) {
               <RankingTable
                 rows={rankingRows}
                 highlightState={primaryState}
-                comparisonState={comparisonState}
+                comparisonStates={comparisonGroups.filter(
+                  (g) => g !== "nacional" && !g.startsWith("r:") && !g.startsWith("c:")
+                )}
                 metricLabel={rankingMetricDef?.label ?? effectiveRankingVarId ?? ""}
                 unit={rankingMetricDef?.unit}
                 view={rankingView}
-                direction={effectiveRankingVarId ? getMetricPolaridad(effectiveRankingVarId, appData.variablesCatalog) : undefined}
+                direction={effectiveRankingDirection}
+                groupLines={rankingGroupLines}
               />
             ) : (
               <EmptyState
@@ -744,6 +843,7 @@ function ComparisonGroupSelector({
   primaryClusterLabel,
   primaryState,
   allStateNames,
+  groupColorMap,
 }: {
   groups: string[];
   onGroupsChange: (groups: string[]) => void;
@@ -752,6 +852,7 @@ function ComparisonGroupSelector({
   primaryClusterLabel: string | null;
   primaryState: string;
   allStateNames: string[];
+  groupColorMap: Map<string, string>;
 }) {
   function toggle(g: string) {
     onGroupsChange(
@@ -765,6 +866,12 @@ function ComparisonGroupSelector({
 
   const stateGroups = groups.filter((g) => g !== "nacional" && !g.startsWith("r:") && !g.startsWith("c:"));
   const availableStates = allStateNames.filter((s) => s !== primaryState && !groups.includes(s));
+
+  function GroupDot({ groupId }: { groupId: string }) {
+    const color = groupColorMap.get(groupId);
+    if (!color) return null;
+    return <span className="comparison-group-dot" style={{ background: color }} />;
+  }
 
   return (
     <div className="comparison-group-selector">
@@ -786,6 +893,7 @@ function ComparisonGroupSelector({
             onChange={() => toggle(regionGroupId)}
             disabled={!groups.includes(regionGroupId) && groups.length >= MAX_COMPARISON_GROUPS}
           />
+          {groups.includes(regionGroupId) && <GroupDot groupId={regionGroupId} />}
           <span>Región {regionGroupId.slice(2)}</span>
         </label>
       )}
@@ -798,6 +906,7 @@ function ComparisonGroupSelector({
             onChange={() => toggle(primaryClusterGroupId)}
             disabled={!groups.includes(primaryClusterGroupId) && groups.length >= MAX_COMPARISON_GROUPS}
           />
+          {groups.includes(primaryClusterGroupId) && <GroupDot groupId={primaryClusterGroupId} />}
           <span>{primaryClusterLabel}</span>
         </label>
       )}
@@ -819,12 +928,20 @@ function ComparisonGroupSelector({
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
-        {stateGroups.map((s) => (
-          <span key={s} className="comparison-state-chip">
-            {s}
-            <button type="button" onClick={() => toggle(s)}>×</button>
-          </span>
-        ))}
+        {stateGroups.map((s) => {
+          const color = groupColorMap.get(s);
+          return (
+            <span
+              key={s}
+              className="comparison-state-chip"
+              style={color ? { background: `color-mix(in srgb, ${color} 15%, transparent)`, color, borderColor: `color-mix(in srgb, ${color} 40%, transparent)` } : undefined}
+            >
+              {color && <span className="comparison-group-dot" style={{ background: color }} />}
+              {s}
+              <button type="button" onClick={() => toggle(s)} style={color ? { color } : undefined}>×</button>
+            </span>
+          );
+        })}
       </div>
     </div>
   );

@@ -1,18 +1,19 @@
 import { useState } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 type Props = {
   title: string;
   description: string;
   children: ReactNode;
+  style?: CSSProperties;
 };
 
-export default function TabNarrative({ title, description, children }: Props) {
-  const [open, setOpen] = useState(false);
+export default function TabNarrative({ title, description, children, style }: Props) {
+  const [open, setOpen] = useState(true);
 
   return (
-    <div className="tab-narrative">
+    <div className="tab-narrative" style={style}>
       <button
         type="button"
         className="tab-narrative__header"

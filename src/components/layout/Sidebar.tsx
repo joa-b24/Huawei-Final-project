@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import StateSearch from "../sidebar/StateSearch";
 import VarChipList from "../sidebar/VarChipList";
 
-type VarItem = { id: string; label: string; category?: string };
+type VarItem = { id: string; label: string; category?: string; role?: string };
 
 type Props = {
   states: string[];

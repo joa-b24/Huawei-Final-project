@@ -8,7 +8,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   demografia: "#be185d",
 };
 
-type VarItem = { id: string; label: string; category?: string };
+type VarItem = { id: string; label: string; category?: string; role?: string };
 
 type Props = {
   vars: VarItem[];
@@ -22,18 +22,24 @@ export default function VarChipList({ vars, activeIds, maxActive = 5, onToggle }
 
   return (
     <div className="var-chip-list">
-      {vars.map(({ id, label, category }) => {
+      {vars.map(({ id, label, category, role }) => {
         const isActive = activeIds.includes(id);
         const isDisabled = !isActive && atLimit;
+        const isContext = role === "context";
         const dotColor = category ? (CATEGORY_COLORS[category] ?? "#6b7280") : "#6b7280";
+        const titleText = isDisabled
+          ? `Máximo ${maxActive} variables activas`
+          : isContext
+          ? `${label} — variable contextual (referencia, no análisis primario)`
+          : label;
         return (
           <button
             key={id}
             type="button"
-            className={`var-chip${isActive ? " active" : ""}${isDisabled ? " disabled" : ""}`}
+            className={`var-chip${isActive ? " active" : ""}${isDisabled ? " disabled" : ""}${isContext ? " var-chip--context" : ""}`}
             onClick={() => { if (!isDisabled) onToggle(id); }}
             aria-pressed={isActive}
-            title={isDisabled ? `Máximo ${maxActive} variables activas` : label}
+            title={titleText}
           >
             <span
               className="var-chip__dot"
@@ -41,6 +47,7 @@ export default function VarChipList({ vars, activeIds, maxActive = 5, onToggle }
               style={{ background: dotColor }}
             />
             {label}
+            {isContext && <span className="var-chip__role-tag">ctx</span>}
           </button>
         );
       })}
