@@ -200,8 +200,23 @@ export default function MultivariateRegressionPlot({ stateCards, metricOptions, 
     ];
   })() : [];
 
+  const missingY = yOptions.length === 0;
+  const missingX = availableX.length === 0 && yOptions.length > 0;
+
   return (
     <div>
+      {missingY && (
+        <div className="regression-role-warning">
+          Ninguna variable activa tiene rol <strong>Objetivo (Y)</strong> o <strong>Análisis (Y o X)</strong>.
+          Asigna el rol en el catálogo de datos para usar esta sección.
+        </div>
+      )}
+      {missingX && (
+        <div className="regression-role-warning">
+          No hay predictores disponibles. Añade variables con rol <strong>Predictor (X)</strong> o{" "}
+          <strong>Análisis (Y o X)</strong> al análisis.
+        </div>
+      )}
       {/* Controls */}
       <div className="regression-controls">
         <div className="regression-field">
@@ -211,6 +226,7 @@ export default function MultivariateRegressionPlot({ stateCards, metricOptions, 
             value={dependentVar}
             onChange={(e) => { setDependentVar(e.target.value); setPredictors([]); resetModelState(); }}
             style={{ minWidth: 200 }}
+            disabled={missingY}
           >
             {yOptions.map((m) => (
               <option key={m.id} value={m.id}>{m.label}</option>
