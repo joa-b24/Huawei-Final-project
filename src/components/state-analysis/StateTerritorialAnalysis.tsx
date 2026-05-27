@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { MunicipioAnalyticsRecord, StateAnalyticsPayload } from "../../types/analytics";
 import { lorenzCurve, weightedGini } from "../../utils/gini";
 import { spearmanSafe } from "../../utils/spearman";
@@ -7,13 +7,13 @@ import {
   giniPercentileAmongStates,
   strengthLabel
 } from "../../utils/stateAnalytics";
-import { ANALYSIS_METRICS } from "./analysisMetrics";
+import { useAppContext } from "../../context/AppContext";
 import EmptyState from "../EmptyState";
+import TabNarrative from "../feedback/TabNarrative";
 import LorenzCurveChart from "./LorenzCurveChart";
 import MunicipioScatterExplore from "./MunicipioScatterExplore";
 import SpearmanHeatmap from "./SpearmanHeatmap";
-
-const DEFAULT_CVE_ENT = "19";
+import { ANALYSIS_METRICS } from "./analysisMetrics";
 
 export type { AnalysisMetricKey } from "./analysisMetrics";
 export { ANALYSIS_METRICS };
@@ -29,22 +29,25 @@ type Props = {
 };
 
 export default function StateTerritorialAnalysis({ stateAnalytics, municipios }: Props) {
-  const [cveEnt, setCveEnt] = useState(DEFAULT_CVE_ENT);
+  const { state: appState } = useAppContext();
+  const { primaryState } = appState;
+
+  const cveEnt = useMemo(() => {
+    if (!stateAnalytics || !primaryState) return null;
+    return stateAnalytics.states.find((s) => s.estado === primaryState)?.cve_ent ?? null;
+  }, [stateAnalytics, primaryState]);
 
   const stateRow = useMemo(
-    () => stateAnalytics?.states.find((s) => s.cve_ent === cveEnt) ?? null,
+    () => (stateAnalytics && cveEnt ? stateAnalytics.states.find((s) => s.cve_ent === cveEnt) ?? null : null),
     [stateAnalytics, cveEnt]
   );
 
   const municipiosEstado = useMemo(
-    () => municipios.filter((m) => m.cve_ent === cveEnt),
+    () => (cveEnt ? municipios.filter((m) => m.cve_ent === cveEnt) : []),
     [municipios, cveEnt]
   );
 
-  const weights = useMemo(
-    () => municipiosEstado.map((m) => m.pobtot_iter),
-    [municipiosEstado]
-  );
+  const weights = useMemo(() => municipiosEstado.map((m) => m.pobtot_iter), [municipiosEstado]);
   const values4g = useMemo(
     () => municipiosEstado.map((m) => m.pob_pct_4g_garantizada),
     [municipiosEstado]
@@ -55,33 +58,28 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
 
   const spearmanMatrix = useMemo(() => {
     const keys = ANALYSIS_METRICS.map((x) => x.key);
-    const cols: (number | null)[][] = [];
-    for (let i = 0; i < keys.length; i++) {
-      const row: (number | null)[] = [];
-      for (let j = 0; j < keys.length; j++) {
-        if (i === j) {
-          row.push(1);
-        } else {
-          const xi = municipiosEstado.map((m) => getMetric(m, keys[i])).map((v) => v ?? Number.NaN);
-          const xj = municipiosEstado.map((m) => getMetric(m, keys[j])).map((v) => v ?? Number.NaN);
-          const pairedI: number[] = [];
-          const pairedJ: number[] = [];
-          for (let k = 0; k < xi.length; k++) {
-            if (Number.isFinite(xi[k]) && Number.isFinite(xj[k])) {
-              pairedI.push(xi[k]);
-              pairedJ.push(xj[k]);
-            }
+    return keys.map((ki) =>
+      keys.map((kj) => {
+        if (ki === kj) return 1;
+        const xi = municipiosEstado.map((m) => getMetric(m, ki) ?? Number.NaN);
+        const xj = municipiosEstado.map((m) => getMetric(m, kj) ?? Number.NaN);
+        const pi: number[] = [];
+        const pj: number[] = [];
+        for (let k = 0; k < xi.length; k++) {
+          if (Number.isFinite(xi[k]) && Number.isFinite(xj[k])) {
+            pi.push(xi[k]);
+            pj.push(xj[k]);
           }
-          row.push(spearmanSafe(pairedI, pairedJ));
         }
-      }
-      cols.push(row);
-    }
-    return cols;
+        return spearmanSafe(pi, pj);
+      })
+    );
   }, [municipiosEstado]);
 
   const percentileRank =
-    stateAnalytics && stateRow ? giniPercentileAmongStates(stateAnalytics.states, cveEnt) : null;
+    stateAnalytics && stateRow && cveEnt
+      ? giniPercentileAmongStates(stateAnalytics.states, cveEnt)
+      : null;
 
   if (!stateAnalytics || municipios.length === 0) {
     return (
@@ -92,75 +90,67 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
     );
   }
 
+  if (!primaryState) {
+    return (
+      <EmptyState
+        title="Sin estado seleccionado"
+        description="Selecciona un estado en el panel lateral."
+      />
+    );
+  }
+
+  if (!cveEnt || !stateRow) {
+    return (
+      <EmptyState
+        title="Estado sin datos municipales"
+        description="El estado seleccionado no tiene registros de analítica municipal. Selecciona otro estado en el panel lateral."
+      />
+    );
+  }
+
   return (
-    <section className="dashboard-block">
-      <div className="dashboard-block-header">
-        <div className="section-heading">
-          <h2>Análisis territorial por estado</h2>
-          <p>
-            Tres lecturas complementarias: desigualdad de cobertura (Gini y Lorenz), agrupamiento municipal
-            en tres perfiles (alta, media y baja cobertura 4G dentro del estado) y asociaciones con
-            escolaridad, edad y composición por sexo (Spearman y dispersión).
-          </p>
-          <p style={{ marginTop: 8, fontSize: "0.88rem", color: "#475569" }}>
-            <strong>Tip:</strong> junto a cada gráfico o tabla verás el texto <em>«Ayuda: …»</em> y un botón circular con
-            la letra <strong>i</strong>: pulsa el botón para ver la explicación técnica (dinámica según el estado y las variables).
-          </p>
-        </div>
-        <div className="metric-control">
-          <label htmlFor="state-territorial-select">Estado</label>
-          <select
-            id="state-territorial-select"
-            value={cveEnt}
-            onChange={(e) => setCveEnt(e.target.value)}
-          >
-            {[...stateAnalytics.states]
-              .sort((a, b) => a.estado.localeCompare(b.estado, "es"))
-              .map((s) => (
-                <option key={s.cve_ent} value={s.cve_ent}>
-                  {s.estado} ({s.n_municipios} municipios)
-                </option>
-              ))}
-          </select>
-        </div>
-      </div>
+    <div className="tab-content">
+      <TabNarrative
+        title={`Análisis territorial — ${stateRow.estado}`}
+        description="Desigualdad de cobertura 4G entre municipios (Gini y Lorenz), tres perfiles municipales de cobertura y asociaciones con escolaridad, edad y composición por sexo (Spearman y dispersión)."
+      >
+        <StateNarrative
+          stateRow={stateRow}
+          national={stateAnalytics.national}
+          giniClient={giniClient}
+          spearmanMatrix={spearmanMatrix}
+          percentileRank={percentileRank}
+          nMunicipiosFiltrados={municipiosEstado.length}
+        />
+      </TabNarrative>
 
-      {stateRow ? (
-        <div className="panel panel-nested" style={{ marginBottom: 16 }}>
-          <StateNarrative
-            stateRow={stateRow}
-            national={stateAnalytics.national}
-            giniClient={giniClient}
-            spearmanMatrix={spearmanMatrix}
-            percentileRank={percentileRank}
-            nMunicipiosFiltrados={municipiosEstado.length}
-          />
-        </div>
-      ) : null}
-
-      <div className="grid-layout" style={{ marginBottom: 16 }}>
-        <div className="panel panel-nested">
+      <div className="two-col">
+        <section className="panel">
+          <p className="panel-title">Curva de Lorenz — cobertura 4G</p>
           <LorenzCurveChart
-            title="Curva de Lorenz — cobertura 4G poblacional"
-            description="Eje X: población acumulada (municipios ordenados de menor a mayor cobertura). Eje Y: cobertura 4G acumulada. Mayor separación respecto a la diagonal implica mayor desigualdad territorial."
+            title=""
+            description="Eje X: población acumulada (municipios de menor a mayor cobertura). Eje Y: cobertura 4G acumulada. Mayor separación de la diagonal = mayor desigualdad territorial."
             points={lorenz}
             gini={giniClient}
             nationalGini={stateAnalytics.national.gini_pob_pct_4g}
           />
-        </div>
-        <div className="panel panel-nested">
+        </section>
+        <section className="panel">
+          <p className="panel-title">Correlaciones de rango (Spearman)</p>
           <SpearmanHeatmap
+            title=""
             labels={ANALYSIS_METRICS.map((m) => m.label)}
             matrix={spearmanMatrix}
             nMunicipios={municipiosEstado.length}
           />
-        </div>
+        </section>
       </div>
 
-      <div className="panel panel-nested">
+      <section className="panel">
+        <p className="panel-title">Explorador de dispersión municipal</p>
         <MunicipioScatterExplore municipios={municipiosEstado} />
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
 
@@ -199,11 +189,6 @@ function StateNarrative({
   const sp65 = spearmanFromMatrix(spearmanMatrix, keys, "pct_pob_65_mas", "pob_pct_4g_garantizada");
   const sp014 = spearmanFromMatrix(spearmanMatrix, keys, "pct_pob_0_14", "pob_pct_4g_garantizada");
 
-  const pRankText =
-    percentileRank !== null
-      ? ` En desigualdad interna de cobertura 4G (Gini entre municipios), el percentil ${percentileRank} compara esta entidad con las demás: valores altos indican más dispersión relativa que la mayoría de los estados; valores bajos, más equidad relativa.`
-      : "";
-
   const natGini = national.gini_pob_pct_4g;
   const gDelta = g - natGini;
   const gVsNational =
@@ -212,33 +197,41 @@ function StateNarrative({
       : gDelta > 0
         ? "por encima del promedio nacional"
         : "por debajo del promedio nacional";
+
   const spearmanDirection =
     Number.isFinite(spE) && spE !== 0 ? (spE > 0 ? "positiva" : "negativa") : "nula";
 
+  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
+
   return (
     <div>
-      <h3 style={{ marginTop: 0, fontSize: "1.05rem" }}>Resumen estadístico del estado</h3>
-      <p style={{ lineHeight: 1.65, color: "#334155" }}>
-        En <strong>{stateRow.estado}</strong> se modelan <strong>{nMunicipiosFiltrados}</strong> municipios
-        con población censal y cobertura 4G por localidades ({national.connectivity_year}). El coeficiente de
-        Gini es <strong>{g.toFixed(3)}</strong> ({gVsNational}; nacional <strong>{natGini.toFixed(3)}</strong>,
-        delta {gDelta >= 0 ? "+" : ""}
-        {gDelta.toFixed(3)}).{pRankText}
+      <p style={S}>
+        Se analizan <strong>{nMunicipiosFiltrados}</strong> municipios con población censal y cobertura 4G (
+        {national.connectivity_year}). El coeficiente de Gini es <strong>{g.toFixed(3)}</strong> ({gVsNational};
+        nacional <strong>{natGini.toFixed(3)}</strong>, delta {gDelta >= 0 ? "+" : ""}
+        {gDelta.toFixed(3)}).
+        {percentileRank !== null && (
+          <>
+            {" "}
+            En desigualdad interna de cobertura 4G, el percentil <strong>{percentileRank}</strong> entre estados
+            indica{" "}
+            {percentileRank >= 75
+              ? "mayor dispersión relativa que la mayoría"
+              : percentileRank <= 25
+                ? "mayor equidad relativa que la mayoría"
+                : "un nivel cercano a la mediana nacional"}
+            .
+          </>
+        )}
       </p>
-      <p style={{ lineHeight: 1.65, color: "#334155" }}>
-        La correlación de Spearman entre escolaridad promedio y cobertura 4G es{" "}
-        <strong>{formatSpearman(spE)}</strong>
-        {Number.isFinite(spE)
-          ? ` (${strengthLabel(spE)} y ${spearmanDirection})`
-          : ""}
-        . Para contexto, con % de mujeres es <strong>{formatSpearman(spM ?? null)}</strong>; con % de
-        población de 65 años y más es{" "}
-        <strong>{formatSpearman(sp65 ?? null)}</strong>; con % de 0 a 14 años:{" "}
-        <strong>{formatSpearman(sp014 ?? null)}</strong>.
+      <p style={S}>
+        Spearman (escolaridad vs cobertura 4G): <strong>{formatSpearman(spE)}</strong>
+        {Number.isFinite(spE) ? ` (${strengthLabel(spE)}, ${spearmanDirection})` : ""}. Contexto: % mujeres{" "}
+        <strong>{formatSpearman(spM ?? null)}</strong> · % 65+ <strong>{formatSpearman(sp65 ?? null)}</strong> ·
+        % 0–14 <strong>{formatSpearman(sp014 ?? null)}</strong>.
       </p>
-      <p style={{ fontSize: "0.85rem", color: "#64748b" }}>
-        Gini y Spearman se calculan con los mismos municipios y definiciones que la curva de Lorenz y la matriz
-        de abajo (población ponderada en Gini; pares con datos válidos en Spearman).
+      <p style={{ fontSize: "0.85rem", color: "#64748b", margin: 0 }}>
+        Gini y Spearman usan los mismos municipios y definiciones que la curva de Lorenz y la matriz de abajo.
       </p>
     </div>
   );

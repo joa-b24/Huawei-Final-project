@@ -62,8 +62,12 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
       <div className="section-heading">
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
           <div style={{ flex: 1 }}>
-            <h2 style={{ margin: 0 }}>{title}</h2>
-            <p style={{ marginTop: 4, marginBottom: 0, color: "#475569", fontSize: "0.88rem" }}>{description}</p>
+            {title ? <h2 style={{ margin: 0 }}>{title}</h2> : null}
+            {description ? (
+              <p style={{ marginTop: title ? 4 : 0, marginBottom: 0, color: "#475569", fontSize: "0.88rem" }}>
+                {description}
+              </p>
+            ) : null}
           </div>
           {Number.isFinite(gini) && (
             <div style={{

@@ -52,7 +52,7 @@ export default function SpearmanHeatmap({
   return (
     <div>
       <div className="section-heading">
-        <h2>{title}</h2>
+        {title ? <h2>{title}</h2> : null}
         <p>
           Cada celda muestra la asociación de rangos entre dos variables municipales. Valores cercanos a +1
           implican que ambas variables tienden a subir juntas; cercanos a -1, que una sube cuando la otra baja.
