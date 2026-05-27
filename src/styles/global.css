@@ -784,8 +784,12 @@ select {
   font-size: 13px; color: var(--text-1); background: var(--surface);
 }
 
-.var-chip-list { display: flex; flex-direction: column; gap: 4px; max-height: 450px; overflow-y: auto; }
+.var-chip-list { display: flex; flex-direction: column; gap: 4px; max-height: 420px; overflow-y: auto; }
 .var-chip-clear { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: 11px; color: var(--text-3); cursor: pointer; text-align: left; transition: all 0.1s; }
+.var-filter-row { display: flex; gap: 4px; margin: 4px 0; }
+.var-filter-btn { flex: 1; padding: 3px 0; font-size: 10px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: transparent; color: var(--text-3); cursor: pointer; transition: all 0.12s; }
+.var-filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+.var-filter-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
 .var-chip-clear:hover { border-color: var(--red); color: var(--red); background: #fee2e2; }
 .var-chip {
   display: flex; align-items: center; gap: 8px;
@@ -896,45 +900,6 @@ select {
 .tab-section-label { margin: 20px 0 16px; font-size: 18px; font-weight: 600; color: var(--text-3); }
 .tab-section-label strong { color: var(--text-1); font-weight: 700; }
 .panel-title { margin: 0 0 16px; font-size: 14px; font-weight: 600; color: var(--text-1); }
-
-.tab-narrative {
-  margin-bottom: 24px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
-  overflow: hidden;
-}
-.tab-narrative__header {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: start;
-  width: 100%;
-  padding: 14px 16px;
-  border: none;
-  background: var(--surface-muted);
-  cursor: pointer;
-  text-align: left;
-}
-.tab-narrative__label {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-1);
-  white-space: nowrap;
-}
-.tab-narrative__desc {
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--text-2);
-}
-.tab-narrative__chevron {
-  color: var(--text-3);
-  padding-top: 2px;
-}
-.tab-narrative__body {
-  padding: 16px;
-  border-top: 1px solid var(--border);
-}
 
 /* Ranking panel header */
 .ranking-panel { position: relative; }

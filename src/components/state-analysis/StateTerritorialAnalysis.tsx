@@ -12,12 +12,13 @@ import EmptyState from "../EmptyState";
 import TabNarrative from "../feedback/TabNarrative";
 import LorenzCurveChart from "./LorenzCurveChart";
 import MunicipioScatterExplore from "./MunicipioScatterExplore";
+import MunicipiosTable from "./MunicipiosTable";
+import MunicipioRfDiagnostico from "./MunicipioRfDiagnostico";
 import SpearmanHeatmap from "./SpearmanHeatmap";
-import TabNarrative from "../feedback/TabNarrative";
-import { useAppContext } from "../../context/AppContext";
+import { ANALYSIS_METRICS } from "./analysisMetrics";
 
 export type { AnalysisMetricKey } from "./analysisMetrics";
-export { ANALYSIS_METRICS };
+export { ANALYSIS_METRICS } from "./analysisMetrics";
 
 function getMetric(m: MunicipioAnalyticsRecord, k: import("./analysisMetrics").AnalysisMetricKey): number | undefined {
   const v = m[k];
@@ -101,6 +102,7 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
           stateRow={stateRow}
           national={stateAnalytics.national}
           giniClient={giniClient}
+          spearmanMatrix={spearmanMatrix}
           percentileRank={percentileRank}
           nMunicipiosFiltrados={municipiosEstado.length}
         />

@@ -18,9 +18,10 @@ type Props = {
   stateCode: string;
   primaryState: string;
   munVars: MunVar[];
+  varId: string;
 };
 
-export default function MunicipalModeView({ stateCode, primaryState, munVars }: Props) {
+export default function MunicipalModeView({ stateCode, primaryState, munVars, varId }: Props) {
   const [features, setFeatures] = useState<GeoFeature[]>([]);
   const [bbox, setBbox] = useState<[number, number, number, number] | null>(null);
   const [combined, setCombined] = useState<CombinedData | null>(null);
@@ -86,13 +87,14 @@ export default function MunicipalModeView({ stateCode, primaryState, munVars }: 
   return (
     <>
       <div className="two-col" style={{ marginTop: 8 }}>
-        <MunicipioDistPanel features={features} combined={combined} munVars={munVars} />
+        <MunicipioDistPanel features={features} combined={combined} munVars={munVars} varId={varId} />
         {bbox ? (
           <MunicipioMapPanel
             features={features}
             combined={combined}
             bbox={bbox}
             munVars={munVars}
+            varId={varId}
             primaryState={primaryState}
           />
         ) : (
@@ -102,7 +104,7 @@ export default function MunicipalModeView({ stateCode, primaryState, munVars }: 
         )}
       </div>
 
-      <MunicipioRankingPanel features={features} combined={combined} munVars={munVars} />
+      <MunicipioRankingPanel features={features} combined={combined} munVars={munVars} varId={varId} />
     </>
   );
 }

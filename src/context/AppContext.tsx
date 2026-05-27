@@ -52,11 +52,11 @@ function reducer(state: AppState, action: Action): AppState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DEFAULT_VARIABLES = [
-  "carencia_servicios_basicos_pct",
+  "poblacion_en_localidades_con_4g_garantizada_pct",
+  "personas_usuarias_internet_pct",
+  "rezago_educativo_pct",
   "pobreza_pct",
-  "pct_analfabetismo_15ymas",
   "pib_per_capita",
-  "poblacion_en_localidades_con_5g_garantizada_pct",
 ];
 
 const initialState: AppState = {

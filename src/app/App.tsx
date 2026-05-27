@@ -72,13 +72,29 @@ function Dashboard({ appData }: { appData: AppData }) {
     [appData.dataset.records]
   );
 
+  const munVarIds = useMemo(() => {
+    if (!appData.municipalManifest) return new Set<string>();
+    const all = new Set<string>();
+    Object.values(appData.municipalManifest.states).forEach((s) => s.variables.forEach((v) => all.add(v)));
+    return all;
+  }, [appData.municipalManifest]);
+
+  const histVarIds = useMemo(() => new Set(appData.temporalVariables), [appData.temporalVariables]);
+
   const allVars = useMemo(() => {
     const hidden = loadHiddenIds();
     const roleMap = new Map(appData.variablesCatalog.map((v) => [v.variable_id, v.role ?? "both"]));
     return appData.dataset.metricCatalog
       .filter((m) => !hidden.has(m.id))
-      .map((m) => ({ id: m.id, label: m.label, category: m.category, role: roleMap.get(m.id) ?? "both" }));
-  }, [appData.dataset.metricCatalog, appData.variablesCatalog, catalogVersion]);
+      .map((m) => ({
+        id: m.id,
+        label: m.label,
+        category: m.category,
+        role: roleMap.get(m.id) ?? "both",
+        hasMunicipal: munVarIds.has(m.id),
+        hasHistorical: histVarIds.has(m.id),
+      }));
+  }, [appData.dataset.metricCatalog, appData.variablesCatalog, munVarIds, histVarIds, catalogVersion]);
 
   // Deactivate any variable that got hidden
   useEffect(() => {
@@ -99,8 +115,9 @@ function Dashboard({ appData }: { appData: AppData }) {
         activeVarIds={state.activeVariableIds}
         onToggleVar={(id) => dispatch(actions.toggleVariable(id))}
         onClearVars={() => dispatch(actions.setVariables([]))}
+        hidden={datosOpen || estructuraOpen}
       />
-      <MainContent>
+      <MainContent noSidebar={datosOpen || estructuraOpen}>
         <h1 className="page-title">Análisis de Indicadores Estatales</h1>
         <div className="tab-bar-row">
           <p className="tab-section-label">

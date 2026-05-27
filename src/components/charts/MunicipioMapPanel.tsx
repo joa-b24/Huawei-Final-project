@@ -11,6 +11,7 @@ type Props = {
   combined: CombinedData;
   bbox: [number, number, number, number];
   munVars: MunVar[];
+  varId: string;
   primaryState?: string;
 };
 
@@ -19,8 +20,7 @@ function interpolateColor(t: number): string {
   return `rgb(${Math.round(210 - c * 150)},${Math.round(220 - c * 100)},${Math.round(235 - c * 10)})`;
 }
 
-export default function MunicipioMapPanel({ features, combined, bbox, munVars, primaryState }: Props) {
-  const [varId, setVarId] = useState(munVars[0]?.id ?? "");
+export default function MunicipioMapPanel({ features, combined, bbox, munVars, varId, primaryState }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; content: string } | null>(null);
 
@@ -65,17 +65,6 @@ export default function MunicipioMapPanel({ features, combined, bbox, munVars, p
           Mapa municipal{primaryState ? ` — ${primaryState}` : ""}
           {varYear ? <span style={{ fontWeight: 400, color: "var(--text-3)", fontSize: 11 }}>{" "}· {varYear}</span> : null}
         </p>
-        {munVars.length > 1 && (
-          <select
-            className="ranking-var-select"
-            value={varId}
-            onChange={(e) => setVarId(e.target.value)}
-          >
-            {munVars.map((v) => (
-              <option key={v.id} value={v.id}>{v.label}</option>
-            ))}
-          </select>
-        )}
       </div>
 
       <div ref={containerRef} style={{ position: "relative" }}>

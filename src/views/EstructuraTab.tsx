@@ -257,6 +257,68 @@ function EstructuraNarrative({
   );
 }
 
+// ── Nota metodológica ─────────────────────────────────────────────────────────
+
+function MethodologyNote({ pcaResults }: { pcaResults: PcaResults }) {
+  const [v1, v2] = pcaResults.variance_explained;
+  const nClusters = Object.keys(pcaResults.cluster_stats).length;
+  const nStates = pcaResults.records.length;
+  const clusterList = Object.values(pcaResults.cluster_stats)
+    .sort((a, b) => b.mean_index - a.mean_index);
+  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px", fontSize: 13 } as const;
+  const Sh = { ...S, fontWeight: 600, color: "var(--text-1)", margin: "12px 0 4px" } as const;
+
+  return (
+    <div style={{ marginBottom: 16, padding: "12px 14px", background: "color-mix(in srgb, var(--blue) 5%, transparent)", borderRadius: 6, borderLeft: "3px solid var(--blue-mid)" }}>
+      <p style={{ ...S, fontWeight: 700, color: "var(--text-1)", margin: "0 0 10px", fontSize: 14 }}>¿Cómo se calculó este análisis?</p>
+
+      <p style={Sh}>Reducción de dimensiones (PCA)</p>
+      <p style={S}>
+        El análisis parte de {nStates} estados y docenas de indicadores de conectividad, adopción digital y contexto socioeconómico.
+        El <strong>Análisis de Componentes Principales</strong> reduce esa información a unos pocos "ejes" sin perder lo esencial:
+        encuentra combinaciones lineales de todas las variables que capturan la mayor variación posible entre estados, en orden de importancia.
+        Todos los indicadores se normalizan primero para que tengan el mismo peso independientemente de su unidad o escala.
+      </p>
+
+      <p style={Sh}>PC1 — eje principal ({(v1 * 100).toFixed(1)} % de la varianza total)</p>
+      <p style={S}>
+        El primer componente concentra el <strong>{(v1 * 100).toFixed(1)} %</strong> de toda la diferencia entre estados.
+        En la práctica refleja el <em>nivel general de desarrollo digital e infraestructura</em>:
+        estados a la derecha del scatter tienen mayores coberturas de red, mayor uso de internet y smartphones, y economías más productivas;
+        estados a la izquierda presentan mayor rezago en adopción y conectividad.
+        El <strong>Índice Digital-Territorial (0–100)</strong> es simplemente la proyección de cada estado sobre PC1,
+        reescalada para que el mayor valor sea 100. Es un resumen de posición relativa, no un juicio absoluto.
+      </p>
+
+      <p style={Sh}>PC2 — contraste secundario ({(v2 * 100).toFixed(1)} % de la varianza total)</p>
+      <p style={S}>
+        El segundo componente captura <em>diferencias dentro de un mismo nivel</em> de desarrollo digital — por ejemplo,
+        estados con buena cobertura de red pero bajo uso real de servicios digitales, o alta conectividad en zonas urbanas pero con indicadores socioeconómicos adversos.
+        Añade matiz al análisis: estados con índice similar pueden estar en posiciones verticales muy distintas en el scatter,
+        lo que indica que su "mezcla" de indicadores es diferente aunque el nivel general sea parecido.
+        Juntos, PC1 + PC2 explican el <strong>{((v1 + v2) * 100).toFixed(0)} %</strong> de la variación entre los {nStates} estados.
+      </p>
+
+      <p style={Sh}>Grupos estructurales (K-Means, {nClusters} clusters)</p>
+      <p style={S}>
+        Los grupos se formaron agrupando los estados por cercanía en el espacio PC1–PC2 con el algoritmo <strong>K-Means</strong>.
+        El resultado son {nClusters} perfiles estructurales distintos:
+      </p>
+      <ul style={{ margin: "0 0 8px", paddingLeft: 18, lineHeight: S.lineHeight, color: S.color, fontSize: S.fontSize }}>
+        {clusterList.map((c) => (
+          <li key={c.label} style={{ marginBottom: 4 }}>
+            <strong>{c.label}</strong> — {c.states.length} estados, índice promedio {c.mean_index.toFixed(1)}/100
+          </li>
+        ))}
+      </ul>
+      <p style={{ ...S, margin: 0, fontSize: 12, color: "var(--text-3)", borderTop: "1px solid var(--border)", paddingTop: 8 }}>
+        Los estados marcados como <strong>atípicos</strong> tienen una <em>distancia de Mahalanobis</em> inusualmente alta respecto al centroide de su grupo —
+        su combinación de fortalezas y rezagos no encaja bien con ningún perfil típico y merece análisis complementario.
+      </p>
+    </div>
+  );
+}
+
 // ── Tab principal ─────────────────────────────────────────────────────────────
 
 type Props = { appData: AppData };
@@ -313,9 +375,10 @@ export default function EstructuraTab({ appData }: Props) {
   return (
     <div className="tab-content">
       <TabNarrative
-        title="Estructura latente digital-territorial"
-        description="Posición del estado en el espacio de componentes principales: índice compuesto, grupo estructural y perfil comparativo entre los 32 estados."
+        title="Estructura digital-territorial"
+        description="Grupos estructurales e índice compuesto derivados de análisis multivariado sobre los 32 estados."
       >
+        <MethodologyNote pcaResults={pcaResults} />
         {primaryRecord ? (
           <EstructuraNarrative record={primaryRecord} pcaResults={pcaResults} />
         ) : (

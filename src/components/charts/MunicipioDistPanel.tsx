@@ -1,5 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import InfoTooltip from "../feedback/InfoTooltip";
+import InlineBoxplot from "./InlineBoxplot";
 
 type GeoFeature = { properties: Record<string, any> };
 type VarRecord = { cve_mun: string; value: number };
@@ -15,169 +17,160 @@ type Props = {
   features: GeoFeature[];
   combined: CombinedData;
   munVars: MunVar[];
+  varId: string;
 };
 
-type Bin = { lo: number; hi: number; count: number };
+const MAX_TOOLTIP_ITEMS = 10;
 
-function buildBins(values: number[], numBins = 10): Bin[] {
-  if (!values.length) return [];
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  if (min === max) return [{ lo: min, hi: max, count: values.length }];
-  const step = (max - min) / numBins;
-  const bins: Bin[] = Array.from({ length: numBins }, (_, i) => ({
-    lo: min + i * step,
-    hi: min + (i + 1) * step,
-    count: 0,
-  }));
-  for (const v of values) {
-    const idx = Math.min(Math.floor((v - min) / step), numBins - 1);
-    bins[idx].count++;
-  }
-  return bins;
+function MunBinTooltip({ active, payload }: any) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  const muns: string[] = d.muns ?? [];
+  const shown = muns.slice(0, MAX_TOOLTIP_ITEMS);
+  const extra = muns.length - MAX_TOOLTIP_ITEMS;
+  const twoCol = shown.length > 5;
+  return (
+    <div style={{
+      background: "var(--surface)", border: "1px solid var(--border)",
+      borderRadius: 8, padding: "10px 12px", fontSize: 12,
+      maxWidth: twoCol ? 300 : 200,
+      boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    }}>
+      <p style={{ margin: "0 0 1px", fontWeight: 700, color: "var(--text-1)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+        Intervalo: {d.lo.toFixed(1)} – {d.hi.toFixed(1)}
+      </p>
+      <p style={{ margin: "0 0 8px", color: "var(--text-3)", fontSize: 11 }}>
+        {d.count} municipio{d.count !== 1 ? "s" : ""}
+      </p>
+      {shown.length > 0 && (
+        <div style={twoCol ? { display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: 10, rowGap: 1 } : {}}>
+          {shown.map((m) => (
+            <span key={m} style={{ display: "block", fontSize: 11, lineHeight: 1.7, color: "var(--text-2)" }}>
+              {m}
+            </span>
+          ))}
+        </div>
+      )}
+      {extra > 0 && (
+        <p style={{ margin: "6px 0 0", fontSize: 11, color: "var(--text-3)", fontStyle: "italic" }}>
+          y {extra} municipio{extra !== 1 ? "s" : ""} más
+        </p>
+      )}
+    </div>
+  );
 }
 
-export default function MunicipioDistPanel({ features, combined, munVars }: Props) {
-  const [varId, setVarId] = useState(munVars[0]?.id ?? "");
-
+export default function MunicipioDistPanel({ features, combined, munVars, varId }: Props) {
   const currentVar = munVars.find((v) => v.id === varId) ?? munVars[0];
   const unit = currentVar?.unit;
   const varLabel = currentVar?.label ?? varId;
 
-  const values = useMemo(() => {
+  const nameMap = useMemo(
+    () => new Map(features.map((f) => [f.properties.cvegeo as string, (f.properties.nom_mun ?? f.properties.cvegeo ?? "—") as string])),
+    [features]
+  );
+
+  const validRecords = useMemo(() => {
     const records = combined.variables[varId]?.records ?? [];
-    const valueMap = new Map(records.map((r) => [r.cve_mun, r.value]));
-    return features
-      .map((f) => valueMap.get(f.properties.cvegeo) ?? null)
-      .filter((v): v is number => v !== null && !isNaN(v));
-  }, [features, combined, varId]);
+    return records.filter((r) => r.value !== null && r.value !== undefined && !isNaN(r.value));
+  }, [combined, varId]);
+
+  const { bins, domainMin, domainMax } = useMemo(() => {
+    if (!validRecords.length) return { bins: [], domainMin: 0, domainMax: 1 };
+    const vals = validRecords.map((r) => r.value);
+    const min = Math.min(...vals);
+    const max = Math.max(...vals);
+    const domainMin = min;
+    const domainMax = max;
+    if (min === max) {
+      return {
+        bins: [{ lo: min, hi: max, center: min, count: validRecords.length, muns: validRecords.map((r) => nameMap.get(r.cve_mun) ?? r.cve_mun) }],
+        domainMin, domainMax,
+      };
+    }
+    const step = (max - min) / 10;
+    const b = Array.from({ length: 10 }, (_, i) => ({
+      lo: min + i * step,
+      hi: min + (i + 1) * step,
+      center: min + (i + 0.5) * step,
+      count: 0,
+      muns: [] as string[],
+    }));
+    for (const r of validRecords) {
+      const idx = Math.min(Math.floor((r.value - min) / step), 9);
+      b[idx].count++;
+      b[idx].muns.push(nameMap.get(r.cve_mun) ?? r.cve_mun);
+    }
+    return { bins: b, domainMin, domainMax };
+  }, [validRecords, nameMap]);
+
+  const boxplotValues = useMemo(
+    () => validRecords.map((r) => ({ state: nameMap.get(r.cve_mun) ?? r.cve_mun, value: r.value })),
+    [validRecords, nameMap]
+  );
 
   const preStats = combined.variables[varId]?.stats;
-  const mean = preStats?.mean ?? (values.length ? values.reduce((s, v) => s + v, 0) / values.length : null);
-  const median = useMemo(() => {
-    if (preStats?.median !== undefined) return preStats.median;
-    if (!values.length) return null;
-    const sorted = [...values].sort((a, b) => a - b);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
-  }, [values, preStats]);
-
-  const bins = useMemo(() => buildBins(values), [values]);
-  const maxCount = Math.max(...bins.map((b) => b.count), 1);
+  const mean = preStats?.mean ?? (validRecords.length ? validRecords.reduce((s, r) => s + r.value, 0) / validRecords.length : null);
 
   return (
     <section className="panel">
       <div className="ranking-panel-header">
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <p className="panel-title" style={{ margin: 0 }}>Distribución municipal</p>
-          <InfoTooltip text="Histograma de los municipios del estado para la variable seleccionada. Cada barra muestra cuántos municipios caen en ese rango de valores. La media y mediana se calculan sobre los municipios con datos disponibles." />
+          <InfoTooltip text="Histograma de los municipios del estado para la variable seleccionada. Cada barra muestra cuántos municipios caen en ese rango de valores. El boxplot debajo indica la mediana, el rango intercuartílico y los valores atípicos." />
         </div>
-        {munVars.length > 1 && (
-          <select
-            className="ranking-var-select"
-            value={varId}
-            onChange={(e) => setVarId(e.target.value)}
-          >
-            {munVars.map((v) => (
-              <option key={v.id} value={v.id}>{v.label}</option>
-            ))}
-          </select>
-        )}
       </div>
 
-      {!values.length ? (
+      {!validRecords.length ? (
         <p style={{ color: "var(--text-3)", fontSize: 13, textAlign: "center", padding: "24px 0" }}>
           Sin datos para esta variable.
         </p>
       ) : (
-        <div>
-          <div
-            style={{
-              display: "flex",
-              gap: 2,
-              alignItems: "flex-end",
-              height: 110,
-              padding: "0 4px",
-              marginBottom: 4,
-            }}
-          >
-            {bins.map((bin, i) => (
-              <div
-                key={i}
-                title={`${bin.lo.toFixed(1)}–${bin.hi.toFixed(1)}${unit ? " " + unit : ""}: ${bin.count} municipios`}
-                style={{
-                  flex: 1,
-                  height: `${(bin.count / maxCount) * 100}%`,
-                  background: "var(--blue)",
-                  opacity: 0.65,
-                  borderRadius: "2px 2px 0 0",
-                  minHeight: bin.count > 0 ? 2 : 0,
-                  cursor: "default",
-                }}
+        <>
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={bins} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+              <XAxis
+                dataKey="center"
+                tickFormatter={(v: number) => v.toFixed(0)}
+                tick={{ fontSize: 11, fill: "var(--text-3)" }}
+                axisLine={false}
+                tickLine={false}
               />
-            ))}
-          </div>
+              <YAxis tick={{ fontSize: 11, fill: "var(--text-3)" }} axisLine={false} tickLine={false} width={28} />
+              <Tooltip content={<MunBinTooltip />} />
+              {mean !== null && (
+                <ReferenceLine
+                  x={mean}
+                  stroke="var(--text-3)"
+                  strokeDasharray="4 4"
+                  label={{ value: "Media", fontSize: 10, fill: "var(--text-3)", position: "insideTopRight" }}
+                />
+              )}
+              <Bar dataKey="count" radius={[3, 3, 0, 0]} isAnimationActive={false}>
+                {bins.map((_, i) => (
+                  <Cell key={i} fill="var(--blue-mid)" opacity={0.7} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontSize: 10,
-              color: "var(--text-3)",
-              padding: "0 4px",
-            }}
-          >
-            <span>{bins[0]?.lo.toFixed(1)}</span>
-            <span>
-              {bins[bins.length - 1]?.hi.toFixed(1)}
-              {unit ? ` ${unit}` : ""}
-            </span>
-          </div>
+          {boxplotValues.length >= 4 && (
+            <div style={{ padding: "0 16px 0 28px", marginTop: 2 }}>
+              <InlineBoxplot
+                stateValues={boxplotValues}
+                domainMin={domainMin}
+                domainMax={domainMax}
+                nationalMean={mean ?? undefined}
+              />
+            </div>
+          )}
 
-          <div
-            style={{
-              display: "flex",
-              gap: 16,
-              justifyContent: "center",
-              marginTop: 8,
-              fontSize: 11,
-              color: "var(--text-3)",
-            }}
-          >
-            {mean !== null && (
-              <span>
-                Media:{" "}
-                <strong style={{ color: "var(--text-2)" }}>
-                  {mean.toFixed(1)}
-                  {unit ? ` ${unit}` : ""}
-                </strong>
-              </span>
-            )}
-            {median !== null && (
-              <span>
-                Mediana:{" "}
-                <strong style={{ color: "var(--text-2)" }}>
-                  {median.toFixed(1)}
-                  {unit ? ` ${unit}` : ""}
-                </strong>
-              </span>
-            )}
-            <span>
-              n = <strong style={{ color: "var(--text-2)" }}>{values.length}</strong>
-            </span>
-          </div>
-
-          <p
-            style={{
-              textAlign: "center",
-              fontSize: 11,
-              color: "var(--text-3)",
-              margin: "4px 0 0",
-            }}
-          >
+          <p style={{ textAlign: "center", fontSize: 11, color: "var(--text-3)", margin: "2px 0 0" }}>
             {varLabel} — distribución entre municipios del estado
+            {unit ? ` (${unit})` : ""}
           </p>
-        </div>
+        </>
       )}
     </section>
   );

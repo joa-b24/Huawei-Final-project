@@ -14,6 +14,7 @@ export type KpiCardProps = {
   comparisonLabel?: string;
   comparisonDelta?: number | null;
   groupComparisons?: GroupComparison[];
+  hasMunicipalData?: boolean;
 };
 
 export default function KpiCard({
@@ -26,6 +27,7 @@ export default function KpiCard({
   comparisonLabel,
   comparisonDelta,
   groupComparisons,
+  hasMunicipalData = false,
 }: KpiCardProps) {
   const isMissing = value === null || value === undefined;
   const deltaDisplay = formatDelta(delta, direction, tipoValor);
@@ -36,7 +38,16 @@ export default function KpiCard({
       className={`kpi-card-v2${isOutlier ? " is-outlier" : ""}`}
       aria-label={label}
     >
-      <p className="kpi-card-v2__label">{label}</p>
+      <p className="kpi-card-v2__label">
+        {label}
+        {hasMunicipalData && (
+          <span style={{
+            marginLeft: 6, fontSize: 9, fontWeight: 700, letterSpacing: "0.06em",
+            background: "var(--blue-mid)", color: "#fff", borderRadius: 3,
+            padding: "1px 4px", verticalAlign: "middle", opacity: 0.85,
+          }}>MUN</span>
+        )}
+      </p>
 
       <p className={`kpi-card-v2__value${isMissing ? " is-missing" : ""}`}>
         {isMissing ? "N/D" : formatValue(value, tipoValor)}

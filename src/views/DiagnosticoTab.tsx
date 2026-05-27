@@ -50,7 +50,7 @@ type Props = { appData: AppData };
 export default function DiagnosticoTab({ appData }: Props) {
   const { state: appState } = useAppContext();
   const { primaryState, activeVariableIds } = appState;
-  const { dataset, outliers, distributions, univariateStats, rankings } = appData;
+  const { dataset, outliers, distributions, univariateStats } = appData;
 
   const primaryRecord = useMemo(
     () => dataset.records.find((r) => r.state === primaryState),
@@ -173,6 +173,30 @@ export default function DiagnosticoTab({ appData }: Props) {
     return map;
   }, [showGroups, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
 
+  // Municipal manifest — loaded once, tells us which variable_ids have municipal data per state
+  const [munManifest, setMunManifest] = useState<Record<string, { variables: string[] }> | null>(null);
+  useEffect(() => {
+    fetch("/data/municipal_manifest.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null)
+      .then((data) => setMunManifest(data?.states ?? null));
+  }, []);
+
+  const munVarsAvailable = useMemo((): MunVar[] => {
+    const sc = primaryRecord?.stateCode;
+    if (!munManifest || !sc) return [];
+    const stateVarIds = new Set(munManifest[sc]?.variables ?? []);
+    return activeVariableIds
+      .filter((id) => stateVarIds.has(id))
+      .map((id) => {
+        const m = dataset.metricCatalog.find((mc) => mc.id === id);
+        return { id, label: m?.label ?? id, unit: m?.unit ?? "", direction: getMetricPolaridad(id, appData.variablesCatalog) };
+      });
+  }, [munManifest, primaryRecord?.stateCode, activeVariableIds, dataset.metricCatalog, appData.variablesCatalog]);
+
+  const [municipalMode, setMunicipalMode] = useState(false);
+  useEffect(() => { setMunicipalMode(false); }, [primaryState]);
+
   const kpiCards = useMemo(() => {
     if (!primaryRecord) return [];
     return activeVariableIds.map((varId) => {
@@ -209,9 +233,10 @@ export default function DiagnosticoTab({ appData }: Props) {
         comparisonLabel: comparisonLabel ?? undefined,
         comparisonDelta: compDelta,
         groupComparisons,
+        hasMunicipalData: munVarsAvailable.some((v) => v.id === varId),
       };
     });
-  }, [primaryRecord, activeVariableIds, dataset, outliers, comparisonValues, comparisonLabel, showGroups, nonNacionalGroups, groupColorMap]);
+  }, [primaryRecord, activeVariableIds, dataset, outliers, comparisonValues, comparisonLabel, showGroups, nonNacionalGroups, groupColorMap, munVarsAvailable]);
 
   const polaridadMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -271,59 +296,39 @@ export default function DiagnosticoTab({ appData }: Props) {
 
   const primaryVarId = activeVariableIds[0] ?? null;
 
-  // Municipal manifest — loaded once, tells us which variable_ids have municipal data per state
-  const [munManifest, setMunManifest] = useState<Record<string, { variables: string[] }> | null>(null);
-  useEffect(() => {
-    fetch("/data/municipal_manifest.json")
-      .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null)
-      .then((data) => setMunManifest(data?.states ?? null));
-  }, []);
+  // Single source of truth for all 6 panels (histogram, map, ranking, mun-dist, mun-map, mun-ranking)
+  const [activeChartVarId, setActiveChartVarId] = useState<string | null>(null);
+  useEffect(() => { setActiveChartVarId(null); }, [primaryState]);
+  const effectiveChartVarId =
+    activeChartVarId && activeVariableIds.includes(activeChartVarId) ? activeChartVarId : primaryVarId;
 
-  const munVarsAvailable = useMemo((): MunVar[] => {
-    const sc = primaryRecord?.stateCode;
-    if (!munManifest || !sc) return [];
-    const stateVarIds = new Set(munManifest[sc]?.variables ?? []);
-    return activeVariableIds
-      .filter((id) => stateVarIds.has(id))
-      .map((id) => {
-        const m = dataset.metricCatalog.find((mc) => mc.id === id);
-        return { id, label: m?.label ?? id, unit: m?.unit ?? "", direction: getMetricPolaridad(id, appData.variablesCatalog) };
-      });
-  }, [munManifest, primaryRecord?.stateCode, activeVariableIds, dataset.metricCatalog, appData.variablesCatalog]);
+  const [rankingView, setRankingView] = useState<"table" | "lollipop">("lollipop");
 
-  const [municipalMode, setMunicipalMode] = useState(false);
-  useEffect(() => { setMunicipalMode(false); }, [primaryState]);
-
-  const [histVarId, setHistVarId] = useState<string | null>(null);
-  const effectiveHistVarId =
-    histVarId && activeVariableIds.includes(histVarId) ? histVarId : primaryVarId;
-
-  const histMetricDef = effectiveHistVarId
-    ? dataset.metricCatalog.find((m) => m.id === effectiveHistVarId)
+  const histMetricDef = effectiveChartVarId
+    ? dataset.metricCatalog.find((m) => m.id === effectiveChartVarId)
     : null;
-  const distribution = effectiveHistVarId ? distributions[effectiveHistVarId] : null;
-  const nationalMeanHist = effectiveHistVarId
-    ? calcNationalMean(dataset.records, effectiveHistVarId)
+  const distribution = effectiveChartVarId ? distributions[effectiveChartVarId] : null;
+  const nationalMeanHist = effectiveChartVarId
+    ? calcNationalMean(dataset.records, effectiveChartVarId)
     : null;
   const highlightValue =
-    primaryRecord && effectiveHistVarId
-      ? (primaryRecord.metrics[effectiveHistVarId] ?? null)
+    primaryRecord && effectiveChartVarId
+      ? (primaryRecord.metrics[effectiveChartVarId] ?? null)
       : null;
 
-  const comparisonHistValue = effectiveHistVarId && comparisonValues
-    ? (comparisonValues[effectiveHistVarId] ?? null)
+  const comparisonHistValue = effectiveChartVarId && comparisonValues
+    ? (comparisonValues[effectiveChartVarId] ?? null)
     : null;
 
   const histStateValues = useMemo(() => {
-    if (!effectiveHistVarId) return [];
+    if (!effectiveChartVarId) return [];
     return dataset.records
-      .map((r) => ({ state: r.state, value: r.metrics[effectiveHistVarId] }))
+      .map((r) => ({ state: r.state, value: r.metrics[effectiveChartVarId] }))
       .filter((d): d is { state: string; value: number } => typeof d.value === "number" && !isNaN(d.value));
-  }, [effectiveHistVarId, dataset.records]);
+  }, [effectiveChartVarId, dataset.records]);
 
   const histogramBinStates = useMemo(() => {
-    if (!effectiveHistVarId || !distribution) return undefined;
+    if (!effectiveChartVarId || !distribution) return undefined;
     const { bins, counts } = distribution.histogram;
     if (bins.length <= counts.length) return undefined;
     const nBins = counts.length;
@@ -332,53 +337,45 @@ export default function DiagnosticoTab({ appData }: Props) {
       const hi = bins[i + 1];
       return dataset.records
         .filter((r) => {
-          const v = r.metrics[effectiveHistVarId];
+          const v = r.metrics[effectiveChartVarId];
           if (typeof v !== "number" || isNaN(v)) return false;
           return i === nBins - 1 ? v >= lo && v <= hi : v >= lo && v < hi;
         })
         .map((r) => r.state);
     });
-  }, [effectiveHistVarId, distribution, dataset.records]);
+  }, [effectiveChartVarId, distribution, dataset.records]);
 
-  const [rankingVarId, setRankingVarId] = useState<string | null>(null);
-  const [rankingView, setRankingView] = useState<"table" | "lollipop">("lollipop");
-
-  const effectiveRankingVarId =
-    rankingVarId && activeVariableIds.includes(rankingVarId)
-      ? rankingVarId
-      : primaryVarId;
-  const rankingMetricDef = effectiveRankingVarId
-    ? dataset.metricCatalog.find((m) => m.id === effectiveRankingVarId)
+  const rankingMetricDef = effectiveChartVarId
+    ? dataset.metricCatalog.find((m) => m.id === effectiveChartVarId)
     : null;
 
-  const effectiveRankingDirection = effectiveRankingVarId
-    ? getMetricPolaridad(effectiveRankingVarId, appData.variablesCatalog)
+  const effectiveRankingDirection = effectiveChartVarId
+    ? getMetricPolaridad(effectiveChartVarId, appData.variablesCatalog)
     : "higher_better";
 
   const histGroupLines = useMemo((): GroupLine[] => {
-    if (!showGroups || !effectiveHistVarId || !nonNacionalGroups.length) return [];
+    if (!showGroups || !effectiveChartVarId || !nonNacionalGroups.length) return [];
     return nonNacionalGroups.flatMap((g) => {
-      const value = computeGroupValue(g, effectiveHistVarId);
+      const value = computeGroupValue(g, effectiveChartVarId);
       const color = groupColorMap.get(g) ?? "#6b7280";
       return value !== null ? [{ value, label: groupLabel(g), color }] : [];
     });
-  }, [showGroups, effectiveHistVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
+  }, [showGroups, effectiveChartVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
 
   const rankingGroupLines = useMemo((): GroupLine[] => {
-    if (!showGroups || !effectiveRankingVarId || !nonNacionalGroups.length) return [];
+    if (!showGroups || !effectiveChartVarId || !nonNacionalGroups.length) return [];
     return nonNacionalGroups.flatMap((g) => {
       if (!g.startsWith("r:") && !g.startsWith("c:")) return [];
-      const value = computeGroupValue(g, effectiveRankingVarId);
+      const value = computeGroupValue(g, effectiveChartVarId);
       const color = groupColorMap.get(g) ?? "#6b7280";
       return value !== null ? [{ value, label: groupLabel(g), color }] : [];
     });
-  }, [showGroups, effectiveRankingVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
+  }, [showGroups, effectiveChartVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
 
   const rankingRows = useMemo(() => {
-    if (!effectiveRankingVarId) return [];
-    // Always rebuild from records to apply polarity-based sort
-    return buildRankingFromRecords(dataset.records, effectiveRankingVarId, effectiveRankingDirection);
-  }, [effectiveRankingVarId, dataset.records, effectiveRankingDirection]);
+    if (!effectiveChartVarId) return [];
+    return buildRankingFromRecords(dataset.records, effectiveChartVarId, effectiveRankingDirection);
+  }, [effectiveChartVarId, dataset.records, effectiveRankingDirection]);
 
 
   if (!primaryState) {
@@ -391,7 +388,7 @@ export default function DiagnosticoTab({ appData }: Props) {
   }
 
   const primaryRankingRow = rankingRows.find((r) => r.state === primaryState) ?? null;
-  const rankingLabel = rankingMetricDef?.label ?? effectiveRankingVarId ?? "";
+  const rankingLabel = rankingMetricDef?.label ?? effectiveChartVarId ?? "";
 
   return (
     <div className="tab-content">
@@ -481,24 +478,48 @@ export default function DiagnosticoTab({ appData }: Props) {
 
       {primaryVarId && (
         <>
-          {/* Distribution narrative — always visible regardless of mode */}
-          {effectiveHistVarId && (
+          {/* Variable selector + narrative — always visible */}
+          {effectiveChartVarId && (
             <TabNarrative
-              title="Estadísticos de distribución"
-              description="Forma, dispersión y posición del estado en la distribución nacional de la variable seleccionada."
+              title={municipalMode
+                ? `Vista municipal — ${histMetricDef?.label ?? effectiveChartVarId}`
+                : `Análisis de variable — ${histMetricDef?.label ?? effectiveChartVarId}`}
+              description={municipalMode
+                ? "Histograma, mapa y ranking de municipios del estado para la variable seleccionada."
+                : "Distribución entre los 32 estados, mapa coroplético y ranking nacional para la variable seleccionada."}
               style={{ marginTop: 16 }}
             >
-              <DistributionInsights
-                varId={effectiveHistVarId}
-                stateValue={highlightValue}
-                uniStat={univariateStats[effectiveHistVarId] ?? null}
-                normality={distribution?.normality ?? null}
-              />
+              {activeVariableIds.length > 1 && (
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                  <span style={{ fontSize: 12, color: "var(--text-3)" }}>Variable:</span>
+                  <select
+                    className="ranking-var-select"
+                    value={effectiveChartVarId}
+                    onChange={(e) => setActiveChartVarId(e.target.value)}
+                  >
+                    {activeVariableIds.map((vid) => {
+                      const lbl = dataset.metricCatalog.find((m) => m.id === vid)?.label ?? vid;
+                      return <option key={vid} value={vid}>{lbl}</option>;
+                    })}
+                  </select>
+                </div>
+              )}
+              {!municipalMode && (
+                <DistributionInsights
+                  varId={effectiveChartVarId}
+                  stateValue={highlightValue}
+                  uniStat={univariateStats[effectiveChartVarId] ?? null}
+                  normality={distribution?.normality ?? null}
+                  primaryState={primaryState}
+                  rankingRow={rankingRows.find((r) => r.state === primaryState) ?? null}
+                  totalStates={dataset.records.length}
+                />
+              )}
             </TabNarrative>
           )}
 
-          {/* Municipal toggle — below the narrative */}
-          {munVarsAvailable.length > 0 && (
+          {/* Municipal toggle — only when selected variable has municipal data */}
+          {munVarsAvailable.some((v) => v.id === effectiveChartVarId) && (
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
               <button
                 type="button"
@@ -513,11 +534,12 @@ export default function DiagnosticoTab({ appData }: Props) {
       )}
 
       {/* Municipal charts */}
-      {primaryRecord?.stateCode && municipalMode && munVarsAvailable.length > 0 && (
+      {primaryRecord?.stateCode && municipalMode && effectiveChartVarId && munVarsAvailable.some((v) => v.id === effectiveChartVarId) && (
         <MunicipalModeView
           stateCode={primaryRecord.stateCode}
           primaryState={primaryState}
           munVars={munVarsAvailable}
+          varId={effectiveChartVarId}
         />
       )}
 
@@ -551,18 +573,6 @@ export default function DiagnosticoTab({ appData }: Props) {
                       </div>
                     } />
                   </div>
-                  {activeVariableIds.length > 1 && (
-                    <select
-                      className="ranking-var-select"
-                      value={effectiveHistVarId ?? ""}
-                      onChange={(e) => setHistVarId(e.target.value)}
-                    >
-                      {activeVariableIds.map((varId) => {
-                        const lbl = dataset.metricCatalog.find((m) => m.id === varId)?.label ?? varId;
-                        return <option key={varId} value={varId}>{lbl}</option>;
-                      })}
-                    </select>
-                  )}
                 </div>
                 {distribution ? (
                   <DistributionHistogram
@@ -594,7 +604,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                   </div>
                 )}
                 <p style={{ margin: "2px 0 0", fontSize: 11, color: "var(--text-3)", textAlign: "center" }}>
-                  {histMetricDef?.label ?? effectiveHistVarId} — distribución entre los 32 estados
+                  {histMetricDef?.label ?? effectiveChartVarId} — distribución entre los 32 estados
                 </p>
               </section>
             </div>
@@ -605,7 +615,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                 <p className="panel-title" style={{ margin: 0 }}>Mapa coroplético</p>
                 <InfoTooltip text="Cada estado se colorea según su valor en la variable seleccionada. La escala de color va del tono más claro (valor menor) al más oscuro (valor mayor). Busca patrones espaciales: estados contiguos con colores similares sugieren agrupamientos regionales. Haz clic en cualquier estado para seleccionarlo como estado de análisis." />
               </div>
-              <ChoroplethMap appData={appData} groupStateNames={groupStateColors} />
+              <ChoroplethMap appData={appData} varId={effectiveChartVarId ?? ""} groupStateNames={groupStateColors} />
             </section>
           </div>
 
@@ -623,18 +633,6 @@ export default function DiagnosticoTab({ appData }: Props) {
                   </div>
                 } />
               </div>
-              {activeVariableIds.length > 1 && (
-                <select
-                  className="ranking-var-select"
-                  value={effectiveRankingVarId ?? ""}
-                  onChange={(e) => setRankingVarId(e.target.value)}
-                >
-                  {activeVariableIds.map((varId) => {
-                    const lbl = dataset.metricCatalog.find((m) => m.id === varId)?.label ?? varId;
-                    return <option key={varId} value={varId}>{lbl}</option>;
-                  })}
-                </select>
-              )}
             </div>
             <div
               className="toggle-pill ranking-panel__toggle"
@@ -667,7 +665,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                 comparisonStates={comparisonGroups.filter(
                   (g) => g !== "nacional" && !g.startsWith("r:") && !g.startsWith("c:")
                 )}
-                metricLabel={rankingMetricDef?.label ?? effectiveRankingVarId ?? ""}
+                metricLabel={rankingMetricDef?.label ?? effectiveChartVarId ?? ""}
                 unit={rankingMetricDef?.unit}
                 view={rankingView}
                 direction={effectiveRankingDirection}
@@ -695,11 +693,17 @@ function DistributionInsights({
   stateValue,
   uniStat,
   normality,
+  primaryState,
+  rankingRow,
+  totalStates,
 }: {
   varId: string;
   stateValue: number | null;
   uniStat: UnivariateStat | null;
   normality: DistributionEntry["normality"] | null;
+  primaryState: string | null;
+  rankingRow: import("../types/dataStandard").RankingEntry | null;
+  totalStates: number;
 }) {
   if (!uniStat) return null;
 
@@ -708,57 +712,59 @@ function DistributionInsights({
 
   const zScore = stateValue !== null && std > 0 ? (stateValue - mean) / std : null;
 
-  // Plain-language position
   let quartileLabel: string | null = null;
-  let quartileContext: string | null = null;
   if (stateValue !== null && q25 !== null && q50 !== null && q75 !== null) {
-    if (stateValue >= q75) {
-      quartileLabel = "en el cuartil superior (25 % de estados con mayor valor)";
-      quartileContext = "El estado muestra un nivel alto de esta variable en el contexto nacional.";
-    } else if (stateValue >= q50) {
-      quartileLabel = "por encima de la mediana, en el segundo cuartil";
-      quartileContext = "El estado supera al 50 % de los estados, situándose en la mitad alta de la distribución.";
-    } else if (stateValue >= q25) {
-      quartileLabel = "por debajo de la mediana, en el tercer cuartil";
-      quartileContext = "El estado se ubica en la mitad baja de la distribución, aunque supera al 25 % inferior.";
-    } else {
-      quartileLabel = "en el cuartil inferior (25 % de estados con menor valor)";
-      quartileContext = "El estado presenta uno de los valores más bajos de la distribución nacional.";
-    }
+    if (stateValue >= q75) quartileLabel = "cuartil superior (top 25 % nacional)";
+    else if (stateValue >= q50) quartileLabel = "segundo cuartil (entre la mediana y Q₃)";
+    else if (stateValue >= q25) quartileLabel = "tercer cuartil (entre Q₁ y la mediana)";
+    else quartileLabel = "cuartil inferior (bottom 25 % nacional)";
   }
 
-  // Plain-language shape
   const skewDesc =
     Math.abs(skewness) < 0.5
-      ? "aproximadamente simétrica: la media y la mediana nacionales son cercanas, por lo que el promedio es un buen punto de referencia para la comparación."
+      ? "aproximadamente simétrica — la media es un buen punto de referencia"
       : skewness > 0
-        ? "sesgada hacia valores altos (cola derecha): la mayoría de los estados concentra valores bajos y unos pocos elevan el promedio. La mediana puede ser más representativa del estado 'típico' que la media."
-        : "sesgada hacia valores bajos (cola izquierda): la mayoría de los estados tiene valores altos y algunos rezagados arrastran el promedio. Considera comparar el estado también contra la mediana.";
+        ? "cola derecha — unos pocos estados con valores altos elevan la media; la mediana refleja mejor al estado 'típico'"
+        : "cola izquierda — unos pocos rezagados arrastran la media hacia abajo";
 
   const normalityNote =
     normality?.is_normal === true
       ? `normal (Shapiro-Wilk p = ${normality.p_value?.toFixed(3)})`
       : normality?.is_normal === false
-        ? `no normal (Shapiro-Wilk p = ${normality.p_value?.toFixed(3)}) — precaución con comparaciones basadas en σ`
+        ? `no normal (p = ${normality.p_value?.toFixed(3)}) — precaución con comparaciones basadas en σ`
         : null;
+
+  const rankPct = rankingRow ? Math.round((rankingRow.rank / totalStates) * 100) : null;
+  const rankTercile =
+    rankPct !== null
+      ? rankPct <= 33 ? "tercio superior"
+        : rankPct <= 66 ? "tercio medio"
+        : "tercio inferior"
+      : null;
 
   const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
 
   return (
     <div style={{ marginTop: 12, padding: "0 4px" }}>
-      {quartileLabel && (
+      {primaryState && stateValue !== null && (
         <p style={S}>
-          En la distribución nacional, el estado seleccionado se ubica <strong>{quartileLabel}</strong>.{" "}
-          {quartileContext}
+          <strong>{primaryState}</strong> registra un valor de{" "}
+          <strong>{stateValue.toFixed(2)}</strong>
+          {quartileLabel ? <>, ubicado en el <strong>{quartileLabel}</strong></> : ""}.
+          {rankingRow && rankTercile ? (
+            <> En el ranking ocupa el <strong>lugar {rankingRow.rank} de {totalStates}</strong> ({rankTercile} nacional),
+            con un valor <strong>{rankingRow.pct_vs_mean >= 0 ? "+" : ""}{rankingRow.pct_vs_mean.toFixed(1)} %</strong> respecto a la media.</>
+          ) : ""}
         </p>
       )}
       <p style={S}>
-        La distribución entre los 32 estados es <strong>{skewDesc}</strong>
+        La distribución entre los 32 estados es <strong>{skewDesc}</strong>.
+        El mapa coroplético muestra la variación geográfica — busca patrones regionales.
       </p>
       <p style={{ lineHeight: 1.5, color: "var(--text-3)", fontSize: 11, margin: 0, borderTop: "1px solid var(--border)", paddingTop: 6 }}>
         Media: <strong>{mean.toFixed(2)}</strong> · σ: <strong>{std.toFixed(2)}</strong>
         {zScore !== null && <> · z del estado: <strong>{zScore >= 0 ? "+" : ""}{zScore.toFixed(2)}</strong></>}
-        {normalityNote && <> · Distribución: {normalityNote}</>}
+        {normalityNote && <> · {normalityNote}</>}
       </p>
     </div>
   );

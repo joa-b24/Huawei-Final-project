@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import StateSearch from "../sidebar/StateSearch";
 import VarChipList from "../sidebar/VarChipList";
 
-type VarItem = { id: string; label: string; category?: string; role?: string };
+type VarItem = { id: string; label: string; category?: string; role?: string; hasMunicipal?: boolean; hasHistorical?: boolean };
 
 type Props = {
   states: string[];
@@ -12,6 +12,7 @@ type Props = {
   activeVarIds: string[];
   onToggleVar: (id: string) => void;
   onClearVars: () => void;
+  hidden?: boolean;
 };
 
 export default function Sidebar({
@@ -22,12 +23,16 @@ export default function Sidebar({
   activeVarIds,
   onToggleVar,
   onClearVars,
+  hidden = false,
 }: Props) {
   const [stateQuery, setStateQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [varQuery, setVarQuery] = useState("");
+  const [varFilter, setVarFilter] = useState<"all" | "municipal" | "historical">("all");
   const [collapsed, setCollapsed] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  if (hidden) return null;
 
   const suggestions = stateQuery.trim()
     ? states.filter((s) => s.toLowerCase().includes(stateQuery.toLowerCase())).slice(0, 8)
@@ -39,9 +44,12 @@ export default function Sidebar({
     setShowDropdown(false);
   }
 
-  const filteredVars = varQuery
-    ? vars.filter((v) => (v.label ?? "").toLowerCase().includes(varQuery.toLowerCase()))
-    : vars;
+  const filteredVars = vars.filter((v) => {
+    if (varQuery && !(v.label ?? "").toLowerCase().includes(varQuery.toLowerCase())) return false;
+    if (varFilter === "municipal") return !!v.hasMunicipal;
+    if (varFilter === "historical") return !!v.hasHistorical;
+    return true;
+  });
 
   return (
     <aside className={`layout-sidebar${collapsed ? " collapsed" : ""}`}>
@@ -106,6 +114,18 @@ export default function Sidebar({
               )}
             </div>
             <StateSearch value={varQuery} onChange={setVarQuery} placeholder="Buscar variable..." />
+            <div className="var-filter-row">
+              {(["all", "municipal", "historical"] as const).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  className={`var-filter-btn${varFilter === f ? " active" : ""}`}
+                  onClick={() => setVarFilter(f)}
+                >
+                  {f === "all" ? "Todas" : f === "municipal" ? "Municipal" : "Histórica"}
+                </button>
+              ))}
+            </div>
             <VarChipList vars={filteredVars} activeIds={activeVarIds} onToggle={onToggleVar} />
           </div>
         </>
