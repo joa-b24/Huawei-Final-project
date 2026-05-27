@@ -15,19 +15,23 @@ Salidas:
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 import sys
 from datetime import date
 from pathlib import Path
+from statistics import mean
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-PROJECT_ROOT       = Path(__file__).resolve().parent.parent
-ANALYTICS_PATH     = PROJECT_ROOT / "data" / "processed" / "municipios_master_analytics.json"
-MUNICIPAL_DIR      = PROJECT_ROOT / "public" / "data" / "outputs" / "municipal"
-MANIFEST_PATH      = PROJECT_ROOT / "public" / "data" / "municipal_manifest.json"
-CATALOG_PATH       = PROJECT_ROOT / "data" / "catalogs" / "variables.catalog.json"
+PROJECT_ROOT        = Path(__file__).resolve().parent.parent
+ANALYTICS_PATH      = PROJECT_ROOT / "data" / "processed" / "municipios_master_analytics.json"
+MUNICIPAL_DIR       = PROJECT_ROOT / "public" / "data" / "outputs" / "municipal"
+MANIFEST_PATH       = PROJECT_ROOT / "public" / "data" / "municipal_manifest.json"
+CATALOG_PATH        = PROJECT_ROOT / "data" / "catalogs" / "variables.catalog.json"
 PUBLIC_CATALOG_PATH = PROJECT_ROOT / "public" / "data" / "variables.catalog.json"
+COMBINED_PATH       = PROJECT_ROOT / "public" / "data" / "state_dashboard.combined.json"
 
 INEGI_TO_CODE: dict[str, str] = {
     "01": "AGS", "02": "BCN", "03": "BCS", "04": "CAM",
@@ -228,7 +232,11 @@ def update_catalogs(existing_ids: set[str]) -> None:
     print(f"  Catálogo: {len(new_entries)} variables añadidas.")
 
 
-def build_combined_files(analytics: list[dict]) -> dict[str, list[str]]:
+def _agg(values: list[float], method: str) -> float:
+    return sum(values) if method == "sum" else mean(values)
+
+
+def build_combined_files(analytics: list[dict]) -> tuple[dict[str, list[str]], dict[str, dict[str, dict]]]:
     """
     Agrupa todos los registros por estado y escribe un archivo combinado por estado:
         outputs/municipal/{state_code}.json  →  { state_code, updated_at, variables: { var_id: { year, records } } }
@@ -277,7 +285,90 @@ def build_combined_files(analytics: list[dict]) -> dict[str, list[str]]:
 
         state_var_ids[state_code] = sorted(variables.keys())
 
-    return state_var_ids
+    return state_var_ids, by_state
+
+
+def aggregate_to_state(by_state: dict[str, dict[str, dict]]) -> None:
+    """Agrega valores municipales a nivel estatal y los escribe en state_dashboard.combined.json."""
+    if not COMBINED_PATH.exists():
+        print("  ⚠ combined.json no encontrado, omitiendo agregación estatal.")
+        return
+
+    catalog = _load_json(CATALOG_PATH)
+    agg_map: dict[str, str] = {
+        v["variable_id"]: v.get("agregacion_default", "avg")
+        for v in catalog.get("variables", [])
+    }
+    for e in NEW_CATALOG_ENTRIES:
+        agg_map.setdefault(e["variable_id"], e.get("agregacion_default", "avg"))
+
+    cat_by_id = {e["variable_id"]: e for e in NEW_CATALOG_ENTRIES}
+    combined = _load_json(COMBINED_PATH)
+
+    existing_metric_ids = {m["variable_id"] for m in combined.get("metric_catalog", [])}
+    added = 0
+    for _, variable_id, year in MAPPING:
+        if variable_id not in existing_metric_ids:
+            cat = cat_by_id.get(variable_id, {})
+            combined.setdefault("metric_catalog", []).append({
+                "variable_id": variable_id,
+                "label": cat.get("nombre") or variable_id,
+                "unidad": cat.get("unidad_base") or "",
+                "categoria_id": cat.get("categoria_id", ""),
+                "anio": year,
+            })
+            existing_metric_ids.add(variable_id)
+            added += 1
+    if added:
+        print(f"  + {added} variables añadidas al metric_catalog")
+
+    updated = 0
+    for record in combined.get("records", []):
+        sc = record.get("state_code", "")
+        if sc not in by_state:
+            continue
+        for variable_id, var_entry in by_state[sc].items():
+            values = [r["value"] for r in var_entry["records"]]
+            if not values:
+                continue
+            record.setdefault("metrics", {})[variable_id] = round(
+                _agg(values, agg_map.get(variable_id, "avg")), 4
+            )
+            updated += 1
+
+    combined["updated_at"] = str(date.today())
+    _write_json(COMBINED_PATH, combined)
+    print(f"  OK combined.json: {updated} valores estatales escritos")
+
+
+def trigger_analytics(state_codes: list[str]) -> None:
+    """Dispara layer1_descriptive y layer1_municipal."""
+    env = os.environ.copy()
+    env["PYTHONUTF8"] = "1"
+    env["PYTHONIOENCODING"] = "utf-8"
+
+    def _run(cmd: list[str], label: str) -> None:
+        result = subprocess.run(
+            cmd, cwd=PROJECT_ROOT, capture_output=True,
+            text=True, encoding="utf-8", errors="replace", env=env,
+        )
+        for line in result.stdout.strip().splitlines():
+            print(f"    {line}")
+        if result.returncode != 0:
+            print(f"  Fallo {label}:")
+            for line in result.stderr.strip().splitlines()[:5]:
+                print(f"    {line}")
+
+    layer1 = PROJECT_ROOT / "scripts" / "analytics" / "layer1_descriptive.py"
+    if layer1.exists():
+        print("  -> layer1_descriptive.py...")
+        _run([sys.executable, str(layer1)], "layer1_descriptive.py")
+
+    layer1_mun = PROJECT_ROOT / "scripts" / "analytics" / "layer1_municipal.py"
+    if layer1_mun.exists():
+        sc_preview = ", ".join(state_codes[:5]) + ("..." if len(state_codes) > 5 else "")
+        print(f"  -> layer1_municipal.py [{sc_preview}]...")
+        _run([sys.executable, str(layer1_mun)] + state_codes, "layer1_municipal.py")
 
 
 def write_manifest(state_var_ids: dict[str, list[str]]) -> None:
@@ -311,10 +402,16 @@ def main() -> None:
 
     print("\nGenerando archivos combinados por estado...")
     MUNICIPAL_DIR.mkdir(parents=True, exist_ok=True)
-    state_var_ids = build_combined_files(analytics)
+    state_var_ids, by_state = build_combined_files(analytics)
 
     print("\nEscribiendo manifest...")
     write_manifest(state_var_ids)
+
+    print("\nAgregando a nivel estatal en combined.json...")
+    aggregate_to_state(by_state)
+
+    print("\nEjecutando analytics...")
+    trigger_analytics(sorted(state_var_ids.keys()))
 
     print(f"\nListo. {len(state_var_ids)} archivos en {MUNICIPAL_DIR}")
 

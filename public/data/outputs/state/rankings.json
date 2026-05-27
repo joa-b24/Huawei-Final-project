@@ -6332,225 +6332,225 @@
       "rank": 1,
       "state": "TLA",
       "estado": "Tlaxcala",
-      "value": 99.83,
-      "pct_vs_mean": 14.950271312808555
+      "value": 99.9534,
+      "pct_vs_mean": 13.044932241615992
     },
     {
       "rank": 2,
-      "state": "AGS",
-      "estado": "Aguascalientes",
-      "value": 99.46,
-      "pct_vs_mean": 14.524231040488214
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 99.3803,
+      "pct_vs_mean": 12.396769691190796
     },
     {
       "rank": 3,
-      "state": "CMX",
-      "estado": "Ciudad de Mexico",
-      "value": 99.37,
-      "pct_vs_mean": 14.420599622896793
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 99.3451,
+      "pct_vs_mean": 12.35695932341036
     },
     {
       "rank": 4,
-      "state": "MOR",
-      "estado": "Morelos",
-      "value": 99.3,
-      "pct_vs_mean": 14.339997409214561
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 99.0664,
+      "pct_vs_mean": 12.041756212603339
     },
     {
       "rank": 5,
-      "state": "MEX",
-      "estado": "Estado de Mexico",
-      "value": 97.79,
-      "pct_vs_mean": 12.601292514069415
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 98.2119,
+      "pct_vs_mean": 11.07533691520614
     },
     {
       "rank": 6,
       "state": "COL",
       "estado": "Colima",
-      "value": 97.72,
-      "pct_vs_mean": 12.52069030038718
+      "value": 95.9096,
+      "pct_vs_mean": 8.471490047567093
     },
     {
       "rank": 7,
-      "state": "TAM",
-      "estado": "Tamaulipas",
-      "value": 97.18,
-      "pct_vs_mean": 11.89890179483859
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 95.8362,
+      "pct_vs_mean": 8.388476382934035
     },
     {
       "rank": 8,
-      "state": "GUA",
-      "estado": "Guanajuato",
-      "value": 95.37,
-      "pct_vs_mean": 9.81475884105532
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 95.4905,
+      "pct_vs_mean": 7.997497856181295
     },
     {
       "rank": 9,
-      "state": "QUE",
-      "estado": "Queretaro",
-      "value": 95.21,
-      "pct_vs_mean": 9.63052520978165
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 95.4747,
+      "pct_vs_mean": 7.9796284297343965
     },
     {
       "rank": 10,
-      "state": "HID",
-      "estado": "Hidalgo",
-      "value": 95.12,
-      "pct_vs_mean": 9.52689379219023
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 94.6853,
+      "pct_vs_mean": 7.086835693203857
     },
     {
       "rank": 11,
-      "state": "PUE",
-      "estado": "Puebla",
-      "value": 94.4,
-      "pct_vs_mean": 8.697842451458765
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 93.8701,
+      "pct_vs_mean": 6.164863766652425
     },
     {
       "rank": 12,
-      "state": "VER",
-      "estado": "Veracruz",
-      "value": 94.09,
-      "pct_vs_mean": 8.340889790866049
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 93.7854,
+      "pct_vs_mean": 6.069070069180756
     },
     {
       "rank": 13,
       "state": "NLE",
       "estado": "Nuevo Leon",
-      "value": 92.47,
-      "pct_vs_mean": 6.4755242742202475
+      "value": 93.4548,
+      "pct_vs_mean": 5.695169285424755
     },
     {
       "rank": 14,
-      "state": "BCN",
-      "estado": "Baja California",
-      "value": 92.12,
-      "pct_vs_mean": 6.072513205809125
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 93.4427,
+      "pct_vs_mean": 5.681484471500227
     },
     {
       "rank": 15,
-      "state": "TAB",
-      "estado": "Tabasco",
-      "value": 91.83,
-      "pct_vs_mean": 5.738589749125611
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 93.3715,
+      "pct_vs_mean": 5.600958954853433
     },
     {
       "rank": 16,
-      "state": "SIN",
-      "estado": "Sinaloa",
-      "value": 90.01,
-      "pct_vs_mean": 3.642932193387748
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 92.1061,
+      "pct_vs_mean": 4.169821472201109
     },
     {
       "rank": 17,
-      "state": "YUC",
-      "estado": "Yucatan",
-      "value": 89.11,
-      "pct_vs_mean": 2.6066180174734104
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 91.6001,
+      "pct_vs_mean": 3.597547435357362
     },
     {
       "rank": 18,
-      "state": "SON",
-      "estado": "Sonora",
-      "value": 88.26,
-      "pct_vs_mean": 1.627876851332104
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 90.5195,
+      "pct_vs_mean": 2.3754143835523145
     },
     {
       "rank": 19,
-      "state": "SLP",
-      "estado": "San Luis Potosi",
-      "value": 87.9,
-      "pct_vs_mean": 1.2133511809663722
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 89.4446,
+      "pct_vs_mean": 1.1597278969844442
     },
     {
       "rank": 20,
-      "state": "CHP",
-      "estado": "Chiapas",
-      "value": 87.89,
-      "pct_vs_mean": 1.2018365790117624
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 88.3946,
+      "pct_vs_mean": -0.02779727828419577
     },
     {
       "rank": 21,
-      "state": "ZAC",
-      "estado": "Zacatecas",
-      "value": 86.55,
-      "pct_vs_mean": -0.34112008290513474
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 87.7874,
+      "pct_vs_mean": -0.7145261224966818
     },
     {
       "rank": 22,
-      "state": "JAL",
-      "estado": "Jalisco",
-      "value": 85.01,
-      "pct_vs_mean": -2.1143687839140926
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 86.6433,
+      "pct_vs_mean": -2.008476172996553
     },
     {
       "rank": 23,
-      "state": "OAX",
-      "estado": "Oaxaca",
-      "value": 84.75,
-      "pct_vs_mean": -2.4137484347337943
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 86.5736,
+      "pct_vs_mean": -2.08730522510724
     },
     {
       "rank": 24,
-      "state": "COA",
-      "estado": "Coahuila",
-      "value": 84.11,
-      "pct_vs_mean": -3.1506829598284303
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 85.8388,
+      "pct_vs_mean": -2.9183466525238027
     },
     {
       "rank": 25,
-      "state": "ROO",
-      "estado": "Quintana Roo",
-      "value": 78.34,
-      "pct_vs_mean": -9.794608287634752
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 85.6162,
+      "pct_vs_mean": -3.170101989680755
     },
     {
       "rank": 26,
-      "state": "MIC",
-      "estado": "Michoacan",
-      "value": 78.16,
-      "pct_vs_mean": -10.001871122817626
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 83.6853,
+      "pct_vs_mean": -5.353904238181928
     },
     {
       "rank": 27,
-      "state": "CAM",
-      "estado": "Campeche",
-      "value": 75.56,
-      "pct_vs_mean": -12.995667631014577
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 77.844,
+      "pct_vs_mean": -11.960276434655004
     },
     {
       "rank": 28,
-      "state": "NAY",
-      "estado": "Nayarit",
-      "value": 72.6,
-      "pct_vs_mean": -16.403989809577276
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 77.2545,
+      "pct_vs_mean": -12.626986997341543
     },
     {
       "rank": 29,
-      "state": "GRO",
-      "estado": "Guerrero",
-      "value": 69.71,
-      "pct_vs_mean": -19.73170977445774
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 72.8451,
+      "pct_vs_mean": -17.613914147655397
     },
     {
       "rank": 30,
-      "state": "BCS",
-      "estado": "Baja California Sur",
-      "value": 69.45,
-      "pct_vs_mean": -20.031089425277422
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 70.2128,
+      "pct_vs_mean": -20.590983213236015
     },
     {
       "rank": 31,
-      "state": "CHH",
-      "estado": "Chihuahua",
-      "value": 58.58,
-      "pct_vs_mean": -32.547461749931635
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 63.3631,
+      "pct_vs_mean": -28.337831968509942
     },
     {
       "rank": 32,
-      "state": "DUR",
-      "estado": "Durango",
-      "value": 51.83,
-      "pct_vs_mean": -40.31981806928911
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 58.4068,
+      "pct_vs_mean": -33.94329008868516
     }
   ],
   "poblacion_en_localidades_con_cobertura_movil_pct": [
@@ -6558,225 +6558,225 @@
       "rank": 1,
       "state": "CMX",
       "estado": "Ciudad de Mexico",
-      "value": 100.0,
-      "pct_vs_mean": 2.143415739661957
+      "value": 99.9996,
+      "pct_vs_mean": 5.924542232019114
     },
     {
       "rank": 2,
       "state": "TLA",
       "estado": "Tlaxcala",
-      "value": 99.99,
-      "pct_vs_mean": 2.133201398087986
+      "value": 99.9798,
+      "pct_vs_mean": 5.9035690887645975
     },
     {
       "rank": 3,
-      "state": "MEX",
-      "estado": "Estado de Mexico",
-      "value": 99.92,
-      "pct_vs_mean": 2.061701007070229
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 99.829,
+      "pct_vs_mean": 5.743834240139314
     },
     {
       "rank": 4,
-      "state": "MOR",
-      "estado": "Morelos",
-      "value": 99.9,
-      "pct_vs_mean": 2.041272323922301
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 99.5929,
+      "pct_vs_mean": 5.4937453955741455
     },
     {
       "rank": 5,
       "state": "BCN",
       "estado": "Baja California",
-      "value": 99.89,
-      "pct_vs_mean": 2.03105798234833
+      "value": 99.5663,
+      "pct_vs_mean": 5.465569354636263
     },
     {
       "rank": 6,
       "state": "AGS",
       "estado": "Aguascalientes",
-      "value": 99.87,
-      "pct_vs_mean": 2.0106292992004016
+      "value": 99.2606,
+      "pct_vs_mean": 5.141756733782495
     },
     {
       "rank": 7,
-      "state": "NLE",
-      "estado": "Nuevo Leon",
-      "value": 99.71,
-      "pct_vs_mean": 1.8471998340169313
+      "state": "COL",
+      "estado": "Colima",
+      "value": 98.8581,
+      "pct_vs_mean": 4.715408745906664
     },
     {
       "rank": 8,
-      "state": "COL",
-      "estado": "Colima",
-      "value": 99.6,
-      "pct_vs_mean": 1.7348420767033037
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 98.8393,
+      "pct_vs_mean": 4.69549485231147
     },
     {
       "rank": 9,
-      "state": "TAM",
-      "estado": "Tamaulipas",
-      "value": 99.59,
-      "pct_vs_mean": 1.7246277351293466
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 97.2444,
+      "pct_vs_mean": 3.0060975706638757
     },
     {
       "rank": 10,
-      "state": "SON",
-      "estado": "Sonora",
-      "value": 99.5,
-      "pct_vs_mean": 1.6326986609636476
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 96.9949,
+      "pct_vs_mean": 2.7418147806638307
     },
     {
       "rank": 11,
-      "state": "COA",
-      "estado": "Coahuila",
-      "value": 99.42,
-      "pct_vs_mean": 1.5509839283719196
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 96.9543,
+      "pct_vs_mean": 2.6988092444954885
     },
     {
       "rank": 12,
-      "state": "GUA",
-      "estado": "Guanajuato",
-      "value": 99.38,
-      "pct_vs_mean": 1.5101265620760485
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 96.7871,
+      "pct_vs_mean": 2.5217027014573716
     },
     {
       "rank": 13,
-      "state": "QUE",
-      "estado": "Queretaro",
-      "value": 99.31,
-      "pct_vs_mean": 1.4386261710582922
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 96.7856,
+      "pct_vs_mean": 2.5201138269684007
     },
     {
       "rank": 14,
-      "state": "JAL",
-      "estado": "Jalisco",
-      "value": 99.18,
-      "pct_vs_mean": 1.3058397305967362
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 96.6334,
+      "pct_vs_mean": 2.3588960288200673
     },
     {
       "rank": 15,
-      "state": "YUC",
-      "estado": "Yucatan",
-      "value": 99.03,
-      "pct_vs_mean": 1.1526246069872375
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 96.6283,
+      "pct_vs_mean": 2.3534938555575424
     },
     {
       "rank": 16,
-      "state": "PUE",
-      "estado": "Puebla",
-      "value": 98.91,
-      "pct_vs_mean": 1.0300525080996386
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 96.5428,
+      "pct_vs_mean": 2.262928009685787
     },
     {
       "rank": 17,
-      "state": "SIN",
-      "estado": "Sinaloa",
-      "value": 98.81,
-      "pct_vs_mean": 0.9279090923599823
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 96.0182,
+      "pct_vs_mean": 1.7072456384071222
     },
     {
       "rank": 18,
-      "state": "BCS",
-      "estado": "Baja California Sur",
-      "value": 98.79,
-      "pct_vs_mean": 0.9074804092120539
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 95.8006,
+      "pct_vs_mean": 1.4767529125393557
     },
     {
       "rank": 19,
-      "state": "TAB",
-      "estado": "Tabasco",
-      "value": 98.58,
-      "pct_vs_mean": 0.6929792361587558
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 95.3087,
+      "pct_vs_mean": 0.9557080051204228
     },
     {
       "rank": 20,
-      "state": "HID",
-      "estado": "Hidalgo",
-      "value": 98.52,
-      "pct_vs_mean": 0.6316931867149562
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 95.0409,
+      "pct_vs_mean": 0.6720409463548318
     },
     {
       "rank": 21,
-      "state": "MIC",
-      "estado": "Michoacan",
-      "value": 98.48,
-      "pct_vs_mean": 0.5908358204190995
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 94.8962,
+      "pct_vs_mean": 0.5187675206513971
     },
     {
       "rank": 22,
-      "state": "ROO",
-      "estado": "Quintana Roo",
-      "value": 97.89,
-      "pct_vs_mean": -0.011810332444909446
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 93.7464,
+      "pct_vs_mean": -0.6991577376333908
     },
     {
       "rank": 23,
-      "state": "VER",
-      "estado": "Veracruz",
-      "value": 97.84,
-      "pct_vs_mean": -0.06288204031473751
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 93.015,
+      "pct_vs_mean": -1.4738929384591752
     },
     {
       "rank": 24,
-      "state": "SLP",
-      "estado": "San Luis Potosi",
-      "value": 97.31,
-      "pct_vs_mean": -0.6042421437349471
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 92.6899,
+      "pct_vs_mean": -1.818255002703733
     },
     {
       "rank": 25,
-      "state": "ZAC",
-      "estado": "Zacatecas",
-      "value": 96.65,
-      "pct_vs_mean": -1.2783886876167125
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 92.4894,
+      "pct_vs_mean": -2.030634559397148
     },
     {
       "rank": 26,
-      "state": "NAY",
-      "estado": "Nayarit",
-      "value": 96.33,
-      "pct_vs_mean": -1.6052476179836381
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 92.4212,
+      "pct_vs_mean": -2.102875386162697
     },
     {
       "rank": 27,
-      "state": "CHH",
-      "estado": "Chihuahua",
-      "value": 96.0,
-      "pct_vs_mean": -1.942320889924521
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 91.6301,
+      "pct_vs_mean": -2.940847791649823
     },
     {
       "rank": 28,
-      "state": "CHP",
-      "estado": "Chiapas",
-      "value": 93.68,
-      "pct_vs_mean": -4.312048135084671
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 90.4732,
+      "pct_vs_mean": -4.166293722515768
     },
     {
       "rank": 29,
-      "state": "OAX",
-      "estado": "Oaxaca",
-      "value": 93.29,
-      "pct_vs_mean": -4.710407456469354
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 87.2959,
+      "pct_vs_mean": -7.531847665069484
     },
     {
       "rank": 30,
-      "state": "CAM",
-      "estado": "Campeche",
-      "value": 92.81,
-      "pct_vs_mean": -5.200695852019735
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 86.9521,
+      "pct_vs_mean": -7.896017697943298
     },
     {
       "rank": 31,
-      "state": "GRO",
-      "estado": "Guerrero",
-      "value": 92.7,
-      "pct_vs_mean": -5.3130536093333625
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 78.8868,
+      "pct_vs_mean": -16.439183975247452
     },
     {
       "rank": 32,
       "state": "DUR",
       "estado": "Durango",
-      "value": 91.97,
-      "pct_vs_mean": -6.0587005442329
+      "value": 73.8454,
+      "pct_vs_mean": -21.77928520773739
     }
   ],
   "localidades_con_4g_garantizada_pct": [
@@ -6784,225 +6784,225 @@
       "rank": 1,
       "state": "MOR",
       "estado": "Morelos",
-      "value": 98.61,
-      "pct_vs_mean": 23.82697688289976
+      "value": 98.5594,
+      "pct_vs_mean": 21.09655496341975
     },
     {
       "rank": 2,
       "state": "TLA",
       "estado": "Tlaxcala",
-      "value": 98.47,
-      "pct_vs_mean": 23.651175475703674
+      "value": 98.3289,
+      "pct_vs_mean": 20.813347517767006
     },
     {
       "rank": 3,
       "state": "CMX",
       "estado": "Ciudad de Mexico",
-      "value": 98.26,
-      "pct_vs_mean": 23.387473364909557
+      "value": 98.0252,
+      "pct_vs_mean": 20.44020174230174
     },
     {
       "rank": 4,
       "state": "AGS",
       "estado": "Aguascalientes",
-      "value": 97.97,
-      "pct_vs_mean": 23.02331330714623
+      "value": 96.9156,
+      "pct_vs_mean": 19.07687427290348
     },
     {
       "rank": 5,
-      "state": "COL",
-      "estado": "Colima",
-      "value": 94.05,
-      "pct_vs_mean": 18.10087390565584
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 95.9036,
+      "pct_vs_mean": 17.833464576588558
     },
     {
       "rank": 6,
-      "state": "GUA",
-      "estado": "Guanajuato",
-      "value": 92.98,
-      "pct_vs_mean": 16.757248864942913
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 91.9078,
+      "pct_vs_mean": 12.923962141277133
     },
     {
       "rank": 7,
-      "state": "MEX",
-      "estado": "Estado de Mexico",
-      "value": 91.11,
-      "pct_vs_mean": 14.409044354538054
+      "state": "COL",
+      "estado": "Colima",
+      "value": 90.9835,
+      "pct_vs_mean": 11.788306427538135
     },
     {
       "rank": 8,
-      "state": "PUE",
-      "estado": "Puebla",
-      "value": 90.58,
-      "pct_vs_mean": 13.743510455867156
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 90.9412,
+      "pct_vs_mean": 11.73633386809729
     },
     {
       "rank": 9,
-      "state": "TAM",
-      "estado": "Tamaulipas",
-      "value": 89.37,
-      "pct_vs_mean": 12.224084007958142
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 90.8115,
+      "pct_vs_mean": 11.576975925792897
     },
     {
       "rank": 10,
-      "state": "BCN",
-      "estado": "Baja California",
-      "value": 89.11,
-      "pct_vs_mean": 11.897595680308262
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 90.3597,
+      "pct_vs_mean": 11.02186475899935
     },
     {
       "rank": 11,
-      "state": "QUE",
-      "estado": "Queretaro",
-      "value": 88.09,
-      "pct_vs_mean": 10.616756856451074
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 89.2075,
+      "pct_vs_mean": 9.606196130447906
     },
     {
       "rank": 12,
-      "state": "VER",
-      "estado": "Veracruz",
-      "value": 87.99,
-      "pct_vs_mean": 10.491184422739575
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 88.6455,
+      "pct_vs_mean": 8.91568600265247
     },
     {
       "rank": 13,
-      "state": "HID",
-      "estado": "Hidalgo",
-      "value": 87.14,
-      "pct_vs_mean": 9.423818736191922
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 87.8715,
+      "pct_vs_mean": 7.964698744798961
     },
     {
       "rank": 14,
-      "state": "YUC",
-      "estado": "Yucatan",
-      "value": 86.81,
-      "pct_vs_mean": 9.009429704944008
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 86.5587,
+      "pct_vs_mean": 6.351706403571468
     },
     {
       "rank": 15,
-      "state": "NLE",
-      "estado": "Nuevo Leon",
-      "value": 84.59,
-      "pct_vs_mean": 6.2217216765489445
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 86.5332,
+      "pct_vs_mean": 6.320375428022021
     },
     {
       "rank": 16,
-      "state": "TAB",
-      "estado": "Tabasco",
-      "value": 82.12,
-      "pct_vs_mean": 3.1200825638751555
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 85.7412,
+      "pct_vs_mean": 5.347272187427751
     },
     {
       "rank": 17,
-      "state": "OAX",
-      "estado": "Oaxaca",
-      "value": 81.11,
-      "pct_vs_mean": 1.8518009833891056
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 83.688,
+      "pct_vs_mean": 2.82457575612953
     },
     {
       "rank": 18,
-      "state": "SIN",
-      "estado": "Sinaloa",
-      "value": 80.22,
-      "pct_vs_mean": 0.7342063233568485
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 81.826,
+      "pct_vs_mean": 0.5368002081666903
     },
     {
       "rank": 19,
-      "state": "ZAC",
-      "estado": "Zacatecas",
-      "value": 79.92,
-      "pct_vs_mean": 0.3574890222223837
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 80.8936,
+      "pct_vs_mean": -0.6088076978056575
     },
     {
       "rank": 20,
-      "state": "SON",
-      "estado": "Sonora",
-      "value": 79.25,
-      "pct_vs_mean": -0.48384628364459786
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 79.3938,
+      "pct_vs_mean": -2.451560526395704
     },
     {
       "rank": 21,
-      "state": "CHP",
-      "estado": "Chiapas",
-      "value": 78.91,
-      "pct_vs_mean": -0.9107925582636662
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 78.8271,
+      "pct_vs_mean": -3.1478453830179
     },
     {
       "rank": 22,
-      "state": "COA",
-      "estado": "Coahuila",
-      "value": 77.74,
-      "pct_vs_mean": -2.379990032688095
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 78.3177,
+      "pct_vs_mean": -3.773727694581951
     },
     {
       "rank": 23,
-      "state": "SLP",
-      "estado": "San Luis Potosi",
-      "value": 77.34,
-      "pct_vs_mean": -2.882279767534042
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 77.4979,
+      "pct_vs_mean": -4.780987841853664
     },
     {
       "rank": 24,
-      "state": "JAL",
-      "estado": "Jalisco",
-      "value": 74.41,
-      "pct_vs_mean": -6.561552075280693
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 76.0723,
+      "pct_vs_mean": -6.5325736749233805
     },
     {
       "rank": 25,
-      "state": "CAM",
-      "estado": "Campeche",
-      "value": 68.25,
-      "pct_vs_mean": -14.296813991908438
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 75.8522,
+      "pct_vs_mean": -6.803002997214801
     },
     {
       "rank": 26,
-      "state": "ROO",
-      "estado": "Quintana Roo",
-      "value": 66.2,
-      "pct_vs_mean": -16.871048882993968
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 73.3369,
+      "pct_vs_mean": -9.89346585209713
     },
     {
       "rank": 27,
       "state": "GRO",
       "estado": "Guerrero",
-      "value": 63.6,
-      "pct_vs_mean": -20.135932159492697
+      "value": 71.0884,
+      "pct_vs_mean": -12.656120696132808
     },
     {
       "rank": 28,
-      "state": "NAY",
-      "estado": "Nayarit",
-      "value": 63.58,
-      "pct_vs_mean": -20.161046646235
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 67.7584,
+      "pct_vs_mean": -16.747577503176963
     },
     {
       "rank": 29,
-      "state": "MIC",
-      "estado": "Michoacan",
-      "value": 63.47,
-      "pct_vs_mean": -20.299176323317635
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 63.6094,
+      "pct_vs_mean": -21.845311524926565
     },
     {
       "rank": 30,
-      "state": "BCS",
-      "estado": "Baja California Sur",
-      "value": 50.1,
-      "pct_vs_mean": -37.08821071054377
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 55.331,
+      "pct_vs_mean": -32.016697720552486
     },
     {
       "rank": 31,
-      "state": "CHH",
-      "estado": "Chihuahua",
-      "value": 44.52,
-      "pct_vs_mean": -44.09515251164488
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 51.3546,
+      "pct_vs_mean": -36.90236404113219
     },
     {
       "rank": 32,
-      "state": "DUR",
-      "estado": "Durango",
-      "value": 42.46,
-      "pct_vs_mean": -46.68194464610157
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 42.31,
+      "pct_vs_mean": -48.01515390209062
     }
   ],
   "poblacion_en_localidades_con_4g_garantizada_pct": [
@@ -7010,451 +7010,451 @@
       "rank": 1,
       "state": "CMX",
       "estado": "Ciudad de Mexico",
-      "value": 100.0,
-      "pct_vs_mean": 3.2524522457408422
+      "value": 99.9994,
+      "pct_vs_mean": 9.013475611307795
     },
     {
       "rank": 2,
-      "state": "BCN",
-      "estado": "Baja California",
-      "value": 99.85,
-      "pct_vs_mean": 3.0975735673722253
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 99.8661,
+      "pct_vs_mean": 8.868159776422925
     },
     {
       "rank": 3,
-      "state": "TLA",
-      "estado": "Tlaxcala",
-      "value": 99.83,
-      "pct_vs_mean": 3.076923076923081
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 99.5902,
+      "pct_vs_mean": 8.567389792591413
     },
     {
       "rank": 4,
-      "state": "MOR",
-      "estado": "Morelos",
-      "value": 99.75,
-      "pct_vs_mean": 2.9943211151264904
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 99.4688,
+      "pct_vs_mean": 8.435046639140372
     },
     {
       "rank": 5,
-      "state": "MEX",
-      "estado": "Estado de Mexico",
-      "value": 99.66,
-      "pct_vs_mean": 2.90139390810532
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 98.8342,
+      "pct_vs_mean": 7.7432429720890035
     },
     {
       "rank": 6,
-      "state": "AGS",
-      "estado": "Aguascalientes",
-      "value": 99.59,
-      "pct_vs_mean": 2.8291171915333084
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 98.5891,
+      "pct_vs_mean": 7.476049340203904
     },
     {
       "rank": 7,
-      "state": "NLE",
-      "estado": "Nuevo Leon",
-      "value": 99.53,
-      "pct_vs_mean": 2.7671657201858615
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 98.2203,
+      "pct_vs_mean": 7.0740052298847305
     },
     {
       "rank": 8,
-      "state": "TAM",
-      "estado": "Tamaulipas",
-      "value": 99.26,
-      "pct_vs_mean": 2.488384099122366
+      "state": "COL",
+      "estado": "Colima",
+      "value": 97.6631,
+      "pct_vs_mean": 6.466578499218145
     },
     {
       "rank": 9,
-      "state": "COL",
-      "estado": "Colima",
-      "value": 99.2,
-      "pct_vs_mean": 2.426432627774919
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 95.7719,
+      "pct_vs_mean": 4.4049032784057705
     },
     {
       "rank": 10,
-      "state": "SON",
-      "estado": "Sonora",
-      "value": 99.13,
-      "pct_vs_mean": 2.3541559112028922
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 95.4792,
+      "pct_vs_mean": 4.08581892078533
     },
     {
       "rank": 11,
-      "state": "COA",
-      "estado": "Coahuila",
-      "value": 99.09,
-      "pct_vs_mean": 2.312854930304604
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 95.4462,
+      "pct_vs_mean": 4.049844257985621
     },
     {
       "rank": 12,
-      "state": "GUA",
-      "estado": "Guanajuato",
-      "value": 98.98,
-      "pct_vs_mean": 2.19927723283429
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 95.0895,
+      "pct_vs_mean": 3.6609908573596783
     },
     {
       "rank": 13,
-      "state": "YUC",
-      "estado": "Yucatan",
-      "value": 98.88,
-      "pct_vs_mean": 2.0960247805885404
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 95.0715,
+      "pct_vs_mean": 3.6413683140143824
     },
     {
       "rank": 14,
-      "state": "JAL",
-      "estado": "Jalisco",
-      "value": 98.42,
-      "pct_vs_mean": 1.6210635002581388
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 93.9851,
+      "pct_vs_mean": 2.4570388089961064
     },
     {
       "rank": 15,
-      "state": "QUE",
-      "estado": "Queretaro",
-      "value": 98.24,
-      "pct_vs_mean": 1.4352090862157985
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 92.8302,
+      "pct_vs_mean": 1.1980346251360119
     },
     {
       "rank": 16,
-      "state": "PUE",
-      "estado": "Puebla",
-      "value": 98.16,
-      "pct_vs_mean": 1.3526071244192073
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 92.7577,
+      "pct_vs_mean": 1.1189993811063441
     },
     {
       "rank": 17,
-      "state": "SIN",
-      "estado": "Sinaloa",
-      "value": 98.04,
-      "pct_vs_mean": 1.2287041817243283
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 92.7409,
+      "pct_vs_mean": 1.1006850073173977
     },
     {
       "rank": 18,
-      "state": "BCS",
-      "estado": "Baja California Sur",
-      "value": 98.0,
-      "pct_vs_mean": 1.1874032008260256
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 92.1741,
+      "pct_vs_mean": 0.48279292019998177
     },
     {
       "rank": 19,
       "state": "ROO",
       "estado": "Quintana Roo",
-      "value": 97.35,
-      "pct_vs_mean": 0.5162622612287042
+      "value": 91.4967,
+      "pct_vs_mean": -0.25566879436129547
     },
     {
       "rank": 20,
-      "state": "TAB",
-      "estado": "Tabasco",
-      "value": 96.54,
-      "pct_vs_mean": -0.3200826019617843
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 91.341,
+      "pct_vs_mean": -0.4254037942981124
     },
     {
       "rank": 21,
-      "state": "MIC",
-      "estado": "Michoacan",
-      "value": 96.53,
-      "pct_vs_mean": -0.3304078471863636
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 91.2678,
+      "pct_vs_mean": -0.5052021372356473
     },
     {
       "rank": 22,
-      "state": "HID",
-      "estado": "Hidalgo",
-      "value": 96.5,
-      "pct_vs_mean": -0.3613835828600871
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 90.708,
+      "pct_vs_mean": -1.1154632352743319
     },
     {
       "rank": 23,
-      "state": "VER",
-      "estado": "Veracruz",
-      "value": 96.12,
-      "pct_vs_mean": -0.7537429013938975
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 90.4977,
+      "pct_vs_mean": -1.3447199500252047
     },
     {
       "rank": 24,
       "state": "ZAC",
       "estado": "Zacatecas",
-      "value": 94.96,
-      "pct_vs_mean": -1.9514713474445025
+      "value": 89.4486,
+      "pct_vs_mean": -2.488387184666838
     },
     {
       "rank": 25,
-      "state": "CHH",
-      "estado": "Chihuahua",
-      "value": 94.78,
-      "pct_vs_mean": -2.1373257614868284
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 89.2365,
+      "pct_vs_mean": -2.719606153752228
     },
     {
       "rank": 26,
       "state": "NAY",
       "estado": "Nayarit",
-      "value": 94.32,
-      "pct_vs_mean": -2.6122870418172446
+      "value": 88.2968,
+      "pct_vs_mean": -3.74401193050635
     },
     {
       "rank": 27,
       "state": "SLP",
       "estado": "San Luis Potosi",
-      "value": 94.14,
-      "pct_vs_mean": -2.7981414558595703
+      "value": 86.2761,
+      "pct_vs_mean": -5.9468604492751655
     },
     {
       "rank": 28,
       "state": "CAM",
       "estado": "Campeche",
-      "value": 92.0,
-      "pct_vs_mean": -5.007743933918425
+      "value": 86.0843,
+      "pct_vs_mean": -6.1559495500322585
     },
     {
       "rank": 29,
-      "state": "OAX",
-      "estado": "Oaxaca",
-      "value": 91.79,
-      "pct_vs_mean": -5.224574083634474
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 85.8518,
+      "pct_vs_mean": -6.409407401575661
     },
     {
       "rank": 30,
       "state": "GRO",
       "estado": "Guerrero",
-      "value": 90.62,
-      "pct_vs_mean": -6.432627774909644
+      "value": 82.9942,
+      "pct_vs_mean": -9.524595171771004
     },
     {
       "rank": 31,
-      "state": "CHP",
-      "estado": "Chiapas",
-      "value": 90.05,
-      "pct_vs_mean": -7.021166752710374
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 72.6566,
+      "pct_vs_mean": -20.794039843233598
     },
     {
       "rank": 32,
       "state": "DUR",
       "estado": "Durango",
-      "value": 89.89,
-      "pct_vs_mean": -7.186370676303556
+      "value": 65.6657,
+      "pct_vs_mean": -28.415108636157267
     }
   ],
   "localidades_con_5g_garantizada_pct": [
     {
       "rank": 1,
-      "state": "AGS",
-      "estado": "Aguascalientes",
-      "value": 14.44,
-      "pct_vs_mean": 192.54827477049702
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 63.6678,
+      "pct_vs_mean": 823.5629008122887
     },
     {
       "rank": 2,
-      "state": "COL",
-      "estado": "Colima",
-      "value": 11.58,
-      "pct_vs_mean": 134.60588793922128
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 21.1385,
+      "pct_vs_mean": 206.63434858469375
     },
     {
       "rank": 3,
-      "state": "MOR",
-      "estado": "Morelos",
-      "value": 10.39,
-      "pct_vs_mean": 110.49699271921496
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 15.9488,
+      "pct_vs_mean": 131.35274019952047
     },
     {
       "rank": 4,
       "state": "BCN",
       "estado": "Baja California",
-      "value": 10.33,
-      "pct_vs_mean": 109.28141817030708
+      "value": 13.6315,
+      "pct_vs_mean": 97.73806669026908
     },
     {
       "rank": 5,
-      "state": "NLE",
-      "estado": "Nuevo Leon",
-      "value": 8.48,
-      "pct_vs_mean": 71.80120291231404
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 10.3183,
+      "pct_vs_mean": 49.676902287364086
     },
     {
       "rank": 6,
-      "state": "PUE",
-      "estado": "Puebla",
-      "value": 7.93,
-      "pct_vs_mean": 60.65843621399177
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 8.9999,
+      "pct_vs_mean": 30.55223756782105
     },
     {
       "rank": 7,
-      "state": "TLA",
-      "estado": "Tlaxcala",
-      "value": 7.83,
-      "pct_vs_mean": 58.632478632478644
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 8.3766,
+      "pct_vs_mean": 21.510669364171797
     },
     {
       "rank": 8,
-      "state": "MEX",
-      "estado": "Estado de Mexico",
-      "value": 7.72,
-      "pct_vs_mean": 56.403925292814186
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 7.5151,
+      "pct_vs_mean": 9.013780213772597
     },
     {
       "rank": 9,
-      "state": "COA",
-      "estado": "Coahuila",
-      "value": 7.04,
-      "pct_vs_mean": 42.62741373852486
+      "state": "COL",
+      "estado": "Colima",
+      "value": 7.2207,
+      "pct_vs_mean": 4.743224014262982
     },
     {
       "rank": 10,
-      "state": "GUA",
-      "estado": "Guanajuato",
-      "value": 7.04,
-      "pct_vs_mean": 42.62741373852486
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 6.6039,
+      "pct_vs_mean": -4.204055414600891
     },
     {
       "rank": 11,
-      "state": "QUE",
-      "estado": "Queretaro",
-      "value": 6.16,
-      "pct_vs_mean": 24.798987021209253
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 6.5236,
+      "pct_vs_mean": -5.368884432333983
     },
     {
       "rank": 12,
-      "state": "CMX",
-      "estado": "Ciudad de Mexico",
-      "value": 5.99,
-      "pct_vs_mean": 21.354859132636925
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 6.1146,
+      "pct_vs_mean": -11.30182426113639
     },
     {
       "rank": 13,
-      "state": "HID",
-      "estado": "Hidalgo",
-      "value": 4.9,
-      "pct_vs_mean": -0.7280785058562692
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 5.5282,
+      "pct_vs_mean": -19.808122343311783
     },
     {
       "rank": 14,
-      "state": "VER",
-      "estado": "Veracruz",
-      "value": 4.57,
-      "pct_vs_mean": -7.413738524849624
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 4.6005,
+      "pct_vs_mean": -33.265306399986585
     },
     {
       "rank": 15,
-      "state": "JAL",
-      "estado": "Jalisco",
-      "value": 4.51,
-      "pct_vs_mean": -8.629313073757515
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 4.3952,
+      "pct_vs_mean": -36.24338108666907
     },
     {
       "rank": 16,
-      "state": "MIC",
-      "estado": "Michoacan",
-      "value": 4.42,
-      "pct_vs_mean": -10.452674897119337
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 4.3241,
+      "pct_vs_mean": -37.27475522316749
     },
     {
       "rank": 17,
-      "state": "TAM",
-      "estado": "Tamaulipas",
-      "value": 4.31,
-      "pct_vs_mean": -12.681228236783795
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 4.0721,
+      "pct_vs_mean": -40.93025849176946
     },
     {
       "rank": 18,
-      "state": "OAX",
-      "estado": "Oaxaca",
-      "value": 4.19,
-      "pct_vs_mean": -15.112377334599541
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 3.7316,
+      "pct_vs_mean": -45.8695396939876
     },
     {
       "rank": 19,
       "state": "BCS",
       "estado": "Baja California Sur",
-      "value": 3.85,
-      "pct_vs_mean": -22.000633111744218
+      "value": 3.6857,
+      "pct_vs_mean": -46.53536350362581
     },
     {
       "rank": 20,
       "state": "SLP",
       "estado": "San Luis Potosi",
-      "value": 3.16,
-      "pct_vs_mean": -35.97974042418486
+      "value": 2.0088,
+      "pct_vs_mean": -70.8604168017157
     },
     {
       "rank": 21,
-      "state": "NAY",
-      "estado": "Nayarit",
-      "value": 3.02,
-      "pct_vs_mean": -38.81608103830326
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 1.9979,
+      "pct_vs_mean": -71.0185318240481
     },
     {
       "rank": 22,
-      "state": "GRO",
-      "estado": "Guerrero",
-      "value": 2.3,
-      "pct_vs_mean": -53.40297562519785
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 1.9331,
+      "pct_vs_mean": -71.95851837883144
     },
     {
       "rank": 23,
-      "state": "SIN",
-      "estado": "Sinaloa",
-      "value": 2.04,
-      "pct_vs_mean": -58.67046533713201
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 1.7842,
+      "pct_vs_mean": -74.11845661968395
     },
     {
       "rank": 24,
-      "state": "SON",
-      "estado": "Sonora",
-      "value": 1.99,
-      "pct_vs_mean": -59.68344412788856
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 1.5574,
+      "pct_vs_mean": -77.40840956142576
     },
     {
       "rank": 25,
       "state": "CHH",
       "estado": "Chihuahua",
-      "value": 1.72,
-      "pct_vs_mean": -65.15352959797404
+      "value": 1.2138,
+      "pct_vs_mean": -82.39265925623383
     },
     {
       "rank": 26,
-      "state": "TAB",
-      "estado": "Tabasco",
-      "value": 1.66,
-      "pct_vs_mean": -66.36910414688192
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 1.145,
+      "pct_vs_mean": -83.39066967242358
     },
     {
       "rank": 27,
-      "state": "DUR",
-      "estado": "Durango",
-      "value": 1.65,
-      "pct_vs_mean": -66.57169990503323
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 0.9951,
+      "pct_vs_mean": -85.56511387862768
     },
     {
       "rank": 28,
-      "state": "ZAC",
-      "estado": "Zacatecas",
-      "value": 1.56,
-      "pct_vs_mean": -68.39506172839506
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 0.5075,
+      "pct_vs_mean": -92.63822258406546
     },
     {
       "rank": 29,
-      "state": "ROO",
-      "estado": "Quintana Roo",
-      "value": 1.45,
-      "pct_vs_mean": -70.62361506805951
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 0.4246,
+      "pct_vs_mean": -93.84076711171271
     },
     {
       "rank": 30,
       "state": "YUC",
       "estado": "Yucatan",
-      "value": 1.23,
-      "pct_vs_mean": -75.08072174738841
+      "value": 0.2929,
+      "pct_vs_mean": -95.75120274851778
     },
     {
       "rank": 31,
       "state": "CHP",
       "estado": "Chiapas",
-      "value": 0.42,
-      "pct_vs_mean": -91.49097815764482
+      "value": 0.2896,
+      "pct_vs_mean": -95.79907243417804
     },
     {
       "rank": 32,
       "state": "CAM",
       "estado": "Campeche",
-      "value": 0.07,
-      "pct_vs_mean": -98.5818296929408
+      "value": 0.0523,
+      "pct_vs_mean": -99.24133801211158
     }
   ],
   "poblacion_en_localidades_con_5g_garantizada_pct": [
@@ -7462,225 +7462,225 @@
       "rank": 1,
       "state": "CMX",
       "estado": "Ciudad de Mexico",
-      "value": 92.84,
-      "pct_vs_mean": 66.12408085665558
+      "value": 86.3907,
+      "pct_vs_mean": 359.1448469942024
     },
     {
       "rank": 2,
-      "state": "NLE",
-      "estado": "Nuevo Leon",
-      "value": 90.09,
-      "pct_vs_mean": 61.20334386445607
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 68.332,
+      "pct_vs_mean": 263.16739747227234
     },
     {
       "rank": 3,
-      "state": "BCN",
-      "estado": "Baja California",
-      "value": 85.39,
-      "pct_vs_mean": 52.793357005060535
+      "state": "COL",
+      "estado": "Colima",
+      "value": 40.0874,
+      "pct_vs_mean": 113.05445076142908
     },
     {
       "rank": 4,
-      "state": "TAM",
-      "estado": "Tamaulipas",
-      "value": 83.0,
-      "pct_vs_mean": 48.516789219112596
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 36.7124,
+      "pct_vs_mean": 95.11717442722374
     },
     {
       "rank": 5,
       "state": "ROO",
       "estado": "Quintana Roo",
-      "value": 80.3,
-      "pct_vs_mean": 43.68552017222579
+      "value": 33.2836,
+      "pct_vs_mean": 76.8939646213798
     },
     {
       "rank": 6,
-      "state": "COA",
-      "estado": "Coahuila",
-      "value": 76.79,
-      "pct_vs_mean": 37.40487041127298
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 31.0123,
+      "pct_vs_mean": 64.82257625460036
     },
     {
       "rank": 7,
-      "state": "COL",
-      "estado": "Colima",
-      "value": 76.51,
-      "pct_vs_mean": 36.903849917521754
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 30.8053,
+      "pct_vs_mean": 63.72242330610243
     },
     {
       "rank": 8,
-      "state": "CHH",
-      "estado": "Chihuahua",
-      "value": 75.83,
-      "pct_vs_mean": 35.68708586126877
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 23.0075,
+      "pct_vs_mean": 22.279077113845727
     },
     {
       "rank": 9,
-      "state": "BCS",
-      "estado": "Baja California Sur",
-      "value": 74.33,
-      "pct_vs_mean": 33.00304750188722
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 21.3689,
+      "pct_vs_mean": 13.570330150518654
     },
     {
       "rank": 10,
-      "state": "AGS",
-      "estado": "Aguascalientes",
-      "value": 72.06,
-      "pct_vs_mean": 28.941202784689807
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 21.1903,
+      "pct_vs_mean": 12.621116060655227
     },
     {
       "rank": 11,
-      "state": "SON",
-      "estado": "Sonora",
-      "value": 66.57,
-      "pct_vs_mean": 19.117622389353308
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 19.7569,
+      "pct_vs_mean": 5.002955498447846
     },
     {
       "rank": 12,
-      "state": "JAL",
-      "estado": "Jalisco",
-      "value": 65.35,
-      "pct_vs_mean": 16.93460452372298
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 18.4471,
+      "pct_vs_mean": -1.958302143786881
     },
     {
       "rank": 13,
-      "state": "QUE",
-      "estado": "Queretaro",
-      "value": 62.37,
-      "pct_vs_mean": 11.602314983084968
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 18.0512,
+      "pct_vs_mean": -4.062411092145947
     },
     {
       "rank": 14,
-      "state": "MEX",
-      "estado": "Estado de Mexico",
-      "value": 57.37,
-      "pct_vs_mean": 2.6555204518131243
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 17.1574,
+      "pct_vs_mean": -8.81273334029788
     },
     {
       "rank": 15,
-      "state": "DUR",
-      "estado": "Durango",
-      "value": 56.01,
-      "pct_vs_mean": 0.22199233930718415
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 14.7424,
+      "pct_vs_mean": -21.647851072773697
     },
     {
       "rank": 16,
-      "state": "SLP",
-      "estado": "San Luis Potosi",
-      "value": 54.75,
-      "pct_vs_mean": -2.032599882573317
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 13.4778,
+      "pct_vs_mean": -28.368882080843637
     },
     {
       "rank": 17,
-      "state": "SIN",
-      "estado": "Sinaloa",
-      "value": 54.58,
-      "pct_vs_mean": -2.3367908966365625
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 11.7673,
+      "pct_vs_mean": -37.45975946444608
     },
     {
       "rank": 18,
-      "state": "MOR",
-      "estado": "Morelos",
-      "value": 54.19,
-      "pct_vs_mean": -3.0346408700757674
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 10.1071,
+      "pct_vs_mean": -46.28330499631206
     },
     {
       "rank": 19,
-      "state": "GUA",
-      "estado": "Guanajuato",
-      "value": 53.33,
-      "pct_vs_mean": -4.573489529454523
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 8.9967,
+      "pct_vs_mean": -52.18480177897921
     },
     {
       "rank": 20,
       "state": "PUE",
       "estado": "Puebla",
-      "value": 47.86,
-      "pct_vs_mean": -14.361282746665918
+      "value": 8.4991,
+      "pct_vs_mean": -54.829420654209
     },
     {
       "rank": 21,
-      "state": "CAM",
-      "estado": "Campeche",
-      "value": 47.49,
-      "pct_vs_mean": -15.02334554198003
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 8.3949,
+      "pct_vs_mean": -55.3832174524384
     },
     {
       "rank": 22,
-      "state": "YUC",
-      "estado": "Yucatan",
-      "value": 47.06,
-      "pct_vs_mean": -15.792769871669407
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 8.335,
+      "pct_vs_mean": -55.701570890192144
     },
     {
       "rank": 23,
-      "state": "MIC",
-      "estado": "Michoacan",
-      "value": 43.91,
-      "pct_vs_mean": -21.42925042637068
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 8.2209,
+      "pct_vs_mean": -56.30798369900187
     },
     {
       "rank": 24,
-      "state": "NAY",
-      "estado": "Nayarit",
-      "value": 42.14,
-      "pct_vs_mean": -24.596415690440903
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 7.8128,
+      "pct_vs_mean": -58.47693257959127
     },
     {
       "rank": 25,
-      "state": "TLA",
-      "estado": "Tlaxcala",
-      "value": 40.57,
-      "pct_vs_mean": -27.405709173260263
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 7.7305,
+      "pct_vs_mean": -58.914336384718716
     },
     {
       "rank": 26,
-      "state": "VER",
-      "estado": "Veracruz",
-      "value": 38.04,
-      "pct_vs_mean": -31.93278720608382
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 6.5703,
+      "pct_vs_mean": -65.08050764485057
     },
     {
       "rank": 27,
-      "state": "GRO",
-      "estado": "Guerrero",
-      "value": 30.26,
-      "pct_vs_mean": -45.8539994967428
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 5.9453,
+      "pct_vs_mean": -68.40222548451823
     },
     {
       "rank": 28,
       "state": "ZAC",
       "estado": "Zacatecas",
-      "value": 28.87,
-      "pct_vs_mean": -48.34120837643637
+      "value": 4.156,
+      "pct_vs_mean": -77.91190505334596
     },
     {
       "rank": 29,
-      "state": "HID",
-      "estado": "Hidalgo",
-      "value": 27.21,
-      "pct_vs_mean": -51.31154416081862
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 4.0439,
+      "pct_vs_mean": -78.50768836506874
     },
     {
       "rank": 30,
-      "state": "OAX",
-      "estado": "Oaxaca",
-      "value": 22.52,
-      "pct_vs_mean": -59.70363743115163
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 3.2766,
+      "pct_vs_mean": -82.58569492247194
     },
     {
       "rank": 31,
-      "state": "TAB",
-      "estado": "Tabasco",
-      "value": 20.81,
-      "pct_vs_mean": -62.76344116084659
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 2.5867,
+      "pct_vs_mean": -86.25233994261067
     },
     {
       "rank": 32,
-      "state": "CHP",
-      "estado": "Chiapas",
-      "value": 19.95,
-      "pct_vs_mean": -64.30228982022534
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 1.8318,
+      "pct_vs_mean": -90.26444361807485
     }
   ],
   "hogares_en_localidades_con_internet_pct": [
@@ -8133,6 +8133,4300 @@
       "estado": "Chiapas",
       "value": 53.35,
       "pct_vs_mean": -36.33865211862668
+    }
+  ],
+  "hogares_con_internet_pct": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 84.4,
+      "pct_vs_mean": 15.443470827099814
+    },
+    {
+      "rank": 2,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 84.4,
+      "pct_vs_mean": 15.443470827099814
+    },
+    {
+      "rank": 3,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 83.7,
+      "pct_vs_mean": 14.486001282325287
+    },
+    {
+      "rank": 4,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 83.1,
+      "pct_vs_mean": 13.665313101089968
+    },
+    {
+      "rank": 5,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 82.4,
+      "pct_vs_mean": 12.70784355631546
+    },
+    {
+      "rank": 6,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 82.3,
+      "pct_vs_mean": 12.57106219277623
+    },
+    {
+      "rank": 7,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 81.6,
+      "pct_vs_mean": 11.613592648001703
+    },
+    {
+      "rank": 8,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 80.9,
+      "pct_vs_mean": 10.656123103227193
+    },
+    {
+      "rank": 9,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 80.4,
+      "pct_vs_mean": 9.972216285531104
+    },
+    {
+      "rank": 10,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 79.5,
+      "pct_vs_mean": 8.741184013678136
+    },
+    {
+      "rank": 11,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 78.9,
+      "pct_vs_mean": 7.920495832442838
+    },
+    {
+      "rank": 12,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 78.2,
+      "pct_vs_mean": 6.963026287668309
+    },
+    {
+      "rank": 13,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 77.6,
+      "pct_vs_mean": 6.142338106432991
+    },
+    {
+      "rank": 14,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 77.1,
+      "pct_vs_mean": 5.458431288736902
+    },
+    {
+      "rank": 15,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 76.7,
+      "pct_vs_mean": 4.911305834580042
+    },
+    {
+      "rank": 16,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 75.3,
+      "pct_vs_mean": 2.9963667450309854
+    },
+    {
+      "rank": 17,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 74.9,
+      "pct_vs_mean": 2.449241290874126
+    },
+    {
+      "rank": 18,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 74.4,
+      "pct_vs_mean": 1.7653344731780374
+    },
+    {
+      "rank": 19,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 73.9,
+      "pct_vs_mean": 1.0814276554819484
+    },
+    {
+      "rank": 20,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 71.7,
+      "pct_vs_mean": -1.9277623423808468
+    },
+    {
+      "rank": 21,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 71.5,
+      "pct_vs_mean": -2.201325069459286
+    },
+    {
+      "rank": 22,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 70.2,
+      "pct_vs_mean": -3.9794827954691137
+    },
+    {
+      "rank": 23,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 67.7,
+      "pct_vs_mean": -7.399016883949558
+    },
+    {
+      "rank": 24,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 66.9,
+      "pct_vs_mean": -8.493267792263296
+    },
+    {
+      "rank": 25,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 65.5,
+      "pct_vs_mean": -10.408206881812353
+    },
+    {
+      "rank": 26,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 64.0,
+      "pct_vs_mean": -12.45992733490062
+    },
+    {
+      "rank": 27,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 63.9,
+      "pct_vs_mean": -12.59670869843984
+    },
+    {
+      "rank": 28,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 61.8,
+      "pct_vs_mean": -15.469117332763416
+    },
+    {
+      "rank": 29,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 61.5,
+      "pct_vs_mean": -15.879461423381064
+    },
+    {
+      "rank": 30,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 58.9,
+      "pct_vs_mean": -19.43577687540073
+    },
+    {
+      "rank": 31,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 55.5,
+      "pct_vs_mean": -24.08634323573413
+    },
+    {
+      "rank": 32,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 50.7,
+      "pct_vs_mean": -30.651848685616578
+    }
+  ],
+  "uso_internet_educacion_pct": [
+    {
+      "rank": 1,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 87.7,
+      "pct_vs_mean": 7.270086384832974
+    },
+    {
+      "rank": 2,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 85.9,
+      "pct_vs_mean": 5.068419845577569
+    },
+    {
+      "rank": 3,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 85.8,
+      "pct_vs_mean": 4.946105037841147
+    },
+    {
+      "rank": 4,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 85.7,
+      "pct_vs_mean": 4.823790230104743
+    },
+    {
+      "rank": 5,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 84.9,
+      "pct_vs_mean": 3.845271768213453
+    },
+    {
+      "rank": 6,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 84.2,
+      "pct_vs_mean": 2.989068114058569
+    },
+    {
+      "rank": 7,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 84.1,
+      "pct_vs_mean": 2.866753306322147
+    },
+    {
+      "rank": 8,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 84.0,
+      "pct_vs_mean": 2.744438498585742
+    },
+    {
+      "rank": 9,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 83.6,
+      "pct_vs_mean": 2.255179267640089
+    },
+    {
+      "rank": 10,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 83.6,
+      "pct_vs_mean": 2.255179267640089
+    },
+    {
+      "rank": 11,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 83.2,
+      "pct_vs_mean": 1.765920036694453
+    },
+    {
+      "rank": 12,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 82.5,
+      "pct_vs_mean": 0.9097163825395682
+    },
+    {
+      "rank": 13,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 82.2,
+      "pct_vs_mean": 0.542771959330337
+    },
+    {
+      "rank": 14,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 82.1,
+      "pct_vs_mean": 0.4204571515939149
+    },
+    {
+      "rank": 15,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 82.0,
+      "pct_vs_mean": 0.29814234385751026
+    },
+    {
+      "rank": 16,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 82.0,
+      "pct_vs_mean": 0.29814234385751026
+    },
+    {
+      "rank": 17,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 81.9,
+      "pct_vs_mean": 0.17582753612110558
+    },
+    {
+      "rank": 18,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 81.9,
+      "pct_vs_mean": 0.17582753612110558
+    },
+    {
+      "rank": 19,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 81.4,
+      "pct_vs_mean": -0.43574650256095243
+    },
+    {
+      "rank": 20,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 81.4,
+      "pct_vs_mean": -0.43574650256095243
+    },
+    {
+      "rank": 21,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 81.2,
+      "pct_vs_mean": -0.6803761180337791
+    },
+    {
+      "rank": 22,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 81.1,
+      "pct_vs_mean": -0.8026909257702011
+    },
+    {
+      "rank": 23,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 81.0,
+      "pct_vs_mean": -0.9250057335066058
+    },
+    {
+      "rank": 24,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 80.6,
+      "pct_vs_mean": -1.4142649644522591
+    },
+    {
+      "rank": 25,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 79.9,
+      "pct_vs_mean": -2.2704686186071266
+    },
+    {
+      "rank": 26,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 79.9,
+      "pct_vs_mean": -2.2704686186071266
+    },
+    {
+      "rank": 27,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 79.3,
+      "pct_vs_mean": -3.0043574650256066
+    },
+    {
+      "rank": 28,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 78.3,
+      "pct_vs_mean": -4.227505542389722
+    },
+    {
+      "rank": 29,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 77.5,
+      "pct_vs_mean": -5.206024004281011
+    },
+    {
+      "rank": 30,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 76.3,
+      "pct_vs_mean": -6.673801697117954
+    },
+    {
+      "rank": 31,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 76.0,
+      "pct_vs_mean": -7.040746120327186
+    },
+    {
+      "rank": 32,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 75.0,
+      "pct_vs_mean": -8.263894197691302
+    }
+  ],
+  "uso_internet_gobierno_pct": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 40.5,
+      "pct_vs_mean": 25.411263789432958
+    },
+    {
+      "rank": 2,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 39.9,
+      "pct_vs_mean": 23.553319140700612
+    },
+    {
+      "rank": 3,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 38.4,
+      "pct_vs_mean": 18.908457518869763
+    },
+    {
+      "rank": 4,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 37.6,
+      "pct_vs_mean": 16.43119798722665
+    },
+    {
+      "rank": 5,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 37.2,
+      "pct_vs_mean": 15.192568221405095
+    },
+    {
+      "rank": 6,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 37.1,
+      "pct_vs_mean": 14.882910779949702
+    },
+    {
+      "rank": 7,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 36.9,
+      "pct_vs_mean": 14.263595897038911
+    },
+    {
+      "rank": 8,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 36.6,
+      "pct_vs_mean": 13.334623572672749
+    },
+    {
+      "rank": 9,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 35.5,
+      "pct_vs_mean": 9.928391716663455
+    },
+    {
+      "rank": 10,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 35.1,
+      "pct_vs_mean": 8.6897619508419
+    },
+    {
+      "rank": 11,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 35.0,
+      "pct_vs_mean": 8.380104509386506
+    },
+    {
+      "rank": 12,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 34.7,
+      "pct_vs_mean": 7.451132185020344
+    },
+    {
+      "rank": 13,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 34.3,
+      "pct_vs_mean": 6.212502419198766
+    },
+    {
+      "rank": 14,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 34.0,
+      "pct_vs_mean": 5.283530094832605
+    },
+    {
+      "rank": 15,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 32.9,
+      "pct_vs_mean": 1.877298238823311
+    },
+    {
+      "rank": 16,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 32.8,
+      "pct_vs_mean": 1.5676407973679165
+    },
+    {
+      "rank": 17,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 32.1,
+      "pct_vs_mean": -0.5999612928198006
+    },
+    {
+      "rank": 18,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 31.9,
+      "pct_vs_mean": -1.2192761757305892
+    },
+    {
+      "rank": 19,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 31.8,
+      "pct_vs_mean": -1.5289336171859729
+    },
+    {
+      "rank": 20,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 31.2,
+      "pct_vs_mean": -3.3868782659183174
+    },
+    {
+      "rank": 21,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 30.4,
+      "pct_vs_mean": -5.8641377975614395
+    },
+    {
+      "rank": 22,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 30.4,
+      "pct_vs_mean": -5.8641377975614395
+    },
+    {
+      "rank": 23,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 29.2,
+      "pct_vs_mean": -9.580027095026118
+    },
+    {
+      "rank": 24,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 28.7,
+      "pct_vs_mean": -11.128314302303068
+    },
+    {
+      "rank": 25,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 28.6,
+      "pct_vs_mean": -11.437971743758451
+    },
+    {
+      "rank": 26,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 28.5,
+      "pct_vs_mean": -11.747629185213846
+    },
+    {
+      "rank": 27,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 28.5,
+      "pct_vs_mean": -11.747629185213846
+    },
+    {
+      "rank": 28,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 26.7,
+      "pct_vs_mean": -17.32146313141087
+    },
+    {
+      "rank": 29,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 26.1,
+      "pct_vs_mean": -19.1794077801432
+    },
+    {
+      "rank": 30,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 24.2,
+      "pct_vs_mean": -25.062899167795617
+    },
+    {
+      "rank": 31,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 23.4,
+      "pct_vs_mean": -27.540158699438738
+    },
+    {
+      "rank": 32,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 23.2,
+      "pct_vs_mean": -28.15947358234952
+    }
+  ],
+  "escolaridad_promedio_anios": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 11.5862,
+      "pct_vs_mean": 35.24566184061254
+    },
+    {
+      "rank": 2,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 9.926,
+      "pct_vs_mean": 15.866154513983885
+    },
+    {
+      "rank": 3,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 9.7083,
+      "pct_vs_mean": 13.324943367732187
+    },
+    {
+      "rank": 4,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 9.5418,
+      "pct_vs_mean": 11.38138959717222
+    },
+    {
+      "rank": 5,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 9.3609,
+      "pct_vs_mean": 9.269744689698957
+    },
+    {
+      "rank": 6,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 9.2666,
+      "pct_vs_mean": 8.168981202829247
+    },
+    {
+      "rank": 7,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 9.2364,
+      "pct_vs_mean": 7.816456735136078
+    },
+    {
+      "rank": 8,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 9.214,
+      "pct_vs_mean": 7.55498163327096
+    },
+    {
+      "rank": 9,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 9.2071,
+      "pct_vs_mean": 7.474437963500008
+    },
+    {
+      "rank": 10,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 9.1876,
+      "pct_vs_mean": 7.246814548929911
+    },
+    {
+      "rank": 11,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 9.0547,
+      "pct_vs_mean": 5.695473431167632
+    },
+    {
+      "rank": 12,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 8.9331,
+      "pct_vs_mean": 4.276037163899797
+    },
+    {
+      "rank": 13,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 8.9117,
+      "pct_vs_mean": 4.026235057653651
+    },
+    {
+      "rank": 14,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 8.7261,
+      "pct_vs_mean": 1.8597270707711908
+    },
+    {
+      "rank": 15,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 8.695,
+      "pct_vs_mean": 1.4966969070209453
+    },
+    {
+      "rank": 16,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 8.68,
+      "pct_vs_mean": 1.3216019727362562
+    },
+    {
+      "rank": 17,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 8.6056,
+      "pct_vs_mean": 0.4531310986842438
+    },
+    {
+      "rank": 18,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 8.4469,
+      "pct_vs_mean": -1.3993733060477132
+    },
+    {
+      "rank": 19,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 8.4167,
+      "pct_vs_mean": -1.7518977737408608
+    },
+    {
+      "rank": 20,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 8.2783,
+      "pct_vs_mean": -3.3674403674075397
+    },
+    {
+      "rank": 21,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 8.1941,
+      "pct_vs_mean": -4.350306598525547
+    },
+    {
+      "rank": 22,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 8.1638,
+      "pct_vs_mean": -4.7039983657806115
+    },
+    {
+      "rank": 23,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 8.1567,
+      "pct_vs_mean": -4.786876634675355
+    },
+    {
+      "rank": 24,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 7.9019,
+      "pct_vs_mean": -7.7611559183911645
+    },
+    {
+      "rank": 25,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 7.6934,
+      "pct_vs_mean": -10.194975504948262
+    },
+    {
+      "rank": 26,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 7.6816,
+      "pct_vs_mean": -10.332716853252201
+    },
+    {
+      "rank": 27,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 7.5171,
+      "pct_vs_mean": -12.252924632574222
+    },
+    {
+      "rank": 28,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 7.4354,
+      "pct_vs_mean": -13.206608374644798
+    },
+    {
+      "rank": 29,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 7.4118,
+      "pct_vs_mean": -13.482091071252691
+    },
+    {
+      "rank": 30,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 7.0904,
+      "pct_vs_mean": -17.233791863192494
+    },
+    {
+      "rank": 31,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 6.9754,
+      "pct_vs_mean": -18.576186359375065
+    },
+    {
+      "rank": 32,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 6.9324,
+      "pct_vs_mean": -19.078125170991143
+    }
+  ],
+  "analfabetismo_15ymas_pct": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 1.4172,
+      "pct_vs_mean": -79.89689213569811
+    },
+    {
+      "rank": 2,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 2.8644,
+      "pct_vs_mean": -59.36823160703758
+    },
+    {
+      "rank": 3,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 2.8655,
+      "pct_vs_mean": -59.352628009344436
+    },
+    {
+      "rank": 4,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 2.9014,
+      "pct_vs_mean": -58.84338332099526
+    },
+    {
+      "rank": 5,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 3.1138,
+      "pct_vs_mean": -55.83047045733613
+    },
+    {
+      "rank": 6,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 3.1926,
+      "pct_vs_mean": -54.71268545895411
+    },
+    {
+      "rank": 7,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 3.4101,
+      "pct_vs_mean": -51.62742864235401
+    },
+    {
+      "rank": 8,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 3.5613,
+      "pct_vs_mean": -49.48264321398649
+    },
+    {
+      "rank": 9,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 4.5869,
+      "pct_vs_mean": -34.934416128445974
+    },
+    {
+      "rank": 10,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 4.6419,
+      "pct_vs_mean": -34.15423624378849
+    },
+    {
+      "rank": 11,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 4.7677,
+      "pct_vs_mean": -32.36975207124461
+    },
+    {
+      "rank": 12,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 5.0862,
+      "pct_vs_mean": -27.851801284637105
+    },
+    {
+      "rank": 13,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 5.4004,
+      "pct_vs_mean": -23.394846379921002
+    },
+    {
+      "rank": 14,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 5.5428,
+      "pct_vs_mean": -21.374889733098694
+    },
+    {
+      "rank": 15,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 5.6302,
+      "pct_vs_mean": -20.13511297093386
+    },
+    {
+      "rank": 16,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 5.78,
+      "pct_vs_mean": -18.01018666690308
+    },
+    {
+      "rank": 17,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 6.0257,
+      "pct_vs_mean": -14.524910345805871
+    },
+    {
+      "rank": 18,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 6.0485,
+      "pct_vs_mean": -14.20149032089331
+    },
+    {
+      "rank": 19,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 6.7332,
+      "pct_vs_mean": -4.488960011348069
+    },
+    {
+      "rank": 20,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 7.3537,
+      "pct_vs_mean": 4.312887596469685
+    },
+    {
+      "rank": 21,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 7.4719,
+      "pct_vs_mean": 5.989565094042703
+    },
+    {
+      "rank": 22,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 7.6274,
+      "pct_vs_mean": 8.195346404301624
+    },
+    {
+      "rank": 23,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 8.1808,
+      "pct_vs_mean": 16.045374552837234
+    },
+    {
+      "rank": 24,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 8.6723,
+      "pct_vs_mean": 23.017345703912866
+    },
+    {
+      "rank": 25,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 9.3326,
+      "pct_vs_mean": 32.3837598464464
+    },
+    {
+      "rank": 26,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 9.5961,
+      "pct_vs_mean": 36.12153074839642
+    },
+    {
+      "rank": 27,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 10.5564,
+      "pct_vs_mean": 49.74347153451631
+    },
+    {
+      "rank": 28,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 12.1142,
+      "pct_vs_mean": 71.84100288577902
+    },
+    {
+      "rank": 29,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 12.516,
+      "pct_vs_mean": 77.54057157042233
+    },
+    {
+      "rank": 30,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 14.4832,
+      "pct_vs_mean": 105.44547828129917
+    },
+    {
+      "rank": 31,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 16.3927,
+      "pct_vs_mean": 132.53190536772627
+    },
+    {
+      "rank": 32,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 17.7219,
+      "pct_vs_mean": 151.38672541657618
+    }
+  ],
+  "sin_escolaridad_15ymas_pct": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 1.9889,
+      "pct_vs_mean": -72.43301845644342
+    },
+    {
+      "rank": 2,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 3.1564,
+      "pct_vs_mean": -56.25098268184324
+    },
+    {
+      "rank": 3,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 3.2271,
+      "pct_vs_mean": -55.27105126491456
+    },
+    {
+      "rank": 4,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 3.3976,
+      "pct_vs_mean": -52.90785032309928
+    },
+    {
+      "rank": 5,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 3.6831,
+      "pct_vs_mean": -48.9507015319658
+    },
+    {
+      "rank": 6,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 3.9793,
+      "pct_vs_mean": -44.8452462887653
+    },
+    {
+      "rank": 7,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 4.1465,
+      "pct_vs_mean": -42.52778472001742
+    },
+    {
+      "rank": 8,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 4.4014,
+      "pct_vs_mean": -38.99476466096339
+    },
+    {
+      "rank": 9,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 4.9466,
+      "pct_vs_mean": -31.438065813586924
+    },
+    {
+      "rank": 10,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 4.9681,
+      "pct_vs_mean": -31.14006686784483
+    },
+    {
+      "rank": 11,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 5.3,
+      "pct_vs_mean": -26.539794770551634
+    },
+    {
+      "rank": 12,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 5.5518,
+      "pct_vs_mean": -23.04974200134878
+    },
+    {
+      "rank": 13,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 5.5926,
+      "pct_vs_mean": -22.48423702524284
+    },
+    {
+      "rank": 14,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 5.7371,
+      "pct_vs_mean": -20.481406901534296
+    },
+    {
+      "rank": 15,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 6.0184,
+      "pct_vs_mean": -16.582471857941126
+    },
+    {
+      "rank": 16,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 6.0812,
+      "pct_vs_mean": -15.712037728052564
+    },
+    {
+      "rank": 17,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 6.272,
+      "pct_vs_mean": -13.067470339792417
+    },
+    {
+      "rank": 18,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 6.4079,
+      "pct_vs_mean": -11.18383979438072
+    },
+    {
+      "rank": 19,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 6.9756,
+      "pct_vs_mean": -3.315281585181124
+    },
+    {
+      "rank": 20,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 8.2668,
+      "pct_vs_mean": 14.58128765864222
+    },
+    {
+      "rank": 21,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 8.4855,
+      "pct_vs_mean": 17.612560655563044
+    },
+    {
+      "rank": 22,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 8.5024,
+      "pct_vs_mean": 17.846801687332416
+    },
+    {
+      "rank": 23,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 8.7196,
+      "pct_vs_mean": 20.857284060131693
+    },
+    {
+      "rank": 24,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 9.0916,
+      "pct_vs_mean": 26.01335884227411
+    },
+    {
+      "rank": 25,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 9.3204,
+      "pct_vs_mean": 29.184622041613306
+    },
+    {
+      "rank": 26,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 9.4774,
+      "pct_vs_mean": 31.3607073663347
+    },
+    {
+      "rank": 27,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 10.2951,
+      "pct_vs_mean": 42.6943695957913
+    },
+    {
+      "rank": 28,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 10.8407,
+      "pct_vs_mean": 50.25661260960017
+    },
+    {
+      "rank": 29,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 11.8536,
+      "pct_vs_mean": 64.29582805807344
+    },
+    {
+      "rank": 30,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 12.0554,
+      "pct_vs_mean": 67.09286002322489
+    },
+    {
+      "rank": 31,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 15.8567,
+      "pct_vs_mean": 119.78045967203659
+    },
+    {
+      "rank": 32,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 16.2765,
+      "pct_vs_mean": 125.59906234285212
+    }
+  ],
+  "posbasica_18ymas_pct": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 63.6065,
+      "pct_vs_mean": 88.09627157024838
+    },
+    {
+      "rank": 2,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 48.6373,
+      "pct_vs_mean": 43.82955813075145
+    },
+    {
+      "rank": 3,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 45.3263,
+      "pct_vs_mean": 34.03831423006375
+    },
+    {
+      "rank": 4,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 41.4323,
+      "pct_vs_mean": 22.523030705666898
+    },
+    {
+      "rank": 5,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 40.9502,
+      "pct_vs_mean": 21.097371181498524
+    },
+    {
+      "rank": 6,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 40.3357,
+      "pct_vs_mean": 19.280180188755367
+    },
+    {
+      "rank": 7,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 40.2418,
+      "pct_vs_mean": 19.002500393444393
+    },
+    {
+      "rank": 8,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 39.9074,
+      "pct_vs_mean": 18.013617288524454
+    },
+    {
+      "rank": 9,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 39.3616,
+      "pct_vs_mean": 16.399584995865034
+    },
+    {
+      "rank": 10,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 37.8554,
+      "pct_vs_mean": 11.945470962879282
+    },
+    {
+      "rank": 11,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 36.2345,
+      "pct_vs_mean": 7.152167659156916
+    },
+    {
+      "rank": 12,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 36.1654,
+      "pct_vs_mean": 6.947826084545769
+    },
+    {
+      "rank": 13,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 35.4686,
+      "pct_vs_mean": 4.887258657786737
+    },
+    {
+      "rank": 14,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 35.3643,
+      "pct_vs_mean": 4.578824124762955
+    },
+    {
+      "rank": 15,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 34.1395,
+      "pct_vs_mean": 0.9568623218145043
+    },
+    {
+      "rank": 16,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 32.4254,
+      "pct_vs_mean": -4.112050746795807
+    },
+    {
+      "rank": 17,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 32.335,
+      "pct_vs_mean": -4.379380389991878
+    },
+    {
+      "rank": 18,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 31.7475,
+      "pct_vs_mean": -6.116727352134448
+    },
+    {
+      "rank": 19,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 31.0222,
+      "pct_vs_mean": -8.261574588971888
+    },
+    {
+      "rank": 20,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 29.4317,
+      "pct_vs_mean": -12.964979428610611
+    },
+    {
+      "rank": 21,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 28.9574,
+      "pct_vs_mean": -14.367572899494386
+    },
+    {
+      "rank": 22,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 28.282,
+      "pct_vs_mean": -16.36485653903666
+    },
+    {
+      "rank": 23,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 27.6787,
+      "pct_vs_mean": -18.148927045012165
+    },
+    {
+      "rank": 24,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 26.6068,
+      "pct_vs_mean": -21.318735059855758
+    },
+    {
+      "rank": 25,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 26.3455,
+      "pct_vs_mean": -22.091447844890396
+    },
+    {
+      "rank": 26,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 26.1985,
+      "pct_vs_mean": -22.52615423371586
+    },
+    {
+      "rank": 27,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 26.1648,
+      "pct_vs_mean": -22.625811412650677
+    },
+    {
+      "rank": 28,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 25.9065,
+      "pct_vs_mean": -23.38965263872969
+    },
+    {
+      "rank": 29,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 25.0986,
+      "pct_vs_mean": -25.778763465478587
+    },
+    {
+      "rank": 30,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 24.9396,
+      "pct_vs_mean": -26.24895609012654
+    },
+    {
+      "rank": 31,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 23.1579,
+      "pct_vs_mean": -31.517774953870198
+    },
+    {
+      "rank": 32,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 20.7848,
+      "pct_vs_mean": -38.53547380639874
+    }
+  ],
+  "pob_0_14_pct": [
+    {
+      "rank": 1,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 33.8383,
+      "pct_vs_mean": 25.73681681572885
+    },
+    {
+      "rank": 2,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 31.7352,
+      "pct_vs_mean": 17.92208914190484
+    },
+    {
+      "rank": 3,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 30.0776,
+      "pct_vs_mean": 11.762756446298027
+    },
+    {
+      "rank": 4,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 29.0921,
+      "pct_vs_mean": 8.100822100544812
+    },
+    {
+      "rank": 5,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 28.9284,
+      "pct_vs_mean": 7.492543407089921
+    },
+    {
+      "rank": 6,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 28.3641,
+      "pct_vs_mean": 5.3957097680147985
+    },
+    {
+      "rank": 7,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 28.1808,
+      "pct_vs_mean": 4.714601127145636
+    },
+    {
+      "rank": 8,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 28.1384,
+      "pct_vs_mean": 4.557050628657622
+    },
+    {
+      "rank": 9,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 28.1168,
+      "pct_vs_mean": 4.476789053956184
+    },
+    {
+      "rank": 10,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 28.071,
+      "pct_vs_mean": 4.306604789079983
+    },
+    {
+      "rank": 11,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 27.8156,
+      "pct_vs_mean": 3.357585984508318
+    },
+    {
+      "rank": 12,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 27.5199,
+      "pct_vs_mean": 2.2588198901001757
+    },
+    {
+      "rank": 13,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 27.5076,
+      "pct_vs_mean": 2.213115382284079
+    },
+    {
+      "rank": 14,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 27.3862,
+      "pct_vs_mean": 1.7620156059528314
+    },
+    {
+      "rank": 15,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 27.2907,
+      "pct_vs_mean": 1.4071554029904538
+    },
+    {
+      "rank": 16,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 27.1102,
+      "pct_vs_mean": 0.7364510403233185
+    },
+    {
+      "rank": 17,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 27.0296,
+      "pct_vs_mean": 0.4369564606503503
+    },
+    {
+      "rank": 18,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 26.9544,
+      "pct_vs_mean": 0.15752727465274807
+    },
+    {
+      "rank": 19,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 26.4877,
+      "pct_vs_mean": -1.5766429528084598
+    },
+    {
+      "rank": 20,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 26.3265,
+      "pct_vs_mean": -2.1756321121543962
+    },
+    {
+      "rank": 21,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 26.2151,
+      "pct_vs_mean": -2.5895737520497857
+    },
+    {
+      "rank": 22,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 26.2079,
+      "pct_vs_mean": -2.6163276102836033
+    },
+    {
+      "rank": 23,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 26.1141,
+      "pct_vs_mean": -2.9648709300518874
+    },
+    {
+      "rank": 24,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 25.9297,
+      "pct_vs_mean": -3.6500669659289975
+    },
+    {
+      "rank": 25,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 25.381,
+      "pct_vs_mean": -5.6889339121641935
+    },
+    {
+      "rank": 26,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 24.9394,
+      "pct_vs_mean": -7.32983721717142
+    },
+    {
+      "rank": 27,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 24.9301,
+      "pct_vs_mean": -7.36439428405676
+    },
+    {
+      "rank": 28,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 24.7388,
+      "pct_vs_mean": -8.075229434074602
+    },
+    {
+      "rank": 29,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 24.4254,
+      "pct_vs_mean": -9.239765429974208
+    },
+    {
+      "rank": 30,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 24.2757,
+      "pct_vs_mean": -9.796022732418908
+    },
+    {
+      "rank": 31,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 24.0691,
+      "pct_vs_mean": -10.563709831183616
+    },
+    {
+      "rank": 32,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 17.9868,
+      "pct_vs_mean": -33.16440315556184
+    }
+  ],
+  "pob_15_64_pct": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 70.9448,
+      "pct_vs_mean": 11.78344643718557
+    },
+    {
+      "rank": 2,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 68.7101,
+      "pct_vs_mean": 8.262364303566489
+    },
+    {
+      "rank": 3,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 67.8508,
+      "pct_vs_mean": 6.908417072430839
+    },
+    {
+      "rank": 4,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 67.1888,
+      "pct_vs_mean": 5.865343562583499
+    },
+    {
+      "rank": 5,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 66.1706,
+      "pct_vs_mean": 4.261027176289604
+    },
+    {
+      "rank": 6,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 65.8107,
+      "pct_vs_mean": 3.6939544327940594
+    },
+    {
+      "rank": 7,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 65.3609,
+      "pct_vs_mean": 2.9852316764053515
+    },
+    {
+      "rank": 8,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 64.6978,
+      "pct_vs_mean": 1.9404249628407526
+    },
+    {
+      "rank": 9,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 64.4943,
+      "pct_vs_mean": 1.6197822751459832
+    },
+    {
+      "rank": 10,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 64.3353,
+      "pct_vs_mean": 1.3692555560134805
+    },
+    {
+      "rank": 11,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 64.013,
+      "pct_vs_mean": 0.8614268668536725
+    },
+    {
+      "rank": 12,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 63.9295,
+      "pct_vs_mean": 0.7298609483155151
+    },
+    {
+      "rank": 13,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 63.8134,
+      "pct_vs_mean": 0.5469291741564959
+    },
+    {
+      "rank": 14,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 63.7487,
+      "pct_vs_mean": 0.4449852827862175
+    },
+    {
+      "rank": 15,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 63.6499,
+      "pct_vs_mean": 0.28931207618060845
+    },
+    {
+      "rank": 16,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 63.6244,
+      "pct_vs_mean": 0.2491332627348261
+    },
+    {
+      "rank": 17,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 63.5677,
+      "pct_vs_mean": 0.1597944893083263
+    },
+    {
+      "rank": 18,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 63.2857,
+      "pct_vs_mean": -0.28453591820972624
+    },
+    {
+      "rank": 19,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 63.2702,
+      "pct_vs_mean": -0.3089583342257825
+    },
+    {
+      "rank": 20,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 62.8552,
+      "pct_vs_mean": -0.962848827559077
+    },
+    {
+      "rank": 21,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 62.7332,
+      "pct_vs_mean": -1.1550768762016475
+    },
+    {
+      "rank": 22,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 61.8344,
+      "pct_vs_mean": -2.57126187718469
+    },
+    {
+      "rank": 23,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 61.7917,
+      "pct_vs_mean": -2.638541694209591
+    },
+    {
+      "rank": 24,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 61.5024,
+      "pct_vs_mean": -3.094374271851328
+    },
+    {
+      "rank": 25,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 61.3481,
+      "pct_vs_mean": -3.3374954841918747
+    },
+    {
+      "rank": 26,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 61.1649,
+      "pct_vs_mean": -3.6261526851043073
+    },
+    {
+      "rank": 27,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 61.1149,
+      "pct_vs_mean": -3.7049346722529033
+    },
+    {
+      "rank": 28,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 60.3938,
+      "pct_vs_mean": -4.841128490909866
+    },
+    {
+      "rank": 29,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 60.384,
+      "pct_vs_mean": -4.856569760390988
+    },
+    {
+      "rank": 30,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 59.4804,
+      "pct_vs_mean": -6.280317832140299
+    },
+    {
+      "rank": 31,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 59.4203,
+      "pct_vs_mean": -6.375013780692913
+    },
+    {
+      "rank": 32,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 58.4312,
+      "pct_vs_mean": -7.933479050466319
+    }
+  ],
+  "pob_65_mas_pct": [
+    {
+      "rank": 1,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 12.9797,
+      "pct_vs_mean": 37.33846997784266
+    },
+    {
+      "rank": 2,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 12.8062,
+      "pct_vs_mean": 35.502662945233624
+    },
+    {
+      "rank": 3,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 12.2311,
+      "pct_vs_mean": 29.417518135703553
+    },
+    {
+      "rank": 4,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 11.6143,
+      "pct_vs_mean": 22.89114477712567
+    },
+    {
+      "rank": 5,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 11.3967,
+      "pct_vs_mean": 20.588714746602726
+    },
+    {
+      "rank": 6,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 11.357,
+      "pct_vs_mean": 20.16864823827662
+    },
+    {
+      "rank": 7,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 11.3246,
+      "pct_vs_mean": 19.8258231785848
+    },
+    {
+      "rank": 8,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 10.9382,
+      "pct_vs_mean": 15.737316911148847
+    },
+    {
+      "rank": 9,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 10.7249,
+      "pct_vs_mean": 13.4803852681776
+    },
+    {
+      "rank": 10,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 10.5881,
+      "pct_vs_mean": 12.032901682812087
+    },
+    {
+      "rank": 11,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 10.4522,
+      "pct_vs_mean": 10.594941015771322
+    },
+    {
+      "rank": 12,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 10.4191,
+      "pct_vs_mean": 10.244709241826895
+    },
+    {
+      "rank": 13,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 10.3332,
+      "pct_vs_mean": 9.335799592829094
+    },
+    {
+      "rank": 14,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 10.1211,
+      "pct_vs_mean": 7.091565174290887
+    },
+    {
+      "rank": 15,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 10.0832,
+      "pct_vs_mean": 6.6905445026143235
+    },
+    {
+      "rank": 16,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 9.8665,
+      "pct_vs_mean": 4.397637390416166
+    },
+    {
+      "rank": 17,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 9.6539,
+      "pct_vs_mean": 2.1481124616975227
+    },
+    {
+      "rank": 18,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 9.4909,
+      "pct_vs_mean": 0.4234061428774889
+    },
+    {
+      "rank": 19,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 9.4596,
+      "pct_vs_mean": 0.09222020558260077
+    },
+    {
+      "rank": 20,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 9.2238,
+      "pct_vs_mean": -2.402784395507964
+    },
+    {
+      "rank": 21,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 8.9443,
+      "pct_vs_mean": -5.360179586368084
+    },
+    {
+      "rank": 22,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 8.8341,
+      "pct_vs_mean": -6.526208030134763
+    },
+    {
+      "rank": 23,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 7.7722,
+      "pct_vs_mean": -17.76219355133102
+    },
+    {
+      "rank": 24,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 7.7162,
+      "pct_vs_mean": -18.35473069153913
+    },
+    {
+      "rank": 25,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 7.7013,
+      "pct_vs_mean": -18.51238789491593
+    },
+    {
+      "rank": 26,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 7.4588,
+      "pct_vs_mean": -21.078285332424258
+    },
+    {
+      "rank": 27,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 7.051,
+      "pct_vs_mean": -25.39322543558259
+    },
+    {
+      "rank": 28,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 6.9298,
+      "pct_vs_mean": -26.67564510331871
+    },
+    {
+      "rank": 29,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 6.6526,
+      "pct_vs_mean": -29.608703947348854
+    },
+    {
+      "rank": 30,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 6.5355,
+      "pct_vs_mean": -30.847741431605453
+    },
+    {
+      "rank": 31,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 6.3926,
+      "pct_vs_mean": -32.359769241172216
+    },
+    {
+      "rank": 32,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 5.3756,
+      "pct_vs_mean": -43.1206669481659
+    }
+  ],
+  "localidades_total": [
+    {
+      "rank": 1,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 21157.0,
+      "pct_vs_mean": 257.3968495291186
+    },
+    {
+      "rank": 2,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 19845.0,
+      "pct_vs_mean": 235.23375142531356
+    },
+    {
+      "rank": 3,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 12186.0,
+      "pct_vs_mean": 105.85328772329912
+    },
+    {
+      "rank": 4,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 10723.0,
+      "pct_vs_mean": 81.13940622492504
+    },
+    {
+      "rank": 5,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 10348.0,
+      "pct_vs_mean": 74.80467925165759
+    },
+    {
+      "rank": 6,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 8809.0,
+      "pct_vs_mean": 48.80695975336796
+    },
+    {
+      "rank": 7,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 8644.0,
+      "pct_vs_mean": 46.01967988513028
+    },
+    {
+      "rank": 8,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 7300.0,
+      "pct_vs_mean": 23.316018412939734
+    },
+    {
+      "rank": 9,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 6769.0,
+      "pct_vs_mean": 14.346045018793024
+    },
+    {
+      "rank": 10,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 6568.0,
+      "pct_vs_mean": 10.950631361121669
+    },
+    {
+      "rank": 11,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 6566.0,
+      "pct_vs_mean": 10.916846150597575
+    },
+    {
+      "rank": 12,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 6554.0,
+      "pct_vs_mean": 10.714134887453017
+    },
+    {
+      "rank": 13,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 5890.0,
+      "pct_vs_mean": -0.5025550065458845
+    },
+    {
+      "rank": 14,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 5545.0,
+      "pct_vs_mean": -6.330503821951941
+    },
+    {
+      "rank": 15,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 5495.0,
+      "pct_vs_mean": -7.1751340850542675
+    },
+    {
+      "rank": 16,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 4894.0,
+      "pct_vs_mean": -17.327589847544235
+    },
+    {
+      "rank": 17,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 4822.0,
+      "pct_vs_mean": -18.543857426411588
+    },
+    {
+      "rank": 18,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 4690.0,
+      "pct_vs_mean": -20.77368132100173
+    },
+    {
+      "rank": 19,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 4498.0,
+      "pct_vs_mean": -24.017061531314667
+    },
+    {
+      "rank": 20,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 4034.0,
+      "pct_vs_mean": -31.85523037290426
+    },
+    {
+      "rank": 21,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 2850.0,
+      "pct_vs_mean": -51.85607500316737
+    },
+    {
+      "rank": 22,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 2762.0,
+      "pct_vs_mean": -53.34262426622745
+    },
+    {
+      "rank": 23,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 2543.0,
+      "pct_vs_mean": -57.04210481861565
+    },
+    {
+      "rank": 24,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 2472.0,
+      "pct_vs_mean": -58.24147979222095
+    },
+    {
+      "rank": 25,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 2434.0,
+      "pct_vs_mean": -58.883398792178724
+    },
+    {
+      "rank": 26,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 2207.0,
+      "pct_vs_mean": -62.718020186663296
+    },
+    {
+      "rank": 27,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 2192.0,
+      "pct_vs_mean": -62.97140926559399
+    },
+    {
+      "rank": 28,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 2022.0,
+      "pct_vs_mean": -65.8431521601419
+    },
+    {
+      "rank": 29,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 1578.0,
+      "pct_vs_mean": -73.34346889649056
+    },
+    {
+      "rank": 30,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 1226.0,
+      "pct_vs_mean": -79.28966594873094
+    },
+    {
+      "rank": 31,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 1175.0,
+      "pct_vs_mean": -80.15118881709532
+    },
+    {
+      "rank": 32,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 634.0,
+      "pct_vs_mean": -89.2900882638625
+    }
+  ],
+  "irs_indice": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": -1.2981,
+      "pct_vs_mean": 214.00817918616343
+    },
+    {
+      "rank": 2,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": -1.062,
+      "pct_vs_mean": 156.89599129166132
+    },
+    {
+      "rank": 3,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": -1.024,
+      "pct_vs_mean": 147.7038560100388
+    },
+    {
+      "rank": 4,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": -0.9074,
+      "pct_vs_mean": 119.4985145932707
+    },
+    {
+      "rank": 5,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": -0.832,
+      "pct_vs_mean": 101.25938300815649
+    },
+    {
+      "rank": 6,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": -0.8262,
+      "pct_vs_mean": 99.85637288622466
+    },
+    {
+      "rank": 7,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": -0.7937,
+      "pct_vs_mean": 91.99467823746853
+    },
+    {
+      "rank": 8,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": -0.7936,
+      "pct_vs_mean": 91.97048840778005
+    },
+    {
+      "rank": 9,
+      "state": "COL",
+      "estado": "Colima",
+      "value": -0.7846,
+      "pct_vs_mean": 89.79340373581681
+    },
+    {
+      "rank": 10,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": -0.7166,
+      "pct_vs_mean": 73.3443195476502
+    },
+    {
+      "rank": 11,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": -0.6881,
+      "pct_vs_mean": 66.4502180864333
+    },
+    {
+      "rank": 12,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": -0.674,
+      "pct_vs_mean": 63.039452100357565
+    },
+    {
+      "rank": 13,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": -0.6078,
+      "pct_vs_mean": 47.02578484658357
+    },
+    {
+      "rank": 14,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": -0.5929,
+      "pct_vs_mean": 43.42150022299999
+    },
+    {
+      "rank": 15,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": -0.5875,
+      "pct_vs_mean": 42.11524941982206
+    },
+    {
+      "rank": 16,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": -0.5668,
+      "pct_vs_mean": 37.10795467430661
+    },
+    {
+      "rank": 17,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": -0.5401,
+      "pct_vs_mean": 30.649270147482376
+    },
+    {
+      "rank": 18,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": -0.4536,
+      "pct_vs_mean": 9.725067466946866
+    },
+    {
+      "rank": 19,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": -0.4045,
+      "pct_vs_mean": -2.152138910096979
+    },
+    {
+      "rank": 20,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": -0.3925,
+      "pct_vs_mean": -5.054918472714624
+    },
+    {
+      "rank": 21,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": -0.3634,
+      "pct_vs_mean": -12.09415891206241
+    },
+    {
+      "rank": 22,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": -0.3466,
+      "pct_vs_mean": -16.158050299727105
+    },
+    {
+      "rank": 23,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": -0.327,
+      "pct_vs_mean": -20.899256918669256
+    },
+    {
+      "rank": 24,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": -0.2658,
+      "pct_vs_mean": -35.70343268801924
+    },
+    {
+      "rank": 25,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": -0.0843,
+      "pct_vs_mean": -79.60797357261107
+    },
+    {
+      "rank": 26,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": -0.0221,
+      "pct_vs_mean": -94.65404763884584
+    },
+    {
+      "rank": 27,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": -0.0083,
+      "pct_vs_mean": -97.99224413585613
+    },
+    {
+      "rank": 28,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 0.1937,
+      "pct_vs_mean": -146.85570010658643
+    },
+    {
+      "rank": 29,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 0.2129,
+      "pct_vs_mean": -151.50014740677466
+    },
+    {
+      "rank": 30,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 0.7014,
+      "pct_vs_mean": -269.6674654350012
+    },
+    {
+      "rank": 31,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 0.7055,
+      "pct_vs_mean": -270.65924845222884
+    },
+    {
+      "rank": 32,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 0.9213,
+      "pct_vs_mean": -322.8609009199695
+    }
+  ],
+  "viv_sin_agua_pct": [
+    {
+      "rank": 1,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 0.9673,
+      "pct_vs_mean": -80.45293399227808
+    },
+    {
+      "rank": 2,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 1.0481,
+      "pct_vs_mean": -78.82013865120092
+    },
+    {
+      "rank": 3,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 1.2795,
+      "pct_vs_mean": -74.14403912242302
+    },
+    {
+      "rank": 4,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 1.5047,
+      "pct_vs_mean": -69.59322834506443
+    },
+    {
+      "rank": 5,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 1.6595,
+      "pct_vs_mean": -66.46505113220869
+    },
+    {
+      "rank": 6,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 1.7245,
+      "pct_vs_mean": -65.15154002861938
+    },
+    {
+      "rank": 7,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 1.756,
+      "pct_vs_mean": -64.51499233995688
+    },
+    {
+      "rank": 8,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 1.8329,
+      "pct_vs_mean": -62.96100766509508
+    },
+    {
+      "rank": 9,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 2.0743,
+      "pct_vs_mean": -58.08282950499576
+    },
+    {
+      "rank": 10,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 2.4846,
+      "pct_vs_mean": -49.791543261877486
+    },
+    {
+      "rank": 11,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 2.9299,
+      "pct_vs_mean": -40.792981809134204
+    },
+    {
+      "rank": 12,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 3.0461,
+      "pct_vs_mean": -38.444828113179184
+    },
+    {
+      "rank": 13,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 3.3599,
+      "pct_vs_mean": -32.10360066231271
+    },
+    {
+      "rank": 14,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 3.5916,
+      "pct_vs_mean": -27.421438774595174
+    },
+    {
+      "rank": 15,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 3.6567,
+      "pct_vs_mean": -26.10590688469267
+    },
+    {
+      "rank": 16,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 3.7928,
+      "pct_vs_mean": -23.355616712408
+    },
+    {
+      "rank": 17,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 4.0853,
+      "pct_vs_mean": -17.44481674625617
+    },
+    {
+      "rank": 18,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 4.1265,
+      "pct_vs_mean": -16.612252785211883
+    },
+    {
+      "rank": 19,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 4.681,
+      "pct_vs_mean": -5.406992678438583
+    },
+    {
+      "rank": 20,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 5.1872,
+      "pct_vs_mean": 4.822227639052203
+    },
+    {
+      "rank": 21,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 5.7698,
+      "pct_vs_mean": 16.595328699838724
+    },
+    {
+      "rank": 22,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 6.1262,
+      "pct_vs_mean": 23.797411120134488
+    },
+    {
+      "rank": 23,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 6.3302,
+      "pct_vs_mean": 27.91981519909166
+    },
+    {
+      "rank": 24,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 6.49,
+      "pct_vs_mean": 31.14903172760812
+    },
+    {
+      "rank": 25,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 6.7422,
+      "pct_vs_mean": 36.245454809534586
+    },
+    {
+      "rank": 26,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 7.0327,
+      "pct_vs_mean": 42.11583904942213
+    },
+    {
+      "rank": 27,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 7.7998,
+      "pct_vs_mean": 57.617290858089035
+    },
+    {
+      "rank": 28,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 7.9183,
+      "pct_vs_mean": 60.011922639247985
+    },
+    {
+      "rank": 29,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 10.277,
+      "pct_vs_mean": 107.67620940903366
+    },
+    {
+      "rank": 30,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 10.7326,
+      "pct_vs_mean": 116.88291185203803
+    },
+    {
+      "rank": 31,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 13.9682,
+      "pct_vs_mean": 182.26747380239993
+    },
+    {
+      "rank": 32,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 14.3788,
+      "pct_vs_mean": 190.56482240445786
+    }
+  ],
+  "viv_sin_drenaje_pct": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 0.2528,
+      "pct_vs_mean": -97.04029026346377
+    },
+    {
+      "rank": 2,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 1.0951,
+      "pct_vs_mean": -87.17888396961702
+    },
+    {
+      "rank": 3,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 1.5995,
+      "pct_vs_mean": -81.27351375162307
+    },
+    {
+      "rank": 4,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 2.2455,
+      "pct_vs_mean": -73.71033143436675
+    },
+    {
+      "rank": 5,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 2.8733,
+      "pct_vs_mean": -66.36022948580091
+    },
+    {
+      "rank": 6,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 3.3014,
+      "pct_vs_mean": -61.348157736547925
+    },
+    {
+      "rank": 7,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 3.7505,
+      "pct_vs_mean": -56.090224023421264
+    },
+    {
+      "rank": 8,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 4.3292,
+      "pct_vs_mean": -49.31497076181719
+    },
+    {
+      "rank": 9,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 4.4743,
+      "pct_vs_mean": -47.61618166857587
+    },
+    {
+      "rank": 10,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 4.5086,
+      "pct_vs_mean": -47.214607127582234
+    },
+    {
+      "rank": 11,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 5.2423,
+      "pct_vs_mean": -38.624658418339244
+    },
+    {
+      "rank": 12,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 5.3813,
+      "pct_vs_mean": -36.99728637174694
+    },
+    {
+      "rank": 13,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 5.6321,
+      "pct_vs_mean": -34.06099206034155
+    },
+    {
+      "rank": 14,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 5.8066,
+      "pct_vs_mean": -32.0179962176771
+    },
+    {
+      "rank": 15,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 5.9075,
+      "pct_vs_mean": -30.83668801982701
+    },
+    {
+      "rank": 16,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 6.3228,
+      "pct_vs_mean": -25.974474991411288
+    },
+    {
+      "rank": 17,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 6.4934,
+      "pct_vs_mean": -23.977139227751955
+    },
+    {
+      "rank": 18,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 7.2008,
+      "pct_vs_mean": -15.695103358979317
+    },
+    {
+      "rank": 19,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 7.9317,
+      "pct_vs_mean": -7.137936244919486
+    },
+    {
+      "rank": 20,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 8.4246,
+      "pct_vs_mean": -1.3672047214277818
+    },
+    {
+      "rank": 21,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 8.5633,
+      "pct_vs_mean": 0.2566550113949008
+    },
+    {
+      "rank": 22,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 9.1095,
+      "pct_vs_mean": 6.651407614623091
+    },
+    {
+      "rank": 23,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 9.6834,
+      "pct_vs_mean": 13.370463855913195
+    },
+    {
+      "rank": 24,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 9.7936,
+      "pct_vs_mean": 14.660653780621615
+    },
+    {
+      "rank": 25,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 10.0516,
+      "pct_vs_mean": 17.68124362249799
+    },
+    {
+      "rank": 26,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 12.5674,
+      "pct_vs_mean": 47.13550689456217
+    },
+    {
+      "rank": 27,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 14.792,
+      "pct_vs_mean": 73.18048426757832
+    },
+    {
+      "rank": 28,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 16.2268,
+      "pct_vs_mean": 89.97871025643185
+    },
+    {
+      "rank": 29,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 18.8173,
+      "pct_vs_mean": 120.30753965713232
+    },
+    {
+      "rank": 30,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 19.4241,
+      "pct_vs_mean": 127.41177964182448
+    },
+    {
+      "rank": 31,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 22.4914,
+      "pct_vs_mean": 163.32284639371355
+    },
+    {
+      "rank": 32,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 29.0304,
+      "pct_vs_mean": 239.87957885894437
+    }
+  ],
+  "viv_sin_luz_pct": [
+    {
+      "rank": 1,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 0.0936,
+      "pct_vs_mean": -94.41262829576955
+    },
+    {
+      "rank": 2,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 0.6051,
+      "pct_vs_mean": -63.87907459156149
+    },
+    {
+      "rank": 3,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 0.6265,
+      "pct_vs_mean": -62.6016199497823
+    },
+    {
+      "rank": 4,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 0.7355,
+      "pct_vs_mean": -56.094958456607955
+    },
+    {
+      "rank": 5,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 0.7378,
+      "pct_vs_mean": -55.95766192968776
+    },
+    {
+      "rank": 6,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 0.7435,
+      "pct_vs_mean": -55.61740531949424
+    },
+    {
+      "rank": 7,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 0.8645,
+      "pct_vs_mean": -48.39441412064932
+    },
+    {
+      "rank": 8,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 0.865,
+      "pct_vs_mean": -48.36456704957971
+    },
+    {
+      "rank": 9,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 0.9035,
+      "pct_vs_mean": -46.06634257721997
+    },
+    {
+      "rank": 10,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 0.9318,
+      "pct_vs_mean": -44.37699835468021
+    },
+    {
+      "rank": 11,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 0.9454,
+      "pct_vs_mean": -43.56515802158689
+    },
+    {
+      "rank": 12,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 0.966,
+      "pct_vs_mean": -42.33545869351909
+    },
+    {
+      "rank": 13,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 1.2189,
+      "pct_vs_mean": -27.238810146511806
+    },
+    {
+      "rank": 14,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 1.2678,
+      "pct_vs_mean": -24.319766595904234
+    },
+    {
+      "rank": 15,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 1.3865,
+      "pct_vs_mean": -17.234071923979506
+    },
+    {
+      "rank": 16,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 1.3873,
+      "pct_vs_mean": -17.18631661026814
+    },
+    {
+      "rank": 17,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 1.4638,
+      "pct_vs_mean": -12.619714736618254
+    },
+    {
+      "rank": 18,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 1.5945,
+      "pct_vs_mean": -4.817690359022954
+    },
+    {
+      "rank": 19,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 1.6612,
+      "pct_vs_mean": -0.8360910783373688
+    },
+    {
+      "rank": 20,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 1.7967,
+      "pct_vs_mean": 7.252465181526152
+    },
+    {
+      "rank": 21,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 1.8924,
+      "pct_vs_mean": 12.965194584248959
+    },
+    {
+      "rank": 22,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 1.9078,
+      "pct_vs_mean": 13.884484373192848
+    },
+    {
+      "rank": 23,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 1.97,
+      "pct_vs_mean": 17.597460014251975
+    },
+    {
+      "rank": 24,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 1.9809,
+      "pct_vs_mean": 18.248126163569417
+    },
+    {
+      "rank": 25,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 2.0385,
+      "pct_vs_mean": 21.686508750788146
+    },
+    {
+      "rank": 26,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 2.1625,
+      "pct_vs_mean": 29.088582376050713
+    },
+    {
+      "rank": 27,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 2.4447,
+      "pct_vs_mean": 45.93426928773696
+    },
+    {
+      "rank": 28,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 2.6069,
+      "pct_vs_mean": 55.616659142717495
+    },
+    {
+      "rank": 29,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 2.6875,
+      "pct_vs_mean": 60.42800699913816
+    },
+    {
+      "rank": 30,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 3.3664,
+      "pct_vs_mean": 100.95436009745069
+    },
+    {
+      "rank": 31,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 4.0162,
+      "pct_vs_mean": 139.74361365951208
+    },
+    {
+      "rank": 32,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 5.7379,
+      "pct_vs_mean": 242.51901818059713
+    }
+  ],
+  "sin_derechohabiencia_pct": [
+    {
+      "rank": 1,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 14.0218,
+      "pct_vs_mean": -36.94132448099283
+    },
+    {
+      "rank": 2,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 14.6352,
+      "pct_vs_mean": -34.18274915090975
+    },
+    {
+      "rank": 3,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 14.6404,
+      "pct_vs_mean": -34.159363771522024
+    },
+    {
+      "rank": 4,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 14.7354,
+      "pct_vs_mean": -33.73213087886162
+    },
+    {
+      "rank": 5,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 14.9782,
+      "pct_vs_mean": -32.6402135489885
+    },
+    {
+      "rank": 6,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 16.0091,
+      "pct_vs_mean": -28.004062085371515
+    },
+    {
+      "rank": 7,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 16.4391,
+      "pct_vs_mean": -26.07027109754021
+    },
+    {
+      "rank": 8,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 17.515,
+      "pct_vs_mean": -21.231746158452513
+    },
+    {
+      "rank": 9,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 18.3592,
+      "pct_vs_mean": -17.435219758621827
+    },
+    {
+      "rank": 10,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 18.4294,
+      "pct_vs_mean": -17.11951713688751
+    },
+    {
+      "rank": 11,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 18.9142,
+      "pct_vs_mean": -14.939280227816301
+    },
+    {
+      "rank": 12,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 19.7909,
+      "pct_vs_mean": -10.996595206812323
+    },
+    {
+      "rank": 13,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 21.0743,
+      "pct_vs_mean": -5.224903686387428
+    },
+    {
+      "rank": 14,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 21.6472,
+      "pct_vs_mean": -2.6484644842279867
+    },
+    {
+      "rank": 15,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 21.6547,
+      "pct_vs_mean": -2.6147355716495486
+    },
+    {
+      "rank": 16,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 22.0881,
+      "pct_vs_mean": -0.6656541434493273
+    },
+    {
+      "rank": 17,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 22.2505,
+      "pct_vs_mean": 0.06468924358276869
+    },
+    {
+      "rank": 18,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 22.7806,
+      "pct_vs_mean": 2.448648784627838
+    },
+    {
+      "rank": 19,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 23.6873,
+      "pct_vs_mean": 6.526249455945631
+    },
+    {
+      "rank": 20,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 24.0675,
+      "pct_vs_mean": 8.236080464256009
+    },
+    {
+      "rank": 21,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 24.4809,
+      "pct_vs_mean": 10.095218125580342
+    },
+    {
+      "rank": 22,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 25.0069,
+      "pct_vs_mean": 12.460739194415867
+    },
+    {
+      "rank": 23,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 25.1687,
+      "pct_vs_mean": 13.188384268441691
+    },
+    {
+      "rank": 24,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 25.7377,
+      "pct_vs_mean": 15.74728443606033
+    },
+    {
+      "rank": 25,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 25.9508,
+      "pct_vs_mean": 16.70563527212278
+    },
+    {
+      "rank": 26,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 26.358,
+      "pct_vs_mean": 18.536890365715593
+    },
+    {
+      "rank": 27,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 27.5518,
+      "pct_vs_mean": 23.905633810536568
+    },
+    {
+      "rank": 28,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 27.7324,
+      "pct_vs_mean": 24.71782602542571
+    },
+    {
+      "rank": 29,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 27.9297,
+      "pct_vs_mean": 25.605121285656224
+    },
+    {
+      "rank": 30,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 29.9842,
+      "pct_vs_mean": 34.844594737980486
+    },
+    {
+      "rank": 31,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 30.0671,
+      "pct_vs_mean": 35.21741165168098
+    },
+    {
+      "rank": 32,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 37.8694,
+      "pct_vs_mean": 70.30582426646292
+    }
+  ],
+  "ookla_velocidad_avg_mbps": [
+    {
+      "rank": 1,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 58.6871,
+      "pct_vs_mean": 27.71691536384438
+    },
+    {
+      "rank": 2,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 58.4279,
+      "pct_vs_mean": 27.15283527703981
+    },
+    {
+      "rank": 3,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 56.5135,
+      "pct_vs_mean": 22.986651179128277
+    },
+    {
+      "rank": 4,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 56.167,
+      "pct_vs_mean": 22.232585785309674
+    },
+    {
+      "rank": 5,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 54.7954,
+      "pct_vs_mean": 19.24766199263549
+    },
+    {
+      "rank": 6,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 53.6883,
+      "pct_vs_mean": 16.838352331750688
+    },
+    {
+      "rank": 7,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 53.5698,
+      "pct_vs_mean": 16.580468495769438
+    },
+    {
+      "rank": 8,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 53.0049,
+      "pct_vs_mean": 15.351113399180308
+    },
+    {
+      "rank": 9,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 51.9569,
+      "pct_vs_mean": 13.070419221050717
+    },
+    {
+      "rank": 10,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 51.0825,
+      "pct_vs_mean": 11.167519422046425
+    },
+    {
+      "rank": 11,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 50.7275,
+      "pct_vs_mean": 10.394956031554047
+    },
+    {
+      "rank": 12,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 50.4759,
+      "pct_vs_mean": 9.847415330010731
+    },
+    {
+      "rank": 13,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 50.1136,
+      "pct_vs_mean": 9.058965424727944
+    },
+    {
+      "rank": 14,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 49.0547,
+      "pct_vs_mean": 6.754550286157884
+    },
+    {
+      "rank": 15,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 48.8234,
+      "pct_vs_mean": 6.251187153141312
+    },
+    {
+      "rank": 16,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 47.5391,
+      "pct_vs_mean": 3.4562486674811654
+    },
+    {
+      "rank": 17,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 47.2935,
+      "pct_vs_mean": 2.921765375354622
+    },
+    {
+      "rank": 18,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 44.7546,
+      "pct_vs_mean": -2.6034774193526347
+    },
+    {
+      "rank": 19,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 44.239,
+      "pct_vs_mean": -3.725544135233961
+    },
+    {
+      "rank": 20,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 43.6173,
+      "pct_vs_mean": -5.078509374301859
+    },
+    {
+      "rank": 21,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 43.0635,
+      "pct_vs_mean": -6.283708263469961
+    },
+    {
+      "rank": 22,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 40.8772,
+      "pct_vs_mean": -11.041610631451553
+    },
+    {
+      "rank": 23,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 39.9934,
+      "pct_vs_mean": -12.964967038542136
+    },
+    {
+      "rank": 24,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 39.5875,
+      "pct_vs_mean": -13.848300785586797
+    },
+    {
+      "rank": 25,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 38.5628,
+      "pct_vs_mean": -16.078288690481244
+    },
+    {
+      "rank": 26,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 38.2643,
+      "pct_vs_mean": -16.72789480896568
+    },
+    {
+      "rank": 27,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 37.4199,
+      "pct_vs_mean": -18.565507560886125
+    },
+    {
+      "rank": 28,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 36.1713,
+      "pct_vs_mean": -21.28275446051646
+    },
+    {
+      "rank": 29,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 35.7231,
+      "pct_vs_mean": -22.258142943949363
+    },
+    {
+      "rank": 30,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 33.7251,
+      "pct_vs_mean": -26.6062602797346
+    },
+    {
+      "rank": 31,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 32.807,
+      "pct_vs_mean": -28.60426154399105
+    },
+    {
+      "rank": 32,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 29.7025,
+      "pct_vs_mean": -35.360382799719396
+    }
+  ],
+  "ookla_cobertura_4g_pct": [
+    {
+      "rank": 1,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 55.1634,
+      "pct_vs_mean": 37.20908739645653
+    },
+    {
+      "rank": 2,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 54.318,
+      "pct_vs_mean": 35.10630615953196
+    },
+    {
+      "rank": 3,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 52.1969,
+      "pct_vs_mean": 29.830449427049484
+    },
+    {
+      "rank": 4,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 50.1799,
+      "pct_vs_mean": 24.813522818489236
+    },
+    {
+      "rank": 5,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 48.5419,
+      "pct_vs_mean": 20.739290897407567
+    },
+    {
+      "rank": 6,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 45.8294,
+      "pct_vs_mean": 13.992432481086453
+    },
+    {
+      "rank": 7,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 45.3294,
+      "pct_vs_mean": 12.748771943515742
+    },
+    {
+      "rank": 8,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 44.352,
+      "pct_vs_mean": 10.317664324672505
+    },
+    {
+      "rank": 9,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 42.9484,
+      "pct_vs_mean": 6.826460463604006
+    },
+    {
+      "rank": 10,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 42.4579,
+      "pct_vs_mean": 5.606429476247143
+    },
+    {
+      "rank": 11,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 42.3589,
+      "pct_vs_mean": 5.360184689808134
+    },
+    {
+      "rank": 12,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 42.2031,
+      "pct_vs_mean": 4.972660066301101
+    },
+    {
+      "rank": 13,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 41.448,
+      "pct_vs_mean": 3.094483922461813
+    },
+    {
+      "rank": 14,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 41.0236,
+      "pct_vs_mean": 2.0388648581717956
+    },
+    {
+      "rank": 15,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 40.1683,
+      "pct_vs_mean": -0.08854085739666492
+    },
+    {
+      "rank": 16,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 39.6838,
+      "pct_vs_mean": -1.293647918302696
+    },
+    {
+      "rank": 17,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 38.7209,
+      "pct_vs_mean": -3.688689381556369
+    },
+    {
+      "rank": 18,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 38.3817,
+      "pct_vs_mean": -4.5323886902443355
+    },
+    {
+      "rank": 19,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 37.4887,
+      "pct_vs_mean": -6.7535664103456305
+    },
+    {
+      "rank": 20,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 37.3349,
+      "pct_vs_mean": -7.136116391702392
+    },
+    {
+      "rank": 21,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 37.2869,
+      "pct_vs_mean": -7.255507803309167
+    },
+    {
+      "rank": 22,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 36.9803,
+      "pct_vs_mean": -8.018120444947536
+    },
+    {
+      "rank": 23,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 36.4053,
+      "pct_vs_mean": -9.448330063153863
+    },
+    {
+      "rank": 24,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 35.7322,
+      "pct_vs_mean": -11.12254587883155
+    },
+    {
+      "rank": 25,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 35.5393,
+      "pct_vs_mean": -11.602350114226336
+    },
+    {
+      "rank": 26,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 34.7065,
+      "pct_vs_mean": -13.673791105604113
+    },
+    {
+      "rank": 27,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 34.6085,
+      "pct_vs_mean": -13.91754857096797
+    },
+    {
+      "rank": 28,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 34.1982,
+      "pct_vs_mean": -14.938096408098495
+    },
+    {
+      "rank": 29,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 33.9021,
+      "pct_vs_mean": -15.67459217844788
+    },
+    {
+      "rank": 30,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 33.1571,
+      "pct_vs_mean": -17.527646379428237
+    },
+    {
+      "rank": 31,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 29.6496,
+      "pct_vs_mean": -26.251925050486786
+    },
+    {
+      "rank": 32,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 24.2296,
+      "pct_vs_mean": -39.73320527775331
+    }
+  ],
+  "brecha_4g_pp": [
+    {
+      "rank": 1,
+      "state": "MOR",
+      "estado": "Morelos",
+      "value": 1.0308,
+      "pct_vs_mean": -90.03299612023642
+    },
+    {
+      "rank": 2,
+      "state": "TLA",
+      "estado": "Tlaxcala",
+      "value": 1.5372,
+      "pct_vs_mean": -85.13651691504404
+    },
+    {
+      "rank": 3,
+      "state": "AGS",
+      "estado": "Aguascalientes",
+      "value": 1.9186,
+      "pct_vs_mean": -81.44868680276056
+    },
+    {
+      "rank": 4,
+      "state": "CMX",
+      "estado": "Ciudad de Mexico",
+      "value": 1.9742,
+      "pct_vs_mean": -80.9110796862347
+    },
+    {
+      "rank": 5,
+      "state": "MEX",
+      "estado": "Estado de Mexico",
+      "value": 2.3167,
+      "pct_vs_mean": -77.59938117166442
+    },
+    {
+      "rank": 6,
+      "state": "VER",
+      "estado": "Veracruz",
+      "value": 3.1736,
+      "pct_vs_mean": -69.31384990995564
+    },
+    {
+      "rank": 7,
+      "state": "PUE",
+      "estado": "Puebla",
+      "value": 3.1816,
+      "pct_vs_mean": -69.23649636800948
+    },
+    {
+      "rank": 8,
+      "state": "QUE",
+      "estado": "Queretaro",
+      "value": 3.3963,
+      "pct_vs_mean": -67.16052068602923
+    },
+    {
+      "rank": 9,
+      "state": "OAX",
+      "estado": "Oaxaca",
+      "value": 3.4954,
+      "pct_vs_mean": -66.20230368517109
+    },
+    {
+      "rank": 10,
+      "state": "GUA",
+      "estado": "Guanajuato",
+      "value": 4.1303,
+      "pct_vs_mean": -60.063333212468415
+    },
+    {
+      "rank": 11,
+      "state": "HID",
+      "estado": "Hidalgo",
+      "value": 4.1848,
+      "pct_vs_mean": -59.53636220796016
+    },
+    {
+      "rank": 12,
+      "state": "CHP",
+      "estado": "Chiapas",
+      "value": 4.9582,
+      "pct_vs_mean": -52.05820854031449
+    },
+    {
+      "rank": 13,
+      "state": "TAB",
+      "estado": "Tabasco",
+      "value": 6.2245,
+      "pct_vs_mean": -39.814109769510615
+    },
+    {
+      "rank": 14,
+      "state": "COL",
+      "estado": "Colima",
+      "value": 6.6796,
+      "pct_vs_mean": -35.41366015204805
+    },
+    {
+      "rank": 15,
+      "state": "TAM",
+      "estado": "Tamaulipas",
+      "value": 7.653,
+      "pct_vs_mean": -26.001667935748213
+    },
+    {
+      "rank": 16,
+      "state": "YUC",
+      "estado": "Yucatan",
+      "value": 8.2294,
+      "pct_vs_mean": -20.428345238526894
+    },
+    {
+      "rank": 17,
+      "state": "NLE",
+      "estado": "Nuevo Leon",
+      "value": 9.2132,
+      "pct_vs_mean": -10.91579341769703
+    },
+    {
+      "rank": 18,
+      "state": "BCN",
+      "estado": "Baja California",
+      "value": 10.2613,
+      "pct_vs_mean": -0.7815125034748569
+    },
+    {
+      "rank": 19,
+      "state": "MIC",
+      "estado": "Michoacan",
+      "value": 10.3481,
+      "pct_vs_mean": 0.05777342664105466
+    },
+    {
+      "rank": 20,
+      "state": "SLP",
+      "estado": "San Luis Potosi",
+      "value": 10.4239,
+      "pct_vs_mean": 0.7906982365809772
+    },
+    {
+      "rank": 21,
+      "state": "ZAC",
+      "estado": "Zacatecas",
+      "value": 11.1309,
+      "pct_vs_mean": 7.626817506073473
+    },
+    {
+      "rank": 22,
+      "state": "SIN",
+      "estado": "Sinaloa",
+      "value": 11.8809,
+      "pct_vs_mean": 14.878712063526608
+    },
+    {
+      "rank": 23,
+      "state": "GRO",
+      "estado": "Guerrero",
+      "value": 11.9058,
+      "pct_vs_mean": 15.11947496283404
+    },
+    {
+      "rank": 24,
+      "state": "NAY",
+      "estado": "Nayarit",
+      "value": 12.2245,
+      "pct_vs_mean": 18.201046690114474
+    },
+    {
+      "rank": 25,
+      "state": "JAL",
+      "estado": "Jalisco",
+      "value": 12.9998,
+      "pct_vs_mean": 25.69757182397236
+    },
+    {
+      "rank": 26,
+      "state": "DUR",
+      "estado": "Durango",
+      "value": 14.3111,
+      "pct_vs_mean": 38.37678426822341
+    },
+    {
+      "rank": 27,
+      "state": "COA",
+      "estado": "Coahuila",
+      "value": 16.0853,
+      "pct_vs_mean": 55.53186603333455
+    },
+    {
+      "rank": 28,
+      "state": "CHH",
+      "estado": "Chihuahua",
+      "value": 17.3256,
+      "pct_vs_mean": 67.52456579281339
+    },
+    {
+      "rank": 29,
+      "state": "CAM",
+      "estado": "Campeche",
+      "value": 18.3259,
+      "pct_vs_mean": 77.19665929390722
+    },
+    {
+      "rank": 30,
+      "state": "SON",
+      "estado": "Sonora",
+      "value": 19.404,
+      "pct_vs_mean": 87.62101599042751
+    },
+    {
+      "rank": 31,
+      "state": "ROO",
+      "estado": "Quintana Roo",
+      "value": 27.8873,
+      "pct_vs_mean": 169.64767878941709
+    },
+    {
+      "rank": 32,
+      "state": "BCS",
+      "estado": "Baja California Sur",
+      "value": 53.1362,
+      "pct_vs_mean": 413.7841594449884
     }
   ]
 }

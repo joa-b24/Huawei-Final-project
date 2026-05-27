@@ -274,50 +274,93 @@
   },
   "localidades_con_cobertura_movil_pct": {
     "outlier_states": [
+      "BCS",
       "CHH",
       "DUR"
     ],
     "values": [
-      58.58,
-      51.83
+      58.4068,
+      70.2128,
+      63.3631
     ],
     "bounds": {
-      "lower": 63.79375000000001,
-      "upper": 114.12375
+      "lower": 71.2399,
+      "upper": 110.02189999999999
     },
     "method": "IQR"
   },
   "poblacion_en_localidades_con_cobertura_movil_pct": {
     "outlier_states": [
-      "CAM",
-      "DUR",
-      "GRO",
-      "OAX"
+      "CHH",
+      "DUR"
     ],
     "values": [
-      92.81,
-      91.97,
-      92.7,
-      93.29
+      78.8868,
+      73.8454
     ],
     "bounds": {
-      "lower": 93.47375000000002,
-      "upper": 103.26374999999999
+      "lower": 85.13475,
+      "upper": 105.14814999999999
     },
     "method": "IQR"
   },
   "localidades_con_4g_garantizada_pct": {
     "outlier_states": [
+      "BCS",
+      "DUR"
+    ],
+    "values": [
+      42.31,
+      51.3546
+    ],
+    "bounds": {
+      "lower": 53.7773,
+      "upper": 113.0839
+    },
+    "method": "IQR"
+  },
+  "poblacion_en_localidades_con_4g_garantizada_pct": {
+    "outlier_states": [
       "CHH",
       "DUR"
     ],
     "values": [
-      44.52,
-      42.46
+      72.6566,
+      65.6657
     ],
     "bounds": {
-      "lower": 47.66625000000001,
-      "upper": 114.87625
+      "lower": 79.12188750000003,
+      "upper": 106.51838749999997
+    },
+    "method": "IQR"
+  },
+  "localidades_con_5g_garantizada_pct": {
+    "outlier_states": [
+      "CMX",
+      "TLA"
+    ],
+    "values": [
+      63.6678,
+      21.1385
+    ],
+    "bounds": {
+      "lower": -7.2627,
+      "upper": 16.0285
+    },
+    "method": "IQR"
+  },
+  "poblacion_en_localidades_con_5g_garantizada_pct": {
+    "outlier_states": [
+      "BCN",
+      "CMX"
+    ],
+    "values": [
+      68.332,
+      86.3907
+    ],
+    "bounds": {
+      "lower": -13.187262499999997,
+      "upper": 42.7580375
     },
     "method": "IQR"
   },
@@ -331,6 +374,229 @@
     "bounds": {
       "lower": 53.76500000000004,
       "upper": 117.10499999999996
+    },
+    "method": "IQR"
+  },
+  "uso_internet_educacion_pct": {
+    "outlier_states": [
+      "OAX"
+    ],
+    "values": [
+      75.0
+    ],
+    "bounds": {
+      "lower": 75.51250000000002,
+      "upper": 88.61249999999998
+    },
+    "method": "IQR"
+  },
+  "escolaridad_promedio_anios": {
+    "outlier_states": [
+      "CMX"
+    ],
+    "values": [
+      11.5862
+    ],
+    "bounds": {
+      "lower": 5.8111999999999995,
+      "upper": 11.247400000000003
+    },
+    "method": "IQR"
+  },
+  "analfabetismo_15ymas_pct": {
+    "outlier_states": [
+      "CHP",
+      "GRO"
+    ],
+    "values": [
+      16.3927,
+      17.7219
+    ],
+    "bounds": {
+      "lower": -2.4298124999999997,
+      "upper": 15.5976875
+    },
+    "method": "IQR"
+  },
+  "sin_escolaridad_15ymas_pct": {
+    "outlier_states": [
+      "CHP",
+      "GRO"
+    ],
+    "values": [
+      15.8567,
+      16.2765
+    ],
+    "bounds": {
+      "lower": -1.69745,
+      "upper": 15.65655
+    },
+    "method": "IQR"
+  },
+  "posbasica_18ymas_pct": {
+    "outlier_states": [
+      "CMX"
+    ],
+    "values": [
+      63.6065
+    ],
+    "bounds": {
+      "lower": 7.1066124999999865,
+      "upper": 58.932912500000015
+    },
+    "method": "IQR"
+  },
+  "pob_0_14_pct": {
+    "outlier_states": [
+      "CHP",
+      "CMX",
+      "GRO"
+    ],
+    "values": [
+      33.8383,
+      17.9868,
+      31.7352
+    ],
+    "bounds": {
+      "lower": 22.298012500000006,
+      "upper": 31.6167125
+    },
+    "method": "IQR"
+  },
+  "pob_15_64_pct": {
+    "outlier_states": [
+      "CMX"
+    ],
+    "values": [
+      70.9448
+    ],
+    "bounds": {
+      "lower": 56.8418,
+      "upper": 69.16720000000001
+    },
+    "method": "IQR"
+  },
+  "localidades_total": {
+    "outlier_states": [
+      "CHP",
+      "VER"
+    ],
+    "values": [
+      21157.0,
+      19845.0
+    ],
+    "bounds": {
+      "lower": -4196.375,
+      "upper": 13560.625
+    },
+    "method": "IQR"
+  },
+  "irs_indice": {
+    "outlier_states": [
+      "CHP",
+      "GRO",
+      "OAX"
+    ],
+    "values": [
+      0.7055,
+      0.9213,
+      0.7014
+    ],
+    "bounds": {
+      "lower": -1.6364874999999999,
+      "upper": 0.6292125
+    },
+    "method": "IQR"
+  },
+  "viv_sin_agua_pct": {
+    "outlier_states": [
+      "GRO",
+      "SLP"
+    ],
+    "values": [
+      13.9682,
+      14.3788
+    ],
+    "bounds": {
+      "lower": -4.794700000000002,
+      "upper": 13.361700000000003
+    },
+    "method": "IQR"
+  },
+  "viv_sin_drenaje_pct": {
+    "outlier_states": [
+      "GRO",
+      "OAX",
+      "SLP",
+      "TAM"
+    ],
+    "values": [
+      19.4241,
+      29.0304,
+      18.8173,
+      22.4914
+    ],
+    "bounds": {
+      "lower": -3.6920874999999986,
+      "upper": 17.9882125
+    },
+    "method": "IQR"
+  },
+  "viv_sin_luz_pct": {
+    "outlier_states": [
+      "CHH",
+      "NAY"
+    ],
+    "values": [
+      5.7379,
+      4.0162
+    ],
+    "bounds": {
+      "lower": -0.7582625000000003,
+      "upper": 3.6474375000000006
+    },
+    "method": "IQR"
+  },
+  "sin_derechohabiencia_pct": {
+    "outlier_states": [
+      "MIC"
+    ],
+    "values": [
+      37.8694
+    ],
+    "bounds": {
+      "lower": 6.6839125000000035,
+      "upper": 37.2552125
+    },
+    "method": "IQR"
+  },
+  "ookla_cobertura_4g_pct": {
+    "outlier_states": [
+      "CAM",
+      "COL"
+    ],
+    "values": [
+      55.1634,
+      24.2296
+    ],
+    "bounds": {
+      "lower": 24.260987499999988,
+      "upper": 54.72228750000001
+    },
+    "method": "IQR"
+  },
+  "brecha_4g_pp": {
+    "outlier_states": [
+      "BCS",
+      "ROO"
+    ],
+    "values": [
+      53.1362,
+      27.8873
+    ],
+    "bounds": {
+      "lower": -9.950925000000002,
+      "upper": 25.839875000000003
     },
     "method": "IQR"
   }
