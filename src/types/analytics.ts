@@ -13,7 +13,8 @@ export type StateAnalyticsNational = {
   spearman_pct_pob_65_mas_vs_pob_4g?: number;
   spearman_pct_pob_0_14_vs_pob_4g?: number;
   kmeans_k: number;
-  kmeans_silhouette: number;
+  kmeans_silhouette?: number;
+  kmeans_scope?: string;
   n_municipios_modelados: number;
   n_municipios_en_clustering: number;
   connectivity_year: string;

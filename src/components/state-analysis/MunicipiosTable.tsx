@@ -63,8 +63,8 @@ export default function MunicipiosTable({ municipios }: Props) {
           6.0 equivale a primaria completa, 9.0 a secundaria, 12.0 a preparatoria.
         </p>
         <p>
-          <strong>Cluster</strong> — grupo asignado por K-medias a partir de varias variables. Dos municipios
-          del mismo cluster comparten perfil multivariado, no necesariamente ubicación geográfica.
+          <strong>Perfil</strong> — uno de tres grupos por estado (alta, media o baja cobertura 4G relativa),
+          con k-medias sobre cobertura, escolaridad y edad. No implica vecindad geográfica.
         </p>
       </InterpretationHelp>
       <div style={{ overflowX: "auto", maxHeight: 420, overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: 8 }}>

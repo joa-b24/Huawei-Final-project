@@ -18,11 +18,16 @@ os.environ.setdefault("JOBLIB_MULTIPROCESSING", "0")
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 
 from analytics.geo_export import normalize_geo_columns
-from analytics.rf_coverage import apply_rf_coverage_diagnostics
+
+CLUSTER_K = 3
+CLUSTER_FEATURES = [
+    "pob_pct_4g_garantizada",
+    "graproes",
+    "pct_pob_65_mas",
+]
 
 
 def _kmeans(n_clusters: int) -> KMeans:
@@ -392,48 +397,78 @@ def spearman_safe(a: pd.Series, b: pd.Series) -> float:
     return float(df["a"].corr(df["b"], method="spearman"))
 
 
-def pick_kmeans_k(matrix: np.ndarray, k_min: int = 2, k_max: int = 7) -> tuple[int, float, np.ndarray]:
-    best_k = k_min
-    best_score = -1.0
-    best_labels: np.ndarray | None = None
-    for k in range(k_min, min(k_max + 1, matrix.shape[0])):
-        model = _kmeans(k)
-        labels = model.fit_predict(matrix)
-        if len(set(labels)) < 2:
-            continue
-        score = silhouette_score(matrix, labels)
-        if score > best_score:
-            best_score = score
-            best_k = k
-            best_labels = labels.copy()
-    assert best_labels is not None
-    return best_k, float(best_score), best_labels
+def weighted_gini(values: np.ndarray, weights: np.ndarray) -> float:
+    v = np.asarray(values, dtype=float)
+    w = np.asarray(weights, dtype=float)
+    mask = np.isfinite(v) & np.isfinite(w) & (w > 0)
+    v, w = v[mask], w[mask]
+    if v.size == 0:
+        return float("nan")
+    order = np.argsort(v)
+    v, w = v[order], w[order]
+    cw = np.concatenate([[0.0], np.cumsum(w)])
+    cx = np.concatenate([[0.0], np.cumsum(v * w)])
+    total_w = cw[-1]
+    total_xw = cx[-1]
+    if total_xw <= 0:
+        return 0.0
+    cw_n = cw / total_w
+    cx_n = cx / total_xw
+    area = float(np.sum((cx_n[1:] + cx_n[:-1]) * (cw_n[1:] - cw_n[:-1]) / 2.0))
+    return 1.0 - 2.0 * area
 
 
-def label_clusters(df: pd.DataFrame) -> dict[int, str]:
-    """Etiquetas legibles por perfil medio (sin LLM)."""
-    prof = df.groupby("cluster_id", as_index=False).agg(
-        pob_4g=("pob_pct_4g_garantizada", "mean"),
-        pob_3g=("pob_pct_3g_garantizada", "mean"),
-        irs=("irs_indice", "mean"),
-        grap=("graproes", "mean"),
+def label_clusters_by_coverage(df: pd.DataFrame) -> dict[int, str]:
+    """Etiquetas por cobertura 4G media del grupo (alto / medio / bajo)."""
+    prof = (
+        df.groupby("cluster_id", as_index=False)["pob_pct_4g_garantizada"]
+        .mean()
+        .sort_values("pob_pct_4g_garantizada", ascending=False)
+        .reset_index(drop=True)
     )
-    prof["score_digital"] = prof["pob_4g"] + 0.5 * prof["pob_3g"] - prof["irs"].fillna(0)
-    prof = prof.sort_values("score_digital", ascending=False).reset_index(drop=True)
-    templates = [
-        "Perfil alto en cobertura poblacional y menor rezago IRS",
-        "Perfil intermedio-alto en conectividad",
-        "Perfil intermedio en conectividad y rezago",
-        "Perfil con rezago territorial de cobertura o IRS elevado",
-        "Perfil heterogéneo / transición",
-        "Perfil de priorización (baja cobertura relativa)",
-        "Perfil divergente (revisar outliers locales)",
-    ]
+    names = ["Alta cobertura 4G", "Cobertura media", "Baja cobertura 4G"]
+    if len(prof) == 2:
+        names = ["Mayor cobertura 4G", "Menor cobertura 4G"]
+    elif len(prof) == 1:
+        names = ["Único grupo"]
     cid_to_label: dict[int, str] = {}
     for i, row in prof.iterrows():
         cid = int(row["cluster_id"])
-        cid_to_label[cid] = f"Grupo {i + 1}: {templates[min(i, len(templates) - 1)]}"
+        cid_to_label[cid] = names[min(i, len(names) - 1)]
     return cid_to_label
+
+
+def assign_clusters_per_state(df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """k-means con k=3 fijo por entidad federativa (cobertura, escolaridad, edad 65+)."""
+    out = df.copy()
+    out["cluster_id"] = np.nan
+    out["cluster_label"] = ""
+    n_clustered = 0
+
+    for _cve_ent, g in out.groupby("cve_ent"):
+        sub = g[CLUSTER_FEATURES].replace([np.inf, -np.inf], np.nan)
+        row_ok = sub.notna().all(axis=1)
+        idx = g.index[row_ok]
+        n = int(idx.size)
+        if n == 0:
+            continue
+        n_clustered += n
+        if n == 1:
+            out.loc[idx, "cluster_id"] = 0.0
+            out.loc[idx, "cluster_label"] = "Único municipio"
+            continue
+        k = min(CLUSTER_K, n)
+        Xz = StandardScaler().fit_transform(sub.loc[row_ok].to_numpy(dtype=float))
+        labels = _kmeans(k).fit_predict(Xz)
+        out.loc[idx, "cluster_id"] = labels.astype(float)
+        chunk = out.loc[idx].copy()
+        chunk["cluster_id"] = labels
+        labels_map = label_clusters_by_coverage(chunk)
+        for cid, lab in labels_map.items():
+            mask = idx[labels == cid]
+            out.loc[mask, "cluster_label"] = lab
+
+    return out, n_clustered
 
 
 def main() -> None:
@@ -456,37 +491,18 @@ def main() -> None:
         df["pob_pct_3g_garantizada"] - df["loc_pct_3g_garantizada"]
     ).round(4)
 
-    feature_cols = [
-        "graproes",
-        "pct_sin_escolaridad_15ymas",
-        "pct_posbasica_18ymas",
-        "pob_pct_4g_garantizada",
-        "pob_pct_3g_garantizada",
-        "loc_pct_4g_garantizada",
-        "irs_indice",
-        "pct_pob_65_mas",
-    ]
-    X = df[feature_cols].replace([np.inf, -np.inf], np.nan)
-    row_ok = X.notna().all(axis=1)
-    df_cluster = df.loc[row_ok].copy()
-    X_ok = X.loc[row_ok].to_numpy(dtype=float)
-    scaler = StandardScaler()
-    Xz = scaler.fit_transform(X_ok)
-    k, sil, labels = pick_kmeans_k(Xz)
-    df_cluster["cluster_id"] = labels
-    df["cluster_id"] = np.nan
-    df.loc[df_cluster.index, "cluster_id"] = labels.astype(float)
-    cluster_labels = label_clusters(df_cluster)
-    df["cluster_label"] = df["cluster_id"].map(lambda x: cluster_labels.get(int(x), "") if pd.notna(x) else "")
-
-    df, rf_national_imps, rf_state_imps = apply_rf_coverage_diagnostics(df)
+    df, n_clustered = assign_clusters_per_state(df)
     df = normalize_geo_columns(df)
 
-    for c in feature_cols:
-        df[f"{c}_z"] = np.nan
-    df.loc[df_cluster.index, [f"{c}_z" for c in feature_cols]] = Xz
+    cluster_labels_catalog = {
+        "0": "Alta cobertura 4G (relativo al estado)",
+        "1": "Cobertura media",
+        "2": "Baja cobertura 4G",
+    }
 
     nat_w = df["pobtot_iter"].to_numpy(dtype=float)
+    nat_gini_4g = weighted_gini(df["pob_pct_4g_garantizada"].to_numpy(), nat_w)
+    nat_gini_3g = weighted_gini(df["pob_pct_3g_garantizada"].to_numpy(), nat_w)
     nat_theil_4g = theil_l(df["pob_pct_4g_garantizada"].to_numpy(), nat_w)
     nat_spear = spearman_safe(df["graproes"], df["pob_pct_4g_garantizada"])
     nat_spear_mujeres = spearman_safe(df["pct_mujeres"], df["pob_pct_4g_garantizada"])
@@ -504,6 +520,12 @@ def main() -> None:
                 "estado": st.get("estado", g["nom_ent"].iloc[0]),
                 "region": st.get("region", ""),
                 "n_municipios": int(len(g)),
+                "gini_pob_pct_4g": round(
+                    weighted_gini(g["pob_pct_4g_garantizada"].to_numpy(), w), 6
+                ),
+                "gini_pob_pct_3g": round(
+                    weighted_gini(g["pob_pct_3g_garantizada"].to_numpy(), w), 6
+                ),
                 "theil_L_pob_pct_4g": round(theil_l(g["pob_pct_4g_garantizada"].to_numpy(), w), 6),
                 "p90_pob_pct_4g": round(float(np.percentile(g["pob_pct_4g_garantizada"], 90)), 4),
                 "p10_pob_pct_4g": round(float(np.percentile(g["pob_pct_4g_garantizada"], 10)), 4),
@@ -521,24 +543,24 @@ def main() -> None:
                     spearman_safe(g["pct_pob_0_14"], g["pob_pct_4g_garantizada"]), 6
                 ),
                 "ookla_municipios_cubiertos": int(g["ookla_cubierto"].sum()),
-                "rf_feature_importances": rf_state_imps.get(str(cve_ent), rf_national_imps),
             }
         )
     state_rows.sort(key=lambda x: x["cve_ent"])
 
     national_payload = {
+        "gini_pob_pct_4g": round(nat_gini_4g, 6),
+        "gini_pob_pct_3g": round(nat_gini_3g, 6),
         "theil_L_pob_pct_4g": round(nat_theil_4g, 6),
         "spearman_graproes_vs_pob_4g": round(nat_spear, 6),
         "spearman_pct_mujeres_vs_pob_4g": round(nat_spear_mujeres, 6),
         "spearman_pct_pob_65_mas_vs_pob_4g": round(nat_spear_65, 6),
         "spearman_pct_pob_0_14_vs_pob_4g": round(nat_spear_014, 6),
-        "kmeans_k": int(k),
-        "kmeans_silhouette": round(sil, 6),
+        "kmeans_k": CLUSTER_K,
+        "kmeans_scope": "per_state",
         "n_municipios_modelados": int(len(df)),
-        "n_municipios_en_clustering": int(len(df_cluster)),
+        "n_municipios_en_clustering": int(n_clustered),
         "connectivity_year": CONNECTIVITY_YEAR,
-        "cluster_labels": cluster_labels,
-        "rf_feature_importances": rf_national_imps,
+        "cluster_labels": cluster_labels_catalog,
     }
 
     dashboard = {
@@ -569,7 +591,7 @@ def main() -> None:
     )
 
     print(f"Municipios en maestro: {len(df)}")
-    print(f"Municipios en clustering: {len(df_cluster)} (k={k}, sil={sil:.4f})")
+    print(f"Municipios en clustering: {n_clustered} (k={CLUSTER_K} fijo por estado)")
     print(f"Salidas: {csv_path.name}, {json_mun_path.name}, {dash_path.name}")
 
 

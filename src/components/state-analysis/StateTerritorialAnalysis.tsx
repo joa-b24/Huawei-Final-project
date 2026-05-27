@@ -7,12 +7,11 @@ import {
   giniPercentileAmongStates,
   strengthLabel
 } from "../../utils/stateAnalytics";
-import { ANALYSIS_METRICS } from "./analysisMetrics";
+import { useAppContext } from "../../context/AppContext";
 import EmptyState from "../EmptyState";
+import TabNarrative from "../feedback/TabNarrative";
 import LorenzCurveChart from "./LorenzCurveChart";
 import MunicipioScatterExplore from "./MunicipioScatterExplore";
-import MunicipioRfDiagnostico from "./MunicipioRfDiagnostico";
-import MunicipiosTable from "./MunicipiosTable";
 import SpearmanHeatmap from "./SpearmanHeatmap";
 import TabNarrative from "../feedback/TabNarrative";
 import { useAppContext } from "../../context/AppContext";
@@ -121,6 +120,7 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
         <section className="panel">
           <p className="panel-title">Correlaciones de rango (Spearman)</p>
           <SpearmanHeatmap
+            title=""
             labels={ANALYSIS_METRICS.map((m) => m.label)}
             matrix={spearmanMatrix}
             nMunicipios={municipiosEstado.length}
@@ -151,16 +151,31 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
   );
 }
 
+function spearmanFromMatrix(
+  matrix: (number | null)[][],
+  keys: import("./analysisMetrics").AnalysisMetricKey[],
+  a: import("./analysisMetrics").AnalysisMetricKey,
+  b: import("./analysisMetrics").AnalysisMetricKey
+): number | null {
+  const i = keys.indexOf(a);
+  const j = keys.indexOf(b);
+  if (i < 0 || j < 0) return null;
+  const v = matrix[i][j];
+  return typeof v === "number" && Number.isFinite(v) ? v : null;
+}
+
 function StateNarrative({
   stateRow,
   national,
   giniClient,
+  spearmanMatrix,
   percentileRank,
   nMunicipiosFiltrados
 }: {
   stateRow: import("../../types/analytics").StateAnalyticsRow;
   national: import("../../types/analytics").StateAnalyticsNational;
   giniClient: number;
+  spearmanMatrix: (number | null)[][];
   percentileRank: number | null;
   nMunicipiosFiltrados: number;
 }) {
