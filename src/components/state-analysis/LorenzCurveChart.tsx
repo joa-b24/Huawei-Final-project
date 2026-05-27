@@ -36,10 +36,33 @@ function coverageShareAtHalfPopulation(points: { popShare: number; lorenz: numbe
   return null;
 }
 
-function giniColor(g: number): { fill: string; badge: string; label: string } {
-  if (g < 0.12) return { fill: "#86efac", badge: "#16a34a", label: "Distribución homogénea" };
-  if (g < 0.25) return { fill: "#fcd34d", badge: "#b45309", label: "Desigualdad moderada" };
-  return { fill: "#fca5a5", badge: "#b91c1c", label: "Alta concentración" };
+function formatGiniValue(g: number): string {
+  if (!Number.isFinite(g)) return "—";
+  if (g < 0.001) return "<0.001";
+  return g.toFixed(3);
+}
+
+function giniBadge(g: number): { badge: string; label: string } {
+  if (g < 0.01) return { badge: "#16a34a", label: "Casi parejo" };
+  if (g < 0.12) return { badge: "#15803d", label: "Poco desigual" };
+  if (g < 0.25) return { badge: "#b45309", label: "Algo desigual" };
+  return { badge: "#b91c1c", label: "Bastante desigual" };
+}
+
+function vsNationalLabel(delta: number): string {
+  if (delta > 0.02) return "por encima de";
+  if (delta < -0.02) return "por debajo de";
+  return "cerca de";
+}
+
+function giniCompareSentence(g: number, delta: number, national: number): string {
+  const gText = formatGiniValue(g);
+  const natText = formatGiniValue(national);
+  const vs = vsNationalLabel(delta);
+  if (g < 0.01) {
+    return `Gini ${gText} (muy bajo). En este indicador, el estado queda ${vs} el promedio del país (${natText}).`;
+  }
+  return `Gini ${gText}. En este indicador, el estado queda ${vs} el promedio del país (${natText}).`;
 }
 
 export default function LorenzCurveChart({ title, description, points, gini, nationalGini }: Props) {
@@ -54,11 +77,12 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
   const halfCoverage = coverageShareAtHalfPopulation(data);
   const deltaNational =
     Number.isFinite(gini) && Number.isFinite(nationalGini) ? gini - nationalGini : Number.NaN;
-  const colors = giniColor(gini);
+  const badge = giniBadge(gini);
+  const giniText = formatGiniValue(gini);
+  const nationalText = formatGiniValue(nationalGini);
 
   return (
     <div>
-      {/* Header */}
       <div className="section-heading">
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
           <div style={{ flex: 1 }}>
@@ -70,155 +94,143 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
             ) : null}
           </div>
           {Number.isFinite(gini) && (
-            <div style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              background: colors.badge,
-              color: "#fff",
-              borderRadius: 12,
-              padding: "10px 18px",
-              minWidth: 90,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-            }}>
-              <span style={{ fontSize: "1.9rem", fontWeight: 800, lineHeight: 1 }}>{gini.toFixed(3)}</span>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                background: badge.badge,
+                color: "#fff",
+                borderRadius: 12,
+                padding: "10px 18px",
+                minWidth: 90,
+              }}
+            >
+              <span style={{ fontSize: "1.9rem", fontWeight: 800, lineHeight: 1 }}>{giniText}</span>
               <span style={{ fontSize: "0.7rem", fontWeight: 600, opacity: 0.9, marginTop: 2, textAlign: "center" }}>
-                GINI ESTATAL
+                Gini
               </span>
               <span style={{ fontSize: "0.65rem", opacity: 0.85, marginTop: 4, textAlign: "center" }}>
-                {colors.label}
+                {badge.label}
               </span>
             </div>
           )}
         </div>
 
-        {/* KPI strip */}
         <div style={{ display: "flex", gap: 12, marginTop: 10, flexWrap: "wrap" }}>
           {Number.isFinite(nationalGini) && (
             <div style={{ background: "#f1f5f9", borderRadius: 8, padding: "6px 12px", fontSize: "0.82rem", color: "#334155" }}>
-              <span style={{ color: "#94a3b8" }}>Nacional </span>
-              <strong>{nationalGini.toFixed(3)}</strong>
+              <span style={{ color: "#94a3b8" }}>País </span>
+              <strong>{nationalText}</strong>
             </div>
           )}
           {Number.isFinite(deltaNational) && (
-            <div style={{
-              background: deltaNational > 0.02 ? "#fef2f2" : deltaNational < -0.02 ? "#f0fdf4" : "#f8fafc",
-              borderRadius: 8,
-              padding: "6px 12px",
-              fontSize: "0.82rem",
-              color: deltaNational > 0.02 ? "#b91c1c" : deltaNational < -0.02 ? "#15803d" : "#334155",
-              fontWeight: 600,
-            }}>
-              {deltaNational >= 0 ? "+" : ""}{deltaNational.toFixed(3)} vs nacional
+            <div
+              style={{
+                background: deltaNational > 0.02 ? "#fef2f2" : deltaNational < -0.02 ? "#f0fdf4" : "#f8fafc",
+                borderRadius: 8,
+                padding: "6px 12px",
+                fontSize: "0.82rem",
+                color: deltaNational > 0.02 ? "#b91c1c" : deltaNational < -0.02 ? "#15803d" : "#334155",
+                fontWeight: 600,
+              }}
+            >
+              {Math.abs(deltaNational).toFixed(3)} {vsNationalLabel(deltaNational)} el país
             </div>
           )}
           {halfCoverage !== null && (
             <div style={{ background: "#eff6ff", borderRadius: 8, padding: "6px 12px", fontSize: "0.82rem", color: "#1d4ed8" }}>
-              50 % pop. menos cubierta ≈ <strong>{(halfCoverage * 100).toFixed(1)}%</strong> cobertura acum.
+              Mitad menos cubierta: <strong>{(halfCoverage * 100).toFixed(1)}%</strong>
             </div>
           )}
         </div>
       </div>
 
-      <InterpretationHelp
-        topic="Curva de Lorenz y coeficiente de Gini (cobertura 4G poblacional)"
-        caption="Ayuda: Lorenz y Gini"
-        heading="Interpretación posible"
-      >
-        <p>
-          <strong>La diagonal gris</strong> representa igualdad perfecta: todos los municipios con la misma
-          cobertura proporcional. La curva azul es la distribución real; cuanto más se aleja de la diagonal,
-          más concentrada está la cobertura en ciertos municipios.
-        </p>
-        <p>
-          <strong>El área sombreada</strong> equivale visualmente al Gini: mayor área → mayor desigualdad territorial.
-          El color del badge (verde / naranja / rojo) resume el nivel de concentración de un vistazo.
-        </p>
+      <InterpretationHelp topic="Cobertura 4G entre municipios" caption="¿Qué veo aquí?" heading="¿Qué veo aquí?">
+        <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7, color: "#334155" }}>
+          <li>
+            <strong>Línea gris</strong> = todos los municipios con la misma cobertura (lo ideal).
+          </li>
+          <li>
+            <strong>Línea azul</strong> = lo que pasa en realidad.
+          </li>
+          <li>
+            <strong>Sombra</strong> = la diferencia entre ambas. Más sombra = mayor diferencia entre municipios.
+          </li>
+        </ul>
         {Number.isFinite(gini) && Number.isFinite(nationalGini) ? (
-          <p style={{ background: "#eff6ff", borderRadius: 8, padding: "8px 10px", border: "1px solid #bfdbfe" }}>
-            <strong>Lectura indicativa:</strong>{" "}
-            {gini < 0.12
-              ? "el estado muestra una distribución prácticamente homogénea entre municipios, lo que podría interpretarse como cobertura relativamente bien repartida."
-              : gini < 0.25
-                ? "se observa desigualdad moderada: algunos municipios concentran más cobertura, pero el grueso del estado se mantiene en rangos cercanos."
-                : "la cobertura muestra una concentración marcada. Un grupo reducido de municipios acumula gran parte de la cobertura, mientras una cola significativa queda rezagada."}
-            {" "} Gini estatal {gini.toFixed(3)} ·{" "}
-            {deltaNational > 0.02
-              ? "por encima del promedio nacional."
-              : deltaNational < -0.02
-                ? "por debajo del promedio nacional."
-                : "en línea con el promedio nacional."}
+          <p style={{ background: "#eff6ff", borderRadius: 8, padding: "8px 10px", border: "1px solid #bfdbfe", marginTop: 10, marginBottom: 0 }}>
+            {giniCompareSentence(gini, deltaNational, nationalGini)}
           </p>
         ) : null}
         {halfCoverage !== null ? (
-          <p style={{ background: "#fefce8", borderRadius: 8, padding: "8px 10px", border: "1px solid #fde68a" }}>
-            <strong>Punto de referencia:</strong> el 50% de la población con menor cobertura acumula{" "}
-            <strong>{(halfCoverage * 100).toFixed(1)}%</strong> de la cobertura 4G del estado.
-            {halfCoverage < 0.35
-              ? " Una proporción que estaría bastante por debajo del 50% esperado en distribución pareja."
-              : halfCoverage < 0.45
-                ? " Hay un sesgo moderado: la mitad menos cubierta recibe algo menos de su proporción ideal."
-                : " La distribución se acerca bastante a un reparto proporcional."}
+          <p style={{ background: "#fefce8", borderRadius: 8, padding: "8px 10px", border: "1px solid #fde68a", marginTop: 10, marginBottom: 0 }}>
+            La mitad de la población con menos cobertura concentra el{" "}
+            <strong>{(halfCoverage * 100).toFixed(1)}%</strong> del total. En un reparto más parejo, sería cerca del 50%.
           </p>
         ) : null}
       </InterpretationHelp>
 
-      {/* Chart */}
       <div className="chart-frame" style={{ height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={data} margin={{ top: 12, right: 20, left: 0, bottom: 8 }}>
-            <defs>
-              <linearGradient id="lorenzFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={colors.fill} stopOpacity={0.8} />
-                <stop offset="100%" stopColor={colors.fill} stopOpacity={0.2} />
-              </linearGradient>
-            </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             <XAxis
               type="number"
               dataKey="popShare"
               domain={[0, 1]}
               tickFormatter={(v) => `${(v * 100).toFixed(0)}%`}
-              label={{ value: "Población acumulada →", position: "insideBottom", offset: -4, fontSize: 11, fill: "#94a3b8" }}
+              label={{ value: "Población →", position: "insideBottom", offset: -4, fontSize: 11, fill: "#94a3b8" }}
               tick={{ fontSize: 11 }}
             />
             <YAxis
               type="number"
               domain={[0, 1]}
               tickFormatter={(v) => `${(v * 100).toFixed(0)}%`}
-              label={{ value: "Cobertura acum. →", angle: -90, position: "insideLeft", offset: 12, fontSize: 11, fill: "#94a3b8" }}
+              label={{ value: "Cobertura →", angle: -90, position: "insideLeft", offset: 12, fontSize: 11, fill: "#94a3b8" }}
               tick={{ fontSize: 11 }}
               width={48}
             />
             <Tooltip
               formatter={(value: number, name: string) =>
-                name === "Área Gini" ? null : [`${(value * 100).toFixed(1)}%`, name]
+                name === "Desigualdad" || name === "_base" ? null : [`${(value * 100).toFixed(1)}%`, name]
               }
               labelFormatter={(_, payload) =>
                 payload?.[0]?.payload
-                  ? `Pob. acum.: ${(payload[0].payload.popShare * 100).toFixed(1)}%`
+                  ? `Población: ${(payload[0].payload.popShare * 100).toFixed(1)}%`
                   : ""
               }
               contentStyle={{ fontSize: "0.82rem", borderRadius: 8 }}
             />
 
-            {/* Gini shaded area */}
+            {/* Sombra = franja entre curva real (lorenz) e igualdad (equality), vía stack */}
+            <Area
+              type="monotone"
+              dataKey="lorenz"
+              name="_base"
+              stackId="lorenzBand"
+              stroke="none"
+              fill="transparent"
+              fillOpacity={0}
+              isAnimationActive={false}
+              legendType="none"
+            />
             <Area
               type="monotone"
               dataKey="giniGap"
-              name="Área Gini"
-              fill="url(#lorenzFill)"
+              name="Desigualdad"
+              stackId="lorenzBand"
               stroke="none"
-              fillOpacity={1}
+              fill="#93c5fd"
+              fillOpacity={0.45}
               isAnimationActive={false}
               legendType="none"
             />
 
-            {/* Perfect equality line */}
             <Line
               type="linear"
               dataKey="equality"
-              name="Igualdad perfecta"
+              name="Todos iguales"
               stroke="#94a3b8"
               strokeDasharray="6 4"
               dot={false}
@@ -226,26 +238,23 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
               isAnimationActive={false}
             />
 
-            {/* Lorenz curve */}
             <Line
               type="monotone"
               dataKey="lorenz"
-              name="Lorenz (cobertura 4G)"
+              name="Cobertura real"
               stroke="#2563eb"
               dot={false}
               strokeWidth={2.5}
               isAnimationActive={false}
             />
 
-            {/* 50% population reference */}
             <ReferenceLine
               x={0.5}
               stroke="#cbd5e1"
               strokeDasharray="4 3"
-              label={{ value: "50% pob.", position: "top", fontSize: 10, fill: "#94a3b8" }}
+              label={{ value: "50%", position: "top", fontSize: 10, fill: "#94a3b8" }}
             />
 
-            {/* Half-coverage dot */}
             {halfCoverage !== null && (
               <ReferenceDot
                 x={0.5}
@@ -267,8 +276,8 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
         </ResponsiveContainer>
       </div>
 
-      <p style={{ marginTop: 8, fontSize: "0.78rem", color: "#94a3b8" }}>
-        El punto azul indica la cobertura acumulada al 50% de la población (la mitad con menos cobertura). La zona sombreada crece con la desigualdad.
+      <p style={{ marginTop: 8, fontSize: "0.78rem", color: "#94a3b8", marginBottom: 0 }}>
+        Punto azul = cobertura de la mitad con menos acceso. Más sombra = mayor diferencia entre municipios.
       </p>
     </div>
   );

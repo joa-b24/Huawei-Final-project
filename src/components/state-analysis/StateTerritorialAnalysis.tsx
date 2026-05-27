@@ -112,7 +112,7 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
     <div className="tab-content">
       <TabNarrative
         title={`Análisis territorial — ${stateRow.estado}`}
-        description="Desigualdad de cobertura 4G entre municipios (Gini y Lorenz), tres perfiles municipales de cobertura y asociaciones con escolaridad, edad y composición por sexo (Spearman y dispersión)."
+        description="¿Se reparte parejo la cobertura 4G? Aquí ves qué tan desigual es entre municipios y qué relación tiene con educación y edad."
       >
         <StateNarrative
           stateRow={stateRow}
@@ -129,7 +129,7 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
           <p className="panel-title">Curva de Lorenz — cobertura 4G</p>
           <LorenzCurveChart
             title=""
-            description="Eje X: población acumulada (municipios de menor a mayor cobertura). Eje Y: cobertura 4G acumulada. Mayor separación de la diagonal = mayor desigualdad territorial."
+            description="Si la cobertura 4G se repartiera igual entre todos los municipios, la línea azul iría pegada a la gris. Cuanto más se separan, peor repartida está."
             points={lorenz}
             gini={giniClient}
             nationalGini={stateAnalytics.national.gini_pob_pct_4g}
