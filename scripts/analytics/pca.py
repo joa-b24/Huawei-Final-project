@@ -67,10 +67,15 @@ def load_wide_json(path: Path) -> pd.DataFrame:
     return pd.DataFrame(rows).set_index("estado")
 
 
-def load_analytics_json(path: Path) -> pd.DataFrame:
-    """Lee state_analytics_dashboard.json → DataFrame indexado por estado."""
+def load_analytics_json(path: Path, cve_to_name: dict | None = None) -> pd.DataFrame:
+    """Lee state_analytics_dashboard.json → DataFrame indexado por estado.
+    Si se pasa cve_to_name, el índice se normaliza al nombre canónico vía cve_ent."""
     data = json.loads(path.read_text())
-    return pd.DataFrame(data["states"]).set_index("estado")
+    df = pd.DataFrame(data["states"])
+    if cve_to_name and "cve_ent" in df.columns:
+        canonical = df["cve_ent"].map(cve_to_name)
+        df["estado"] = canonical.where(canonical.notna(), df["estado"])
+    return df.set_index("estado")
 
 
 def load_cobertura_estado(path: Path, cve_to_name: dict) -> pd.DataFrame:
@@ -266,7 +271,7 @@ cve_to_estado = {s["cve_ent"]: s["estado"] for s in states_data["states"]}
 
 df_endutih   = load_wide_json(PROCESSED / "endutih_2024_state_dashboard.wide.json")
 df_context   = load_wide_json(PROCESSED / "context_variables_state_dashboard.wide.json")
-df_analytics = load_analytics_json(PROCESSED / "state_analytics_dashboard.json")
+df_analytics = load_analytics_json(PROCESSED / "state_analytics_dashboard.json", cve_to_estado)
 df_cobertura = load_cobertura_estado(
     PROCESSED / "cobertura_red_por_estado_2025.json", cve_to_estado
 )

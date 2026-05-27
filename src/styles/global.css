@@ -323,50 +323,48 @@ select {
 }
 
 .interpretation-help__caption {
-  font-size: 0.86rem;
+  font-size: 11px;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .interpretation-help__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 22px;
+  height: 22px;
   padding: 0;
-  border: 2px solid #1d4ed8;
+  border: 1px solid var(--border);
   border-radius: 50%;
-  background: #ffffff;
-  color: #1d4ed8;
+  background: transparent;
+  color: var(--text-3);
   cursor: pointer;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.25);
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
 }
 
 .interpretation-help__btn:hover {
-  border-color: #1e40af;
-  background: #eff6ff;
-  color: #1e3a8a;
-  transform: scale(1.05);
+  border-color: var(--blue);
+  background: var(--blue-light);
+  color: var(--blue);
 }
 
 .interpretation-help__btn--open {
-  background: #2563eb;
-  border-color: #1e3a8a;
-  color: #ffffff;
-  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.45);
+  background: var(--blue-light);
+  border-color: var(--blue);
+  color: var(--blue);
 }
 
 .interpretation-help__i-char {
   display: block;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 700;
   font-style: italic;
   line-height: 1;
-  margin-top: -1px;
 }
 
 .interpretation-help__panel {
@@ -846,7 +844,9 @@ select {
 /* ─────────────────────────────────────────────────────────────────────────────
    RankingTable
 ───────────────────────────────────────────────────────────────────────────── */
+.ranking-table-scroll { overflow-x: auto; max-height: 420px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; }
 .ranking-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ranking-table thead { position: sticky; top: 0; background: var(--surface-2, #f8fafc); z-index: 1; }
 .ranking-table th { padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); border-bottom: 2px solid var(--border); white-space: nowrap; }
 .ranking-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-2); }
 .ranking-table tr.highlighted td { background: var(--blue-light); }
@@ -1166,6 +1166,15 @@ select {
 .evolucion-tooltip__row { margin: 0 0 2px; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
 .evolucion-tooltip__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
 .evolucion-tooltip__dot--primary { background: var(--blue); }
+
+/* Evolución tab — S-curve insights panel */
+.scurve-insights { margin-top: 12px; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.scurve-insights__title { margin: 0 0 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
+.scurve-insights__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 8px; }
+.scurve-insights__item { display: flex; flex-direction: column; gap: 2px; }
+.scurve-insights__label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); }
+.scurve-insights__value { font-size: 15px; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; }
+.scurve-insights__desc { margin: 0; font-size: 12px; color: var(--text-3); font-style: italic; }
 
 /* Help modal */
 .help-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 24px; }

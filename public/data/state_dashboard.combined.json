@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-12",
+  "updated_at": "2026-05-27",
   "schema_version": "2.0",
   "sources": [
     "CONEVAL 2022 / INEGI ITER 2020 / INEGI PIB",
@@ -257,6 +257,27 @@
       "label": "Poblacion en localidades con internet",
       "unidad": "%",
       "source_table": "loc_tipo_conectividad + localidades_conectividad"
+    },
+    {
+      "variable_id": "hogares_con_internet_pct",
+      "anio": 2024,
+      "categoria_id": "infraestructura_digital",
+      "label": "Hogares con internet",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "uso_internet_educacion_pct",
+      "anio": 2024,
+      "categoria_id": "infraestructura_digital",
+      "label": "Internet: educación",
+      "unidad": "%"
+    },
+    {
+      "variable_id": "uso_internet_gobierno_pct",
+      "anio": 2024,
+      "categoria_id": "infraestructura_digital",
+      "label": "Internet: gobierno",
+      "unidad": "%"
     }
   ],
   "records": [
@@ -301,7 +322,10 @@
         "localidades_con_5g_garantizada_pct": 14.44,
         "poblacion_en_localidades_con_5g_garantizada_pct": 72.06,
         "hogares_en_localidades_con_internet_pct": 93.3,
-        "poblacion_en_localidades_con_internet_pct": 92.31
+        "poblacion_en_localidades_con_internet_pct": 92.31,
+        "hogares_con_internet_pct": 82.4,
+        "uso_internet_educacion_pct": 81.2,
+        "uso_internet_gobierno_pct": 34.0
       }
     },
     {
@@ -345,7 +369,10 @@
         "localidades_con_5g_garantizada_pct": 10.33,
         "poblacion_en_localidades_con_5g_garantizada_pct": 85.39,
         "hogares_en_localidades_con_internet_pct": 97.69,
-        "poblacion_en_localidades_con_internet_pct": 97.29
+        "poblacion_en_localidades_con_internet_pct": 97.29,
+        "hogares_con_internet_pct": 81.6,
+        "uso_internet_educacion_pct": 76.0,
+        "uso_internet_gobierno_pct": 30.4
       }
     },
     {
@@ -389,7 +416,10 @@
         "localidades_con_5g_garantizada_pct": 3.85,
         "poblacion_en_localidades_con_5g_garantizada_pct": 74.33,
         "hogares_en_localidades_con_internet_pct": 95.58,
-        "poblacion_en_localidades_con_internet_pct": 94.72
+        "poblacion_en_localidades_con_internet_pct": 94.72,
+        "hogares_con_internet_pct": 80.4,
+        "uso_internet_educacion_pct": 83.2,
+        "uso_internet_gobierno_pct": 28.5
       }
     },
     {
@@ -433,7 +463,10 @@
         "localidades_con_5g_garantizada_pct": 0.07,
         "poblacion_en_localidades_con_5g_garantizada_pct": 47.49,
         "hogares_en_localidades_con_internet_pct": 78.37,
-        "poblacion_en_localidades_con_internet_pct": 76.37
+        "poblacion_en_localidades_con_internet_pct": 76.37,
+        "hogares_con_internet_pct": 71.5,
+        "uso_internet_educacion_pct": 85.7,
+        "uso_internet_gobierno_pct": 30.4
       }
     },
     {
@@ -477,7 +510,10 @@
         "localidades_con_5g_garantizada_pct": 1.72,
         "poblacion_en_localidades_con_5g_garantizada_pct": 75.83,
         "hogares_en_localidades_con_internet_pct": 92.94,
-        "poblacion_en_localidades_con_internet_pct": 91.93
+        "poblacion_en_localidades_con_internet_pct": 91.93,
+        "hogares_con_internet_pct": 77.6,
+        "uso_internet_educacion_pct": 81.9,
+        "uso_internet_gobierno_pct": 38.4
       }
     },
     {
@@ -521,7 +557,10 @@
         "localidades_con_5g_garantizada_pct": 0.42,
         "poblacion_en_localidades_con_5g_garantizada_pct": 19.95,
         "hogares_en_localidades_con_internet_pct": 57.9,
-        "poblacion_en_localidades_con_internet_pct": 53.35
+        "poblacion_en_localidades_con_internet_pct": 53.35,
+        "hogares_con_internet_pct": 50.7,
+        "uso_internet_educacion_pct": 77.5,
+        "uso_internet_gobierno_pct": 23.2
       }
     },
     {
@@ -565,7 +604,10 @@
         "localidades_con_5g_garantizada_pct": 5.99,
         "poblacion_en_localidades_con_5g_garantizada_pct": 92.84,
         "hogares_en_localidades_con_internet_pct": 99.9,
-        "poblacion_en_localidades_con_internet_pct": 99.88
+        "poblacion_en_localidades_con_internet_pct": 99.88,
+        "hogares_con_internet_pct": 84.4,
+        "uso_internet_educacion_pct": 82.2,
+        "uso_internet_gobierno_pct": 40.5
       }
     },
     {
@@ -609,7 +651,10 @@
         "localidades_con_5g_garantizada_pct": 7.04,
         "poblacion_en_localidades_con_5g_garantizada_pct": 76.79,
         "hogares_en_localidades_con_internet_pct": 94.84,
-        "poblacion_en_localidades_con_internet_pct": 94.39
+        "poblacion_en_localidades_con_internet_pct": 94.39,
+        "hogares_con_internet_pct": 83.1,
+        "uso_internet_educacion_pct": 84.9,
+        "uso_internet_gobierno_pct": 26.7
       }
     },
     {
@@ -653,7 +698,10 @@
         "localidades_con_5g_garantizada_pct": 11.58,
         "poblacion_en_localidades_con_5g_garantizada_pct": 76.51,
         "hogares_en_localidades_con_internet_pct": 96.72,
-        "poblacion_en_localidades_con_internet_pct": 96.3
+        "poblacion_en_localidades_con_internet_pct": 96.3,
+        "hogares_con_internet_pct": 77.1,
+        "uso_internet_educacion_pct": 87.7,
+        "uso_internet_gobierno_pct": 34.7
       }
     },
     {
@@ -697,7 +745,10 @@
         "localidades_con_5g_garantizada_pct": 1.65,
         "poblacion_en_localidades_con_5g_garantizada_pct": 56.01,
         "hogares_en_localidades_con_internet_pct": 82.75,
-        "poblacion_en_localidades_con_internet_pct": 81.0
+        "poblacion_en_localidades_con_internet_pct": 81.0,
+        "hogares_con_internet_pct": 63.9,
+        "uso_internet_educacion_pct": 83.6,
+        "uso_internet_gobierno_pct": 28.5
       }
     },
     {
@@ -741,7 +792,10 @@
         "localidades_con_5g_garantizada_pct": 2.3,
         "poblacion_en_localidades_con_5g_garantizada_pct": 30.26,
         "hogares_en_localidades_con_internet_pct": 69.24,
-        "poblacion_en_localidades_con_internet_pct": 66.51
+        "poblacion_en_localidades_con_internet_pct": 66.51,
+        "hogares_con_internet_pct": 58.9,
+        "uso_internet_educacion_pct": 82.1,
+        "uso_internet_gobierno_pct": 35.0
       }
     },
     {
@@ -785,7 +839,10 @@
         "localidades_con_5g_garantizada_pct": 7.04,
         "poblacion_en_localidades_con_5g_garantizada_pct": 53.33,
         "hogares_en_localidades_con_internet_pct": 83.16,
-        "poblacion_en_localidades_con_internet_pct": 82.46
+        "poblacion_en_localidades_con_internet_pct": 82.46,
+        "hogares_con_internet_pct": 75.3,
+        "uso_internet_educacion_pct": 81.1,
+        "uso_internet_gobierno_pct": 28.7
       }
     },
     {
@@ -829,7 +886,10 @@
         "localidades_con_5g_garantizada_pct": 4.9,
         "poblacion_en_localidades_con_5g_garantizada_pct": 27.21,
         "hogares_en_localidades_con_internet_pct": 67.81,
-        "poblacion_en_localidades_con_internet_pct": 66.83
+        "poblacion_en_localidades_con_internet_pct": 66.83,
+        "hogares_con_internet_pct": 70.2,
+        "uso_internet_educacion_pct": 85.9,
+        "uso_internet_gobierno_pct": 36.6
       }
     },
     {
@@ -873,7 +933,10 @@
         "localidades_con_5g_garantizada_pct": 4.51,
         "poblacion_en_localidades_con_5g_garantizada_pct": 65.35,
         "hogares_en_localidades_con_internet_pct": 93.77,
-        "poblacion_en_localidades_con_internet_pct": 93.32
+        "poblacion_en_localidades_con_internet_pct": 93.32,
+        "hogares_con_internet_pct": 80.9,
+        "uso_internet_educacion_pct": 81.0,
+        "uso_internet_gobierno_pct": 31.2
       }
     },
     {
@@ -917,7 +980,10 @@
         "localidades_con_5g_garantizada_pct": 7.72,
         "poblacion_en_localidades_con_5g_garantizada_pct": 57.37,
         "hogares_en_localidades_con_internet_pct": 93.83,
-        "poblacion_en_localidades_con_internet_pct": 93.18
+        "poblacion_en_localidades_con_internet_pct": 93.18,
+        "hogares_con_internet_pct": 76.7,
+        "uso_internet_educacion_pct": 84.1,
+        "uso_internet_gobierno_pct": 37.1
       }
     },
     {
@@ -961,7 +1027,10 @@
         "localidades_con_5g_garantizada_pct": 4.42,
         "poblacion_en_localidades_con_5g_garantizada_pct": 43.91,
         "hogares_en_localidades_con_internet_pct": 82.29,
-        "poblacion_en_localidades_con_internet_pct": 81.35
+        "poblacion_en_localidades_con_internet_pct": 81.35,
+        "hogares_con_internet_pct": 67.7,
+        "uso_internet_educacion_pct": 78.3,
+        "uso_internet_gobierno_pct": 23.4
       }
     },
     {
@@ -1005,7 +1074,10 @@
         "localidades_con_5g_garantizada_pct": 10.39,
         "poblacion_en_localidades_con_5g_garantizada_pct": 54.19,
         "hogares_en_localidades_con_internet_pct": 96.67,
-        "poblacion_en_localidades_con_internet_pct": 96.53
+        "poblacion_en_localidades_con_internet_pct": 96.53,
+        "hogares_con_internet_pct": 74.4,
+        "uso_internet_educacion_pct": 80.6,
+        "uso_internet_gobierno_pct": 32.9
       }
     },
     {
@@ -1049,7 +1121,10 @@
         "localidades_con_5g_garantizada_pct": 3.02,
         "poblacion_en_localidades_con_5g_garantizada_pct": 42.14,
         "hogares_en_localidades_con_internet_pct": 85.33,
-        "poblacion_en_localidades_con_internet_pct": 83.59
+        "poblacion_en_localidades_con_internet_pct": 83.59,
+        "hogares_con_internet_pct": 66.9,
+        "uso_internet_educacion_pct": 82.5,
+        "uso_internet_gobierno_pct": 26.1
       }
     },
     {
@@ -1093,7 +1168,10 @@
         "localidades_con_5g_garantizada_pct": 8.48,
         "poblacion_en_localidades_con_5g_garantizada_pct": 90.09,
         "hogares_en_localidades_con_internet_pct": 97.16,
-        "poblacion_en_localidades_con_internet_pct": 97.14
+        "poblacion_en_localidades_con_internet_pct": 97.14,
+        "hogares_con_internet_pct": 83.7,
+        "uso_internet_educacion_pct": 79.9,
+        "uso_internet_gobierno_pct": 28.6
       }
     },
     {
@@ -1137,7 +1215,10 @@
         "localidades_con_5g_garantizada_pct": 4.19,
         "poblacion_en_localidades_con_5g_garantizada_pct": 22.52,
         "hogares_en_localidades_con_internet_pct": 56.2,
-        "poblacion_en_localidades_con_internet_pct": 55.08
+        "poblacion_en_localidades_con_internet_pct": 55.08,
+        "hogares_con_internet_pct": 55.5,
+        "uso_internet_educacion_pct": 75.0,
+        "uso_internet_gobierno_pct": 31.8
       }
     },
     {
@@ -1181,7 +1262,10 @@
         "localidades_con_5g_garantizada_pct": 7.93,
         "poblacion_en_localidades_con_5g_garantizada_pct": 47.86,
         "hogares_en_localidades_con_internet_pct": 79.42,
-        "poblacion_en_localidades_con_internet_pct": 78.36
+        "poblacion_en_localidades_con_internet_pct": 78.36,
+        "hogares_con_internet_pct": 61.8,
+        "uso_internet_educacion_pct": 79.9,
+        "uso_internet_gobierno_pct": 32.1
       }
     },
     {
@@ -1225,7 +1309,10 @@
         "localidades_con_5g_garantizada_pct": 6.16,
         "poblacion_en_localidades_con_5g_garantizada_pct": 62.37,
         "hogares_en_localidades_con_internet_pct": 84.62,
-        "poblacion_en_localidades_con_internet_pct": 82.86
+        "poblacion_en_localidades_con_internet_pct": 82.86,
+        "hogares_con_internet_pct": 79.5,
+        "uso_internet_educacion_pct": 82.0,
+        "uso_internet_gobierno_pct": 36.9
       }
     },
     {
@@ -1269,7 +1356,10 @@
         "localidades_con_5g_garantizada_pct": 1.45,
         "poblacion_en_localidades_con_5g_garantizada_pct": 80.3,
         "hogares_en_localidades_con_internet_pct": 94.2,
-        "poblacion_en_localidades_con_internet_pct": 93.17
+        "poblacion_en_localidades_con_internet_pct": 93.17,
+        "hogares_con_internet_pct": 82.3,
+        "uso_internet_educacion_pct": 81.4,
+        "uso_internet_gobierno_pct": 37.6
       }
     },
     {
@@ -1313,7 +1403,10 @@
         "localidades_con_5g_garantizada_pct": 2.04,
         "poblacion_en_localidades_con_5g_garantizada_pct": 54.58,
         "hogares_en_localidades_con_internet_pct": 86.29,
-        "poblacion_en_localidades_con_internet_pct": 84.89
+        "poblacion_en_localidades_con_internet_pct": 84.89,
+        "hogares_con_internet_pct": 78.9,
+        "uso_internet_educacion_pct": 81.4,
+        "uso_internet_gobierno_pct": 29.2
       }
     },
     {
@@ -1357,7 +1450,10 @@
         "localidades_con_5g_garantizada_pct": 3.16,
         "poblacion_en_localidades_con_5g_garantizada_pct": 54.75,
         "hogares_en_localidades_con_internet_pct": 73.6,
-        "poblacion_en_localidades_con_internet_pct": 72.0
+        "poblacion_en_localidades_con_internet_pct": 72.0,
+        "hogares_con_internet_pct": 65.5,
+        "uso_internet_educacion_pct": 79.3,
+        "uso_internet_gobierno_pct": 34.3
       }
     },
     {
@@ -1401,7 +1497,10 @@
         "localidades_con_5g_garantizada_pct": 1.99,
         "poblacion_en_localidades_con_5g_garantizada_pct": 66.57,
         "hogares_en_localidades_con_internet_pct": 93.84,
-        "poblacion_en_localidades_con_internet_pct": 92.87
+        "poblacion_en_localidades_con_internet_pct": 92.87,
+        "hogares_con_internet_pct": 84.4,
+        "uso_internet_educacion_pct": 83.6,
+        "uso_internet_gobierno_pct": 35.1
       }
     },
     {
@@ -1445,7 +1544,10 @@
         "localidades_con_5g_garantizada_pct": 1.66,
         "poblacion_en_localidades_con_5g_garantizada_pct": 20.81,
         "hogares_en_localidades_con_internet_pct": 64.99,
-        "poblacion_en_localidades_con_internet_pct": 63.3
+        "poblacion_en_localidades_con_internet_pct": 63.3,
+        "hogares_con_internet_pct": 71.7,
+        "uso_internet_educacion_pct": 84.0,
+        "uso_internet_gobierno_pct": 39.9
       }
     },
     {
@@ -1489,7 +1591,10 @@
         "localidades_con_5g_garantizada_pct": 4.31,
         "poblacion_en_localidades_con_5g_garantizada_pct": 83.0,
         "hogares_en_localidades_con_internet_pct": 93.65,
-        "poblacion_en_localidades_con_internet_pct": 93.45
+        "poblacion_en_localidades_con_internet_pct": 93.45,
+        "hogares_con_internet_pct": 74.9,
+        "uso_internet_educacion_pct": 82.0,
+        "uso_internet_gobierno_pct": 32.8
       }
     },
     {
@@ -1533,7 +1638,10 @@
         "localidades_con_5g_garantizada_pct": 7.83,
         "poblacion_en_localidades_con_5g_garantizada_pct": 40.57,
         "hogares_en_localidades_con_internet_pct": 92.95,
-        "poblacion_en_localidades_con_internet_pct": 92.81
+        "poblacion_en_localidades_con_internet_pct": 92.81,
+        "hogares_con_internet_pct": 61.5,
+        "uso_internet_educacion_pct": 85.8,
+        "uso_internet_gobierno_pct": 35.5
       }
     },
     {
@@ -1577,7 +1685,10 @@
         "localidades_con_5g_garantizada_pct": 4.57,
         "poblacion_en_localidades_con_5g_garantizada_pct": 38.04,
         "hogares_en_localidades_con_internet_pct": 71.34,
-        "poblacion_en_localidades_con_internet_pct": 69.26
+        "poblacion_en_localidades_con_internet_pct": 69.26,
+        "hogares_con_internet_pct": 64.0,
+        "uso_internet_educacion_pct": 76.3,
+        "uso_internet_gobierno_pct": 31.9
       }
     },
     {
@@ -1621,7 +1732,10 @@
         "localidades_con_5g_garantizada_pct": 1.23,
         "poblacion_en_localidades_con_5g_garantizada_pct": 47.06,
         "hogares_en_localidades_con_internet_pct": 88.41,
-        "poblacion_en_localidades_con_internet_pct": 87.29
+        "poblacion_en_localidades_con_internet_pct": 87.29,
+        "hogares_con_internet_pct": 73.9,
+        "uso_internet_educacion_pct": 84.2,
+        "uso_internet_gobierno_pct": 37.2
       }
     },
     {
@@ -1665,7 +1779,10 @@
         "localidades_con_5g_garantizada_pct": 1.56,
         "poblacion_en_localidades_con_5g_garantizada_pct": 28.87,
         "hogares_en_localidades_con_internet_pct": 78.56,
-        "poblacion_en_localidades_con_internet_pct": 77.9
+        "poblacion_en_localidades_con_internet_pct": 77.9,
+        "hogares_con_internet_pct": 78.2,
+        "uso_internet_educacion_pct": 81.9,
+        "uso_internet_gobierno_pct": 24.2
       }
     }
   ]

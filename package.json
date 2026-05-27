@@ -20,7 +20,9 @@
     "data:import": "python3 scripts/import_variable.py",
     "data:layer1": "python3 scripts/analytics/layer1_descriptive.py",
     "data:layer1:municipal": "python3 scripts/analytics/layer1_municipal.py",
-    "data:pipeline": "python3 scripts/combine_data.py && python3 scripts/analytics/layer1_descriptive.py"
+    "data:pipeline": "python3 scripts/combine_data.py && python3 scripts/analytics/layer1_descriptive.py",
+    "data:build:temporal": "python scripts/analytics/build_temporal_outputs.py",
+    "data:build:pca": "python scripts/analytics/pca.py"
   },
   "dependencies": {
     "lucide-react": "^1.14.0",

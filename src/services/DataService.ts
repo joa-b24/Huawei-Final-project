@@ -86,6 +86,12 @@ export type PcaResults = {
   cluster_stats: Record<string, PcaClusterStat>;
 };
 
+export type TemporalVarMeta = {
+  label: string;
+  unit: string;
+  source: string;
+};
+
 export type AppData = {
   dataset: DashboardDataset;
   correlations: CorrelationsPayload;
@@ -98,6 +104,8 @@ export type AppData = {
   pcaResults: PcaResults | null;
   /** Variable IDs that have temporal JSON files available */
   temporalVariables: string[];
+  /** Label/unit/source metadata for temporal-only variables */
+  temporalMeta: Record<string, TemporalVarMeta>;
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -243,5 +251,6 @@ export async function loadAppData(): Promise<AppData> {
     municipalManifest,
     pcaResults,
     temporalVariables: temporalManifest?.variables ?? [],
+    temporalMeta: (temporalManifest as any)?.metadata ?? {},
   };
 }

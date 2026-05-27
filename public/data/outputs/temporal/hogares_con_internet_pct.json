@@ -1,0 +1,1606 @@
+{
+  "variable_id": "hogares_con_internet_pct",
+  "updated_at": "2026-05-27",
+  "records": [
+    {
+      "state_code": "AGS",
+      "year": 2015,
+      "value": 40.1
+    },
+    {
+      "state_code": "AGS",
+      "year": 2016,
+      "value": 45.6
+    },
+    {
+      "state_code": "AGS",
+      "year": 2017,
+      "value": 66.8
+    },
+    {
+      "state_code": "AGS",
+      "year": 2018,
+      "value": 70.4
+    },
+    {
+      "state_code": "AGS",
+      "year": 2019,
+      "value": 69.25
+    },
+    {
+      "state_code": "AGS",
+      "year": 2020,
+      "value": 68.1
+    },
+    {
+      "state_code": "AGS",
+      "year": 2021,
+      "value": 71.6
+    },
+    {
+      "state_code": "AGS",
+      "year": 2022,
+      "value": 75.8
+    },
+    {
+      "state_code": "AGS",
+      "year": 2023,
+      "value": 81.4
+    },
+    {
+      "state_code": "AGS",
+      "year": 2024,
+      "value": 82.4
+    },
+    {
+      "state_code": "BCN",
+      "year": 2015,
+      "value": 56.2
+    },
+    {
+      "state_code": "BCN",
+      "year": 2016,
+      "value": 67.6
+    },
+    {
+      "state_code": "BCN",
+      "year": 2017,
+      "value": 75.1
+    },
+    {
+      "state_code": "BCN",
+      "year": 2018,
+      "value": 81.7
+    },
+    {
+      "state_code": "BCN",
+      "year": 2019,
+      "value": 78.0
+    },
+    {
+      "state_code": "BCN",
+      "year": 2020,
+      "value": 74.3
+    },
+    {
+      "state_code": "BCN",
+      "year": 2021,
+      "value": 79.1
+    },
+    {
+      "state_code": "BCN",
+      "year": 2022,
+      "value": 83.1
+    },
+    {
+      "state_code": "BCN",
+      "year": 2023,
+      "value": 86.4
+    },
+    {
+      "state_code": "BCN",
+      "year": 2024,
+      "value": 81.6
+    },
+    {
+      "state_code": "BCS",
+      "year": 2015,
+      "value": 57.4
+    },
+    {
+      "state_code": "BCS",
+      "year": 2016,
+      "value": 74.8
+    },
+    {
+      "state_code": "BCS",
+      "year": 2017,
+      "value": 78.5
+    },
+    {
+      "state_code": "BCS",
+      "year": 2018,
+      "value": 78.2
+    },
+    {
+      "state_code": "BCS",
+      "year": 2019,
+      "value": 73.55
+    },
+    {
+      "state_code": "BCS",
+      "year": 2020,
+      "value": 68.9
+    },
+    {
+      "state_code": "BCS",
+      "year": 2021,
+      "value": 72.5
+    },
+    {
+      "state_code": "BCS",
+      "year": 2022,
+      "value": 75.4
+    },
+    {
+      "state_code": "BCS",
+      "year": 2023,
+      "value": 78.9
+    },
+    {
+      "state_code": "BCS",
+      "year": 2024,
+      "value": 80.4
+    },
+    {
+      "state_code": "CAM",
+      "year": 2015,
+      "value": 40.1
+    },
+    {
+      "state_code": "CAM",
+      "year": 2016,
+      "value": 53.7
+    },
+    {
+      "state_code": "CAM",
+      "year": 2017,
+      "value": 58.7
+    },
+    {
+      "state_code": "CAM",
+      "year": 2018,
+      "value": 70.8
+    },
+    {
+      "state_code": "CAM",
+      "year": 2019,
+      "value": 61.8
+    },
+    {
+      "state_code": "CAM",
+      "year": 2020,
+      "value": 52.8
+    },
+    {
+      "state_code": "CAM",
+      "year": 2021,
+      "value": 61.8
+    },
+    {
+      "state_code": "CAM",
+      "year": 2022,
+      "value": 65.0
+    },
+    {
+      "state_code": "CAM",
+      "year": 2023,
+      "value": 70.9
+    },
+    {
+      "state_code": "CAM",
+      "year": 2024,
+      "value": 71.5
+    },
+    {
+      "state_code": "CHH",
+      "year": 2015,
+      "value": 41.5
+    },
+    {
+      "state_code": "CHH",
+      "year": 2016,
+      "value": 47.9
+    },
+    {
+      "state_code": "CHH",
+      "year": 2017,
+      "value": 66.0
+    },
+    {
+      "state_code": "CHH",
+      "year": 2018,
+      "value": 63.3
+    },
+    {
+      "state_code": "CHH",
+      "year": 2019,
+      "value": 64.45
+    },
+    {
+      "state_code": "CHH",
+      "year": 2020,
+      "value": 65.6
+    },
+    {
+      "state_code": "CHH",
+      "year": 2021,
+      "value": 68.7
+    },
+    {
+      "state_code": "CHH",
+      "year": 2022,
+      "value": 71.1
+    },
+    {
+      "state_code": "CHH",
+      "year": 2023,
+      "value": 74.1
+    },
+    {
+      "state_code": "CHH",
+      "year": 2024,
+      "value": 77.6
+    },
+    {
+      "state_code": "CHP",
+      "year": 2015,
+      "value": 13.4
+    },
+    {
+      "state_code": "CHP",
+      "year": 2016,
+      "value": 12.9
+    },
+    {
+      "state_code": "CHP",
+      "year": 2017,
+      "value": 33.9
+    },
+    {
+      "state_code": "CHP",
+      "year": 2018,
+      "value": 72.9
+    },
+    {
+      "state_code": "CHP",
+      "year": 2019,
+      "value": 49.7
+    },
+    {
+      "state_code": "CHP",
+      "year": 2020,
+      "value": 26.5
+    },
+    {
+      "state_code": "CHP",
+      "year": 2021,
+      "value": 30.8
+    },
+    {
+      "state_code": "CHP",
+      "year": 2022,
+      "value": 38.4
+    },
+    {
+      "state_code": "CHP",
+      "year": 2023,
+      "value": 44.3
+    },
+    {
+      "state_code": "CHP",
+      "year": 2024,
+      "value": 50.7
+    },
+    {
+      "state_code": "CMX",
+      "year": 2015,
+      "value": 63.1
+    },
+    {
+      "state_code": "CMX",
+      "year": 2016,
+      "value": 67.6
+    },
+    {
+      "state_code": "CMX",
+      "year": 2017,
+      "value": 74.7
+    },
+    {
+      "state_code": "CMX",
+      "year": 2018,
+      "value": 71.9
+    },
+    {
+      "state_code": "CMX",
+      "year": 2019,
+      "value": 76.2
+    },
+    {
+      "state_code": "CMX",
+      "year": 2020,
+      "value": 80.5
+    },
+    {
+      "state_code": "CMX",
+      "year": 2021,
+      "value": 85.1
+    },
+    {
+      "state_code": "CMX",
+      "year": 2022,
+      "value": 86.0
+    },
+    {
+      "state_code": "CMX",
+      "year": 2023,
+      "value": 89.5
+    },
+    {
+      "state_code": "CMX",
+      "year": 2024,
+      "value": 84.4
+    },
+    {
+      "state_code": "COA",
+      "year": 2015,
+      "value": 41.1
+    },
+    {
+      "state_code": "COA",
+      "year": 2016,
+      "value": 52.2
+    },
+    {
+      "state_code": "COA",
+      "year": 2017,
+      "value": 61.3
+    },
+    {
+      "state_code": "COA",
+      "year": 2018,
+      "value": 44.3
+    },
+    {
+      "state_code": "COA",
+      "year": 2019,
+      "value": 54.45
+    },
+    {
+      "state_code": "COA",
+      "year": 2020,
+      "value": 64.6
+    },
+    {
+      "state_code": "COA",
+      "year": 2021,
+      "value": 71.4
+    },
+    {
+      "state_code": "COA",
+      "year": 2022,
+      "value": 70.0
+    },
+    {
+      "state_code": "COA",
+      "year": 2023,
+      "value": 76.9
+    },
+    {
+      "state_code": "COA",
+      "year": 2024,
+      "value": 83.1
+    },
+    {
+      "state_code": "COL",
+      "year": 2015,
+      "value": 47.7
+    },
+    {
+      "state_code": "COL",
+      "year": 2016,
+      "value": 54.1
+    },
+    {
+      "state_code": "COL",
+      "year": 2017,
+      "value": 65.5
+    },
+    {
+      "state_code": "COL",
+      "year": 2018,
+      "value": 73.1
+    },
+    {
+      "state_code": "COL",
+      "year": 2019,
+      "value": 70.25
+    },
+    {
+      "state_code": "COL",
+      "year": 2020,
+      "value": 67.4
+    },
+    {
+      "state_code": "COL",
+      "year": 2021,
+      "value": 73.7
+    },
+    {
+      "state_code": "COL",
+      "year": 2022,
+      "value": 76.4
+    },
+    {
+      "state_code": "COL",
+      "year": 2023,
+      "value": 75.5
+    },
+    {
+      "state_code": "COL",
+      "year": 2024,
+      "value": 77.1
+    },
+    {
+      "state_code": "DUR",
+      "year": 2015,
+      "value": 28.8
+    },
+    {
+      "state_code": "DUR",
+      "year": 2016,
+      "value": 47.3
+    },
+    {
+      "state_code": "DUR",
+      "year": 2017,
+      "value": 58.2
+    },
+    {
+      "state_code": "DUR",
+      "year": 2018,
+      "value": 63.8
+    },
+    {
+      "state_code": "DUR",
+      "year": 2019,
+      "value": 57.3
+    },
+    {
+      "state_code": "DUR",
+      "year": 2020,
+      "value": 50.8
+    },
+    {
+      "state_code": "DUR",
+      "year": 2021,
+      "value": 55.8
+    },
+    {
+      "state_code": "DUR",
+      "year": 2022,
+      "value": 60.0
+    },
+    {
+      "state_code": "DUR",
+      "year": 2023,
+      "value": 64.7
+    },
+    {
+      "state_code": "DUR",
+      "year": 2024,
+      "value": 63.9
+    },
+    {
+      "state_code": "GRO",
+      "year": 2015,
+      "value": 21.4
+    },
+    {
+      "state_code": "GRO",
+      "year": 2016,
+      "value": 32.5
+    },
+    {
+      "state_code": "GRO",
+      "year": 2017,
+      "value": 51.5
+    },
+    {
+      "state_code": "GRO",
+      "year": 2018,
+      "value": 53.0
+    },
+    {
+      "state_code": "GRO",
+      "year": 2019,
+      "value": 50.0
+    },
+    {
+      "state_code": "GRO",
+      "year": 2020,
+      "value": 47.0
+    },
+    {
+      "state_code": "GRO",
+      "year": 2021,
+      "value": 55.5
+    },
+    {
+      "state_code": "GRO",
+      "year": 2022,
+      "value": 53.6
+    },
+    {
+      "state_code": "GRO",
+      "year": 2023,
+      "value": 53.9
+    },
+    {
+      "state_code": "GRO",
+      "year": 2024,
+      "value": 58.9
+    },
+    {
+      "state_code": "GUA",
+      "year": 2015,
+      "value": 35.6
+    },
+    {
+      "state_code": "GUA",
+      "year": 2016,
+      "value": 40.5
+    },
+    {
+      "state_code": "GUA",
+      "year": 2017,
+      "value": 53.6
+    },
+    {
+      "state_code": "GUA",
+      "year": 2018,
+      "value": 58.6
+    },
+    {
+      "state_code": "GUA",
+      "year": 2019,
+      "value": 56.7
+    },
+    {
+      "state_code": "GUA",
+      "year": 2020,
+      "value": 54.8
+    },
+    {
+      "state_code": "GUA",
+      "year": 2021,
+      "value": 62.1
+    },
+    {
+      "state_code": "GUA",
+      "year": 2022,
+      "value": 65.0
+    },
+    {
+      "state_code": "GUA",
+      "year": 2023,
+      "value": 71.7
+    },
+    {
+      "state_code": "GUA",
+      "year": 2024,
+      "value": 75.3
+    },
+    {
+      "state_code": "HID",
+      "year": 2015,
+      "value": 31.7
+    },
+    {
+      "state_code": "HID",
+      "year": 2016,
+      "value": 37.1
+    },
+    {
+      "state_code": "HID",
+      "year": 2017,
+      "value": 50.3
+    },
+    {
+      "state_code": "HID",
+      "year": 2018,
+      "value": 54.4
+    },
+    {
+      "state_code": "HID",
+      "year": 2019,
+      "value": 49.55
+    },
+    {
+      "state_code": "HID",
+      "year": 2020,
+      "value": 44.7
+    },
+    {
+      "state_code": "HID",
+      "year": 2021,
+      "value": 54.7
+    },
+    {
+      "state_code": "HID",
+      "year": 2022,
+      "value": 58.3
+    },
+    {
+      "state_code": "HID",
+      "year": 2023,
+      "value": 64.8
+    },
+    {
+      "state_code": "HID",
+      "year": 2024,
+      "value": 70.2
+    },
+    {
+      "state_code": "JAL",
+      "year": 2015,
+      "value": 47.1
+    },
+    {
+      "state_code": "JAL",
+      "year": 2016,
+      "value": 58.5
+    },
+    {
+      "state_code": "JAL",
+      "year": 2017,
+      "value": 69.4
+    },
+    {
+      "state_code": "JAL",
+      "year": 2018,
+      "value": 72.8
+    },
+    {
+      "state_code": "JAL",
+      "year": 2019,
+      "value": 69.5
+    },
+    {
+      "state_code": "JAL",
+      "year": 2020,
+      "value": 66.2
+    },
+    {
+      "state_code": "JAL",
+      "year": 2021,
+      "value": 71.0
+    },
+    {
+      "state_code": "JAL",
+      "year": 2022,
+      "value": 75.7
+    },
+    {
+      "state_code": "JAL",
+      "year": 2023,
+      "value": 83.3
+    },
+    {
+      "state_code": "JAL",
+      "year": 2024,
+      "value": 80.9
+    },
+    {
+      "state_code": "MEX",
+      "year": 2015,
+      "value": 40.7
+    },
+    {
+      "state_code": "MEX",
+      "year": 2016,
+      "value": 44.9
+    },
+    {
+      "state_code": "MEX",
+      "year": 2017,
+      "value": 63.8
+    },
+    {
+      "state_code": "MEX",
+      "year": 2018,
+      "value": 65.4
+    },
+    {
+      "state_code": "MEX",
+      "year": 2019,
+      "value": 67.45
+    },
+    {
+      "state_code": "MEX",
+      "year": 2020,
+      "value": 69.5
+    },
+    {
+      "state_code": "MEX",
+      "year": 2021,
+      "value": 76.9
+    },
+    {
+      "state_code": "MEX",
+      "year": 2022,
+      "value": 75.9
+    },
+    {
+      "state_code": "MEX",
+      "year": 2023,
+      "value": 73.4
+    },
+    {
+      "state_code": "MEX",
+      "year": 2024,
+      "value": 76.7
+    },
+    {
+      "state_code": "MIC",
+      "year": 2015,
+      "value": 24.2
+    },
+    {
+      "state_code": "MIC",
+      "year": 2016,
+      "value": 33.4
+    },
+    {
+      "state_code": "MIC",
+      "year": 2017,
+      "value": 49.3
+    },
+    {
+      "state_code": "MIC",
+      "year": 2018,
+      "value": 55.4
+    },
+    {
+      "state_code": "MIC",
+      "year": 2019,
+      "value": 51.8
+    },
+    {
+      "state_code": "MIC",
+      "year": 2020,
+      "value": 48.2
+    },
+    {
+      "state_code": "MIC",
+      "year": 2021,
+      "value": 59.5
+    },
+    {
+      "state_code": "MIC",
+      "year": 2022,
+      "value": 56.9
+    },
+    {
+      "state_code": "MIC",
+      "year": 2023,
+      "value": 65.0
+    },
+    {
+      "state_code": "MIC",
+      "year": 2024,
+      "value": 67.7
+    },
+    {
+      "state_code": "MOR",
+      "year": 2015,
+      "value": 39.6
+    },
+    {
+      "state_code": "MOR",
+      "year": 2016,
+      "value": 52.3
+    },
+    {
+      "state_code": "MOR",
+      "year": 2017,
+      "value": 61.3
+    },
+    {
+      "state_code": "MOR",
+      "year": 2018,
+      "value": 61.5
+    },
+    {
+      "state_code": "MOR",
+      "year": 2019,
+      "value": 63.15
+    },
+    {
+      "state_code": "MOR",
+      "year": 2020,
+      "value": 64.8
+    },
+    {
+      "state_code": "MOR",
+      "year": 2021,
+      "value": 69.3
+    },
+    {
+      "state_code": "MOR",
+      "year": 2022,
+      "value": 69.8
+    },
+    {
+      "state_code": "MOR",
+      "year": 2023,
+      "value": 74.1
+    },
+    {
+      "state_code": "MOR",
+      "year": 2024,
+      "value": 74.4
+    },
+    {
+      "state_code": "NAY",
+      "year": 2015,
+      "value": 33.9
+    },
+    {
+      "state_code": "NAY",
+      "year": 2016,
+      "value": 45.7
+    },
+    {
+      "state_code": "NAY",
+      "year": 2017,
+      "value": 56.5
+    },
+    {
+      "state_code": "NAY",
+      "year": 2018,
+      "value": 62.7
+    },
+    {
+      "state_code": "NAY",
+      "year": 2019,
+      "value": 57.8
+    },
+    {
+      "state_code": "NAY",
+      "year": 2020,
+      "value": 52.9
+    },
+    {
+      "state_code": "NAY",
+      "year": 2021,
+      "value": 63.1
+    },
+    {
+      "state_code": "NAY",
+      "year": 2022,
+      "value": 63.8
+    },
+    {
+      "state_code": "NAY",
+      "year": 2023,
+      "value": 69.6
+    },
+    {
+      "state_code": "NAY",
+      "year": 2024,
+      "value": 66.9
+    },
+    {
+      "state_code": "NLE",
+      "year": 2015,
+      "value": 57.7
+    },
+    {
+      "state_code": "NLE",
+      "year": 2016,
+      "value": 65.4
+    },
+    {
+      "state_code": "NLE",
+      "year": 2017,
+      "value": 72.8
+    },
+    {
+      "state_code": "NLE",
+      "year": 2018,
+      "value": 78.7
+    },
+    {
+      "state_code": "NLE",
+      "year": 2019,
+      "value": 77.85
+    },
+    {
+      "state_code": "NLE",
+      "year": 2020,
+      "value": 77.0
+    },
+    {
+      "state_code": "NLE",
+      "year": 2021,
+      "value": 77.5
+    },
+    {
+      "state_code": "NLE",
+      "year": 2022,
+      "value": 81.5
+    },
+    {
+      "state_code": "NLE",
+      "year": 2023,
+      "value": 80.6
+    },
+    {
+      "state_code": "NLE",
+      "year": 2024,
+      "value": 83.7
+    },
+    {
+      "state_code": "OAX",
+      "year": 2015,
+      "value": 17.3
+    },
+    {
+      "state_code": "OAX",
+      "year": 2016,
+      "value": 20.3
+    },
+    {
+      "state_code": "OAX",
+      "year": 2017,
+      "value": 43.1
+    },
+    {
+      "state_code": "OAX",
+      "year": 2018,
+      "value": 46.8
+    },
+    {
+      "state_code": "OAX",
+      "year": 2019,
+      "value": 42.8
+    },
+    {
+      "state_code": "OAX",
+      "year": 2020,
+      "value": 38.8
+    },
+    {
+      "state_code": "OAX",
+      "year": 2021,
+      "value": 39.0
+    },
+    {
+      "state_code": "OAX",
+      "year": 2022,
+      "value": 47.4
+    },
+    {
+      "state_code": "OAX",
+      "year": 2023,
+      "value": 53.0
+    },
+    {
+      "state_code": "OAX",
+      "year": 2024,
+      "value": 55.5
+    },
+    {
+      "state_code": "PUE",
+      "year": 2015,
+      "value": 26.1
+    },
+    {
+      "state_code": "PUE",
+      "year": 2016,
+      "value": 29.9
+    },
+    {
+      "state_code": "PUE",
+      "year": 2017,
+      "value": 51.1
+    },
+    {
+      "state_code": "PUE",
+      "year": 2018,
+      "value": 50.8
+    },
+    {
+      "state_code": "PUE",
+      "year": 2019,
+      "value": 49.6
+    },
+    {
+      "state_code": "PUE",
+      "year": 2020,
+      "value": 48.4
+    },
+    {
+      "state_code": "PUE",
+      "year": 2021,
+      "value": 55.8
+    },
+    {
+      "state_code": "PUE",
+      "year": 2022,
+      "value": 58.1
+    },
+    {
+      "state_code": "PUE",
+      "year": 2023,
+      "value": 58.3
+    },
+    {
+      "state_code": "PUE",
+      "year": 2024,
+      "value": 61.8
+    },
+    {
+      "state_code": "QUE",
+      "year": 2015,
+      "value": 43.2
+    },
+    {
+      "state_code": "QUE",
+      "year": 2016,
+      "value": 52.8
+    },
+    {
+      "state_code": "QUE",
+      "year": 2017,
+      "value": 64.9
+    },
+    {
+      "state_code": "QUE",
+      "year": 2018,
+      "value": 68.4
+    },
+    {
+      "state_code": "QUE",
+      "year": 2019,
+      "value": 64.35
+    },
+    {
+      "state_code": "QUE",
+      "year": 2020,
+      "value": 60.3
+    },
+    {
+      "state_code": "QUE",
+      "year": 2021,
+      "value": 74.1
+    },
+    {
+      "state_code": "QUE",
+      "year": 2022,
+      "value": 77.4
+    },
+    {
+      "state_code": "QUE",
+      "year": 2023,
+      "value": 75.9
+    },
+    {
+      "state_code": "QUE",
+      "year": 2024,
+      "value": 79.5
+    },
+    {
+      "state_code": "ROO",
+      "year": 2015,
+      "value": 49.8
+    },
+    {
+      "state_code": "ROO",
+      "year": 2016,
+      "value": 62.2
+    },
+    {
+      "state_code": "ROO",
+      "year": 2017,
+      "value": 72.3
+    },
+    {
+      "state_code": "ROO",
+      "year": 2018,
+      "value": 78.8
+    },
+    {
+      "state_code": "ROO",
+      "year": 2019,
+      "value": 72.05
+    },
+    {
+      "state_code": "ROO",
+      "year": 2020,
+      "value": 65.3
+    },
+    {
+      "state_code": "ROO",
+      "year": 2021,
+      "value": 72.4
+    },
+    {
+      "state_code": "ROO",
+      "year": 2022,
+      "value": 77.5
+    },
+    {
+      "state_code": "ROO",
+      "year": 2023,
+      "value": 83.6
+    },
+    {
+      "state_code": "ROO",
+      "year": 2024,
+      "value": 82.3
+    },
+    {
+      "state_code": "SIN",
+      "year": 2015,
+      "value": 38.4
+    },
+    {
+      "state_code": "SIN",
+      "year": 2016,
+      "value": 41.0
+    },
+    {
+      "state_code": "SIN",
+      "year": 2017,
+      "value": 68.3
+    },
+    {
+      "state_code": "SIN",
+      "year": 2018,
+      "value": 77.3
+    },
+    {
+      "state_code": "SIN",
+      "year": 2019,
+      "value": 67.85
+    },
+    {
+      "state_code": "SIN",
+      "year": 2020,
+      "value": 58.4
+    },
+    {
+      "state_code": "SIN",
+      "year": 2021,
+      "value": 76.9
+    },
+    {
+      "state_code": "SIN",
+      "year": 2022,
+      "value": 80.2
+    },
+    {
+      "state_code": "SIN",
+      "year": 2023,
+      "value": 81.4
+    },
+    {
+      "state_code": "SIN",
+      "year": 2024,
+      "value": 78.9
+    },
+    {
+      "state_code": "SLP",
+      "year": 2015,
+      "value": 40.8
+    },
+    {
+      "state_code": "SLP",
+      "year": 2016,
+      "value": 51.7
+    },
+    {
+      "state_code": "SLP",
+      "year": 2017,
+      "value": 56.4
+    },
+    {
+      "state_code": "SLP",
+      "year": 2018,
+      "value": 64.5
+    },
+    {
+      "state_code": "SLP",
+      "year": 2019,
+      "value": 57.95
+    },
+    {
+      "state_code": "SLP",
+      "year": 2020,
+      "value": 51.4
+    },
+    {
+      "state_code": "SLP",
+      "year": 2021,
+      "value": 61.8
+    },
+    {
+      "state_code": "SLP",
+      "year": 2022,
+      "value": 65.1
+    },
+    {
+      "state_code": "SLP",
+      "year": 2023,
+      "value": 63.5
+    },
+    {
+      "state_code": "SLP",
+      "year": 2024,
+      "value": 65.5
+    },
+    {
+      "state_code": "SON",
+      "year": 2015,
+      "value": 56.8
+    },
+    {
+      "state_code": "SON",
+      "year": 2016,
+      "value": 71.4
+    },
+    {
+      "state_code": "SON",
+      "year": 2017,
+      "value": 82.6
+    },
+    {
+      "state_code": "SON",
+      "year": 2018,
+      "value": 83.3
+    },
+    {
+      "state_code": "SON",
+      "year": 2019,
+      "value": 81.25
+    },
+    {
+      "state_code": "SON",
+      "year": 2020,
+      "value": 79.2
+    },
+    {
+      "state_code": "SON",
+      "year": 2021,
+      "value": 86.2
+    },
+    {
+      "state_code": "SON",
+      "year": 2022,
+      "value": 80.6
+    },
+    {
+      "state_code": "SON",
+      "year": 2023,
+      "value": 80.3
+    },
+    {
+      "state_code": "SON",
+      "year": 2024,
+      "value": 84.4
+    },
+    {
+      "state_code": "TAB",
+      "year": 2015,
+      "value": 21.0
+    },
+    {
+      "state_code": "TAB",
+      "year": 2016,
+      "value": 61.9
+    },
+    {
+      "state_code": "TAB",
+      "year": 2017,
+      "value": 49.4
+    },
+    {
+      "state_code": "TAB",
+      "year": 2018,
+      "value": 52.8
+    },
+    {
+      "state_code": "TAB",
+      "year": 2019,
+      "value": 48.2
+    },
+    {
+      "state_code": "TAB",
+      "year": 2020,
+      "value": 43.6
+    },
+    {
+      "state_code": "TAB",
+      "year": 2021,
+      "value": 52.7
+    },
+    {
+      "state_code": "TAB",
+      "year": 2022,
+      "value": 57.8
+    },
+    {
+      "state_code": "TAB",
+      "year": 2023,
+      "value": 68.3
+    },
+    {
+      "state_code": "TAB",
+      "year": 2024,
+      "value": 71.7
+    },
+    {
+      "state_code": "TAM",
+      "year": 2015,
+      "value": 44.3
+    },
+    {
+      "state_code": "TAM",
+      "year": 2016,
+      "value": 56.1
+    },
+    {
+      "state_code": "TAM",
+      "year": 2017,
+      "value": 65.5
+    },
+    {
+      "state_code": "TAM",
+      "year": 2018,
+      "value": 69.5
+    },
+    {
+      "state_code": "TAM",
+      "year": 2019,
+      "value": 67.9
+    },
+    {
+      "state_code": "TAM",
+      "year": 2020,
+      "value": 66.3
+    },
+    {
+      "state_code": "TAM",
+      "year": 2021,
+      "value": 69.7
+    },
+    {
+      "state_code": "TAM",
+      "year": 2022,
+      "value": 68.5
+    },
+    {
+      "state_code": "TAM",
+      "year": 2023,
+      "value": 73.2
+    },
+    {
+      "state_code": "TAM",
+      "year": 2024,
+      "value": 74.9
+    },
+    {
+      "state_code": "TLA",
+      "year": 2015,
+      "value": 23.7
+    },
+    {
+      "state_code": "TLA",
+      "year": 2016,
+      "value": 28.2
+    },
+    {
+      "state_code": "TLA",
+      "year": 2017,
+      "value": 48.6
+    },
+    {
+      "state_code": "TLA",
+      "year": 2018,
+      "value": 50.4
+    },
+    {
+      "state_code": "TLA",
+      "year": 2019,
+      "value": 48.7
+    },
+    {
+      "state_code": "TLA",
+      "year": 2020,
+      "value": 47.0
+    },
+    {
+      "state_code": "TLA",
+      "year": 2021,
+      "value": 55.7
+    },
+    {
+      "state_code": "TLA",
+      "year": 2022,
+      "value": 55.6
+    },
+    {
+      "state_code": "TLA",
+      "year": 2023,
+      "value": 62.7
+    },
+    {
+      "state_code": "TLA",
+      "year": 2024,
+      "value": 61.5
+    },
+    {
+      "state_code": "VER",
+      "year": 2015,
+      "value": 26.6
+    },
+    {
+      "state_code": "VER",
+      "year": 2016,
+      "value": 30.1
+    },
+    {
+      "state_code": "VER",
+      "year": 2017,
+      "value": 53.1
+    },
+    {
+      "state_code": "VER",
+      "year": 2018,
+      "value": 51.7
+    },
+    {
+      "state_code": "VER",
+      "year": 2019,
+      "value": 49.1
+    },
+    {
+      "state_code": "VER",
+      "year": 2020,
+      "value": 46.5
+    },
+    {
+      "state_code": "VER",
+      "year": 2021,
+      "value": 51.1
+    },
+    {
+      "state_code": "VER",
+      "year": 2022,
+      "value": 53.9
+    },
+    {
+      "state_code": "VER",
+      "year": 2023,
+      "value": 58.2
+    },
+    {
+      "state_code": "VER",
+      "year": 2024,
+      "value": 64.0
+    },
+    {
+      "state_code": "YUC",
+      "year": 2015,
+      "value": 47.2
+    },
+    {
+      "state_code": "YUC",
+      "year": 2016,
+      "value": 58.9
+    },
+    {
+      "state_code": "YUC",
+      "year": 2017,
+      "value": 61.2
+    },
+    {
+      "state_code": "YUC",
+      "year": 2018,
+      "value": 68.0
+    },
+    {
+      "state_code": "YUC",
+      "year": 2019,
+      "value": 61.6
+    },
+    {
+      "state_code": "YUC",
+      "year": 2020,
+      "value": 55.2
+    },
+    {
+      "state_code": "YUC",
+      "year": 2021,
+      "value": 66.4
+    },
+    {
+      "state_code": "YUC",
+      "year": 2022,
+      "value": 65.9
+    },
+    {
+      "state_code": "YUC",
+      "year": 2023,
+      "value": 70.6
+    },
+    {
+      "state_code": "YUC",
+      "year": 2024,
+      "value": 73.9
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2015,
+      "value": 29.7
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2016,
+      "value": 33.0
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2017,
+      "value": 48.0
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2018,
+      "value": 54.2
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2019,
+      "value": 55.95
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2020,
+      "value": 57.7
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2021,
+      "value": 63.2
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2022,
+      "value": 68.6
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2023,
+      "value": 73.9
+    },
+    {
+      "state_code": "ZAC",
+      "year": 2024,
+      "value": 78.2
+    }
+  ]
+}

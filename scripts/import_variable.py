@@ -38,6 +38,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PUBLIC_DATA_DIR = PROJECT_ROOT / "public" / "data"
 COMBINED_PATH = PUBLIC_DATA_DIR / "state_dashboard.combined.json"
 TEMPORAL_DIR = PUBLIC_DATA_DIR / "outputs" / "temporal"
+TEMPORAL_MANIFEST_PATH = TEMPORAL_DIR / "manifest.json"
 MUNICIPAL_DIR = PUBLIC_DATA_DIR / "outputs" / "municipal"
 MANIFEST_PATH = PUBLIC_DATA_DIR / "municipal_manifest.json"
 IMPORTS_DIR = PROJECT_ROOT / "data" / "processed" / "imports"
@@ -456,8 +457,35 @@ def merge_historical(imp: dict) -> None:
     }
     _save_to_catalog(full_cat_entry)
 
+    _update_temporal_manifest(variable_id, cat)
+
     if update_state and latest_by_state:
         trigger_layer1(variable_id)
+
+
+# ── Temporal manifest ────────────────────────────────────────────────────────
+
+def _update_temporal_manifest(variable_id: str, cat: dict) -> None:
+    """Añade variable_id al manifest.json del tab Evolución si no está ya."""
+    TEMPORAL_DIR.mkdir(parents=True, exist_ok=True)
+    if TEMPORAL_MANIFEST_PATH.exists():
+        manifest = load_json(TEMPORAL_MANIFEST_PATH)
+    else:
+        manifest = {"updated_at": "", "variables": [], "metadata": {}}
+
+    if variable_id not in manifest.get("variables", []):
+        manifest.setdefault("variables", []).append(variable_id)
+        print(f"  + {variable_id} añadida a temporal/manifest.json")
+
+    manifest.setdefault("metadata", {})[variable_id] = {
+        "label": cat.get("nombre") or cat.get("label") or variable_id,
+        "unit":  cat.get("unidad_base") or cat.get("unidad") or "",
+        "source": cat.get("fuente_sugerida", ""),
+    }
+    manifest["updated_at"] = date.today().isoformat()
+    TEMPORAL_MANIFEST_PATH.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
 
 # ── Dispatcher ────────────────────────────────────────────────────────────────

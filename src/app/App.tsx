@@ -16,9 +16,10 @@ import DatosTab from "../views/DatosTab";
 import StateTerritorialAnalysis from "../components/state-analysis/StateTerritorialAnalysis";
 import HelpModal from "../components/feedback/HelpModal";
 
-function buildTabs(appData: AppData): Tab[] {
+function buildTabs(appData: AppData, activeVarIds: string[]): Tab[] {
   const hasMunicipal = appData.dataset.municipios.length > 0;
-  const hasTemporalData = (appData.temporalVariables?.length ?? 0) > 0;
+  const temporalSet = new Set(appData.temporalVariables ?? []);
+  const hasTemporalData = activeVarIds.some((id) => temporalSet.has(id));
   return [
     { id: "diagnostico", label: "Diagnóstico" },
     { id: "relaciones", label: "Impacto" },
@@ -125,7 +126,7 @@ function Dashboard({ appData }: { appData: AppData }) {
           </p>
           <div style={{ display: "flex", alignItems: "stretch" }}>
             <TabBar
-              tabs={buildTabs(appData)}
+              tabs={buildTabs(appData, state.activeVariableIds)}
               activeTab={datosOpen || estructuraOpen ? "__none__" : state.activeTab}
               onTabChange={(id) => { setDatosOpen(false); setEstructuraOpen(false); dispatch(actions.setTab(id as TabId)); }}
             />

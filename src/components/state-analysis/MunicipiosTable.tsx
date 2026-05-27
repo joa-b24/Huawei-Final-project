@@ -67,9 +67,9 @@ export default function MunicipiosTable({ municipios }: Props) {
           con k-medias sobre cobertura, escolaridad y edad. No implica vecindad geográfica.
         </p>
       </InterpretationHelp>
-      <div style={{ overflowX: "auto", maxHeight: 420, overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: 8 }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.8rem" }}>
-          <thead style={{ position: "sticky", top: 0, background: "#f8fafc", zIndex: 1 }}>
+      <div className="ranking-table-scroll">
+        <table className="ranking-table">
+          <thead>
             <tr>
               {(
                 [
@@ -84,12 +84,7 @@ export default function MunicipiosTable({ municipios }: Props) {
               ).map(([key, label, sortable]) => (
                 <th
                   key={key}
-                  style={{
-                    textAlign: "left",
-                    padding: "8px 10px",
-                    borderBottom: "1px solid #e2e8f0",
-                    cursor: sortable ? "pointer" : "default"
-                  }}
+                  style={{ cursor: sortable ? "pointer" : "default" }}
                   onClick={() => (sortable ? toggle(key as SortKey) : undefined)}
                 >
                   {label}
@@ -100,26 +95,24 @@ export default function MunicipiosTable({ municipios }: Props) {
           </thead>
           <tbody>
             {sorted.map((m) => (
-              <tr key={m.cvegeo} style={{ borderBottom: "1px solid #f1f5f9" }}>
-                <td style={{ padding: "6px 10px", fontWeight: 600 }}>{m.nom_mun}</td>
-                <td style={{ padding: "6px 10px", fontVariantNumeric: "tabular-nums" }}>
+              <tr key={m.cvegeo}>
+                <td style={{ fontWeight: 600 }}>{m.nom_mun}</td>
+                <td style={{ fontVariantNumeric: "tabular-nums" }}>
                   {m.pobtot_iter.toLocaleString("es-MX")}
                 </td>
-                <td style={{ padding: "6px 10px", fontVariantNumeric: "tabular-nums" }}>
+                <td style={{ fontVariantNumeric: "tabular-nums" }}>
                   {m.pob_pct_4g_garantizada?.toFixed(1) ?? "—"}
                 </td>
-                <td style={{ padding: "6px 10px", fontVariantNumeric: "tabular-nums" }}>
+                <td style={{ fontVariantNumeric: "tabular-nums" }}>
                   {m.graproes?.toFixed(2) ?? "—"}
                 </td>
-                <td style={{ padding: "6px 10px", fontVariantNumeric: "tabular-nums" }}>
+                <td style={{ fontVariantNumeric: "tabular-nums" }}>
                   {m.pct_mujeres != null ? m.pct_mujeres.toFixed(1) : "—"}
                 </td>
-                <td style={{ padding: "6px 10px", fontVariantNumeric: "tabular-nums" }}>
+                <td style={{ fontVariantNumeric: "tabular-nums" }}>
                   {m.pct_pob_65_mas?.toFixed(1) ?? "—"}
                 </td>
-                <td style={{ padding: "6px 10px", color: "#475569", maxWidth: 200 }}>
-                  {m.cluster_label ?? "—"}
-                </td>
+                <td>{m.cluster_label ?? "—"}</td>
               </tr>
             ))}
           </tbody>
