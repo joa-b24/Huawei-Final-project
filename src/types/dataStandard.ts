@@ -15,13 +15,30 @@ export type TipoValor = "number" | "integer" | "percentage" | "currency";
 
 export type AgregacionDefault = "avg" | "sum" | "latest";
 
-/** "higher_better": más alto = mejor (ej. cobertura internet).
- *  "lower_better": más bajo = mejor (ej. pobreza, carencia). */
-export type MetricDirection = "higher_better" | "lower_better";
+/** Método de ponderación al agregar valores municipales a nivel estatal.
+ *  - poblacion:   peso = pobtot_iter (población total INEGI 2020) — "¿qué experimenta el habitante promedio?"
+ *  - localidades: peso = localidades_n — "¿qué porcentaje de comunidades tiene el indicador?"
+ *  - uniforme:    peso = 1 por municipio — promedio simple entre unidades administrativas */
+export type AgregacionMunicipal = "poblacion" | "localidades" | "uniforme";
+
+/** "higher_better": polaridad positiva — más alto = mejor (ej. cobertura internet).
+ *  "lower_better": polaridad negativa — más bajo = mejor (ej. pobreza, carencia). */
+export type MetricPolaridad = "higher_better" | "lower_better";
+
+/** @deprecated Usa MetricPolaridad */
+export type MetricDirection = MetricPolaridad;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Catálogo de variables
 // ─────────────────────────────────────────────────────────────────────────────
+
+/** Rol analítico de la variable:
+ *  - "target"      — solo como Y en OLS/correlaciones; no aparece como predictor X.
+ *  - "explanatory" — solo como X predictor; no válida como target Y.
+ *  - "both"        (default) — puede usarse como Y o como X.
+ *  - "contextual"  — variable de escala/referencia; excluida de análisis estadístico.
+ */
+export type VariableRole = "target" | "explanatory" | "both" | "contextual";
 
 export type VariableCatalogEntry = {
   variable_id: string;
@@ -31,9 +48,16 @@ export type VariableCatalogEntry = {
   unidad_base: string;
   tipo_valor: TipoValor;
   agregacion_default: AgregacionDefault;
-  direction?: MetricDirection;
+  direction?: MetricPolaridad;
   fuente_sugerida: string;
   sinonimos: string[];
+  /** Rol analítico. Omitido = "both". */
+  role?: VariableRole;
+  /** Nombre del campo correspondiente en MunicipioAnalyticsRecord.
+   *  Presente solo en variables con fuente de granularidad municipal. */
+  campo_municipal?: string;
+  /** Peso aplicado al promediar municipios → estatal. Solo aplica cuando agregacion_default = "avg". */
+  peso_municipal?: AgregacionMunicipal;
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -212,8 +236,6 @@ export type StateCard = {
   estado: string;
   region: string;
   metrics: Record<string, number>;
-  overall_score: number;
-  color_code: "green" | "yellow" | "red";
 };
 
 /** Shape de dashboard_data/correlations.json */

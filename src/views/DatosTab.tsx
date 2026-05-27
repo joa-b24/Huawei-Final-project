@@ -1,6 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { AppData } from "../services/DataService";
-import type { ImportedData } from "../app/App";
 import type { VariableCatalogEntry } from "../types/dataStandard";
 import {
   applyCatalogOverrides, loadCatalogOverrides,
@@ -14,7 +13,6 @@ type Mode = "catalog" | "panel" | "wizard";
 
 type Props = {
   appData: AppData;
-  onImport: (d: ImportedData) => void;
   onCatalogChange: () => void;
 };
 
@@ -72,12 +70,48 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
     setMode("catalog");
   }
 
+  const metricYears = useMemo(() => {
+    const result: Record<string, number> = {};
+    for (const m of appData.dataset.metricCatalog) {
+      if (m.year != null) result[m.id] = m.year;
+    }
+    return result;
+  }, [appData.dataset.metricCatalog]);
+
   const statesWithData = useMemo(() => {
     if (!selectedVar) return 0;
     return appData.dataset.records.filter(
       (r) => r.metrics[selectedVar.variable_id] != null
     ).length;
   }, [selectedVar, appData.dataset.records]);
+
+  const lastYearWithData = useMemo(() => {
+    if (!selectedVar) return null;
+    const recordYear = appData.dataset.records.find(
+      (r) => r.metrics[selectedVar.variable_id] != null
+    )?.year;
+    return recordYear ?? null;
+  }, [selectedVar, appData.dataset.records]);
+
+  const municipalStatesCount = useMemo(() => {
+    if (!selectedVar || !appData.municipalManifest) return 0;
+    return Object.values(appData.municipalManifest.states).filter(
+      (e) => e.variables.includes(selectedVar.variable_id)
+    ).length;
+  }, [selectedVar, appData.municipalManifest]);
+
+  const [temporalYears, setTemporalYears] = useState<number[]>([]);
+  useEffect(() => {
+    if (mode !== "panel" || !selectedVar) { setTemporalYears([]); return; }
+    fetch(`/data/outputs/temporal/${selectedVar.variable_id}.json`)
+      .then((r) => r.ok ? r.json() as Promise<{ records: { year: number }[] }> : null)
+      .then((data) => {
+        if (!data) { setTemporalYears([]); return; }
+        const years = [...new Set(data.records.map((r) => r.year))].sort((a, b) => a - b);
+        setTemporalYears(years);
+      })
+      .catch(() => setTemporalYears([]));
+  }, [selectedVar?.variable_id, mode]);
 
   return (
     <div className="tab-content">
@@ -100,6 +134,9 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
             variable={selectedVar}
             statesWithData={statesWithData}
             totalStates={appData.dataset.records.length}
+            lastYearWithData={lastYearWithData}
+            municipalStatesCount={municipalStatesCount}
+            historicalYears={temporalYears}
             onUpdateData={() => openWizardForVariable(selectedVar)}
             onBack={() => setMode("catalog")}
           />
@@ -118,6 +155,7 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
           <OperationWizard
             catalog={catalog}
             initialVariable={wizardInitialVar}
+            metricYears={metricYears}
             onDone={handleWizardDone}
           />
         </section>

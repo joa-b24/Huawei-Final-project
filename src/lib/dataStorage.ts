@@ -1,14 +1,12 @@
 import type { VariableCatalogEntry } from "../types/dataStandard";
 
 const CATALOG_KEY = "catalog_overrides";
-const IMPORTED_KEY = "imported_data";
 
 export type OperationType =
   | "nueva_variable"
   | "historico"
   | "municipal"
   | "completar"
-  | "modificar"
   | "actualizar";
 
 export type ImportedDataEntry = {
@@ -62,33 +60,6 @@ export function applyCatalogOverrides(
   return [...patched, ...added];
 }
 
-// ── Imported data ─────────────────────────────────────────────────────────────
-
-export function loadImportedData(): ImportedDataEntry[] {
-  try {
-    const raw = localStorage.getItem(IMPORTED_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function saveImportedEntry(entry: Omit<ImportedDataEntry, "id" | "savedAt">): ImportedDataEntry {
-  const full: ImportedDataEntry = {
-    ...entry,
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    savedAt: new Date().toISOString(),
-  };
-  const all = loadImportedData();
-  localStorage.setItem(IMPORTED_KEY, JSON.stringify([...all, full]));
-  return full;
-}
-
-export function deleteImportedEntry(id: string): void {
-  const all = loadImportedData().filter((e) => e.id !== id);
-  localStorage.setItem(IMPORTED_KEY, JSON.stringify(all));
-}
-
 // ── Deleted variable IDs ───────────────────────────────────────────────────────
 
 const DELETED_KEY = "deleted_variable_ids";
@@ -109,20 +80,74 @@ export function addDeletedId(id: string): void {
 }
 
 // ── Hidden variable IDs (ocultas en sidebar) ──────────────────────────────────
+//
+// Three localStorage keys cooperate:
+//   hidden_variable_ids     — manually hidden by the user
+//   no_data_hidden_ids      — auto-hidden because they have no data in combined JSON
+//   user_shown_no_data_ids  — user explicitly un-hid an auto-hidden variable (overrides auto)
+//
+// Effective hidden set = manual ∪ (no_data \ user_shown)
 
 const HIDDEN_KEY = "hidden_variable_ids";
+const NO_DATA_HIDDEN_KEY = "no_data_hidden_ids";
+const USER_SHOWN_KEY = "user_shown_no_data_ids";
+
+function loadSet(key: string): Set<string> {
+  try { return new Set(JSON.parse(localStorage.getItem(key) ?? "[]")); }
+  catch { return new Set(); }
+}
+
+function saveSet(key: string, s: Set<string>): void {
+  localStorage.setItem(key, JSON.stringify([...s]));
+}
 
 export function loadHiddenIds(): Set<string> {
-  try {
-    const raw = localStorage.getItem(HIDDEN_KEY);
-    return new Set(raw ? JSON.parse(raw) : []);
-  } catch {
-    return new Set();
-  }
+  const manual = loadSet(HIDDEN_KEY);
+  const noData = loadSet(NO_DATA_HIDDEN_KEY);
+  const userShown = loadSet(USER_SHOWN_KEY);
+  const result = new Set(manual);
+  for (const id of noData) if (!userShown.has(id)) result.add(id);
+  return result;
 }
 
 export function toggleHiddenId(id: string): void {
-  const ids = loadHiddenIds();
-  if (ids.has(id)) ids.delete(id); else ids.add(id);
-  localStorage.setItem(HIDDEN_KEY, JSON.stringify([...ids]));
+  const manual = loadSet(HIDDEN_KEY);
+  const noData = loadSet(NO_DATA_HIDDEN_KEY);
+  const userShown = loadSet(USER_SHOWN_KEY);
+  const effectivelyHidden = loadHiddenIds();
+
+  if (effectivelyHidden.has(id)) {
+    if (noData.has(id)) {
+      // Auto-hidden due to no data → user is explicitly showing it
+      userShown.add(id);
+      saveSet(USER_SHOWN_KEY, userShown);
+    } else {
+      manual.delete(id);
+      saveSet(HIDDEN_KEY, manual);
+    }
+  } else {
+    // Currently shown → manually hide
+    manual.add(id);
+    saveSet(HIDDEN_KEY, manual);
+    // If user had previously overridden auto-hide, clear that override
+    if (userShown.has(id)) { userShown.delete(id); saveSet(USER_SHOWN_KEY, userShown); }
+  }
+}
+
+// Called on app startup to sync auto-hidden set with actual data availability.
+// Safe to call on every load — won't override manual user decisions.
+export function syncNoDataAutoHidden(
+  idsWithData: Set<string>,
+  allCatalogIds: string[]
+): void {
+  const noDataIds = new Set(allCatalogIds.filter((id) => !idsWithData.has(id)));
+  saveSet(NO_DATA_HIDDEN_KEY, noDataIds);
+
+  // Remove user_shown overrides for IDs that now have data (override is irrelevant)
+  const userShown = loadSet(USER_SHOWN_KEY);
+  let changed = false;
+  for (const id of userShown) {
+    if (idsWithData.has(id)) { userShown.delete(id); changed = true; }
+  }
+  if (changed) saveSet(USER_SHOWN_KEY, userShown);
 }

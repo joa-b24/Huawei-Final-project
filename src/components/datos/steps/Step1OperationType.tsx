@@ -1,63 +1,45 @@
-import type { OperationType } from "../../../lib/dataStorage";
+export type Granularity = "state" | "historico" | "municipal";
 
-const MAIN_OPTIONS: { id: OperationType; label: string; desc: string }[] = [
-  { id: "nueva_variable", label: "Nueva variable", desc: "Añade un indicador completamente nuevo al catálogo con sus datos estatales." },
-  { id: "historico", label: "Datos históricos", desc: "Incorpora datos de años anteriores para una variable existente." },
-  { id: "municipal", label: "Granularidad municipal", desc: "Agrega datos a nivel municipio para una variable existente." },
-];
-
-const UPDATE_OPTIONS: { id: OperationType; label: string; desc: string }[] = [
-  { id: "completar", label: "Completar faltantes", desc: "Llena valores null sin sobreescribir los existentes." },
-  { id: "modificar", label: "Modificar datos", desc: "Sobreescribe valores por mejor fuente, corrección o recálculo." },
-  { id: "actualizar", label: "Datos más recientes", desc: "Reemplaza con datos de un periodo más reciente." },
+const OPTIONS: { id: Granularity; label: string; desc: string }[] = [
+  {
+    id: "state",
+    label: "Estatal",
+    desc: "Un valor por estado para un año. Ej: % usuarios internet 2024.",
+  },
+  {
+    id: "historico",
+    label: "Histórico",
+    desc: "Serie temporal por estado: múltiples años para la misma variable.",
+  },
+  {
+    id: "municipal",
+    label: "Municipal",
+    desc: "Un valor por municipio. Ej: cobertura 4G por municipio en 2024.",
+  },
 ];
 
 type Props = {
-  selected: OperationType | null;
-  onChange: (op: OperationType) => void;
+  selected: Granularity | null;
+  onChange: (g: Granularity) => void;
   onNext: () => void;
-  disableNew?: boolean;
 };
 
-export default function Step1OperationType({ selected, onChange, onNext, disableNew }: Props) {
-  const isUpdate = selected === "completar" || selected === "modificar" || selected === "actualizar";
-
+export default function Step1Granularity({ selected, onChange, onNext }: Props) {
   return (
     <div className="wizard-step-body">
-      <p className="wizard-step-title">¿Qué quieres hacer?</p>
+      <p className="wizard-step-title">¿Qué tipo de datos tienes?</p>
       <div className="op-type-grid">
-        {MAIN_OPTIONS.map((op) => {
-          const disabled = disableNew && op.id === "nueva_variable";
-          return (
-            <button
-              key={op.id}
-              className={`op-type-card${selected === op.id ? " selected" : ""}${disabled ? " disabled" : ""}`}
-              onClick={() => { if (!disabled) onChange(op.id); }}
-              type="button"
-              title={disabled ? "No aplica cuando se selecciona una variable existente" : undefined}
-            >
-              <span className="op-type-card__label">{op.label}</span>
-              <span className="op-type-card__desc">{op.desc}</span>
-            </button>
-          );
-        })}
-        <div className={`op-type-card op-type-group${isUpdate ? " selected" : ""}`}>
-          <span className="op-type-card__label">Actualizar datos</span>
-          <span className="op-type-card__desc">Incorpora o corrige datos de una variable existente.</span>
-          <div className="op-type-subgrid">
-            {UPDATE_OPTIONS.map((op) => (
-              <button
-                key={op.id}
-                className={`op-type-subcard${selected === op.id ? " selected" : ""}`}
-                onClick={() => onChange(op.id)}
-                type="button"
-              >
-                <span className="op-type-subcard__label">{op.label}</span>
-                <span className="op-type-subcard__desc">{op.desc}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+        {OPTIONS.map((opt) => (
+          <button
+            key={opt.id}
+            className={`op-type-card${selected === opt.id ? " selected" : ""}`}
+            onClick={() => onChange(opt.id)}
+            type="button"
+          >
+            <span className="op-type-card__label">{opt.label}</span>
+            <span className="op-type-card__desc">{opt.desc}</span>
+          </button>
+        ))}
       </div>
       <div className="wizard-nav">
         <button className="btn-primary" disabled={!selected} onClick={onNext} type="button">

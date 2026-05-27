@@ -23,6 +23,14 @@ type Props = {
   yUnit?: string;
 };
 
+function scatterStrength(r2: number): { label: string; level: "strong" | "moderate" | "weak" | "none" } {
+  const r = Math.sqrt(r2);
+  if (r >= 0.7) return { label: "Relación fuerte", level: "strong" };
+  if (r >= 0.4) return { label: "Relación moderada", level: "moderate" };
+  if (r >= 0.2) return { label: "Relación débil", level: "weak" };
+  return { label: "Sin relación clara", level: "none" };
+}
+
 function linearReg(pts: ScatterPoint[]) {
   const n = pts.length;
   if (n < 2) return { slope: 0, intercept: 0, r2: 0 };
@@ -106,6 +114,7 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
   }
 
   const { slope, intercept, r2 } = linearReg(regressionData);
+  const { label: strengthLabel, level: strengthLevel } = scatterStrength(r2);
   const xs = data.map((d) => d.x);
   const ys = data.map((d) => d.y);
   const xMin = Math.min(...xs), xMax = Math.max(...xs);
@@ -161,34 +170,45 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 8 }}>
-        <p style={{ fontSize: 12, color: "var(--text-3)", margin: 0 }}>
-          R² = {r2.toFixed(2)}
+      <div className="scatter-summary">
+        <div className="scatter-summary__left">
+          <span className={`scatter-summary__badge scatter-summary__badge--${strengthLevel}`}>
+            {strengthLabel}
+          </span>
+          <span className="scatter-summary__phrase">
+            {r2 >= 0.04
+              ? <>Los estados con más {xLabel} tienden a tener {slope >= 0 ? "mayor" : "menor"} {yLabel}</>
+              : <>No se observa una tendencia clara entre estas variables</>
+            }
+          </span>
+        </div>
+        <div className="scatter-summary__right">
           {excludeOutliers && outlierStates.size > 0 && (
-            <span style={{ color: "var(--amber)", marginLeft: 6 }}>
-              (sin {outlierStates.size} atípico{outlierStates.size !== 1 ? "s" : ""})
+            <span style={{ fontSize: 11, color: "var(--amber)" }}>
+              sin {outlierStates.size} atípico{outlierStates.size !== 1 ? "s" : ""}
             </span>
           )}
-        </p>
-        {outlierStates.size > 0 && (
-          <button
-            type="button"
-            className={`btn-ghost scatter-outlier-toggle${excludeOutliers ? " active" : ""}`}
-            onClick={() => setExcludeOutliers((v) => !v)}
-          >
-            {excludeOutliers ? "Mostrando atípicos" : `Excluir atípicos (${outlierStates.size})`}
-          </button>
-        )}
-        {zoomLevel > 1 && (
-          <button
-            type="button"
-            className="btn-ghost"
-            style={{ fontSize: 11, padding: "2px 8px" }}
-            onClick={() => { setZoomLevel(1); setPanX(0); setPanY(0); }}
-          >
-            Restablecer zoom
-          </button>
-        )}
+          <span className="scatter-summary__r2">r² = {r2.toFixed(2)}</span>
+          {outlierStates.size > 0 && (
+            <button
+              type="button"
+              className={`btn-ghost scatter-outlier-toggle${excludeOutliers ? " active" : ""}`}
+              onClick={() => setExcludeOutliers((v) => !v)}
+            >
+              {excludeOutliers ? "Mostrando atípicos" : `Excluir (${outlierStates.size} atíp.)`}
+            </button>
+          )}
+          {zoomLevel > 1 && (
+            <button
+              type="button"
+              className="btn-ghost"
+              style={{ fontSize: 11, padding: "2px 8px" }}
+              onClick={() => { setZoomLevel(1); setPanX(0); setPanY(0); }}
+            >
+              Restablecer zoom
+            </button>
+          )}
+        </div>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <ComposedChart data={combined} margin={{ top: 8, right: 24, bottom: 28, left: 16 }}>

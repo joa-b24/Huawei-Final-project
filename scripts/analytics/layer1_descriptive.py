@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -9,13 +10,13 @@ import pandas as pd
 from scipy.stats import shapiro, zscore
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-CATALOG_PATH = PROJECT_ROOT / "data" / "catalogs" / "variables.catalog.json"
-OUTPUT_DIR = PROCESSED_DIR  # Layer1 escribe en processed/; publish.py copia a public/data/
+PUBLIC_DATA_DIR = PROJECT_ROOT / "public" / "data"
+CATALOG_PATH = PUBLIC_DATA_DIR / "variables.catalog.json"
+COMBINED_PATH = PUBLIC_DATA_DIR / "state_dashboard.combined.json"
+OUTPUT_DIR = PUBLIC_DATA_DIR / "outputs" / "state"
 
 
 def _load_direction_map() -> dict[str, str]:
-    """Lee variables.catalog.json y devuelve {variable_id: direction}."""
     if not CATALOG_PATH.exists():
         return {}
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
@@ -27,25 +28,17 @@ def _load_direction_map() -> dict[str, str]:
 
 
 class Layer1Descriptive:
-    """Capa descriptiva: estadísticas univariadas, distribuciones, correlaciones,
-    outliers y rankings sobre el dataset combinado de 32 estados."""
+    """Estadísticas descriptivas sobre el dataset combinado de 32 estados."""
 
-    def __init__(self, context_df: pd.DataFrame, digital_df: pd.DataFrame,
-                 direction_map: dict[str, str] | None = None) -> None:
-        meta_cols = ["cve_ent", "estado", "region"]
-        self.combined = pd.merge(
-            context_df,
-            digital_df.drop(columns=[c for c in meta_cols if c in digital_df.columns], errors="ignore"),
-            on="state_code",
-            how="outer",
-        )
+    def __init__(self, df: pd.DataFrame, direction_map: dict[str, str] | None = None) -> None:
+        self.combined = df
         self.direction_map: dict[str, str] = direction_map or {}
 
     # ── A. Estadísticas univariadas ──────────────────────────────────────────
 
     def univariate_stats(self) -> pd.DataFrame:
         numeric = self._numeric_cols()
-        stats = self.combined[numeric].describe(percentiles=[0.25, 0.75]).T
+        stats = self.combined[numeric].describe(percentiles=[0.25, 0.50, 0.75]).T
         stats["skewness"] = self.combined[numeric].skew()
         stats["kurtosis"] = self.combined[numeric].kurtosis()
         return stats.round(4)
@@ -136,49 +129,135 @@ class Layer1Descriptive:
             ]
         return rankings
 
-    # ── G. State profile cards ───────────────────────────────────────────────
+    # ── F. State profile cards ───────────────────────────────────────────────
 
     def state_profile_cards(self) -> dict:
         numeric = self._numeric_cols()
-        col_min = self.combined[numeric].min()
-        col_max = self.combined[numeric].max()
-        col_range = (col_max - col_min).replace(0, float("nan"))
-        normalized = (self.combined[numeric] - col_min) / col_range
-
         cards: dict = {}
-        for idx, row in self.combined.iterrows():
+        for _, row in self.combined.iterrows():
             state = row["state_code"]
-            norm_vals = normalized.loc[idx].dropna().values
-            overall = float(np.mean(norm_vals) * 100) if len(norm_vals) > 0 else 0.0
             cards[state] = {
                 "estado": row.get("estado", state),
                 "region": row.get("region", ""),
                 "metrics": {col: float(row[col]) for col in numeric if not _isnan(row[col])},
-                "overall_score": round(overall, 2),
-                "color_code": "green" if overall > 70 else "yellow" if overall > 50 else "red",
             }
         return cards
 
     # ── Export ───────────────────────────────────────────────────────────────
 
-    def export(self, output_dir: Path = OUTPUT_DIR) -> Path:
-        output_dir.mkdir(parents=True, exist_ok=True)
+    def univariate_stats_json(self) -> dict:
+        import math
 
-        analyses = {
+        def _f(v) -> float | None:
+            try:
+                f = float(v)
+                return None if (math.isnan(f) or math.isinf(f)) else f
+            except (TypeError, ValueError):
+                return None
+
+        stats = self.univariate_stats()
+        result: dict = {}
+        for col, row in stats.iterrows():
+            result[str(col)] = {
+                "count": int(row.get("count", 0)),
+                "mean": _f(row.get("mean")),
+                "std": _f(row.get("std")),
+                "min": _f(row.get("min")),
+                "q25": _f(row.get("25%")),
+                "q50": _f(row.get("50%")),
+                "q75": _f(row.get("75%")),
+                "max": _f(row.get("max")),
+                "skewness": _f(row.get("skewness")),
+                "kurtosis": _f(row.get("kurtosis")),
+            }
+        return result
+
+    def export(self, output_dir: Path = OUTPUT_DIR, new_vars: set[str] | None = None) -> Path:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        if new_vars is None:
+            self._export_full(output_dir)
+        else:
+            self._export_partial(output_dir, new_vars)
+        self.combined.to_csv(output_dir / "combined_data.csv", index=False)
+        stats_df = self.univariate_stats()
+        stats_df.to_csv(output_dir / "univariate_stats.csv")
+        (output_dir / "univariate_stats.json").write_text(
+            json.dumps(self.univariate_stats_json(), ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        print(f"  [ok] univariate_stats.json")
+        print(f"Layer1 finalizado en: {output_dir}")
+        return output_dir
+
+    def _export_full(self, output_dir: Path) -> None:
+        files = {
             "distributions.json": self.distribution_analysis(),
             "correlations.json": self.correlation_matrices(),
             "outliers_iqr.json": self.outlier_detection(method="iqr"),
             "rankings.json": self.state_rankings(),
-            "state_cards.json": self.state_profile_cards(),
         }
-        for filename, data in analyses.items():
+        for filename, data in files.items():
             (output_dir / filename).write_text(
                 json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
             )
-        self.univariate_stats().to_csv(output_dir / "univariate_stats.csv")
-        self.combined.to_csv(output_dir / "combined_data.csv", index=False)
-        print(f"Layer1 outputs escritos en: {output_dir}")
-        return output_dir
+            print(f"  [ok] {filename}")
+
+    def _export_partial(self, output_dir: Path, new_vars: set[str]) -> None:
+        valid_vars = {v for v in new_vars if v in self.combined.columns}
+        if not valid_vars:
+            print("  [warn] Variables no encontradas en el dataset combinado, ejecutando recálculo completo...")
+            self._export_full(output_dir)
+            return
+
+        per_var_files: dict[str, dict] = {
+            "distributions.json": self.distribution_analysis(),
+            "outliers_iqr.json": self.outlier_detection(method="iqr"),
+            "rankings.json": self.state_rankings(),
+        }
+        for filename, fresh in per_var_files.items():
+            target = output_dir / filename
+            existing: dict = json.loads(target.read_text(encoding="utf-8")) if target.exists() else {}
+            for var_id in valid_vars:
+                if var_id in fresh:
+                    existing[var_id] = fresh[var_id]
+                    print(f"  [ok] {filename} ← {var_id}")
+            target.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        self._update_correlations_partial(output_dir / "correlations.json", valid_vars)
+
+    def _update_correlations_partial(self, target: Path, new_vars: set[str]) -> None:
+        existing: dict = json.loads(target.read_text(encoding="utf-8")) if target.exists() else {}
+
+        for method in ("pearson", "spearman"):
+            block = existing.get(method, {"matrix": [], "variables": [], "note": ""})
+            ex_vars: list[str] = block["variables"]
+            matrix: list[list] = block["matrix"]
+
+            for var_id in new_vars:
+                if var_id not in self.combined.columns:
+                    continue
+                if var_id not in ex_vars:
+                    ex_vars.append(var_id)
+                    for row in matrix:
+                        row.append(None)
+                    matrix.append([None] * len(ex_vars))
+
+                idx = ex_vars.index(var_id)
+                for j, other in enumerate(ex_vars):
+                    if other not in self.combined.columns:
+                        continue
+                    pair = self.combined[[var_id, other]].dropna()
+                    corr = float(pair.corr(method=method).iloc[0, 1]) if len(pair) > 2 else None
+                    if corr is not None and np.isnan(corr):
+                        corr = None
+                    matrix[idx][j] = corr
+                    matrix[j][idx] = corr
+
+            block["variables"] = ex_vars
+            block["matrix"] = matrix
+            existing[method] = block
+            print(f"  [ok] correlations.json ({method}) ← {new_vars}")
+
+        target.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -193,7 +272,7 @@ def _isnan(x: object) -> bool:
         return True
 
 
-def load_wide_json(path: Path) -> pd.DataFrame:
+def load_combined_json(path: Path) -> pd.DataFrame:
     data = json.loads(path.read_text(encoding="utf-8"))
     rows = []
     for r in data["records"]:
@@ -209,13 +288,34 @@ def load_wide_json(path: Path) -> pd.DataFrame:
 
 
 def main() -> None:
-    context_df = load_wide_json(PROCESSED_DIR / "context_variables_state_dashboard.wide.json")
-    digital_df = load_wide_json(PROCESSED_DIR / "endutih_2024_state_dashboard.wide.json")
-    digital_df = digital_df.drop(columns=["anio"], errors="ignore")
+    parser = argparse.ArgumentParser(description="Layer1: estadísticas descriptivas sobre el dataset combinado.")
+    parser.add_argument(
+        "--new-vars",
+        default=None,
+        help="IDs de variables nuevas separados por coma (activa recálculo parcial).",
+    )
+    parser.add_argument(
+        "--input",
+        default=str(COMBINED_PATH),
+        help=f"Ruta del combined JSON (default: {COMBINED_PATH})",
+    )
+    args = parser.parse_args()
 
+    input_path = Path(args.input)
+    if not input_path.exists():
+        print(f"✗ No se encontró el combined JSON: {input_path}")
+        print("  Ejecuta primero: python scripts/combine_data.py")
+        return
+
+    new_vars: set[str] | None = None
+    if args.new_vars:
+        new_vars = {v.strip() for v in args.new_vars.split(",") if v.strip()}
+        print(f"Recálculo parcial: {new_vars}")
+
+    df = load_combined_json(input_path)
     direction_map = _load_direction_map()
-    layer1 = Layer1Descriptive(context_df, digital_df, direction_map=direction_map)
-    layer1.export()
+    layer1 = Layer1Descriptive(df, direction_map=direction_map)
+    layer1.export(new_vars=new_vars)
 
 
 if __name__ == "__main__":

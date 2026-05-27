@@ -12,6 +12,30 @@ export function minMaxNormalize(values: (number | null)[]): (number | null)[] {
   );
 }
 
+// Converts raw values to 0–100 percentile rank (tied values share averaged rank).
+// More robust than min-max when outliers or zeros are present.
+export function percentileRankNormalize(values: (number | null)[]): (number | null)[] {
+  const indexed = values
+    .map((v, i) => ({ v, i }))
+    .filter((p): p is { v: number; i: number } => p.v !== null && !isNaN(p.v as number));
+  if (!indexed.length) return values.map(() => null);
+  const n = indexed.length;
+  if (n === 1) return values.map((v) => (v !== null && !isNaN(v as number) ? 50 : null));
+  const sorted = [...indexed].sort((a, b) => a.v - b.v);
+  const rankByIdx = new Map<number, number>();
+  let pos = 0;
+  while (pos < sorted.length) {
+    let end = pos;
+    while (end < sorted.length - 1 && sorted[end + 1].v === sorted[pos].v) end++;
+    const avgRank = (pos + end) / 2;
+    for (let k = pos; k <= end; k++) rankByIdx.set(sorted[k].i, avgRank);
+    pos = end + 1;
+  }
+  const result: (number | null)[] = values.map(() => null);
+  for (const { i } of indexed) result[i] = (rankByIdx.get(i)! / (n - 1)) * 100;
+  return result;
+}
+
 export function calcDelta(value: number, benchmark: number): number {
   return value - benchmark;
 }
@@ -43,19 +67,25 @@ export function corrPValue(r: number, n: number): number {
   return Math.min(1, Math.max(0, p));
 }
 
-/** Returns normalized [0–100] values per state per metric for radar charts. */
+/** Returns normalized [0–100] values per state per metric for radar charts.
+ *  Metrics with polaridad "lower_better" are inverted so that higher score = better. */
 export function normalizeForRadar(
   records: StateMetricRecord[],
-  metricIds: string[]
+  metricIds: string[],
+  polaridadMap?: Record<string, string>
 ): Map<string, Record<string, number | null>> {
   const result = new Map<string, Record<string, number | null>>();
 
   for (const metricId of metricIds) {
     const values = records.map((r) => r.metrics[metricId] ?? null);
-    const normalized = minMaxNormalize(values);
+    const normalized = percentileRankNormalize(values);
+    const invert = polaridadMap?.[metricId] === "lower_better";
+    const final = invert
+      ? normalized.map((v) => (v !== null ? 100 - v : null))
+      : normalized;
     records.forEach((r, i) => {
       if (!result.has(r.state)) result.set(r.state, {});
-      result.get(r.state)![metricId] = normalized[i];
+      result.get(r.state)![metricId] = final[i];
     });
   }
 

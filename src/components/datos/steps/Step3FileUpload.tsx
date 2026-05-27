@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 import { Upload, FileText } from "lucide-react";
 import { parseCsv, type ParsedRow } from "../../../lib/csvParser";
-import type { OperationType } from "../../../lib/dataStorage";
+import type { Granularity } from "./Step1OperationType";
 
 type Props = {
-  operation: OperationType;
+  granularity: Granularity;
   variableId: string;
   onParsed: (rows: ParsedRow[], headers: string[]) => void;
   onBack: () => void;
@@ -12,21 +12,33 @@ type Props = {
   hasData: boolean;
 };
 
-const SCHEMA_HINT: Record<OperationType, string> = {
-  nueva_variable: "state_code, value [, year]",
-  historico: "state_code, year, value",
-  municipal: "cve_mun, municipio, state_code, value [, year]",
-  completar: "state_code, value [, year]",
-  modificar: "state_code, value [, year]",
-  actualizar: "state_code, value, year",
+const SCHEMA_HINT: Record<Granularity, string> = {
+  state: "state_code (ej. AGS, CMX), value, year",
+  historico: "state_code (ej. AGS, CMX), year, value",
+  municipal: "cvegeo (5 dígitos INEGI), value, year  —  state_code se deriva automáticamente",
 };
 
-export default function Step3FileUpload({ operation, variableId, onParsed, onBack, onNext, hasData }: Props) {
+function hasYearColumn(rows: ParsedRow[]): boolean {
+  return rows.some((r) => {
+    const y = r.year ?? r.anio;
+    return y !== undefined && y !== "" && !isNaN(parseInt(y));
+  });
+}
+
+export default function Step3FileUpload({
+  granularity,
+  variableId,
+  onParsed,
+  onBack,
+  onNext,
+  hasData,
+}: Props) {
   const [dragOver, setDragOver] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [preview, setPreview] = useState<ParsedRow[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [yearMissing, setYearMissing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleFile(file: File) {
@@ -36,24 +48,28 @@ export default function Step3FileUpload({ operation, variableId, onParsed, onBac
     }
     setFileName(file.name);
     setError(null);
+    setYearMissing(false);
 
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
       try {
+        let rows: ParsedRow[];
+        let h: string[];
         if (file.name.endsWith(".json")) {
           const data = JSON.parse(text);
-          const rows: ParsedRow[] = Array.isArray(data) ? data : data.records ?? [];
-          const h = rows.length > 0 ? Object.keys(rows[0]) : [];
-          setHeaders(h);
-          setPreview(rows.slice(0, 5));
-          onParsed(rows, h);
+          rows = Array.isArray(data) ? data : data.records ?? [];
+          h = rows.length > 0 ? Object.keys(rows[0]) : [];
         } else {
-          const { headers: h, rows } = parseCsv(text);
-          setHeaders(h);
-          setPreview(rows.slice(0, 5));
-          onParsed(rows, h);
+          const parsed = parseCsv(text);
+          rows = parsed.rows;
+          h = parsed.headers;
         }
+        const missing = !hasYearColumn(rows);
+        setYearMissing(missing);
+        setHeaders(h);
+        setPreview(rows.slice(0, 5));
+        onParsed(rows, h);
       } catch {
         setError("No se pudo leer el archivo. Verifica el formato.");
       }
@@ -61,11 +77,13 @@ export default function Step3FileUpload({ operation, variableId, onParsed, onBac
     reader.readAsText(file, "utf-8");
   }
 
+  const canContinue = hasData && !yearMissing;
+
   return (
     <div className="wizard-step-body">
       <p className="wizard-step-title">Sube el archivo de datos</p>
       <p className="wizard-schema-hint">
-        Formato esperado: <code>{SCHEMA_HINT[operation]}</code>
+        Formato esperado: <code>{SCHEMA_HINT[granularity]}</code>
         {" · "}variable: <code>{variableId}</code>
       </p>
 
@@ -74,7 +92,12 @@ export default function Step3FileUpload({ operation, variableId, onParsed, onBac
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
-        onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          const f = e.dataTransfer.files[0];
+          if (f) handleFile(f);
+        }}
       >
         {fileName ? (
           <span className="dropzone-filename"><FileText size={14} /> {fileName}</span>
@@ -86,10 +109,21 @@ export default function Step3FileUpload({ operation, variableId, onParsed, onBac
           </>
         )}
       </div>
-      <input ref={inputRef} type="file" accept=".csv,.json" style={{ display: "none" }}
-        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".csv,.json"
+        style={{ display: "none" }}
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
+      />
 
       {error && <p className="wizard-error">{error}</p>}
+      {yearMissing && (
+        <p className="wizard-error">
+          El archivo no incluye la columna <code>year</code> (o <code>anio</code>).
+          El año es obligatorio — por favor agrégalo al archivo.
+        </p>
+      )}
 
       {preview.length > 0 && (
         <div className="data-preview">
@@ -113,7 +147,9 @@ export default function Step3FileUpload({ operation, variableId, onParsed, onBac
 
       <div className="wizard-nav">
         <button className="btn-ghost" onClick={onBack} type="button">← Atrás</button>
-        <button className="btn-primary" disabled={!hasData} onClick={onNext} type="button">Siguiente →</button>
+        <button className="btn-primary" disabled={!canContinue} onClick={onNext} type="button">
+          Siguiente →
+        </button>
       </div>
     </div>
   );

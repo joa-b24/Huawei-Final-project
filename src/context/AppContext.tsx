@@ -52,15 +52,15 @@ function reducer(state: AppState, action: Action): AppState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DEFAULT_VARIABLES = [
-  "personas_usuarias_internet_pct",
-  "localidades_con_4g_garantizada_pct",
+  "carencia_servicios_basicos_pct",
   "pobreza_pct",
+  "pct_analfabetismo_15ymas",
   "pib_per_capita",
   "poblacion_en_localidades_con_5g_garantizada_pct",
 ];
 
 const initialState: AppState = {
-  primaryState: "Nuevo Leon",
+  primaryState: "Ciudad de Mexico",
   activeTab: "diagnostico",
   activeVariableIds: DEFAULT_VARIABLES,
 };

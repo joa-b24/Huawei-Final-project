@@ -6,10 +6,13 @@ Este documento describe el flujo de datos del pipeline Python hacia el dashboard
 
 1. **ETL por fuente** — Transformación y agregación a nivel estatal: ENDUTIH 2024, variables de contexto (CONEVAL + PIBE + ITER), cobertura de red Ookla/IFT, GeoJSON de polígonos estatales.
 2. **Dataset maestro municipal** — Cruce de fuentes oficiales (INEGI ITER 2020, CONEVAL IRS 2020, brechas de conectividad por localidad INEGI/IFT 2024, Ookla 2025 cuando exista observación). Features derivadas: educación, brechas 3G/4G, demografía por sexo.
-3. **Analytics Layer 1** — Estadísticas descriptivas sobre el dataset fusionado: distribuciones, correlaciones Pearson/Spearman, rankings, outliers IQR.
-4. **Estandarización + Clustering** — `StandardScaler` + `KMeans` (k=2..7, selección por silhouette score). Perfil de cada cluster por medias de variables clave.
-5. **Desigualdad territorial** — **Theil L** ponderado por población municipal. **Gini** por municipio para análisis de exposición.
-6. **Publish** — Copia selectiva de `data/processed/` a `public/data/` mediante `scripts/publish.py`.
+3. **Exportación municipal** — `export_municipal_from_analytics.py` mapea las 23 variables del maestro al catálogo canónico y escribe un archivo `.json` combinado por estado en `public/data/outputs/municipal/`, más `municipal_manifest.json`.
+4. **GeoJSONs municipales** — `build_municipal_geojsons.py` genera polígonos de municipios en WGS84 (geometría pura: solo `cvegeo` y `nom_mun`), más `bboxes.json` para auto-zoom en el mapa.
+5. **Analytics Layer 1 estatal** — Estadísticas descriptivas sobre el dataset fusionado: distribuciones, correlaciones Pearson/Spearman, rankings, outliers IQR.
+6. **Analytics Layer 1 municipal** — `layer1_municipal.py` lee los combined por estado e incrusta bajo cada variable: `stats` (count, mean, median, std, min, max, q1, q3), `rankings` (lista ordenada según `direction` del catálogo) y `outliers` (método IQR 1.5).
+7. **Estandarización + Clustering** — `StandardScaler` + `KMeans` (k=2..7, selección por silhouette score). Perfil de cada cluster por medias de variables clave.
+8. **Desigualdad territorial** — **Theil L** ponderado por población municipal. **Gini** por municipio para análisis de exposición.
+9. **Publish** — Copia selectiva de `data/processed/` a `public/data/` mediante `scripts/publish.py`.
 
 ## Vista web (tab Territorial)
 
@@ -20,23 +23,31 @@ En la app (`npm run dev`), el tab **«Territorial»** permite elegir un estado y
 Desde la raíz del repo (requiere `pip install -r requirements-pipeline.txt`):
 
 ```bash
-# ETL — fuentes digitales y de contexto
+# ETL estatal — fuentes digitales y de contexto
 npm run data:build:endutih              # ENDUTIH 2024 + cobertura de red (Ookla/IFT)
 npm run data:build:context              # CONEVAL + PIBE + ITER
 
-# ETL — GeoJSON para mapa coroplético
+# ETL estatal — GeoJSON para mapa coroplético
 npm run data:build:geojson              # 00ent.shp → estados.geojson (requiere pyproj)
 
-# Analytics Layer 1
+# Analytics Layer 1 estatal
 npm run data:build:analytics            # distribuciones, correlaciones, rankings, outliers
 
 # Publish al frontend
 npm run data:publish                    # copia data/processed/ → public/data/
+
+# Pipeline municipal (requiere municipios_master_analytics.json generado)
+python scripts/build_municipal_geojsons.py              # 00mun.shp → geojsons por estado + bboxes
+python scripts/export_municipal_from_analytics.py       # combined .json por estado + manifest
+python scripts/analytics/layer1_municipal.py            # stats/rankings/outliers embebidos en combined
+
+# Analytics municipal para estados específicos
+python scripts/analytics/layer1_municipal.py AGS JAL    # solo Aguascalientes y Jalisco
 ```
 
 ## Archivos que genera
 
-### ETL (`scripts/etl/`)
+### ETL estatal (`scripts/etl/`)
 
 | Salida | Script | Uso |
 |--------|--------|-----|
@@ -46,13 +57,42 @@ npm run data:publish                    # copia data/processed/ → public/data/
 | `data/processed/cobertura_red_por_municipio_2025.json` | `build_cobertura_red.py` | Ídem a nivel municipal |
 | `data/processed/estados.geojson` | `build_geojson.py` | Polígonos WGS84 para mapa coroplético |
 
-### Variables del dataset municipal (`scripts/build_municipal_analytics.py`)
+### Pipeline municipal
 
-- **Educación (ITER)**: `graproes`, `pct_sin_escolaridad_15ymas`, `pct_posbasica_18ymas`, `pct_analfabetismo_15ymas`.
-- **Población por sexo (ITER)**: `pct_mujeres`, `pct_hombres`, `indice_masculinidad`.
-- **Rezago / carencias (CONEVAL IRS 2020)**: índice y componentes (`pct_*` IRS).
-- **Conectividad (localidades 2024)**: `loc_pct_4g_garantizada`, `pob_pct_4g_garantizada`, `brecha_4g_pp`, `brecha_3g_pp`.
-- **Ookla (2025, parcial)**: velocidad y cobertura donde `id_cvegeo` coincide; resto `null`.
+| Salida | Script | Uso |
+|--------|--------|-----|
+| `public/data/geo/municipios/{estado}.geojson` | `build_municipal_geojsons.py` | Geometría pura (cvegeo + nom_mun) para el mapa del frontend |
+| `public/data/geo/municipios/bboxes.json` | `build_municipal_geojsons.py` | Bounding boxes para auto-zoom en el mapa |
+| `public/data/outputs/municipal/{estado}.json` | `export_municipal_from_analytics.py` | Combined por estado: 23 variables con registros municipales |
+| `public/data/municipal_manifest.json` | `export_municipal_from_analytics.py` | Índice: qué variables existen por estado |
+
+El combined por estado tiene esta estructura:
+```json
+{
+  "state_code": "AGS",
+  "updated_at": "2026-05-26",
+  "variables": {
+    "poblacion_en_localidades_con_4g_garantizada_pct": {
+      "year": 2024,
+      "records": [{ "cve_mun": "01001", "value": 99.83 }],
+      "stats":    { "count": 11, "mean": 98.83, "median": 99.69, "std": 1.76, "min": 94.02, "max": 100.0, "q1": 97.88, "q3": 100.0 },
+      "rankings": [{ "rank": 1, "cve_mun": "01004", "value": 100.0 }],
+      "outliers": []
+    }
+  }
+}
+```
+
+### 23 variables municipales disponibles
+
+| Categoría | Variables |
+|-----------|-----------|
+| Cobertura BIT (IFT 2024) | `poblacion_en_localidades_con_4g_garantizada_pct`, `localidades_con_4g_garantizada_pct`, `localidades_total`, `brecha_4g_pp` |
+| Educación (ITER 2020) | `pct_analfabetismo_15ymas`, `pct_sin_escolaridad_15ymas`, `pct_posbasica_18ymas` |
+| Demografía (ITER 2020) | `pob_0_14_pct`, `pob_15_64_pct`, `pob_65_mas_pct` |
+| Rezago social (CONEVAL IRS 2020) | `irs_indice`, `viv_sin_agua_pct`, `viv_sin_drenaje_pct`, `viv_sin_luz_pct`, `sin_derechohabiencia_pct` |
+| Ookla (2025, parcial) | `ookla_velocidad_avg_mbps`, `ookla_cobertura_4g_pct` |
+| BIT completo (ya en catálogo) | `poblacion_en_localidades_con_cobertura_movil_pct`, `localidades_con_cobertura_movil_pct`, `hogares_con_cobertura_movil_pct`, `localidades_con_3g_garantizada_pct`, `localidades_con_5g_garantizada_pct`, `poblacion_en_localidades_con_3g_garantizada_pct` |
 
 ### Analytics Layer 1 (`scripts/analytics/layer1_descriptive.py`)
 

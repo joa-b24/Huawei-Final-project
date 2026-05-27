@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-22",
+  "updated_at": "2026-05-26",
   "categories": [
     {
       "categoria_id": "infraestructura_digital",
@@ -52,7 +52,8 @@
         "uso de computadora",
         "usuarios computadora"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_usuarias_internet_pct",
@@ -68,7 +69,8 @@
         "uso de internet",
         "usuarios internet"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_conexion_internet_movil_pct",
@@ -84,7 +86,8 @@
         "internet movil",
         "uso internet movil"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_usan_redes_sociales_pct",
@@ -100,7 +103,8 @@
         "redes sociales",
         "uso redes"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_compras_internet_pct",
@@ -116,7 +120,8 @@
         "compras en linea",
         "ecommerce"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_pagos_internet_pct",
@@ -132,7 +137,8 @@
         "pagos digitales",
         "pagos por internet"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_banca_electronica_pct",
@@ -148,7 +154,8 @@
         "banca electronica",
         "uso banca electronica"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_con_celular_pct",
@@ -163,7 +170,8 @@
         "P8_1",
         "disponibilidad celular"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_usuarias_celular_pct",
@@ -179,7 +187,8 @@
         "uso celular",
         "usuarios celular"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_con_smartphone_pct",
@@ -195,7 +204,8 @@
         "smartphone",
         "celular inteligente"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_conexion_datos_celular_pct",
@@ -211,7 +221,8 @@
         "datos moviles",
         "conexion datos celular"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "teledensidad_internet_movil",
@@ -227,7 +238,8 @@
         "teledensidad internet movil",
         "internet movil por cada 100 habitantes"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "localidades_con_cobertura_movil_pct",
@@ -243,7 +255,8 @@
         "localidades con movil",
         "cobertura movil por localidad"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "poblacion_en_localidades_con_cobertura_movil_pct",
@@ -258,7 +271,8 @@
         "poblacion con cobertura movil",
         "movil ponderado por poblacion"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "localidades_con_4g_garantizada_pct",
@@ -274,7 +288,8 @@
         "localidades con 4G",
         "4G garantizada"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "poblacion_en_localidades_con_4g_garantizada_pct",
@@ -289,7 +304,8 @@
         "poblacion con 4G",
         "4G garantizada ponderada"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "localidades_con_5g_garantizada_pct",
@@ -305,7 +321,8 @@
         "localidades con 5G",
         "5G garantizada"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "poblacion_en_localidades_con_5g_garantizada_pct",
@@ -320,7 +337,8 @@
         "poblacion con 5G",
         "5G garantizada ponderada"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "hogares_en_localidades_con_internet_pct",
@@ -335,7 +353,8 @@
         "hogares con internet por localidad",
         "INTERNET ponderado por hogares"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "poblacion_en_localidades_con_internet_pct",
@@ -350,7 +369,8 @@
         "poblacion con internet por localidad",
         "INTERNET ponderado por poblacion"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "personas_usan_apps_redes_sociales_pct",
@@ -366,7 +386,8 @@
         "apps redes sociales",
         "redes sociales movil"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "personas_usan_banca_movil_pct",
@@ -382,7 +403,8 @@
         "banca movil",
         "apps banca movil"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "indice_conectividad_digital",
@@ -398,7 +420,8 @@
         "conectividad digital",
         "indice de conectividad"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "hogares_banda_ancha_fija_pct",
@@ -413,7 +436,8 @@
         "banda ancha fija",
         "fixed broadband households pct"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "both"
     },
     {
       "variable_id": "cobertura_5g_pct",
@@ -429,7 +453,8 @@
         "5g coverage",
         "cobertura 5g"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "cobertura_4g_pct",
@@ -444,7 +469,8 @@
         "4g coverage",
         "cobertura 4g"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "penetracion_movil_pct",
@@ -459,7 +485,8 @@
         "mobile penetration",
         "penetracion movil"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "target"
     },
     {
       "variable_id": "actividad_industrial_indice",
@@ -474,7 +501,8 @@
         "industrial_activity",
         "actividad industrial"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "empleo_industrial_pct",
@@ -489,7 +517,8 @@
         "industrial employment pct",
         "empleo industrial"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "exportaciones_industriales_usd_millones",
@@ -504,7 +533,8 @@
         "industrial_exports",
         "exportaciones industriales"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "inversion_extranjera_industria_usd_millones",
@@ -519,7 +549,8 @@
         "industrial fdi",
         "ied industria"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "poblacion_total",
@@ -534,7 +565,8 @@
         "population",
         "poblacion total"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "contextual"
     },
     {
       "variable_id": "densidad_poblacional",
@@ -549,7 +581,8 @@
         "population density",
         "densidad"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "edad_mediana",
@@ -564,7 +597,8 @@
         "median age",
         "edad mediana"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "urbanizacion_pct",
@@ -579,7 +613,8 @@
         "urbanization rate",
         "urbanizacion"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "escolaridad_promedio_anios",
@@ -594,7 +629,8 @@
         "average schooling years",
         "escolaridad promedio"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "pobreza_pct",
@@ -609,7 +645,8 @@
         "pobreza",
         "poblacion en pobreza"
       ],
-      "direction": "lower_better"
+      "direction": "lower_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "pobreza_extrema_pct",
@@ -623,7 +660,8 @@
       "sinonimos": [
         "pobreza extrema"
       ],
-      "direction": "lower_better"
+      "direction": "lower_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "vulnerable_carencias_pct",
@@ -637,7 +675,8 @@
       "sinonimos": [
         "vulnerable por carencias"
       ],
-      "direction": "lower_better"
+      "direction": "lower_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "no_pobre_no_vulnerable_pct",
@@ -651,7 +690,8 @@
       "sinonimos": [
         "no pobre y no vulnerable"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "rezago_educativo_pct",
@@ -665,7 +705,8 @@
       "sinonimos": [
         "rezago educativo"
       ],
-      "direction": "lower_better"
+      "direction": "lower_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "carencia_salud_pct",
@@ -680,7 +721,8 @@
         "carencia salud",
         "acceso a salud"
       ],
-      "direction": "lower_better"
+      "direction": "lower_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "carencia_servicios_basicos_pct",
@@ -695,7 +737,8 @@
         "servicios basicos",
         "carencias de vivienda"
       ],
-      "direction": "lower_better"
+      "direction": "lower_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "ingreso_inferior_lp_pct",
@@ -709,7 +752,8 @@
       "sinonimos": [
         "linea de pobreza por ingresos"
       ],
-      "direction": "lower_better"
+      "direction": "lower_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "pib_total",
@@ -724,7 +768,8 @@
         "PIBE",
         "producto interno bruto estatal"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "pib_per_capita",
@@ -739,7 +784,8 @@
         "PIB per capita",
         "PIB por habitante"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "poblacion_edad_laboral_pct",
@@ -754,7 +800,8 @@
         "poblacion 15 a 64",
         "POB15_64"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "poblacion_economicamente_activa_pct",
@@ -769,7 +816,8 @@
         "PEA",
         "poblacion economicamente activa"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
     },
     {
       "variable_id": "poblacion_afiliada_imss_pct",
@@ -784,7 +832,188 @@
         "PDER_IMSS",
         "afiliacion IMSS"
       ],
-      "direction": "higher_better"
+      "direction": "higher_better",
+      "role": "explanatory"
+    },
+    {
+      "variable_id": "analfabetismo_15ymas_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Analfabetismo 15+ años",
+      "descripcion": "Porcentaje de poblacion de 15 anos o mas que no sabe leer ni escribir.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": "lower_better",
+      "role": "explanatory",
+      "fuente_sugerida": "INEGI ITER 2020"
+    },
+    {
+      "variable_id": "sin_escolaridad_15ymas_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Sin escolaridad 15+ años",
+      "descripcion": "Porcentaje de poblacion de 15 anos o mas sin ningun nivel de escolaridad.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": "lower_better",
+      "role": "explanatory",
+      "fuente_sugerida": "INEGI ITER 2020"
+    },
+    {
+      "variable_id": "posbasica_18ymas_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Educación posbásica 18+ años",
+      "descripcion": "Porcentaje de poblacion de 18 anos o mas con educacion superior a la basica.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": "higher_better",
+      "role": "explanatory",
+      "fuente_sugerida": "INEGI ITER 2020"
+    },
+    {
+      "variable_id": "pob_0_14_pct",
+      "categoria_id": "demografia",
+      "nombre": "Población 0–14 años (%)",
+      "descripcion": "Porcentaje de la poblacion municipal en el rango de 0 a 14 anos.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": null,
+      "role": "contextual",
+      "fuente_sugerida": "INEGI ITER 2020"
+    },
+    {
+      "variable_id": "pob_15_64_pct",
+      "categoria_id": "demografia",
+      "nombre": "Población 15–64 años (%)",
+      "descripcion": "Porcentaje de la poblacion municipal en edad productiva (15 a 64 anos).",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": null,
+      "role": "contextual",
+      "fuente_sugerida": "INEGI ITER 2020"
+    },
+    {
+      "variable_id": "pob_65_mas_pct",
+      "categoria_id": "demografia",
+      "nombre": "Población 65+ años (%)",
+      "descripcion": "Porcentaje de la poblacion municipal de 65 anos o mas.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": null,
+      "role": "contextual",
+      "fuente_sugerida": "INEGI ITER 2020"
+    },
+    {
+      "variable_id": "localidades_total",
+      "categoria_id": "contexto_territorial",
+      "nombre": "Total de localidades",
+      "descripcion": "Numero de localidades en el municipio segun el ITER 2020.",
+      "unidad_base": "",
+      "tipo_valor": "integer",
+      "agregacion_default": "sum",
+      "direction": null,
+      "role": "contextual",
+      "fuente_sugerida": "INEGI ITER 2020"
+    },
+    {
+      "variable_id": "irs_indice",
+      "categoria_id": "bienestar_social",
+      "nombre": "Índice de Rezago Social (IRS)",
+      "descripcion": "Indice de rezago social municipal (CONAPO). Valores mas altos indican mayor marginacion.",
+      "unidad_base": "",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "direction": "lower_better",
+      "role": "explanatory",
+      "fuente_sugerida": "CONAPO IRS 2020"
+    },
+    {
+      "variable_id": "viv_sin_agua_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Viviendas sin agua entubada (%)",
+      "descripcion": "Porcentaje de viviendas particulares habitadas sin acceso a agua entubada.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": "lower_better",
+      "role": "explanatory",
+      "fuente_sugerida": "CONAPO IRS 2020"
+    },
+    {
+      "variable_id": "viv_sin_drenaje_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Viviendas sin drenaje (%)",
+      "descripcion": "Porcentaje de viviendas particulares habitadas sin drenaje.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": "lower_better",
+      "role": "explanatory",
+      "fuente_sugerida": "CONAPO IRS 2020"
+    },
+    {
+      "variable_id": "viv_sin_luz_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Viviendas sin electricidad (%)",
+      "descripcion": "Porcentaje de viviendas particulares habitadas sin energia electrica.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": "lower_better",
+      "role": "explanatory",
+      "fuente_sugerida": "CONAPO IRS 2020"
+    },
+    {
+      "variable_id": "sin_derechohabiencia_pct",
+      "categoria_id": "bienestar_social",
+      "nombre": "Sin derechohabiencia (%)",
+      "descripcion": "Porcentaje de poblacion sin acceso a servicios de salud por seguridad social.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": "lower_better",
+      "role": "explanatory",
+      "fuente_sugerida": "CONAPO IRS 2020"
+    },
+    {
+      "variable_id": "ookla_velocidad_avg_mbps",
+      "categoria_id": "infraestructura_digital",
+      "nombre": "Velocidad promedio internet (Ookla)",
+      "descripcion": "Velocidad promedio de internet medida por Ookla Speedtest Intelligence (Mbps).",
+      "unidad_base": "Mbps",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "direction": "higher_better",
+      "role": "target",
+      "fuente_sugerida": "Ookla Speedtest Intelligence 2025"
+    },
+    {
+      "variable_id": "ookla_cobertura_4g_pct",
+      "categoria_id": "cobertura_red",
+      "nombre": "Cobertura 4G Ookla (%)",
+      "descripcion": "Porcentaje de muestras Ookla con tecnologia 4G en el municipio.",
+      "unidad_base": "%",
+      "tipo_valor": "percentage",
+      "agregacion_default": "avg",
+      "direction": "higher_better",
+      "role": "target",
+      "fuente_sugerida": "Ookla Speedtest Intelligence 2025"
+    },
+    {
+      "variable_id": "brecha_4g_pp",
+      "categoria_id": "cobertura_red",
+      "nombre": "Brecha 4G (pp)",
+      "descripcion": "Diferencia en puntos porcentuales entre cobertura 4G teorica (BIT) y medida (Ookla).",
+      "unidad_base": "pp",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "direction": "lower_better",
+      "role": "target",
+      "fuente_sugerida": "BIT / Ookla 2024"
     }
   ]
 }

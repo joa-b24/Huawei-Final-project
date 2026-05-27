@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 type Props = {
   title: string;
   description: string;
-  children?: ReactNode;
+  children: ReactNode;
   style?: CSSProperties;
 };
 
@@ -26,7 +26,11 @@ export default function TabNarrative({ title, description, children, style }: Pr
           {open ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
         </span>
       </button>
-      {open && children ? <div className="tab-narrative__body">{children}</div> : null}
+      {open && (
+        <div className="tab-narrative__body">
+          {children}
+        </div>
+      )}
     </div>
   );
 }

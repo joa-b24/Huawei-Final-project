@@ -16,9 +16,11 @@
     "data:enrich:rf": "python3 scripts/enrich_rf_diagnostics.py",
     "data:build:context": "python3 scripts/etl/build_context_variables.py",
     "data:build:geojson": "python3 scripts/etl/build_geojson.py",
+    "data:combine": "python3 scripts/combine_data.py",
     "data:import": "python3 scripts/import_variable.py",
     "data:layer1": "python3 scripts/analytics/layer1_descriptive.py",
-    "data:publish": "python3 scripts/publish.py"
+    "data:layer1:municipal": "python3 scripts/analytics/layer1_municipal.py",
+    "data:pipeline": "python3 scripts/combine_data.py && python3 scripts/analytics/layer1_descriptive.py"
   },
   "dependencies": {
     "lucide-react": "^1.14.0",

@@ -8,6 +8,7 @@ export type MetricDefinition = {
   unit: string;
   category: string;
   description: string;
+  year?: number;
 };
 
 export type StateMetricRecord = {

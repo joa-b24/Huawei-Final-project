@@ -82,21 +82,6 @@ Convierte el shapefile `data/raw/00ent.shp` (INEGI Marco Geoestadístico Naciona
 
 **Output:** `data/processed/estados.geojson`
 
-### 3.4 Cobertura de red Ookla — `scripts/etl/build_cobertura_red.py`
-
-Geodatos de velocidad móvil a nivel hexágono.
-
-- Filtro por bounding box de México: `(-118.5, 14.5, -86.5, 32.7)`.
-- Filtro de confianza: se descartan hexágonos con menos de 3 pruebas (`tests < 3`).
-- Proxy de tecnología por velocidad promedio de descarga (estándar IFT):
-  - `< 10 Mbps` → 3G
-  - `10–40 Mbps` → 4G
-  - `> 40 Mbps` → 5G
-- Spatial join con polígonos municipales (`00mun.shp`) por centroide del hexágono.
-- Agregación municipal y luego estatal por promedio.
-
-**Outputs:** `data/processed/cobertura_red_por_municipio_2025.json` + `cobertura_red_por_estado_2025.json`
-
 ---
 
 ## 4. Analytics — Layer 1

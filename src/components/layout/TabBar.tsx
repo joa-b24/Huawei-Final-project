@@ -1,4 +1,4 @@
-export type Tab = { id: string; label: string };
+export type Tab = { id: string; label: string; disabled?: boolean; disabledReason?: string };
 
 type Props = {
   tabs: Tab[];
@@ -12,11 +12,13 @@ export default function TabBar({ tabs, activeTab, onTabChange }: Props) {
       {tabs.map((tab) => (
         <button
           key={tab.id}
-          className={`tab-btn${activeTab === tab.id ? " active" : ""}`}
-          onClick={() => onTabChange(tab.id)}
+          className={`tab-btn${activeTab === tab.id ? " active" : ""}${tab.disabled ? " tab-btn--disabled" : ""}`}
+          onClick={() => !tab.disabled && onTabChange(tab.id)}
           aria-selected={activeTab === tab.id}
+          aria-disabled={tab.disabled}
           role="tab"
           type="button"
+          title={tab.disabled ? tab.disabledReason : undefined}
         >
           {tab.label}
         </button>

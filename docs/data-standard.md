@@ -1,5 +1,5 @@
 # Estándar de datos territoriales
-**Versión:** 2.1 | **Actualizado:** 2026-05-06
+**Versión:** 2.2 | **Actualizado:** 2026-05-26
 
 ## Objetivo
 
@@ -104,25 +104,39 @@ Un registro por estado con todas las métricas en un objeto `metrics`.
 }
 ```
 
-### 3c. Formato largo (long) — municipal
+### 3c. Formato combined — municipal (serving layer)
 
-Un registro por observación: `municipio × variable × año`.
+Un archivo por estado con todas sus variables. Es el único formato que lee el frontend para nivel municipal.
 
 ```json
 {
-  "cve_ent": "14",
-  "id_cvegeo": "14039",
-  "nom_mun": "Guadalajara",
   "state_code": "JAL",
-  "estado": "Jalisco",
-  "categoria": "cobertura_red",
-  "variable": "int_pct_4g_coverage",
-  "valor": 92.3,
-  "anio": 2025,
-  "fuente": "Ookla Open Datasets",
-  "unidad": "%"
+  "updated_at": "2026-05-26",
+  "variables": {
+    "pct_analfabetismo_15ymas": {
+      "year": 2020,
+      "records": [
+        { "cve_mun": "14039", "value": 2.1 }
+      ],
+      "stats": {
+        "count": 125, "mean": 5.3, "median": 4.8,
+        "std": 3.1, "min": 0.9, "max": 18.2, "q1": 3.1, "q3": 7.0
+      },
+      "rankings": [
+        { "rank": 1, "cve_mun": "14039", "value": 0.9 }
+      ],
+      "outliers": [
+        { "cve_mun": "14097", "value": 18.2 }
+      ]
+    }
+  }
 }
 ```
+
+- `records`: lista raw de municipios con valor; llave de join = `cve_mun` ↔ `cvegeo` del GeoJSON.
+- `stats`: pre-calculados por `layer1_municipal.py` para uso inmediato en UI (media, mediana, IQR, etc.).
+- `rankings`: lista ya ordenada según `direction` de la variable en el catálogo.
+- `outliers`: municipios fuera de `[Q1 − 1.5×IQR, Q3 + 1.5×IQR]`.
 
 ### 3d. Serie temporal
 
@@ -145,7 +159,9 @@ Un punto por año por estado, para habilitar análisis de tendencias.
 
 ## 4. Outputs analíticos (Layer 1)
 
-Generados por `scripts/analytics/layer1_descriptive.py`. Se guardan en `data/processed/`.
+### 4a. Estatal — `scripts/analytics/layer1_descriptive.py`
+
+Se guardan en `data/processed/`.
 
 | Archivo | Contenido |
 |---|---|
@@ -158,16 +174,28 @@ Generados por `scripts/analytics/layer1_descriptive.py`. Se guardan en `data/pro
 | `combined_data.csv` | Dataset fusionado (contexto + digital) |
 | `estados.geojson` | Polígonos estatales simplificados en WGS84 para el mapa coroplético |
 
+### 4b. Municipal — `scripts/analytics/layer1_municipal.py`
+
+Embebe los resultados directamente en el combined por estado (`public/data/outputs/municipal/{estado}.json`). No genera archivos separados.
+
+| Campo embebido | Método |
+|---|---|
+| `stats` | count, mean, median, std, min, max, q1, q3 sobre los municipios del estado |
+| `rankings` | Municipios ordenados por valor según `direction` del catálogo (ascendente si `lower_better`) |
+| `outliers` | IQR: `[Q1 − 1.5×IQR, Q3 + 1.5×IQR]` |
+
+Actualiza `analytics_available: true` en `municipal_manifest.json` al completar.
+
 ---
 
 ## 5. Serving layer
 
 **Directorio:** `public/data/`
 
-Es el único directorio que lee el frontend. Se puebla ejecutando `scripts/publish.py`.
+Es el único directorio que lee el frontend. Se puebla ejecutando `scripts/publish.py` (datos estatales) y los scripts municipales.
 **Nunca escribir directamente en `public/data/`** — siempre pasar por el pipeline.
 
-Archivos presentes en `public/data/` tras un publish completo:
+### Archivos estatales (via `publish.py`)
 
 | Archivo | Origen |
 |---|---|
@@ -183,6 +211,26 @@ Archivos presentes en `public/data/` tras un publish completo:
 | `outliers_iqr.json` | `scripts/analytics/layer1_descriptive.py` |
 | `variables.catalog.json` | `data/catalogs/` (copiado directamente) |
 | `states.master.json` | `data/catalogs/` (copiado directamente) |
+
+### Archivos municipales (pipeline municipal directo)
+
+| Archivo | Origen |
+|---|---|
+| `municipal_manifest.json` | `scripts/export_municipal_from_analytics.py` |
+| `outputs/municipal/{estado}.json` (×32) | `scripts/export_municipal_from_analytics.py` + `layer1_municipal.py` |
+| `geo/municipios/{estado}.geojson` (×32) | `scripts/build_municipal_geojsons.py` |
+| `geo/municipios/bboxes.json` | `scripts/build_municipal_geojsons.py` |
+
+El `municipal_manifest.json` tiene la estructura:
+```json
+{
+  "updated_at": "2026-05-26",
+  "states": {
+    "AGS": { "variables": ["pct_analfabetismo_15ymas", "..."], "analytics_available": true }
+  }
+}
+```
+El frontend lo usa para determinar si el botón "Ver municipios" debe mostrarse para el estado y variables activas.
 
 ---
 
@@ -201,7 +249,9 @@ Archivos presentes en `public/data/` tras un publish completo:
 | Granularidad | Formato recomendado | Llave principal |
 |---|---|---|
 | Estatal (actual) | Wide JSON por dataset | `cve_ent` |
-| Municipal | Long JSON con `id_cvegeo` | `id_cvegeo` (CVEGEO INEGI) |
+| Municipal (serving layer) | Combined por estado `outputs/municipal/{estado}.json` | `cve_mun` (5 dígitos) ↔ `cvegeo` en GeoJSON |
 | Temporal | Array de `{anio, valor}` por estado+variable | `state_code + variable + anio` |
 | Outputs de modelos | JSON con tipo `ClusteringOutput` o `PcaStateResult` | `state_code` |
 | Métricas compuestas | Mismo formato ancho, `categoria_id: "modelo"` | `state_code` |
+
+Para agregar una variable municipal nueva: usar `scripts/import_variable.py` con `granularity: "municipal"`. El script actualiza el combined, el manifest y regenera analytics automáticamente.
