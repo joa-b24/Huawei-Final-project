@@ -96,8 +96,9 @@ export default function SpearmanHeatmap({
           );
         })()}
         <p style={{ fontSize: "0.82rem", color: "#64748b" }}>
-          Las lecturas son indicativas: para validar un patrón conviene abrir la dispersión del par,
-          revisar outliers y contrastar con conocimiento del territorio.
+          Las proporciones por edad (0–14 y 65+) suman casi el 100% del municipio; por eso suelen correlacionar
+          entre sí de forma mecánica. Las lecturas son indicativas: valida el patrón en la dispersión y con
+          conocimiento del territorio.
         </p>
       </InterpretationHelp>
       <div style={{ overflowX: "auto" }}>

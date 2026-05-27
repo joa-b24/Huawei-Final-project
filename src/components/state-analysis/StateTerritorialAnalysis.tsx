@@ -11,7 +11,6 @@ import { ANALYSIS_METRICS } from "./analysisMetrics";
 import EmptyState from "../EmptyState";
 import LorenzCurveChart from "./LorenzCurveChart";
 import MunicipioScatterExplore from "./MunicipioScatterExplore";
-import MunicipioRfDiagnostico from "./MunicipioRfDiagnostico";
 import SpearmanHeatmap from "./SpearmanHeatmap";
 
 const DEFAULT_CVE_ENT = "19";
@@ -97,11 +96,11 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
     <section className="dashboard-block">
       <div className="dashboard-block-header">
         <div className="section-heading">
-          <h2>Análisis por estado (municipios + Gini + Spearman)</h2>
+          <h2>Análisis territorial por estado</h2>
           <p>
-            Compara la desigualdad de la cobertura 4G poblacional entre municipios y las asociaciones de
-            rango (Spearman) con escolaridad, estructura por edades y composición por sexo. Cobertura:
-            localidades 2024 (IFT/INEGI); demografía y sexo: Censo 2020 (ITER).
+            Tres lecturas complementarias: desigualdad de cobertura (Gini y Lorenz), agrupamiento municipal
+            en tres perfiles (alta, media y baja cobertura 4G dentro del estado) y asociaciones con
+            escolaridad, edad y composición por sexo (Spearman y dispersión).
           </p>
           <p style={{ marginTop: 8, fontSize: "0.88rem", color: "#475569" }}>
             <strong>Tip:</strong> junto a cada gráfico o tabla verás el texto <em>«Ayuda: …»</em> y un botón circular con
@@ -132,6 +131,7 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
             stateRow={stateRow}
             national={stateAnalytics.national}
             giniClient={giniClient}
+            spearmanMatrix={spearmanMatrix}
             percentileRank={percentileRank}
             nMunicipiosFiltrados={municipiosEstado.length}
           />
@@ -157,40 +157,47 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios }:
         </div>
       </div>
 
-      <div className="panel panel-nested" style={{ marginBottom: 16 }}>
-        <MunicipioScatterExplore municipios={municipiosEstado} />
-      </div>
-
       <div className="panel panel-nested">
-        <MunicipioRfDiagnostico
-          municipios={municipiosEstado}
-          featureImportances={
-            stateRow?.rf_feature_importances ?? stateAnalytics.national.rf_feature_importances ?? []
-          }
-        />
+        <MunicipioScatterExplore municipios={municipiosEstado} />
       </div>
     </section>
   );
+}
+
+function spearmanFromMatrix(
+  matrix: (number | null)[][],
+  keys: import("./analysisMetrics").AnalysisMetricKey[],
+  a: import("./analysisMetrics").AnalysisMetricKey,
+  b: import("./analysisMetrics").AnalysisMetricKey
+): number | null {
+  const i = keys.indexOf(a);
+  const j = keys.indexOf(b);
+  if (i < 0 || j < 0) return null;
+  const v = matrix[i][j];
+  return typeof v === "number" && Number.isFinite(v) ? v : null;
 }
 
 function StateNarrative({
   stateRow,
   national,
   giniClient,
+  spearmanMatrix,
   percentileRank,
   nMunicipiosFiltrados
 }: {
   stateRow: import("../../types/analytics").StateAnalyticsRow;
   national: import("../../types/analytics").StateAnalyticsNational;
   giniClient: number;
+  spearmanMatrix: (number | null)[][];
   percentileRank: number | null;
   nMunicipiosFiltrados: number;
 }) {
-  const g = stateRow.gini_pob_pct_4g;
-  const spE = stateRow.spearman_graproes_vs_pob_4g;
-  const spM = stateRow.spearman_pct_mujeres_vs_pob_4g;
-  const sp65 = stateRow.spearman_pct_pob_65_mas_vs_pob_4g;
-  const sp014 = stateRow.spearman_pct_pob_0_14_vs_pob_4g;
+  const keys = ANALYSIS_METRICS.map((m) => m.key);
+  const g = Number.isFinite(giniClient) ? giniClient : stateRow.gini_pob_pct_4g;
+  const spE = spearmanFromMatrix(spearmanMatrix, keys, "graproes", "pob_pct_4g_garantizada");
+  const spM = spearmanFromMatrix(spearmanMatrix, keys, "pct_mujeres", "pob_pct_4g_garantizada");
+  const sp65 = spearmanFromMatrix(spearmanMatrix, keys, "pct_pob_65_mas", "pob_pct_4g_garantizada");
+  const sp014 = spearmanFromMatrix(spearmanMatrix, keys, "pct_pob_0_14", "pob_pct_4g_garantizada");
 
   const pRankText =
     percentileRank !== null
@@ -230,8 +237,8 @@ function StateNarrative({
         <strong>{formatSpearman(sp014 ?? null)}</strong>.
       </p>
       <p style={{ fontSize: "0.85rem", color: "#64748b" }}>
-        Gini recalculado en el navegador ({Number.isFinite(giniClient) ? giniClient.toFixed(3) : "—"}) debe
-        coincidir con el del JSON; diferencias mínimas pueden deberse a redondeo.
+        Gini y Spearman se calculan con los mismos municipios y definiciones que la curva de Lorenz y la matriz
+        de abajo (población ponderada en Gini; pares con datos válidos en Spearman).
       </p>
     </div>
   );

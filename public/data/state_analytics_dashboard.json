@@ -10,72 +10,16 @@
     "spearman_pct_mujeres_vs_pob_4g": 0.178181,
     "spearman_pct_pob_65_mas_vs_pob_4g": -0.137577,
     "spearman_pct_pob_0_14_vs_pob_4g": -0.287461,
-    "kmeans_k": 2,
-    "kmeans_silhouette": 0.335889,
+    "kmeans_k": 3,
     "n_municipios_modelados": 2469,
     "n_municipios_en_clustering": 2469,
     "connectivity_year": "2024",
     "cluster_labels": {
-      "0": "Grupo 1: Perfil alto en cobertura poblacional y menor rezago IRS",
-      "1": "Grupo 2: Perfil intermedio-alto en conectividad"
+      "0": "Alta cobertura 4G (relativo al estado)",
+      "1": "Cobertura media",
+      "2": "Baja cobertura 4G"
     },
-    "rf_feature_importances": [
-      {
-        "key": "pct_pob_15_64",
-        "label": "Población 15–64 años",
-        "importance": 0.344205
-      },
-      {
-        "key": "pct_mujeres",
-        "label": "Proporción de mujeres",
-        "importance": 0.135167
-      },
-      {
-        "key": "irs_indice",
-        "label": "Índice de rezago social",
-        "importance": 0.113665
-      },
-      {
-        "key": "irs_pct_viv_sin_agua",
-        "label": "Viviendas sin agua",
-        "importance": 0.079281
-      },
-      {
-        "key": "pobtot_iter",
-        "label": "Población municipal",
-        "importance": 0.061541
-      },
-      {
-        "key": "pct_posbasica_18ymas",
-        "label": "Educación posbásica (18+)",
-        "importance": 0.061532
-      },
-      {
-        "key": "pct_sin_escolaridad_15ymas",
-        "label": "Sin escolaridad (15+)",
-        "importance": 0.060169
-      },
-      {
-        "key": "irs_pct_viv_sin_drenaje",
-        "label": "Viviendas sin drenaje",
-        "importance": 0.058109
-      },
-      {
-        "key": "graproes",
-        "label": "Escolaridad promedio",
-        "importance": 0.031133
-      },
-      {
-        "key": "pct_pob_65_mas",
-        "label": "Población 65+ años",
-        "importance": 0.02885
-      },
-      {
-        "key": "pct_pob_0_14",
-        "label": "Población 0–14 años",
-        "importance": 0.026348
-      }
-    ]
+    "kmeans_scope": "per_state"
   },
   "states": [
     {
@@ -95,64 +39,7 @@
       "spearman_pct_mujeres_vs_pob_4g": -0.082572,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.165145,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.321114,
-      "ookla_municipios_cubiertos": 10,
-      "rf_feature_importances": [
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 1.0
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.0
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.0
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.0
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.0
-        }
-      ]
+      "ookla_municipios_cubiertos": 10
     },
     {
       "cve_ent": "02",
@@ -171,64 +58,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.314286,
       "spearman_pct_pob_65_mas_vs_pob_4g": 0.085714,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.542857,
-      "ookla_municipios_cubiertos": 6,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.344205
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.135167
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.113665
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.079281
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.061541
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.061532
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.060169
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.058109
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.031133
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.02885
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.026348
-        }
-      ]
+      "ookla_municipios_cubiertos": 6
     },
     {
       "cve_ent": "03",
@@ -247,64 +77,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.4,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.1,
       "spearman_pct_pob_0_14_vs_pob_4g": 0.0,
-      "ookla_municipios_cubiertos": 5,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.344205
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.135167
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.113665
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.079281
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.061541
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.061532
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.060169
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.058109
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.031133
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.02885
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.026348
-        }
-      ]
+      "ookla_municipios_cubiertos": 5
     },
     {
       "cve_ent": "04",
@@ -323,64 +96,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.559441,
       "spearman_pct_pob_65_mas_vs_pob_4g": 0.405594,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.79021,
-      "ookla_municipios_cubiertos": 12,
-      "rf_feature_importances": [
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.411765
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.294118
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.176471
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.058824
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.058824
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.0
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.0
-        }
-      ]
+      "ookla_municipios_cubiertos": 12
     },
     {
       "cve_ent": "05",
@@ -399,64 +115,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.246442,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.292314,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.317276,
-      "ookla_municipios_cubiertos": 30,
-      "rf_feature_importances": [
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.583831
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.250541
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.063957
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.049109
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.020322
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.0094
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.008709
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.008216
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.003723
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.002073
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.000118
-        }
-      ]
+      "ookla_municipios_cubiertos": 30
     },
     {
       "cve_ent": "06",
@@ -475,64 +134,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.369697,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.151515,
       "spearman_pct_pob_0_14_vs_pob_4g": 0.260606,
-      "ookla_municipios_cubiertos": 10,
-      "rf_feature_importances": [
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.0
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.0
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.0
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.0
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.0
-        }
-      ]
+      "ookla_municipios_cubiertos": 10
     },
     {
       "cve_ent": "07",
@@ -551,64 +153,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.242744,
       "spearman_pct_pob_65_mas_vs_pob_4g": 0.148766,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.350686,
-      "ookla_municipios_cubiertos": 78,
-      "rf_feature_importances": [
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.199086
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.173849
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.148823
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.109416
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.078752
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.059942
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.057664
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.051678
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.048011
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.043793
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.028986
-        }
-      ]
+      "ookla_municipios_cubiertos": 78
     },
     {
       "cve_ent": "08",
@@ -627,64 +172,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.103734,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.133768,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.228642,
-      "ookla_municipios_cubiertos": 33,
-      "rf_feature_importances": [
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.283379
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.164214
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.162788
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.118904
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.097071
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.07693
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.025536
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.022737
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.022033
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.021138
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.005268
-        }
-      ]
+      "ookla_municipios_cubiertos": 33
     },
     {
       "cve_ent": "09",
@@ -703,64 +191,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.021573,
       "spearman_pct_pob_65_mas_vs_pob_4g": 0.163952,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.13375,
-      "ookla_municipios_cubiertos": 16,
-      "rf_feature_importances": [
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.286667
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.16
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.113333
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.113333
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.08
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.073333
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.06
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.033333
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.033333
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.033333
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.013333
-        }
-      ]
+      "ookla_municipios_cubiertos": 16
     },
     {
       "cve_ent": "10",
@@ -779,64 +210,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.605395,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.065489,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.282808,
-      "ookla_municipios_cubiertos": 25,
-      "rf_feature_importances": [
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.458008
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.413044
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.028852
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.024684
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.018309
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.018017
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.013488
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.009454
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.007371
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.007036
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.001737
-        }
-      ]
+      "ookla_municipios_cubiertos": 25
     },
     {
       "cve_ent": "11",
@@ -855,64 +229,7 @@
       "spearman_pct_mujeres_vs_pob_4g": -0.353175,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.010267,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.378499,
-      "ookla_municipios_cubiertos": 41,
-      "rf_feature_importances": [
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.378363
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.227332
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.186262
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.07946
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.048746
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.020011
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.019646
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.015613
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.014703
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.005109
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.004755
-        }
-      ]
+      "ookla_municipios_cubiertos": 41
     },
     {
       "cve_ent": "12",
@@ -931,64 +248,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.121658,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.149097,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.219874,
-      "ookla_municipios_cubiertos": 56,
-      "rf_feature_importances": [
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.406604
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.089173
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.084444
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.08364
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.06912
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.066813
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.059337
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.058165
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.043716
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.02599
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.012997
-        }
-      ]
+      "ookla_municipios_cubiertos": 56
     },
     {
       "cve_ent": "13",
@@ -1007,64 +267,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.07922,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.655306,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.312523,
-      "ookla_municipios_cubiertos": 75,
-      "rf_feature_importances": [
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.217494
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.197782
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.155241
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.118603
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.092889
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.092473
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.077025
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.021926
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.012875
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.009555
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.004136
-        }
-      ]
+      "ookla_municipios_cubiertos": 75
     },
     {
       "cve_ent": "14",
@@ -1083,64 +286,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.241276,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.511762,
       "spearman_pct_pob_0_14_vs_pob_4g": 0.074625,
-      "ookla_municipios_cubiertos": 101,
-      "rf_feature_importances": [
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.349687
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.15348
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.100063
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.069707
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.065547
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.060007
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.059238
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.055691
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.054562
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.020323
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.011697
-        }
-      ]
+      "ookla_municipios_cubiertos": 101
     },
     {
       "cve_ent": "15",
@@ -1159,64 +305,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.011176,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.157236,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.532588,
-      "ookla_municipios_cubiertos": 114,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.82459
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.074729
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.035418
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.01745
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.015984
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.010931
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.007396
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.006859
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.004147
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.002293
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.000202
-        }
-      ]
+      "ookla_municipios_cubiertos": 114
     },
     {
       "cve_ent": "16",
@@ -1235,64 +324,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.462448,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.159837,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.293136,
-      "ookla_municipios_cubiertos": 79,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.59706
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.315444
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.038723
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.014007
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.012004
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.0073
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.005234
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.003465
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.002739
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.00233
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.001694
-        }
-      ]
+      "ookla_municipios_cubiertos": 79
     },
     {
       "cve_ent": "17",
@@ -1311,64 +343,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.19184,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.083441,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.014155,
-      "ookla_municipios_cubiertos": 28,
-      "rf_feature_importances": [
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.32173
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.16499
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.151306
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.104316
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.096272
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.069395
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.034936
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.022528
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.019454
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.012559
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.002513
-        }
-      ]
+      "ookla_municipios_cubiertos": 28
     },
     {
       "cve_ent": "18",
@@ -1387,64 +362,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.230075,
       "spearman_pct_pob_65_mas_vs_pob_4g": 0.142857,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.554887,
-      "ookla_municipios_cubiertos": 15,
-      "rf_feature_importances": [
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.235617
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.190134
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.131964
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.130619
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.095477
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.095066
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.076136
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.015075
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.014835
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.01005
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.005025
-        }
-      ]
+      "ookla_municipios_cubiertos": 15
     },
     {
       "cve_ent": "19",
@@ -1463,64 +381,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.177278,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.419018,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.076307,
-      "ookla_municipios_cubiertos": 34,
-      "rf_feature_importances": [
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.666164
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.186973
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.093257
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.026863
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.009081
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.006951
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.003074
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.002815
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.002716
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.001991
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.000117
-        }
-      ]
+      "ookla_municipios_cubiertos": 34
     },
     {
       "cve_ent": "20",
@@ -1539,64 +400,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.132175,
       "spearman_pct_pob_65_mas_vs_pob_4g": 0.10008,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.310736,
-      "ookla_municipios_cubiertos": 156,
-      "rf_feature_importances": [
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.133006
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.132991
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.126596
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.12569
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.091544
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.084906
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.071544
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.071084
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.070372
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.049691
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.042575
-        }
-      ]
+      "ookla_municipios_cubiertos": 156
     },
     {
       "cve_ent": "21",
@@ -1615,64 +419,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.019467,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.359994,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.007768,
-      "ookla_municipios_cubiertos": 99,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.27944
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.144953
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.13991
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.107174
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.060882
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.053434
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.048413
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.045572
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.044963
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.038721
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.036537
-        }
-      ]
+      "ookla_municipios_cubiertos": 99
     },
     {
       "cve_ent": "22",
@@ -1691,64 +438,7 @@
       "spearman_pct_mujeres_vs_pob_4g": -0.551875,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.652498,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.458512,
-      "ookla_municipios_cubiertos": 18,
-      "rf_feature_importances": [
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.566138
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.111065
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.068783
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.068783
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.052956
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.05291
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.031746
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.026455
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.015873
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.005291
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.0
-        }
-      ]
+      "ookla_municipios_cubiertos": 18
     },
     {
       "cve_ent": "23",
@@ -1767,64 +457,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.045455,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.636364,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.863636,
-      "ookla_municipios_cubiertos": 11,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 1.0
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.0
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.0
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.0
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.0
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.0
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.0
-        }
-      ]
+      "ookla_municipios_cubiertos": 11
     },
     {
       "cve_ent": "24",
@@ -1843,64 +476,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.497585,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.510323,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.022062,
-      "ookla_municipios_cubiertos": 44,
-      "rf_feature_importances": [
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.446894
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.137167
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.104817
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.088104
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.065929
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.049945
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.027563
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.027092
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.024562
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.018868
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.00906
-        }
-      ]
+      "ookla_municipios_cubiertos": 44
     },
     {
       "cve_ent": "25",
@@ -1919,64 +495,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.760578,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.382869,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.692466,
-      "ookla_municipios_cubiertos": 16,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.343798
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.142974
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.095238
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.095238
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.079365
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.074074
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.042328
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.042328
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.042328
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.037037
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.005291
-        }
-      ]
+      "ookla_municipios_cubiertos": 16
     },
     {
       "cve_ent": "26",
@@ -1995,64 +514,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.200052,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.277809,
       "spearman_pct_pob_0_14_vs_pob_4g": 0.160255,
-      "ookla_municipios_cubiertos": 32,
-      "rf_feature_importances": [
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.307385
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.25021
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.122149
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.079227
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.053376
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.045791
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.039772
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.036947
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.025194
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.020185
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.019765
-        }
-      ]
+      "ookla_municipios_cubiertos": 32
     },
     {
       "cve_ent": "27",
@@ -2071,64 +533,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.633909,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.515972,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.297298,
-      "ookla_municipios_cubiertos": 17,
-      "rf_feature_importances": [
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.265193
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.237569
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.104972
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.093923
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.082873
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.060773
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.060773
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.044199
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.038674
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.01105
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.0
-        }
-      ]
+      "ookla_municipios_cubiertos": 17
     },
     {
       "cve_ent": "28",
@@ -2147,64 +552,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.381081,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.532119,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.178307,
-      "ookla_municipios_cubiertos": 34,
-      "rf_feature_importances": [
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.672362
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.155675
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.070376
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.043571
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.02897
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.016264
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.00688
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.003278
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.002575
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 4.5e-05
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 6e-06
-        }
-      ]
+      "ookla_municipios_cubiertos": 34
     },
     {
       "cve_ent": "29",
@@ -2223,64 +571,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.035505,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.018811,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.25733,
-      "ookla_municipios_cubiertos": 43,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.260092
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.17148
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.134915
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.108993
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.073404
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.068885
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.067326
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.031204
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.029423
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.028356
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.025921
-        }
-      ]
+      "ookla_municipios_cubiertos": 43
     },
     {
       "cve_ent": "30",
@@ -2299,64 +590,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.252048,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.069654,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.288498,
-      "ookla_municipios_cubiertos": 143,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.246144
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.095638
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.090255
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.087993
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.086112
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.084972
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.075319
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.071351
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.060864
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.059164
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.042188
-        }
-      ]
+      "ookla_municipios_cubiertos": 143
     },
     {
       "cve_ent": "31",
@@ -2375,64 +609,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.062886,
       "spearman_pct_pob_65_mas_vs_pob_4g": 0.189118,
       "spearman_pct_pob_0_14_vs_pob_4g": -0.436757,
-      "ookla_municipios_cubiertos": 56,
-      "rf_feature_importances": [
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.45448
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.136627
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.108266
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.074253
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.056691
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.039474
-        },
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.038441
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.028442
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.026405
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.018711
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.01821
-        }
-      ]
+      "ookla_municipios_cubiertos": 56
     },
     {
       "cve_ent": "32",
@@ -2451,64 +628,7 @@
       "spearman_pct_mujeres_vs_pob_4g": 0.294576,
       "spearman_pct_pob_65_mas_vs_pob_4g": -0.595035,
       "spearman_pct_pob_0_14_vs_pob_4g": 0.237072,
-      "ookla_municipios_cubiertos": 38,
-      "rf_feature_importances": [
-        {
-          "key": "pct_sin_escolaridad_15ymas",
-          "label": "Sin escolaridad (15+)",
-          "importance": 0.152334
-        },
-        {
-          "key": "pct_pob_15_64",
-          "label": "Población 15–64 años",
-          "importance": 0.15082
-        },
-        {
-          "key": "pct_pob_65_mas",
-          "label": "Población 65+ años",
-          "importance": 0.127771
-        },
-        {
-          "key": "irs_indice",
-          "label": "Índice de rezago social",
-          "importance": 0.125471
-        },
-        {
-          "key": "graproes",
-          "label": "Escolaridad promedio",
-          "importance": 0.122871
-        },
-        {
-          "key": "irs_pct_viv_sin_agua",
-          "label": "Viviendas sin agua",
-          "importance": 0.103256
-        },
-        {
-          "key": "irs_pct_viv_sin_drenaje",
-          "label": "Viviendas sin drenaje",
-          "importance": 0.074699
-        },
-        {
-          "key": "pct_posbasica_18ymas",
-          "label": "Educación posbásica (18+)",
-          "importance": 0.055709
-        },
-        {
-          "key": "pct_mujeres",
-          "label": "Proporción de mujeres",
-          "importance": 0.042655
-        },
-        {
-          "key": "pobtot_iter",
-          "label": "Población municipal",
-          "importance": 0.029237
-        },
-        {
-          "key": "pct_pob_0_14",
-          "label": "Población 0–14 años",
-          "importance": 0.015177
-        }
-      ]
+      "ookla_municipios_cubiertos": 38
     }
   ]
 }

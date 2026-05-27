@@ -11,7 +11,12 @@ import {
 } from "recharts";
 import type { MunicipioAnalyticsRecord } from "../../types/analytics";
 import { spearmanSafe } from "../../utils/spearman";
-import { ANALYSIS_METRICS, type AnalysisMetricKey } from "./analysisMetrics";
+import {
+  AGE_METRIC_KEYS,
+  ANALYSIS_METRICS,
+  COVERAGE_METRIC_KEY,
+  type AnalysisMetricKey
+} from "./analysisMetrics";
 import InterpretationHelp from "./InterpretationHelp";
 import { getPairInterpretation } from "./pairInterpretations";
 
@@ -24,7 +29,36 @@ type Props = {
   municipios: MunicipioAnalyticsRecord[];
 };
 
-const CLUSTER_COLORS = ["#7c3aed", "#2563eb", "#0f766e", "#ea580c", "#be123c", "#0891b2"];
+const CLUSTER_COLOR_BY_LABEL: Record<string, string> = {
+  "Alta cobertura 4G": "#16a34a",
+  "Mayor cobertura 4G": "#16a34a",
+  "Cobertura media": "#2563eb",
+  "Baja cobertura 4G": "#dc2626",
+  "Menor cobertura 4G": "#dc2626",
+  "Único municipio": "#64748b",
+  "Único grupo": "#64748b",
+  "Sin grupo": "#94a3b8",
+};
+const CLUSTER_FALLBACK_COLORS = ["#16a34a", "#2563eb", "#dc2626", "#64748b"];
+
+function isAgeMetric(k: AnalysisMetricKey): boolean {
+  return AGE_METRIC_KEYS.includes(k);
+}
+
+function otherMetric(avoid: AnalysisMetricKey, alsoAvoid?: AnalysisMetricKey): AnalysisMetricKey {
+  const alt = ANALYSIS_METRICS.find((m) => m.key !== avoid && m.key !== alsoAvoid);
+  return alt?.key ?? ANALYSIS_METRICS.find((m) => m.key !== avoid)?.key ?? avoid;
+}
+
+function resolveAxisPair(x: AnalysisMetricKey, y: AnalysisMetricKey): { x: AnalysisMetricKey; y: AnalysisMetricKey } {
+  if (x === y) {
+    return { x, y: otherMetric(x) };
+  }
+  if (isAgeMetric(x) && isAgeMetric(y)) {
+    return { x, y: COVERAGE_METRIC_KEY };
+  }
+  return { x, y };
+}
 
 function quantile(sorted: number[], q: number): number {
   if (!sorted.length) {
@@ -45,6 +79,22 @@ export default function MunicipioScatterExplore({ municipios }: Props) {
 
   const xMeta = ANALYSIS_METRICS.find((m) => m.key === xKey)!;
   const yMeta = ANALYSIS_METRICS.find((m) => m.key === yKey)!;
+  const sameAxis = xKey === yKey;
+
+  const setXKeySafe = (next: AnalysisMetricKey) => {
+    const resolved = resolveAxisPair(next, yKey);
+    setXKey(resolved.x);
+    setYKey(resolved.y);
+  };
+
+  const setYKeySafe = (next: AnalysisMetricKey) => {
+    const resolved = resolveAxisPair(xKey, next);
+    setXKey(resolved.x);
+    setYKey(resolved.y);
+  };
+
+  const colorEchoesCoverageAxis =
+    xKey === COVERAGE_METRIC_KEY || yKey === COVERAGE_METRIC_KEY;
 
   const data = useMemo(
     () =>
@@ -53,7 +103,9 @@ export default function MunicipioScatterExplore({ municipios }: Props) {
         x: pickMetric(m, xKey),
         y: pickMetric(m, yKey),
         z: m.pobtot_iter,
-        clusterId: typeof m.cluster_id === "number" ? m.cluster_id : null
+        clusterLabel:
+          m.cluster_label?.trim() ||
+          (typeof m.cluster_id === "number" ? `Grupo ${m.cluster_id}` : "Sin grupo"),
       })),
     [municipios, xKey, yKey]
   );
@@ -76,13 +128,21 @@ export default function MunicipioScatterExplore({ municipios }: Props) {
   const groupedByCluster = useMemo(() => {
     const groups = new Map<string, typeof filtered>();
     for (const point of filtered) {
-      const key = point.clusterId === null ? "Sin cluster" : `Cluster ${point.clusterId}`;
+      const key = point.clusterLabel;
       if (!groups.has(key)) {
         groups.set(key, []);
       }
       groups.get(key)!.push(point);
     }
-    return [...groups.entries()];
+    const order = ["Alta cobertura 4G", "Mayor cobertura 4G", "Cobertura media", "Baja cobertura 4G", "Menor cobertura 4G"];
+    return [...groups.entries()].sort((a, b) => {
+      const ia = order.indexOf(a[0]);
+      const ib = order.indexOf(b[0]);
+      if (ia >= 0 && ib >= 0) return ia - ib;
+      if (ia >= 0) return -1;
+      if (ib >= 0) return 1;
+      return a[0].localeCompare(b[0], "es");
+    });
   }, [filtered]);
 
   const outliers = useMemo(() => {
@@ -119,29 +179,58 @@ export default function MunicipioScatterExplore({ municipios }: Props) {
       <div className="section-heading">
         <h2>Exploración municipal (dispersión)</h2>
         <p>
-          Cada punto representa un municipio; el tamaño refleja población y el color el cluster territorial.
-          Permite identificar patrones, municipios atípicos y contrastes entre perfiles similares. Spearman entre
+          Cada punto es un municipio (tamaño = población). El color indica uno de tres perfiles de cobertura
+          4G dentro del estado (alta, media o baja). Cada eje debe ser una variable distinta. Spearman entre
           los ejes seleccionados:{" "}
-          <strong>{rho === null ? "— (pocos datos o sin varianza)" : rho.toFixed(3)}</strong>.
+          <strong>
+            {sameAxis ? "— (elige dos variables diferentes)" : rho === null ? "— (pocos datos o sin varianza)" : rho.toFixed(3)}
+          </strong>
+          .
         </p>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 12, alignItems: "flex-end" }}>
         <div className="metric-control">
           <label htmlFor="scatter-x">Eje horizontal</label>
-          <select id="scatter-x" value={xKey} onChange={(e) => setXKey(e.target.value as AnalysisMetricKey)}>
+          <select
+            id="scatter-x"
+            value={xKey}
+            onChange={(e) => setXKeySafe(e.target.value as AnalysisMetricKey)}
+          >
             {ANALYSIS_METRICS.map((m) => (
-              <option key={m.key} value={m.key}>
+              <option
+                key={m.key}
+                value={m.key}
+                disabled={m.key === yKey || (isAgeMetric(m.key) && isAgeMetric(yKey))}
+              >
                 {m.label}
+                {m.key === yKey
+                  ? " (eje vertical)"
+                  : isAgeMetric(m.key) && isAgeMetric(yKey)
+                    ? " (elige solo una edad)"
+                    : ""}
               </option>
             ))}
           </select>
         </div>
         <div className="metric-control">
           <label htmlFor="scatter-y">Eje vertical</label>
-          <select id="scatter-y" value={yKey} onChange={(e) => setYKey(e.target.value as AnalysisMetricKey)}>
+          <select
+            id="scatter-y"
+            value={yKey}
+            onChange={(e) => setYKeySafe(e.target.value as AnalysisMetricKey)}
+          >
             {ANALYSIS_METRICS.map((m) => (
-              <option key={m.key} value={m.key}>
+              <option
+                key={m.key}
+                value={m.key}
+                disabled={m.key === xKey || (isAgeMetric(m.key) && isAgeMetric(xKey))}
+              >
                 {m.label}
+                {m.key === xKey
+                  ? " (eje horizontal)"
+                  : isAgeMetric(m.key) && isAgeMetric(xKey)
+                    ? " (elige solo una edad)"
+                    : ""}
               </option>
             ))}
           </select>
@@ -154,7 +243,8 @@ export default function MunicipioScatterExplore({ municipios }: Props) {
       >
         <p>
           Eje X: <strong>{xMeta.label}</strong>; eje Y: <strong>{yMeta.label}</strong>. Hay{" "}
-          <strong>{municipios.length}</strong> municipios; cada punto es uno (tamaño = población, color = cluster).
+          <strong>{municipios.length}</strong> municipios; el color es el perfil de cobertura (3 grupos por estado,
+          k-medias con cobertura 4G, escolaridad y % de población 65+).
         </p>
         <p>
           Con estos ejes, Spearman sugiere <strong>{rhoInterpretation}</strong>
@@ -173,9 +263,19 @@ export default function MunicipioScatterExplore({ municipios }: Props) {
           Antes de generalizar, conviene revisarlos uno a uno: pueden estar reflejando casos particulares
           y no la tendencia del estado.
         </p>
+        {colorEchoesCoverageAxis ? (
+          <p style={{ fontSize: "0.82rem", color: "#b45309", background: "#fffbeb", borderRadius: 8, padding: "8px 10px", border: "1px solid #fde68a" }}>
+            El color del punto ya refleja el nivel de cobertura 4G del municipio (tres grupos del estado).
+            Con cobertura en un eje, la gráfica repite la misma dimensión; conviene usar otro eje (escolaridad, edad o sexo).
+          </p>
+        ) : null}
       </InterpretationHelp>
       <div className="chart-frame">
-        {filtered.length === 0 ? (
+        {sameAxis ? (
+          <p style={{ padding: 24, color: "#64748b" }}>
+            Elige dos variables distintas en los ejes horizontal y vertical para comparar municipios.
+          </p>
+        ) : filtered.length === 0 ? (
           <p style={{ padding: 24, color: "#64748b" }}>No hay municipios con ambos ejes numéricos para graficar.</p>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
@@ -211,7 +311,10 @@ export default function MunicipioScatterExplore({ municipios }: Props) {
                   key={clusterName}
                   name={clusterName}
                   data={points}
-                  fill={CLUSTER_COLORS[idx % CLUSTER_COLORS.length]}
+                  fill={
+                    CLUSTER_COLOR_BY_LABEL[clusterName] ??
+                    CLUSTER_FALLBACK_COLORS[idx % CLUSTER_FALLBACK_COLORS.length]
+                  }
                 />
               ))}
             </ScatterChart>
