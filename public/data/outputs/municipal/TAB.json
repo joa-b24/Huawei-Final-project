@@ -1,0 +1,4012 @@
+{
+  "state_code": "TAB",
+  "updated_at": "2026-05-26",
+  "variables": {
+    "poblacion_en_localidades_con_4g_garantizada_pct": {
+      "year": 2024,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 77.5921
+        },
+        {
+          "cve_mun": "27002",
+          "value": 97.5196
+        },
+        {
+          "cve_mun": "27003",
+          "value": 94.2319
+        },
+        {
+          "cve_mun": "27004",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27005",
+          "value": 99.5905
+        },
+        {
+          "cve_mun": "27006",
+          "value": 99.4339
+        },
+        {
+          "cve_mun": "27007",
+          "value": 97.2717
+        },
+        {
+          "cve_mun": "27008",
+          "value": 93.0728
+        },
+        {
+          "cve_mun": "27009",
+          "value": 94.0316
+        },
+        {
+          "cve_mun": "27010",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 75.4302
+        },
+        {
+          "cve_mun": "27012",
+          "value": 96.6715
+        },
+        {
+          "cve_mun": "27013",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27014",
+          "value": 98.6614
+        },
+        {
+          "cve_mun": "27015",
+          "value": 77.4387
+        },
+        {
+          "cve_mun": "27016",
+          "value": 97.6055
+        },
+        {
+          "cve_mun": "27017",
+          "value": 78.3293
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 92.7577,
+        "median": 97.2717,
+        "std": 9.1594,
+        "min": 75.4302,
+        "max": 100.0,
+        "q1": 78.3293,
+        "q3": 99.4339
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 100.0
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27010",
+          "value": 100.0
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27013",
+          "value": 100.0
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27005",
+          "value": 99.5905
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27006",
+          "value": 99.4339
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27014",
+          "value": 98.6614
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27016",
+          "value": 97.6055
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27002",
+          "value": 97.5196
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27007",
+          "value": 97.2717
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27012",
+          "value": 96.6715
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27003",
+          "value": 94.2319
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27009",
+          "value": 94.0316
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27008",
+          "value": 93.0728
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27017",
+          "value": 78.3293
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27001",
+          "value": 77.5921
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27015",
+          "value": 77.4387
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27011",
+          "value": 75.4302
+        }
+      ],
+      "outliers": []
+    },
+    "localidades_con_4g_garantizada_pct": {
+      "year": 2024,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 63.3053
+        },
+        {
+          "cve_mun": "27002",
+          "value": 90.6433
+        },
+        {
+          "cve_mun": "27003",
+          "value": 83.0
+        },
+        {
+          "cve_mun": "27004",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27005",
+          "value": 99.1379
+        },
+        {
+          "cve_mun": "27006",
+          "value": 98.2759
+        },
+        {
+          "cve_mun": "27007",
+          "value": 91.3043
+        },
+        {
+          "cve_mun": "27008",
+          "value": 74.6224
+        },
+        {
+          "cve_mun": "27009",
+          "value": 92.1875
+        },
+        {
+          "cve_mun": "27010",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 73.2484
+        },
+        {
+          "cve_mun": "27012",
+          "value": 87.2146
+        },
+        {
+          "cve_mun": "27013",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27014",
+          "value": 95.8333
+        },
+        {
+          "cve_mun": "27015",
+          "value": 75.8621
+        },
+        {
+          "cve_mun": "27016",
+          "value": 96.4286
+        },
+        {
+          "cve_mun": "27017",
+          "value": 50.0
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 86.5332,
+        "median": 91.3043,
+        "std": 14.6122,
+        "min": 50.0,
+        "max": 100.0,
+        "q1": 74.6224,
+        "q3": 98.2759
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 100.0
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27010",
+          "value": 100.0
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27013",
+          "value": 100.0
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27005",
+          "value": 99.1379
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27006",
+          "value": 98.2759
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27016",
+          "value": 96.4286
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27014",
+          "value": 95.8333
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27009",
+          "value": 92.1875
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27007",
+          "value": 91.3043
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27002",
+          "value": 90.6433
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27012",
+          "value": 87.2146
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27003",
+          "value": 83.0
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27015",
+          "value": 75.8621
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27008",
+          "value": 74.6224
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27011",
+          "value": 73.2484
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27001",
+          "value": 63.3053
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27017",
+          "value": 50.0
+        }
+      ],
+      "outliers": []
+    },
+    "poblacion_en_localidades_con_cobertura_movil_pct": {
+      "year": 2024,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 91.0413
+        },
+        {
+          "cve_mun": "27002",
+          "value": 99.1288
+        },
+        {
+          "cve_mun": "27003",
+          "value": 99.4867
+        },
+        {
+          "cve_mun": "27004",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27005",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27006",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27007",
+          "value": 97.6073
+        },
+        {
+          "cve_mun": "27008",
+          "value": 98.1732
+        },
+        {
+          "cve_mun": "27009",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27010",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 83.1483
+        },
+        {
+          "cve_mun": "27012",
+          "value": 98.5202
+        },
+        {
+          "cve_mun": "27013",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27014",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27015",
+          "value": 87.4585
+        },
+        {
+          "cve_mun": "27016",
+          "value": 99.4397
+        },
+        {
+          "cve_mun": "27017",
+          "value": 87.2236
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 96.5428,
+        "median": 99.4397,
+        "std": 5.5575,
+        "min": 83.1483,
+        "max": 100.0,
+        "q1": 91.0413,
+        "q3": 100.0
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 100.0
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27005",
+          "value": 100.0
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27006",
+          "value": 100.0
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27009",
+          "value": 100.0
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27010",
+          "value": 100.0
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27013",
+          "value": 100.0
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27014",
+          "value": 100.0
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27003",
+          "value": 99.4867
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27016",
+          "value": 99.4397
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27002",
+          "value": 99.1288
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27012",
+          "value": 98.5202
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27008",
+          "value": 98.1732
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27007",
+          "value": 97.6073
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27001",
+          "value": 91.0413
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27015",
+          "value": 87.4585
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27017",
+          "value": 87.2236
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27011",
+          "value": 83.1483
+        }
+      ],
+      "outliers": []
+    },
+    "localidades_con_cobertura_movil_pct": {
+      "year": 2024,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 78.4314
+        },
+        {
+          "cve_mun": "27002",
+          "value": 97.6608
+        },
+        {
+          "cve_mun": "27003",
+          "value": 95.0
+        },
+        {
+          "cve_mun": "27004",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27005",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27006",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27007",
+          "value": 95.6522
+        },
+        {
+          "cve_mun": "27008",
+          "value": 94.864
+        },
+        {
+          "cve_mun": "27009",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27010",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 82.1656
+        },
+        {
+          "cve_mun": "27012",
+          "value": 95.8904
+        },
+        {
+          "cve_mun": "27013",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27014",
+          "value": 100.0
+        },
+        {
+          "cve_mun": "27015",
+          "value": 87.3563
+        },
+        {
+          "cve_mun": "27016",
+          "value": 98.2143
+        },
+        {
+          "cve_mun": "27017",
+          "value": 69.1176
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 93.7854,
+        "median": 97.6608,
+        "std": 9.1383,
+        "min": 69.1176,
+        "max": 100.0,
+        "q1": 87.3563,
+        "q3": 100.0
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 100.0
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27005",
+          "value": 100.0
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27006",
+          "value": 100.0
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27009",
+          "value": 100.0
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27010",
+          "value": 100.0
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27013",
+          "value": 100.0
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27014",
+          "value": 100.0
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27016",
+          "value": 98.2143
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27002",
+          "value": 97.6608
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27012",
+          "value": 95.8904
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27007",
+          "value": 95.6522
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27003",
+          "value": 95.0
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27008",
+          "value": 94.864
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27015",
+          "value": 87.3563
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27011",
+          "value": 82.1656
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27001",
+          "value": 78.4314
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27017",
+          "value": 69.1176
+        }
+      ],
+      "outliers": []
+    },
+    "poblacion_en_localidades_con_5g_garantizada_pct": {
+      "year": 2024,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27002",
+          "value": 33.8249
+        },
+        {
+          "cve_mun": "27003",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27004",
+          "value": 56.044
+        },
+        {
+          "cve_mun": "27005",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27006",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27007",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27008",
+          "value": 4.3078
+        },
+        {
+          "cve_mun": "27009",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27010",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27012",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27013",
+          "value": 17.5183
+        },
+        {
+          "cve_mun": "27014",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27015",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27016",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27017",
+          "value": 0.0
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 6.5703,
+        "median": 0.0,
+        "std": 15.5657,
+        "min": 0.0,
+        "max": 56.044,
+        "q1": 0.0,
+        "q3": 0.0
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 56.044
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27002",
+          "value": 33.8249
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27013",
+          "value": 17.5183
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27008",
+          "value": 4.3078
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27001",
+          "value": 0.0
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27003",
+          "value": 0.0
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27005",
+          "value": 0.0
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27006",
+          "value": 0.0
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27007",
+          "value": 0.0
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27009",
+          "value": 0.0
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27010",
+          "value": 0.0
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27011",
+          "value": 0.0
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27012",
+          "value": 0.0
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27014",
+          "value": 0.0
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27015",
+          "value": 0.0
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27016",
+          "value": 0.0
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27017",
+          "value": 0.0
+        }
+      ],
+      "outliers": [
+        {
+          "cve_mun": "27002",
+          "value": 33.8249
+        },
+        {
+          "cve_mun": "27004",
+          "value": 56.044
+        },
+        {
+          "cve_mun": "27008",
+          "value": 4.3078
+        },
+        {
+          "cve_mun": "27013",
+          "value": 17.5183
+        }
+      ]
+    },
+    "localidades_con_5g_garantizada_pct": {
+      "year": 2024,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27002",
+          "value": 3.5088
+        },
+        {
+          "cve_mun": "27003",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27004",
+          "value": 10.7317
+        },
+        {
+          "cve_mun": "27005",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27006",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27007",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27008",
+          "value": 0.3021
+        },
+        {
+          "cve_mun": "27009",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27010",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27012",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27013",
+          "value": 15.7895
+        },
+        {
+          "cve_mun": "27014",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27015",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27016",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27017",
+          "value": 0.0
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 1.7842,
+        "median": 0.0,
+        "std": 4.4914,
+        "min": 0.0,
+        "max": 15.7895,
+        "q1": 0.0,
+        "q3": 0.0
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27013",
+          "value": 15.7895
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27004",
+          "value": 10.7317
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27002",
+          "value": 3.5088
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27008",
+          "value": 0.3021
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27001",
+          "value": 0.0
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27003",
+          "value": 0.0
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27005",
+          "value": 0.0
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27006",
+          "value": 0.0
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27007",
+          "value": 0.0
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27009",
+          "value": 0.0
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27010",
+          "value": 0.0
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27011",
+          "value": 0.0
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27012",
+          "value": 0.0
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27014",
+          "value": 0.0
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27015",
+          "value": 0.0
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27016",
+          "value": 0.0
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27017",
+          "value": 0.0
+        }
+      ],
+      "outliers": [
+        {
+          "cve_mun": "27002",
+          "value": 3.5088
+        },
+        {
+          "cve_mun": "27004",
+          "value": 10.7317
+        },
+        {
+          "cve_mun": "27008",
+          "value": 0.3021
+        },
+        {
+          "cve_mun": "27013",
+          "value": 15.7895
+        }
+      ]
+    },
+    "escolaridad_promedio_anios": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 8.27
+        },
+        {
+          "cve_mun": "27002",
+          "value": 8.84
+        },
+        {
+          "cve_mun": "27003",
+          "value": 9.32
+        },
+        {
+          "cve_mun": "27004",
+          "value": 10.96
+        },
+        {
+          "cve_mun": "27005",
+          "value": 9.14
+        },
+        {
+          "cve_mun": "27006",
+          "value": 8.86
+        },
+        {
+          "cve_mun": "27007",
+          "value": 9.62
+        },
+        {
+          "cve_mun": "27008",
+          "value": 8.45
+        },
+        {
+          "cve_mun": "27009",
+          "value": 9.08
+        },
+        {
+          "cve_mun": "27010",
+          "value": 9.73
+        },
+        {
+          "cve_mun": "27011",
+          "value": 8.27
+        },
+        {
+          "cve_mun": "27012",
+          "value": 9.33
+        },
+        {
+          "cve_mun": "27013",
+          "value": 10.53
+        },
+        {
+          "cve_mun": "27014",
+          "value": 10.04
+        },
+        {
+          "cve_mun": "27015",
+          "value": 8.66
+        },
+        {
+          "cve_mun": "27016",
+          "value": 8.68
+        },
+        {
+          "cve_mun": "27017",
+          "value": 8.74
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 9.2071,
+        "median": 9.08,
+        "std": 0.766,
+        "min": 8.27,
+        "max": 10.96,
+        "q1": 8.66,
+        "q3": 9.62
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 10.96
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27013",
+          "value": 10.53
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27014",
+          "value": 10.04
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27010",
+          "value": 9.73
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27007",
+          "value": 9.62
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27012",
+          "value": 9.33
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27003",
+          "value": 9.32
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27005",
+          "value": 9.14
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27009",
+          "value": 9.08
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27006",
+          "value": 8.86
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27002",
+          "value": 8.84
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27017",
+          "value": 8.74
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27016",
+          "value": 8.68
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27015",
+          "value": 8.66
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27008",
+          "value": 8.45
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27001",
+          "value": 8.27
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27011",
+          "value": 8.27
+        }
+      ],
+      "outliers": []
+    },
+    "poblacion_total": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 58524.0
+        },
+        {
+          "cve_mun": "27002",
+          "value": 243229.0
+        },
+        {
+          "cve_mun": "27003",
+          "value": 107731.0
+        },
+        {
+          "cve_mun": "27004",
+          "value": 683607.0
+        },
+        {
+          "cve_mun": "27005",
+          "value": 214877.0
+        },
+        {
+          "cve_mun": "27006",
+          "value": 137257.0
+        },
+        {
+          "cve_mun": "27007",
+          "value": 32181.0
+        },
+        {
+          "cve_mun": "27008",
+          "value": 190885.0
+        },
+        {
+          "cve_mun": "27009",
+          "value": 37749.0
+        },
+        {
+          "cve_mun": "27010",
+          "value": 91185.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 30798.0
+        },
+        {
+          "cve_mun": "27012",
+          "value": 158601.0
+        },
+        {
+          "cve_mun": "27013",
+          "value": 150300.0
+        },
+        {
+          "cve_mun": "27014",
+          "value": 96741.0
+        },
+        {
+          "cve_mun": "27015",
+          "value": 47905.0
+        },
+        {
+          "cve_mun": "27016",
+          "value": 58718.0
+        },
+        {
+          "cve_mun": "27017",
+          "value": 62310.0
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 141329.2941,
+        "median": 96741.0,
+        "std": 154485.711,
+        "min": 30798.0,
+        "max": 683607.0,
+        "q1": 47905.0,
+        "q3": 158601.0
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 683607.0
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27002",
+          "value": 243229.0
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27005",
+          "value": 214877.0
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27008",
+          "value": 190885.0
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27012",
+          "value": 158601.0
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27013",
+          "value": 150300.0
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27006",
+          "value": 137257.0
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27003",
+          "value": 107731.0
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27014",
+          "value": 96741.0
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27010",
+          "value": 91185.0
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27017",
+          "value": 62310.0
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27016",
+          "value": 58718.0
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27001",
+          "value": 58524.0
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27015",
+          "value": 47905.0
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27009",
+          "value": 37749.0
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27007",
+          "value": 32181.0
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27011",
+          "value": 30798.0
+        }
+      ],
+      "outliers": [
+        {
+          "cve_mun": "27004",
+          "value": 683607.0
+        }
+      ]
+    },
+    "analfabetismo_15ymas_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 8.5541
+        },
+        {
+          "cve_mun": "27002",
+          "value": 5.9156
+        },
+        {
+          "cve_mun": "27003",
+          "value": 5.4223
+        },
+        {
+          "cve_mun": "27004",
+          "value": 3.0173
+        },
+        {
+          "cve_mun": "27005",
+          "value": 5.7077
+        },
+        {
+          "cve_mun": "27006",
+          "value": 5.5517
+        },
+        {
+          "cve_mun": "27007",
+          "value": 5.3389
+        },
+        {
+          "cve_mun": "27008",
+          "value": 7.3777
+        },
+        {
+          "cve_mun": "27009",
+          "value": 5.5833
+        },
+        {
+          "cve_mun": "27010",
+          "value": 4.8545
+        },
+        {
+          "cve_mun": "27011",
+          "value": 8.2833
+        },
+        {
+          "cve_mun": "27012",
+          "value": 5.4808
+        },
+        {
+          "cve_mun": "27013",
+          "value": 5.1492
+        },
+        {
+          "cve_mun": "27014",
+          "value": 3.2693
+        },
+        {
+          "cve_mun": "27015",
+          "value": 7.039
+        },
+        {
+          "cve_mun": "27016",
+          "value": 8.1861
+        },
+        {
+          "cve_mun": "27017",
+          "value": 7.7065
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 6.0257,
+        "median": 5.5833,
+        "std": 1.6258,
+        "min": 3.0173,
+        "max": 8.5541,
+        "q1": 5.1492,
+        "q3": 7.3777
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 3.0173
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27014",
+          "value": 3.2693
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27010",
+          "value": 4.8545
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27013",
+          "value": 5.1492
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27007",
+          "value": 5.3389
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27003",
+          "value": 5.4223
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27012",
+          "value": 5.4808
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27006",
+          "value": 5.5517
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27009",
+          "value": 5.5833
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27005",
+          "value": 5.7077
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27002",
+          "value": 5.9156
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27015",
+          "value": 7.039
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27008",
+          "value": 7.3777
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27017",
+          "value": 7.7065
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27016",
+          "value": 8.1861
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27011",
+          "value": 8.2833
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27001",
+          "value": 8.5541
+        }
+      ],
+      "outliers": []
+    },
+    "sin_escolaridad_15ymas_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 8.4533
+        },
+        {
+          "cve_mun": "27002",
+          "value": 5.6965
+        },
+        {
+          "cve_mun": "27003",
+          "value": 4.2465
+        },
+        {
+          "cve_mun": "27004",
+          "value": 3.1972
+        },
+        {
+          "cve_mun": "27005",
+          "value": 4.2594
+        },
+        {
+          "cve_mun": "27006",
+          "value": 4.8807
+        },
+        {
+          "cve_mun": "27007",
+          "value": 5.5035
+        },
+        {
+          "cve_mun": "27008",
+          "value": 7.8072
+        },
+        {
+          "cve_mun": "27009",
+          "value": 3.8542
+        },
+        {
+          "cve_mun": "27010",
+          "value": 3.9248
+        },
+        {
+          "cve_mun": "27011",
+          "value": 6.3287
+        },
+        {
+          "cve_mun": "27012",
+          "value": 4.651
+        },
+        {
+          "cve_mun": "27013",
+          "value": 4.7921
+        },
+        {
+          "cve_mun": "27014",
+          "value": 2.4773
+        },
+        {
+          "cve_mun": "27015",
+          "value": 5.8887
+        },
+        {
+          "cve_mun": "27016",
+          "value": 10.4625
+        },
+        {
+          "cve_mun": "27017",
+          "value": 8.6501
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 5.5926,
+        "median": 4.8807,
+        "std": 2.1458,
+        "min": 2.4773,
+        "max": 10.4625,
+        "q1": 3.9248,
+        "q3": 6.3287
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27014",
+          "value": 2.4773
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27004",
+          "value": 3.1972
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27009",
+          "value": 3.8542
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27010",
+          "value": 3.9248
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27003",
+          "value": 4.2465
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27005",
+          "value": 4.2594
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27012",
+          "value": 4.651
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27013",
+          "value": 4.7921
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27006",
+          "value": 4.8807
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27007",
+          "value": 5.5035
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27002",
+          "value": 5.6965
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27015",
+          "value": 5.8887
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27011",
+          "value": 6.3287
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27008",
+          "value": 7.8072
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27001",
+          "value": 8.4533
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27017",
+          "value": 8.6501
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27016",
+          "value": 10.4625
+        }
+      ],
+      "outliers": [
+        {
+          "cve_mun": "27016",
+          "value": 10.4625
+        }
+      ]
+    },
+    "posbasica_18ymas_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 31.8088
+        },
+        {
+          "cve_mun": "27002",
+          "value": 36.9642
+        },
+        {
+          "cve_mun": "27003",
+          "value": 43.2908
+        },
+        {
+          "cve_mun": "27004",
+          "value": 58.1492
+        },
+        {
+          "cve_mun": "27005",
+          "value": 38.8598
+        },
+        {
+          "cve_mun": "27006",
+          "value": 36.5191
+        },
+        {
+          "cve_mun": "27007",
+          "value": 46.3925
+        },
+        {
+          "cve_mun": "27008",
+          "value": 33.747
+        },
+        {
+          "cve_mun": "27009",
+          "value": 38.5267
+        },
+        {
+          "cve_mun": "27010",
+          "value": 46.8465
+        },
+        {
+          "cve_mun": "27011",
+          "value": 30.4482
+        },
+        {
+          "cve_mun": "27012",
+          "value": 42.1036
+        },
+        {
+          "cve_mun": "27013",
+          "value": 55.6136
+        },
+        {
+          "cve_mun": "27014",
+          "value": 46.3706
+        },
+        {
+          "cve_mun": "27015",
+          "value": 35.8531
+        },
+        {
+          "cve_mun": "27016",
+          "value": 37.7588
+        },
+        {
+          "cve_mun": "27017",
+          "value": 36.9003
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 40.9502,
+        "median": 38.5267,
+        "std": 7.7277,
+        "min": 30.4482,
+        "max": 58.1492,
+        "q1": 35.8531,
+        "q3": 46.3706
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 58.1492
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27013",
+          "value": 55.6136
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27010",
+          "value": 46.8465
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27007",
+          "value": 46.3925
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27014",
+          "value": 46.3706
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27003",
+          "value": 43.2908
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27012",
+          "value": 42.1036
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27005",
+          "value": 38.8598
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27009",
+          "value": 38.5267
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27016",
+          "value": 37.7588
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27002",
+          "value": 36.9642
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27017",
+          "value": 36.9003
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27006",
+          "value": 36.5191
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27015",
+          "value": 35.8531
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27008",
+          "value": 33.747
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27001",
+          "value": 31.8088
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27011",
+          "value": 30.4482
+        }
+      ],
+      "outliers": []
+    },
+    "pob_0_14_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 28.8002
+        },
+        {
+          "cve_mun": "27002",
+          "value": 29.7962
+        },
+        {
+          "cve_mun": "27003",
+          "value": 30.048
+        },
+        {
+          "cve_mun": "27004",
+          "value": 23.8273
+        },
+        {
+          "cve_mun": "27005",
+          "value": 28.2115
+        },
+        {
+          "cve_mun": "27006",
+          "value": 29.1767
+        },
+        {
+          "cve_mun": "27007",
+          "value": 26.3603
+        },
+        {
+          "cve_mun": "27008",
+          "value": 30.9569
+        },
+        {
+          "cve_mun": "27009",
+          "value": 25.055
+        },
+        {
+          "cve_mun": "27010",
+          "value": 28.1527
+        },
+        {
+          "cve_mun": "27011",
+          "value": 28.07
+        },
+        {
+          "cve_mun": "27012",
+          "value": 28.0093
+        },
+        {
+          "cve_mun": "27013",
+          "value": 26.7259
+        },
+        {
+          "cve_mun": "27014",
+          "value": 26.6361
+        },
+        {
+          "cve_mun": "27015",
+          "value": 28.496
+        },
+        {
+          "cve_mun": "27016",
+          "value": 26.8299
+        },
+        {
+          "cve_mun": "27017",
+          "value": 27.713
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 27.8156,
+        "median": 28.07,
+        "std": 1.7965,
+        "min": 23.8273,
+        "max": 30.9569,
+        "q1": 26.6361,
+        "q3": 28.8002
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27008",
+          "value": 30.9569
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27003",
+          "value": 30.048
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27002",
+          "value": 29.7962
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27006",
+          "value": 29.1767
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27001",
+          "value": 28.8002
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27015",
+          "value": 28.496
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27005",
+          "value": 28.2115
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27010",
+          "value": 28.1527
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27011",
+          "value": 28.07
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27012",
+          "value": 28.0093
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27017",
+          "value": 27.713
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27016",
+          "value": 26.8299
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27013",
+          "value": 26.7259
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27014",
+          "value": 26.6361
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27007",
+          "value": 26.3603
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27009",
+          "value": 25.055
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27004",
+          "value": 23.8273
+        }
+      ],
+      "outliers": []
+    },
+    "pob_15_64_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 62.2958
+        },
+        {
+          "cve_mun": "27002",
+          "value": 63.3473
+        },
+        {
+          "cve_mun": "27003",
+          "value": 63.3179
+        },
+        {
+          "cve_mun": "27004",
+          "value": 68.6252
+        },
+        {
+          "cve_mun": "27005",
+          "value": 64.6212
+        },
+        {
+          "cve_mun": "27006",
+          "value": 63.9341
+        },
+        {
+          "cve_mun": "27007",
+          "value": 64.7805
+        },
+        {
+          "cve_mun": "27008",
+          "value": 62.3663
+        },
+        {
+          "cve_mun": "27009",
+          "value": 66.0335
+        },
+        {
+          "cve_mun": "27010",
+          "value": 64.7574
+        },
+        {
+          "cve_mun": "27011",
+          "value": 63.5658
+        },
+        {
+          "cve_mun": "27012",
+          "value": 64.7518
+        },
+        {
+          "cve_mun": "27013",
+          "value": 67.654
+        },
+        {
+          "cve_mun": "27014",
+          "value": 66.1943
+        },
+        {
+          "cve_mun": "27015",
+          "value": 63.7073
+        },
+        {
+          "cve_mun": "27016",
+          "value": 65.9644
+        },
+        {
+          "cve_mun": "27017",
+          "value": 63.9464
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 64.6978,
+        "median": 64.6212,
+        "std": 1.7348,
+        "min": 62.2958,
+        "max": 68.6252,
+        "q1": 63.3473,
+        "q3": 65.9644
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 68.6252
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27013",
+          "value": 67.654
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27014",
+          "value": 66.1943
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27009",
+          "value": 66.0335
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27016",
+          "value": 65.9644
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27007",
+          "value": 64.7805
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27010",
+          "value": 64.7574
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27012",
+          "value": 64.7518
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27005",
+          "value": 64.6212
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27017",
+          "value": 63.9464
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27006",
+          "value": 63.9341
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27015",
+          "value": 63.7073
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27011",
+          "value": 63.5658
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27002",
+          "value": 63.3473
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27003",
+          "value": 63.3179
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27008",
+          "value": 62.3663
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27001",
+          "value": 62.2958
+        }
+      ],
+      "outliers": []
+    },
+    "pob_65_mas_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 8.8955
+        },
+        {
+          "cve_mun": "27002",
+          "value": 6.8483
+        },
+        {
+          "cve_mun": "27003",
+          "value": 6.6304
+        },
+        {
+          "cve_mun": "27004",
+          "value": 7.5088
+        },
+        {
+          "cve_mun": "27005",
+          "value": 7.1306
+        },
+        {
+          "cve_mun": "27006",
+          "value": 6.866
+        },
+        {
+          "cve_mun": "27007",
+          "value": 8.8468
+        },
+        {
+          "cve_mun": "27008",
+          "value": 6.6679
+        },
+        {
+          "cve_mun": "27009",
+          "value": 8.885
+        },
+        {
+          "cve_mun": "27010",
+          "value": 7.0812
+        },
+        {
+          "cve_mun": "27011",
+          "value": 8.3642
+        },
+        {
+          "cve_mun": "27012",
+          "value": 7.2061
+        },
+        {
+          "cve_mun": "27013",
+          "value": 5.3766
+        },
+        {
+          "cve_mun": "27014",
+          "value": 7.1593
+        },
+        {
+          "cve_mun": "27015",
+          "value": 7.7925
+        },
+        {
+          "cve_mun": "27016",
+          "value": 7.2039
+        },
+        {
+          "cve_mun": "27017",
+          "value": 8.3373
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 7.4588,
+        "median": 7.2039,
+        "std": 0.9543,
+        "min": 5.3766,
+        "max": 8.8955,
+        "q1": 6.8483,
+        "q3": 8.3373
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27001",
+          "value": 8.8955
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27009",
+          "value": 8.885
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27007",
+          "value": 8.8468
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27011",
+          "value": 8.3642
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27017",
+          "value": 8.3373
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27015",
+          "value": 7.7925
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27004",
+          "value": 7.5088
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27012",
+          "value": 7.2061
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27016",
+          "value": 7.2039
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27014",
+          "value": 7.1593
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27005",
+          "value": 7.1306
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27010",
+          "value": 7.0812
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27006",
+          "value": 6.866
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27002",
+          "value": 6.8483
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27008",
+          "value": 6.6679
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27003",
+          "value": 6.6304
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27013",
+          "value": 5.3766
+        }
+      ],
+      "outliers": []
+    },
+    "localidades_total": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 357.0
+        },
+        {
+          "cve_mun": "27002",
+          "value": 171.0
+        },
+        {
+          "cve_mun": "27003",
+          "value": 200.0
+        },
+        {
+          "cve_mun": "27004",
+          "value": 205.0
+        },
+        {
+          "cve_mun": "27005",
+          "value": 116.0
+        },
+        {
+          "cve_mun": "27006",
+          "value": 116.0
+        },
+        {
+          "cve_mun": "27007",
+          "value": 69.0
+        },
+        {
+          "cve_mun": "27008",
+          "value": 331.0
+        },
+        {
+          "cve_mun": "27009",
+          "value": 64.0
+        },
+        {
+          "cve_mun": "27010",
+          "value": 64.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 157.0
+        },
+        {
+          "cve_mun": "27012",
+          "value": 219.0
+        },
+        {
+          "cve_mun": "27013",
+          "value": 76.0
+        },
+        {
+          "cve_mun": "27014",
+          "value": 48.0
+        },
+        {
+          "cve_mun": "27015",
+          "value": 87.0
+        },
+        {
+          "cve_mun": "27016",
+          "value": 56.0
+        },
+        {
+          "cve_mun": "27017",
+          "value": 136.0
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 145.4118,
+        "median": 116.0,
+        "std": 93.0639,
+        "min": 48.0,
+        "max": 357.0,
+        "q1": 64.0,
+        "q3": 200.0
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27001",
+          "value": 357.0
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27008",
+          "value": 331.0
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27012",
+          "value": 219.0
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27004",
+          "value": 205.0
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27003",
+          "value": 200.0
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27002",
+          "value": 171.0
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27011",
+          "value": 157.0
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27017",
+          "value": 136.0
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27005",
+          "value": 116.0
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27006",
+          "value": 116.0
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27015",
+          "value": 87.0
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27013",
+          "value": 76.0
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27007",
+          "value": 69.0
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27009",
+          "value": 64.0
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27010",
+          "value": 64.0
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27016",
+          "value": 56.0
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27014",
+          "value": 48.0
+        }
+      ],
+      "outliers": []
+    },
+    "irs_indice": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": -0.395558
+        },
+        {
+          "cve_mun": "27002",
+          "value": -0.673675
+        },
+        {
+          "cve_mun": "27003",
+          "value": -0.468657
+        },
+        {
+          "cve_mun": "27004",
+          "value": -1.215095
+        },
+        {
+          "cve_mun": "27005",
+          "value": -0.800784
+        },
+        {
+          "cve_mun": "27006",
+          "value": -0.690995
+        },
+        {
+          "cve_mun": "27007",
+          "value": -0.910675
+        },
+        {
+          "cve_mun": "27008",
+          "value": -0.459056
+        },
+        {
+          "cve_mun": "27009",
+          "value": -0.802967
+        },
+        {
+          "cve_mun": "27010",
+          "value": -0.903986
+        },
+        {
+          "cve_mun": "27011",
+          "value": -0.19926
+        },
+        {
+          "cve_mun": "27012",
+          "value": -0.457969
+        },
+        {
+          "cve_mun": "27013",
+          "value": -1.108234
+        },
+        {
+          "cve_mun": "27014",
+          "value": -1.06776
+        },
+        {
+          "cve_mun": "27015",
+          "value": -0.292976
+        },
+        {
+          "cve_mun": "27016",
+          "value": -0.520337
+        },
+        {
+          "cve_mun": "27017",
+          "value": -0.490228
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": -0.674,
+        "median": -0.6737,
+        "std": 0.2978,
+        "min": -1.2151,
+        "max": -0.1993,
+        "q1": -0.9107,
+        "q3": -0.4591
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": -1.2151
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27013",
+          "value": -1.1082
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27014",
+          "value": -1.0678
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27007",
+          "value": -0.9107
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27010",
+          "value": -0.904
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27009",
+          "value": -0.803
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27005",
+          "value": -0.8008
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27006",
+          "value": -0.691
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27002",
+          "value": -0.6737
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27016",
+          "value": -0.5203
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27017",
+          "value": -0.4902
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27003",
+          "value": -0.4687
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27008",
+          "value": -0.4591
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27012",
+          "value": -0.458
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27001",
+          "value": -0.3956
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27015",
+          "value": -0.293
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27011",
+          "value": -0.1993
+        }
+      ],
+      "outliers": []
+    },
+    "viv_sin_agua_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 7.435294
+        },
+        {
+          "cve_mun": "27002",
+          "value": 5.357648
+        },
+        {
+          "cve_mun": "27003",
+          "value": 17.073857
+        },
+        {
+          "cve_mun": "27004",
+          "value": 1.320015
+        },
+        {
+          "cve_mun": "27005",
+          "value": 2.785267
+        },
+        {
+          "cve_mun": "27006",
+          "value": 8.224613
+        },
+        {
+          "cve_mun": "27007",
+          "value": 0.957391
+        },
+        {
+          "cve_mun": "27008",
+          "value": 15.096754
+        },
+        {
+          "cve_mun": "27009",
+          "value": 3.853802
+        },
+        {
+          "cve_mun": "27010",
+          "value": 6.124947
+        },
+        {
+          "cve_mun": "27011",
+          "value": 6.369721
+        },
+        {
+          "cve_mun": "27012",
+          "value": 21.922756
+        },
+        {
+          "cve_mun": "27013",
+          "value": 1.350643
+        },
+        {
+          "cve_mun": "27014",
+          "value": 3.235416
+        },
+        {
+          "cve_mun": "27015",
+          "value": 4.582549
+        },
+        {
+          "cve_mun": "27016",
+          "value": 4.795242
+        },
+        {
+          "cve_mun": "27017",
+          "value": 9.070295
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 7.0327,
+        "median": 5.3576,
+        "std": 5.8778,
+        "min": 0.9574,
+        "max": 21.9228,
+        "q1": 2.7853,
+        "q3": 8.2246
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27007",
+          "value": 0.9574
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27004",
+          "value": 1.32
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27013",
+          "value": 1.3506
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27005",
+          "value": 2.7853
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27014",
+          "value": 3.2354
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27009",
+          "value": 3.8538
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27015",
+          "value": 4.5825
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27016",
+          "value": 4.7952
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27002",
+          "value": 5.3576
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27010",
+          "value": 6.1249
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27011",
+          "value": 6.3697
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27001",
+          "value": 7.4353
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27006",
+          "value": 8.2246
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27017",
+          "value": 9.0703
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27008",
+          "value": 15.0968
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27003",
+          "value": 17.0739
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27012",
+          "value": 21.9228
+        }
+      ],
+      "outliers": [
+        {
+          "cve_mun": "27003",
+          "value": 17.0739
+        },
+        {
+          "cve_mun": "27012",
+          "value": 21.9228
+        }
+      ]
+    },
+    "viv_sin_drenaje_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 4.429412
+        },
+        {
+          "cve_mun": "27002",
+          "value": 3.126163
+        },
+        {
+          "cve_mun": "27003",
+          "value": 5.459275
+        },
+        {
+          "cve_mun": "27004",
+          "value": 0.635188
+        },
+        {
+          "cve_mun": "27005",
+          "value": 2.192839
+        },
+        {
+          "cve_mun": "27006",
+          "value": 3.554502
+        },
+        {
+          "cve_mun": "27007",
+          "value": 0.757496
+        },
+        {
+          "cve_mun": "27008",
+          "value": 3.09846
+        },
+        {
+          "cve_mun": "27009",
+          "value": 3.607613
+        },
+        {
+          "cve_mun": "27010",
+          "value": 3.001266
+        },
+        {
+          "cve_mun": "27011",
+          "value": 6.496654
+        },
+        {
+          "cve_mun": "27012",
+          "value": 3.720941
+        },
+        {
+          "cve_mun": "27013",
+          "value": 1.26727
+        },
+        {
+          "cve_mun": "27014",
+          "value": 1.79871
+        },
+        {
+          "cve_mun": "27015",
+          "value": 6.669805
+        },
+        {
+          "cve_mun": "27016",
+          "value": 1.579828
+        },
+        {
+          "cve_mun": "27017",
+          "value": 4.728721
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 3.3014,
+        "median": 3.1262,
+        "std": 1.8403,
+        "min": 0.6352,
+        "max": 6.6698,
+        "q1": 1.5798,
+        "q3": 4.4294
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 0.6352
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27007",
+          "value": 0.7575
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27013",
+          "value": 1.2673
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27016",
+          "value": 1.5798
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27014",
+          "value": 1.7987
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27005",
+          "value": 2.1928
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27010",
+          "value": 3.0013
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27008",
+          "value": 3.0985
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27002",
+          "value": 3.1262
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27006",
+          "value": 3.5545
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27009",
+          "value": 3.6076
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27012",
+          "value": 3.7209
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27001",
+          "value": 4.4294
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27017",
+          "value": 4.7287
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27003",
+          "value": 5.4593
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27011",
+          "value": 6.4967
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27015",
+          "value": 6.6698
+        }
+      ],
+      "outliers": []
+    },
+    "viv_sin_luz_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 2.523529
+        },
+        {
+          "cve_mun": "27002",
+          "value": 0.684779
+        },
+        {
+          "cve_mun": "27003",
+          "value": 1.212782
+        },
+        {
+          "cve_mun": "27004",
+          "value": 0.226925
+        },
+        {
+          "cve_mun": "27005",
+          "value": 0.384648
+        },
+        {
+          "cve_mun": "27006",
+          "value": 0.537835
+        },
+        {
+          "cve_mun": "27007",
+          "value": 0.578643
+        },
+        {
+          "cve_mun": "27008",
+          "value": 1.219607
+        },
+        {
+          "cve_mun": "27009",
+          "value": 0.842723
+        },
+        {
+          "cve_mun": "27010",
+          "value": 0.586745
+        },
+        {
+          "cve_mun": "27011",
+          "value": 1.673206
+        },
+        {
+          "cve_mun": "27012",
+          "value": 1.067426
+        },
+        {
+          "cve_mun": "27013",
+          "value": 0.27394
+        },
+        {
+          "cve_mun": "27014",
+          "value": 0.38463
+        },
+        {
+          "cve_mun": "27015",
+          "value": 1.043628
+        },
+        {
+          "cve_mun": "27016",
+          "value": 0.712471
+        },
+        {
+          "cve_mun": "27017",
+          "value": 2.118246
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 0.9454,
+        "median": 0.7125,
+        "std": 0.6483,
+        "min": 0.2269,
+        "max": 2.5235,
+        "q1": 0.3846,
+        "q3": 1.2128
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 0.2269
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27013",
+          "value": 0.2739
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27014",
+          "value": 0.3846
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27005",
+          "value": 0.3846
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27006",
+          "value": 0.5378
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27007",
+          "value": 0.5786
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27010",
+          "value": 0.5867
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27002",
+          "value": 0.6848
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27016",
+          "value": 0.7125
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27009",
+          "value": 0.8427
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27015",
+          "value": 1.0436
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27012",
+          "value": 1.0674
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27003",
+          "value": 1.2128
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27008",
+          "value": 1.2196
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27011",
+          "value": 1.6732
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27017",
+          "value": 2.1182
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27001",
+          "value": 2.5235
+        }
+      ],
+      "outliers": [
+        {
+          "cve_mun": "27001",
+          "value": 2.5235
+        }
+      ]
+    },
+    "sin_derechohabiencia_pct": {
+      "year": 2020,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 30.999248
+        },
+        {
+          "cve_mun": "27002",
+          "value": 33.273993
+        },
+        {
+          "cve_mun": "27003",
+          "value": 36.608776
+        },
+        {
+          "cve_mun": "27004",
+          "value": 30.986225
+        },
+        {
+          "cve_mun": "27005",
+          "value": 32.608422
+        },
+        {
+          "cve_mun": "27006",
+          "value": 37.56894
+        },
+        {
+          "cve_mun": "27007",
+          "value": 21.925981
+        },
+        {
+          "cve_mun": "27008",
+          "value": 33.956047
+        },
+        {
+          "cve_mun": "27009",
+          "value": 26.390103
+        },
+        {
+          "cve_mun": "27010",
+          "value": 36.930416
+        },
+        {
+          "cve_mun": "27011",
+          "value": 18.754465
+        },
+        {
+          "cve_mun": "27012",
+          "value": 27.497935
+        },
+        {
+          "cve_mun": "27013",
+          "value": 29.306055
+        },
+        {
+          "cve_mun": "27014",
+          "value": 27.070218
+        },
+        {
+          "cve_mun": "27015",
+          "value": 28.656716
+        },
+        {
+          "cve_mun": "27016",
+          "value": 27.494124
+        },
+        {
+          "cve_mun": "27017",
+          "value": 29.703097
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 29.9842,
+        "median": 29.7031,
+        "std": 5.0764,
+        "min": 18.7545,
+        "max": 37.5689,
+        "q1": 27.0702,
+        "q3": 33.274
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27011",
+          "value": 18.7545
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27007",
+          "value": 21.926
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27009",
+          "value": 26.3901
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27014",
+          "value": 27.0702
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27016",
+          "value": 27.4941
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27012",
+          "value": 27.4979
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27015",
+          "value": 28.6567
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27013",
+          "value": 29.3061
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27017",
+          "value": 29.7031
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27004",
+          "value": 30.9862
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27001",
+          "value": 30.9992
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27005",
+          "value": 32.6084
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27002",
+          "value": 33.274
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27008",
+          "value": 33.956
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27003",
+          "value": 36.6088
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27010",
+          "value": 36.9304
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27006",
+          "value": 37.5689
+        }
+      ],
+      "outliers": []
+    },
+    "ookla_velocidad_avg_mbps": {
+      "year": 2025,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 36.5615714286
+        },
+        {
+          "cve_mun": "27002",
+          "value": 56.7002903226
+        },
+        {
+          "cve_mun": "27003",
+          "value": 29.1616
+        },
+        {
+          "cve_mun": "27004",
+          "value": 63.4874161491
+        },
+        {
+          "cve_mun": "27005",
+          "value": 62.7232272727
+        },
+        {
+          "cve_mun": "27006",
+          "value": 43.5155
+        },
+        {
+          "cve_mun": "27007",
+          "value": 43.5763333333
+        },
+        {
+          "cve_mun": "27008",
+          "value": 44.0362666667
+        },
+        {
+          "cve_mun": "27009",
+          "value": 39.3255
+        },
+        {
+          "cve_mun": "27010",
+          "value": 42.3366
+        },
+        {
+          "cve_mun": "27011",
+          "value": 100.416
+        },
+        {
+          "cve_mun": "27012",
+          "value": 51.01532
+        },
+        {
+          "cve_mun": "27013",
+          "value": 58.8561
+        },
+        {
+          "cve_mun": "27014",
+          "value": 63.6104666667
+        },
+        {
+          "cve_mun": "27015",
+          "value": 46.257
+        },
+        {
+          "cve_mun": "27016",
+          "value": 40.673875
+        },
+        {
+          "cve_mun": "27017",
+          "value": 40.1144
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 50.7275,
+        "median": 44.0363,
+        "std": 16.3769,
+        "min": 29.1616,
+        "max": 100.416,
+        "q1": 40.1144,
+        "q3": 58.8561
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27011",
+          "value": 100.416
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27014",
+          "value": 63.6105
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27004",
+          "value": 63.4874
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27005",
+          "value": 62.7232
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27013",
+          "value": 58.8561
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27002",
+          "value": 56.7003
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27012",
+          "value": 51.0153
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27015",
+          "value": 46.257
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27008",
+          "value": 44.0363
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27007",
+          "value": 43.5763
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27006",
+          "value": 43.5155
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27010",
+          "value": 42.3366
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27016",
+          "value": 40.6739
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27017",
+          "value": 40.1144
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27009",
+          "value": 39.3255
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27001",
+          "value": 36.5616
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27003",
+          "value": 29.1616
+        }
+      ],
+      "outliers": [
+        {
+          "cve_mun": "27011",
+          "value": 100.416
+        }
+      ]
+    },
+    "ookla_cobertura_4g_pct": {
+      "year": 2025,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 42.8571428571
+        },
+        {
+          "cve_mun": "27002",
+          "value": 29.0322580645
+        },
+        {
+          "cve_mun": "27003",
+          "value": 60.0
+        },
+        {
+          "cve_mun": "27004",
+          "value": 27.950310559
+        },
+        {
+          "cve_mun": "27005",
+          "value": 36.3636363636
+        },
+        {
+          "cve_mun": "27006",
+          "value": 75.0
+        },
+        {
+          "cve_mun": "27007",
+          "value": 33.3333333333
+        },
+        {
+          "cve_mun": "27008",
+          "value": 33.3333333333
+        },
+        {
+          "cve_mun": "27009",
+          "value": 50.0
+        },
+        {
+          "cve_mun": "27010",
+          "value": 40.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27012",
+          "value": 36.0
+        },
+        {
+          "cve_mun": "27013",
+          "value": 40.0
+        },
+        {
+          "cve_mun": "27014",
+          "value": 20.0
+        },
+        {
+          "cve_mun": "27015",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27016",
+          "value": 37.5
+        },
+        {
+          "cve_mun": "27017",
+          "value": 20.0
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 34.1982,
+        "median": 36.0,
+        "std": 18.6259,
+        "min": 0.0,
+        "max": 75.0,
+        "q1": 20.0,
+        "q3": 40.0
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27006",
+          "value": 75.0
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27003",
+          "value": 60.0
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27009",
+          "value": 50.0
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27001",
+          "value": 42.8571
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27010",
+          "value": 40.0
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27013",
+          "value": 40.0
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27016",
+          "value": 37.5
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27005",
+          "value": 36.3636
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27012",
+          "value": 36.0
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27007",
+          "value": 33.3333
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27008",
+          "value": 33.3333
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27002",
+          "value": 29.0323
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27004",
+          "value": 27.9503
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27014",
+          "value": 20.0
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27017",
+          "value": 20.0
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27011",
+          "value": 0.0
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27015",
+          "value": 0.0
+        }
+      ],
+      "outliers": [
+        {
+          "cve_mun": "27006",
+          "value": 75.0
+        }
+      ]
+    },
+    "brecha_4g_pp": {
+      "year": 2024,
+      "records": [
+        {
+          "cve_mun": "27001",
+          "value": 14.2868
+        },
+        {
+          "cve_mun": "27002",
+          "value": 6.8763
+        },
+        {
+          "cve_mun": "27003",
+          "value": 11.2319
+        },
+        {
+          "cve_mun": "27004",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27005",
+          "value": 0.4526
+        },
+        {
+          "cve_mun": "27006",
+          "value": 1.158
+        },
+        {
+          "cve_mun": "27007",
+          "value": 5.9674
+        },
+        {
+          "cve_mun": "27008",
+          "value": 18.4504
+        },
+        {
+          "cve_mun": "27009",
+          "value": 1.8441
+        },
+        {
+          "cve_mun": "27010",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27011",
+          "value": 2.1818
+        },
+        {
+          "cve_mun": "27012",
+          "value": 9.4569
+        },
+        {
+          "cve_mun": "27013",
+          "value": 0.0
+        },
+        {
+          "cve_mun": "27014",
+          "value": 2.8281
+        },
+        {
+          "cve_mun": "27015",
+          "value": 1.5766
+        },
+        {
+          "cve_mun": "27016",
+          "value": 1.1769
+        },
+        {
+          "cve_mun": "27017",
+          "value": 28.3293
+        }
+      ],
+      "stats": {
+        "count": 17,
+        "mean": 6.2245,
+        "median": 2.1818,
+        "std": 7.9391,
+        "min": 0.0,
+        "max": 28.3293,
+        "q1": 0.4526,
+        "q3": 9.4569
+      },
+      "rankings": [
+        {
+          "rank": 1,
+          "cve_mun": "27004",
+          "value": 0.0
+        },
+        {
+          "rank": 2,
+          "cve_mun": "27010",
+          "value": 0.0
+        },
+        {
+          "rank": 3,
+          "cve_mun": "27013",
+          "value": 0.0
+        },
+        {
+          "rank": 4,
+          "cve_mun": "27005",
+          "value": 0.4526
+        },
+        {
+          "rank": 5,
+          "cve_mun": "27006",
+          "value": 1.158
+        },
+        {
+          "rank": 6,
+          "cve_mun": "27016",
+          "value": 1.1769
+        },
+        {
+          "rank": 7,
+          "cve_mun": "27015",
+          "value": 1.5766
+        },
+        {
+          "rank": 8,
+          "cve_mun": "27009",
+          "value": 1.8441
+        },
+        {
+          "rank": 9,
+          "cve_mun": "27011",
+          "value": 2.1818
+        },
+        {
+          "rank": 10,
+          "cve_mun": "27014",
+          "value": 2.8281
+        },
+        {
+          "rank": 11,
+          "cve_mun": "27007",
+          "value": 5.9674
+        },
+        {
+          "rank": 12,
+          "cve_mun": "27002",
+          "value": 6.8763
+        },
+        {
+          "rank": 13,
+          "cve_mun": "27012",
+          "value": 9.4569
+        },
+        {
+          "rank": 14,
+          "cve_mun": "27003",
+          "value": 11.2319
+        },
+        {
+          "rank": 15,
+          "cve_mun": "27001",
+          "value": 14.2868
+        },
+        {
+          "rank": 16,
+          "cve_mun": "27008",
+          "value": 18.4504
+        },
+        {
+          "rank": 17,
+          "cve_mun": "27017",
+          "value": 28.3293
+        }
+      ],
+      "outliers": [
+        {
+          "cve_mun": "27017",
+          "value": 28.3293
+        }
+      ]
+    }
+  }
+}

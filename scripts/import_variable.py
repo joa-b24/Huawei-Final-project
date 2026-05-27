@@ -289,20 +289,21 @@ def merge_municipal(imp: dict) -> None:
     cat_entry = find_catalog_entry(variable_id) or {}
     agg_method = cat_entry.get("agregacion_default", "avg")
 
-    # Persist raw municipal data per state
+    # Persist municipal data — merged into combined per-state file
     for state_code, mun_records in by_state.items():
-        mun_dir = MUNICIPAL_DIR / state_code
-        mun_dir.mkdir(parents=True, exist_ok=True)
-        mun_path = mun_dir / f"{variable_id}.json"
-        payload: dict = {
-            "variable_id": variable_id,
-            "state_code": state_code,
+        combined_path = MUNICIPAL_DIR / f"{state_code}.json"
+        if combined_path.exists():
+            combined_state = load_json(combined_path)
+        else:
+            MUNICIPAL_DIR.mkdir(parents=True, exist_ok=True)
+            combined_state = {"state_code": state_code, "updated_at": "", "variables": {}}
+        combined_state["variables"][variable_id] = {
             "year": year_incoming,
-            "updated_at": date.today().isoformat(),
             "records": sorted(mun_records, key=lambda r: r["cve_mun"]),
         }
-        mun_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"  Guardado: outputs/municipal/{state_code}/{variable_id}.json ({len(mun_records)} municipios)")
+        combined_state["updated_at"] = date.today().isoformat()
+        combined_path.write_text(json.dumps(combined_state, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"  Guardado: outputs/municipal/{state_code}.json (+{variable_id}, {len(mun_records)} municipios)")
 
     update_municipal_manifest(variable_id, list(by_state.keys()))
 

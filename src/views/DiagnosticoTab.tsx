@@ -8,6 +8,7 @@ import DistributionHistogram from "../components/charts/DistributionHistogram";
 import InlineBoxplot from "../components/charts/InlineBoxplot";
 import RankingTable from "../components/charts/RankingTable";
 import ChoroplethMap from "../components/charts/ChoroplethMap";
+import MunicipalModeView, { type MunVar } from "../components/charts/MunicipalModeView";
 import EmptyState from "../components/EmptyState";
 import InsightBox from "../components/feedback/InsightBox";
 import InfoTooltip from "../components/feedback/InfoTooltip";
@@ -270,6 +271,30 @@ export default function DiagnosticoTab({ appData }: Props) {
 
   const primaryVarId = activeVariableIds[0] ?? null;
 
+  // Municipal manifest — loaded once, tells us which variable_ids have municipal data per state
+  const [munManifest, setMunManifest] = useState<Record<string, { variables: string[] }> | null>(null);
+  useEffect(() => {
+    fetch("/data/municipal_manifest.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null)
+      .then((data) => setMunManifest(data?.states ?? null));
+  }, []);
+
+  const munVarsAvailable = useMemo((): MunVar[] => {
+    const sc = primaryRecord?.stateCode;
+    if (!munManifest || !sc) return [];
+    const stateVarIds = new Set(munManifest[sc]?.variables ?? []);
+    return activeVariableIds
+      .filter((id) => stateVarIds.has(id))
+      .map((id) => {
+        const m = dataset.metricCatalog.find((mc) => mc.id === id);
+        return { id, label: m?.label ?? id, unit: m?.unit ?? "", direction: getMetricPolaridad(id, appData.variablesCatalog) };
+      });
+  }, [munManifest, primaryRecord?.stateCode, activeVariableIds, dataset.metricCatalog, appData.variablesCatalog]);
+
+  const [municipalMode, setMunicipalMode] = useState(false);
+  useEffect(() => { setMunicipalMode(false); }, [primaryState]);
+
   const [histVarId, setHistVarId] = useState<string | null>(null);
   const effectiveHistVarId =
     histVarId && activeVariableIds.includes(histVarId) ? histVarId : primaryVarId;
@@ -456,7 +481,7 @@ export default function DiagnosticoTab({ appData }: Props) {
 
       {primaryVarId && (
         <>
-          {/* Distribution narrative — full width above two-column */}
+          {/* Distribution narrative — always visible regardless of mode */}
           {effectiveHistVarId && (
             <TabNarrative
               title="Estadísticos de distribución"
@@ -471,6 +496,33 @@ export default function DiagnosticoTab({ appData }: Props) {
               />
             </TabNarrative>
           )}
+
+          {/* Municipal toggle — below the narrative */}
+          {munVarsAvailable.length > 0 && (
+            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
+              <button
+                type="button"
+                className={`groups-toggle-btn${municipalMode ? " active" : ""}`}
+                onClick={() => setMunicipalMode((m) => !m)}
+              >
+                {municipalMode ? "← Vista nacional" : "Ver municipios →"}
+              </button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Municipal charts */}
+      {primaryRecord?.stateCode && municipalMode && munVarsAvailable.length > 0 && (
+        <MunicipalModeView
+          stateCode={primaryRecord.stateCode}
+          primaryState={primaryState}
+          munVars={munVarsAvailable}
+        />
+      )}
+
+      {primaryVarId && !municipalMode && (
+        <>
 
           {/* Two-column: distribution (left) + map (right) */}
           <div className="two-col">
