@@ -1,5 +1,5 @@
 # UI/UX Specifications — Observatorio de Indicadores por Estado
-**Versión:** 2.1 | **Actualizado:** 2026-05-06
+**Versión:** 2.2 | **Actualizado:** 2026-05-26
 
 ---
 
@@ -118,6 +118,33 @@ Cada card muestra:
 - Estado primario: borde `--blue` 2px. Click en cualquier estado lo selecciona como primario.
 - Tooltip flotante: nombre del estado + valor + unidad.
 - **Dato esperado:** `public/data/estados.geojson` (polígonos) + valores de `dataset.records`; join por `cve_ent`.
+
+#### 4.1.6 Vista municipal (toggle "Ver municipios")
+
+Aparece debajo de la `TabNarrative "Estadísticos de distribución"` únicamente si el estado seleccionado tiene datos municipales disponibles para al menos una de las variables activas en el sidebar.
+
+- **Condición de visibilidad:** `municipal_manifest.json` indica qué variables existen por estado; la intersección con las variables activas del sidebar determina si el botón aparece.
+- **Activación:** botón `groups-toggle-btn` "Ver municipios →" / "← Vista nacional".
+- La `TabNarrative "Estadísticos de distribución"` permanece visible en ambos modos.
+- En modo municipal se sustituyen los paneles nacionales (histograma + mapa + ranking) por los tres paneles municipales descritos abajo; cada uno tiene su propio selector de variable.
+
+**`MunicipioDistPanel`** — Distribución municipal
+- Panel con `ranking-panel-header`: título + InfoTooltip + selector de variable.
+- Histograma de 10 bins sobre los municipios del estado.
+- Footer: media, mediana (pre-calculadas de `stats`) y conteo `n`.
+- **Dato esperado:** `outputs/municipal/{estado}.json` → `variables[varId].records` + `.stats`.
+
+**`MunicipioMapPanel`** — Mapa municipal
+- Panel con `panel-title-row`: título ("Mapa municipal — {estado}" + año) + selector de variable.
+- Coroplético sobre polígonos municipales del estado; auto-zoom desde `bboxes.json`.
+- Escala azul min→max igual que el mapa estatal. Tooltip: nombre de municipio + valor.
+- **Dato esperado:** `geo/municipios/{estado}.geojson` + join con `outputs/municipal/{estado}.json`.
+
+**`MunicipioRankingPanel`** — Ranking municipal
+- Panel con `ranking-panel-header`: título + InfoTooltip + selector de variable.
+- Toggle pill "Mejor desempeño" / "Menor desempeño" (top 10 / bottom 10).
+- Columnas: #, Municipio, Valor, % vs media del estado. Color verde/rojo según `direction`.
+- **Dato esperado:** `outputs/municipal/{estado}.json` → `variables[varId].records` + features para `nom_mun`.
 
 ---
 
@@ -317,6 +344,10 @@ Definición: valor fuera de `[Q1 − 1.5×IQR, Q3 + 1.5×IQR]` según `dashboard
 | `CorrelationBarChart` | `correlations[], targetVariable, threshold` | `correlations.json` | Implementado |
 | `PairScatterChart` | `data[], xVar, yVar, highlightState` | `state_cards.json` | Implementado |
 | `ChoroplethMap` | `appData` | `estados.geojson` + `dataset.records` | Implementado |
+| `MunicipalModeView` | `stateCode, primaryState, munVars[]` | GeoJSON + bboxes + combined por estado | Implementado |
+| `MunicipioDistPanel` | `features[], combined, munVars[]` | `outputs/municipal/{estado}.json` | Implementado |
+| `MunicipioMapPanel` | `features[], combined, bbox, munVars[], primaryState` | GeoJSON municipal + combined | Implementado |
+| `MunicipioRankingPanel` | `features[], combined, munVars[]` | combined `.records` + features para nombres | Implementado |
 | `BoxplotPanel` | — | — | Eliminado |
 | `CorrelationMatrixTable` | — | — | Eliminado |
 | `TimeSeriesChart` | `series[], variables` | Datos históricos (pendiente) | Placeholder |
