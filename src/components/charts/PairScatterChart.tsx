@@ -174,7 +174,7 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="scatter-summary">
+      <div className="scatter-summary" style={{ flexDirection: "column", alignItems: "stretch", gap: 6 }}>
         <div className="scatter-summary__left">
           <span className={`scatter-summary__badge scatter-summary__badge--${strengthLevel}`}>
             {strengthLabel}
@@ -186,13 +186,13 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
             }
           </span>
         </div>
-        <div className="scatter-summary__right">
+        <div className="scatter-summary__right" style={{ justifyContent: "center" }}>
+          <span className="scatter-summary__r2">r² = {r2.toFixed(2)}</span>
           {excludeOutliers && outlierStates.size > 0 && (
             <span style={{ fontSize: 11, color: "var(--amber)" }}>
               sin {outlierStates.size} atípico{outlierStates.size !== 1 ? "s" : ""}
             </span>
           )}
-          <span className="scatter-summary__r2">r² = {r2.toFixed(2)}</span>
           {outlierStates.size > 0 && (
             <button
               type="button"

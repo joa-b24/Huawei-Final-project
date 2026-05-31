@@ -64,9 +64,9 @@ export default function KpiCard({
         groupComparisons.map((gc, i) => {
           const gcDisplay = formatDelta(gc.delta, direction, tipoValor);
           return gcDisplay.text ? (
-            <p key={i} className="kpi-card-v2__delta" style={{ color: gc.color, opacity: 0.85, fontSize: "0.82em" }}>
-              <span className="kpi-group-dot" style={{ background: gc.color }} />
-              {gcDisplay.arrow} {gcDisplay.text} vs {gc.label}
+            <p key={i} className="kpi-card-v2__delta" style={{ fontSize: "0.82em" }}>
+              <span style={{ color: gcDisplay.color }}>{gcDisplay.arrow} {gcDisplay.text}</span>
+              <span style={{ color: gc.color, opacity: 0.8 }}> vs {gc.label}</span>
             </p>
           ) : null;
         })

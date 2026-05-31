@@ -73,6 +73,21 @@ function Dashboard({ appData }: { appData: AppData }) {
     [appData.dataset.records]
   );
 
+  const primaryRecord = useMemo(
+    () => appData.dataset.records.find((r) => r.state === state.primaryState) ?? null,
+    [appData.dataset.records, state.primaryState]
+  );
+  const regionGroupId = primaryRecord?.region ? `r:${primaryRecord.region}` : null;
+
+  const primaryPcaRecord = useMemo(
+    () => appData.pcaResults?.records.find((r) => r.state === state.primaryState) ?? null,
+    [appData.pcaResults, state.primaryState]
+  );
+  const primaryClusterGroupId = primaryPcaRecord !== null ? `c:${primaryPcaRecord.cluster}` : null;
+  const primaryClusterLabel = primaryPcaRecord !== null
+    ? (appData.pcaResults?.cluster_stats[String(primaryPcaRecord.cluster)]?.label ?? `Cluster ${primaryPcaRecord.cluster}`)
+    : null;
+
   const munVarIds = useMemo(() => {
     if (!appData.municipalManifest) return new Set<string>();
     const all = new Set<string>();
@@ -116,6 +131,11 @@ function Dashboard({ appData }: { appData: AppData }) {
         activeVarIds={state.activeVariableIds}
         onToggleVar={(id) => dispatch(actions.toggleVariable(id))}
         onClearVars={() => dispatch(actions.setVariables([]))}
+        comparisonGroups={state.comparisonGroups}
+        onComparisonGroupsChange={(groups) => dispatch(actions.setComparisonGroups(groups))}
+        regionGroupId={regionGroupId}
+        primaryClusterGroupId={primaryClusterGroupId}
+        primaryClusterLabel={primaryClusterLabel}
         hidden={datosOpen || estructuraOpen}
       />
       <MainContent noSidebar={datosOpen || estructuraOpen}>

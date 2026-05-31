@@ -16,7 +16,7 @@ import TabNarrative from "../components/feedback/TabNarrative";
 import { calcNationalMean, calcDelta, isStateOutlier, normalizeForRadar } from "../lib/stats";
 import type { RankingEntry, TipoValor } from "../types/dataStandard";
 import type { StateMetricRecord } from "../types/dataset";
-import ComparisonGroupSelector, { GROUP_COLORS } from "../components/sidebar/ComparisonGroupSelector";
+import { GROUP_COLORS } from "../components/sidebar/ComparisonGroupSelector";
 
 function guessTipoValor(metricId: string, unit: string): TipoValor {
   if (unit === "%" || metricId.endsWith("_pct")) return "percentage";
@@ -50,7 +50,7 @@ type Props = { appData: AppData };
 
 export default function DiagnosticoTab({ appData }: Props) {
   const { state: appState } = useAppContext();
-  const { primaryState, activeVariableIds } = appState;
+  const { primaryState, activeVariableIds, comparisonGroups } = appState;
   const { dataset, outliers, distributions, univariateStats } = appData;
 
   const primaryRecord = useMemo(
@@ -58,26 +58,12 @@ export default function DiagnosticoTab({ appData }: Props) {
     [dataset.records, primaryState]
   );
 
-  const primaryPcaRecord = useMemo(
-    () => appData.pcaResults?.records.find((r) => r.state === primaryState) ?? null,
-    [appData.pcaResults, primaryState]
-  );
-  const primaryClusterGroupId = primaryPcaRecord !== null ? `c:${primaryPcaRecord.cluster}` : null;
-  const primaryClusterLabel = primaryPcaRecord !== null
-    ? (appData.pcaResults?.cluster_stats[String(primaryPcaRecord.cluster)]?.label ?? `Cluster ${primaryPcaRecord.cluster}`)
-    : null;
-
-  const [comparisonGroups, setComparisonGroups] = useState<string[]>(["nacional"]);
-  useEffect(() => { setComparisonGroups(["nacional"]); }, [primaryState]);
-
-  const [showGroups, setShowGroups] = useState(false);
-
   const secondaryGroup = comparisonGroups.find((g) => g !== "nacional") ?? null;
 
   const comparisonLabel: string | null = secondaryGroup
     ? secondaryGroup.startsWith("r:") ? `Región ${secondaryGroup.slice(2)}`
     : secondaryGroup.startsWith("c:")
-      ? (appData.pcaResults?.cluster_stats[secondaryGroup.slice(2)]?.label ?? `Cluster ${secondaryGroup.slice(2)}`)
+      ? (appData.pcaResults?.cluster_stats[secondaryGroup.slice(2)]?.label ?? `Cluster ${secondaryGroup.slice(2)}`).replace(/:.*$/, "").trim()
     : secondaryGroup
     : null;
 
@@ -120,10 +106,6 @@ export default function DiagnosticoTab({ appData }: Props) {
 
   const nonNacionalGroups = comparisonGroups.filter((g) => g !== "nacional");
 
-  useEffect(() => {
-    if (!comparisonGroups.some((g) => g !== "nacional")) setShowGroups(false);
-  }, [comparisonGroups]);
-
   // Single source of truth: groupId → color, indexed by position in comparisonGroups (matches radar)
   const groupColorMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -152,12 +134,12 @@ export default function DiagnosticoTab({ appData }: Props) {
 
   function groupLabel(g: string): string {
     if (g.startsWith("r:")) return `R:${g.slice(2)}`;
-    if (g.startsWith("c:")) return appData.pcaResults?.cluster_stats[g.slice(2)]?.label ?? `C${g.slice(2)}`;
+    if (g.startsWith("c:")) return (appData.pcaResults?.cluster_stats[g.slice(2)]?.label ?? `Cluster ${g.slice(2)}`).replace(/:.*$/, "").trim();
     return g;
   }
 
   const groupStateColors = useMemo((): Map<string, string> => {
-    if (!showGroups || !nonNacionalGroups.length) return new Map();
+    if (!nonNacionalGroups.length) return new Map();
     const map = new Map<string, string>();
     nonNacionalGroups.forEach((g) => {
       const color = groupColorMap.get(g) ?? "#6b7280";
@@ -170,7 +152,7 @@ export default function DiagnosticoTab({ appData }: Props) {
       }
     });
     return map;
-  }, [showGroups, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
+  }, [nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
 
   // Municipal manifest — loaded once, tells us which variable_ids have municipal data per state
   const [munManifest, setMunManifest] = useState<Record<string, { variables: string[] }> | null>(null);
@@ -211,7 +193,7 @@ export default function DiagnosticoTab({ appData }: Props) {
           : false;
       const compValue = comparisonValues?.[varId] ?? null;
       const compDelta = value !== null && compValue !== null ? calcDelta(value, compValue) : null;
-      const groupComparisons = showGroups && nonNacionalGroups.length > 0
+      const groupComparisons = nonNacionalGroups.length > 0
         ? nonNacionalGroups.map((g) => {
             const gVal = computeGroupValue(g, varId);
             return {
@@ -235,7 +217,7 @@ export default function DiagnosticoTab({ appData }: Props) {
         hasMunicipalData: munVarsAvailable.some((v) => v.id === varId),
       };
     });
-  }, [primaryRecord, activeVariableIds, dataset, outliers, comparisonValues, comparisonLabel, showGroups, nonNacionalGroups, groupColorMap, munVarsAvailable]);
+  }, [primaryRecord, activeVariableIds, dataset, outliers, comparisonValues, comparisonLabel, nonNacionalGroups, groupColorMap, munVarsAvailable]);
 
   const polaridadMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -258,9 +240,6 @@ export default function DiagnosticoTab({ appData }: Props) {
   const stateRegion = primaryState
     ? (stateRegionMap[primaryState] ?? null)
     : null;
-
-  const regionGroupId = stateRegion ? `r:${stateRegion}` : null;
-  const allStateNames = useMemo(() => dataset.records.map((r) => r.state), [dataset.records]);
 
   // National average in normalized space = mean of all states' percentile ranks ≈ 50
   const nationalValues = useMemo(() => {
@@ -353,23 +332,23 @@ export default function DiagnosticoTab({ appData }: Props) {
     : "higher_better";
 
   const histGroupLines = useMemo((): GroupLine[] => {
-    if (!showGroups || !effectiveChartVarId || !nonNacionalGroups.length) return [];
+    if (!effectiveChartVarId || !nonNacionalGroups.length) return [];
     return nonNacionalGroups.flatMap((g) => {
       const value = computeGroupValue(g, effectiveChartVarId);
       const color = groupColorMap.get(g) ?? "#6b7280";
       return value !== null ? [{ value, label: groupLabel(g), color }] : [];
     });
-  }, [showGroups, effectiveChartVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
+  }, [effectiveChartVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
 
   const rankingGroupLines = useMemo((): GroupLine[] => {
-    if (!showGroups || !effectiveChartVarId || !nonNacionalGroups.length) return [];
+    if (!effectiveChartVarId || !nonNacionalGroups.length) return [];
     return nonNacionalGroups.flatMap((g) => {
       if (!g.startsWith("r:") && !g.startsWith("c:")) return [];
       const value = computeGroupValue(g, effectiveChartVarId);
       const color = groupColorMap.get(g) ?? "#6b7280";
       return value !== null ? [{ value, label: groupLabel(g), color }] : [];
     });
-  }, [showGroups, effectiveChartVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
+  }, [effectiveChartVarId, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
 
   const rankingRows = useMemo(() => {
     if (!effectiveChartVarId) return [];
@@ -408,32 +387,6 @@ export default function DiagnosticoTab({ appData }: Props) {
           <p>Activa variables en el panel lateral para ver el análisis del estado seleccionado.</p>
         )}
       </TabNarrative>
-
-      <section className="comparison-panel" style={{ marginTop: 8 }}>
-        <div className="comparison-panel__header">
-          <span className="comparison-panel__title">Grupos de comparación</span>
-          {nonNacionalGroups.length > 0 && (
-            <button
-              type="button"
-              className={`groups-toggle-btn${showGroups ? " active" : ""}`}
-              onClick={() => setShowGroups((v) => !v)}
-              title="Superponer grupos en distribución, mapa y ranking"
-            >
-              Mostrar en gráficas
-            </button>
-          )}
-        </div>
-        <ComparisonGroupSelector
-          groups={comparisonGroups}
-          onGroupsChange={setComparisonGroups}
-          regionGroupId={regionGroupId}
-          primaryClusterGroupId={primaryClusterGroupId}
-          primaryClusterLabel={primaryClusterLabel}
-          primaryState={primaryState}
-          allStateNames={allStateNames}
-          groupColorMap={groupColorMap}
-        />
-      </section>
 
       {kpiCards.length > 0 ? (
         <KpiGrid cards={kpiCards} />
@@ -582,9 +535,9 @@ export default function DiagnosticoTab({ appData }: Props) {
                     nationalMean={nationalMeanHist}
                     binStates={histogramBinStates}
                     highlightState={primaryState}
-                    comparisonValue={showGroups ? null : comparisonHistValue}
-                    comparisonLabel={showGroups ? undefined : (comparisonLabel ?? undefined)}
-                    groupLines={showGroups ? histGroupLines : undefined}
+                    comparisonValue={nonNacionalGroups.length > 0 ? null : comparisonHistValue}
+                    comparisonLabel={nonNacionalGroups.length > 0 ? undefined : (comparisonLabel ?? undefined)}
+                    groupLines={nonNacionalGroups.length > 0 ? histGroupLines : undefined}
                   />
                 ) : (
                   <EmptyState
@@ -600,7 +553,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                       domainMin={Math.min(...histStateValues.map((d) => d.value))}
                       domainMax={Math.max(...histStateValues.map((d) => d.value))}
                       nationalMean={nationalMeanHist ?? undefined}
-                      groupMarkers={showGroups ? histGroupLines : undefined}
+                      groupMarkers={nonNacionalGroups.length > 0 ? histGroupLines : undefined}
                     />
                   </div>
                 )}
@@ -666,6 +619,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                 comparisonStates={comparisonGroups.filter(
                   (g) => g !== "nacional" && !g.startsWith("r:") && !g.startsWith("c:")
                 )}
+                groupStateColors={groupStateColors}
                 metricLabel={rankingMetricDef?.label ?? effectiveChartVarId ?? ""}
                 unit={rankingMetricDef?.unit}
                 view={rankingView}

@@ -17,6 +17,7 @@ import {
 } from "recharts";
 import EmptyState from "../EmptyState";
 import type { PcaResults } from "../../services/DataService";
+import { NACIONAL_COLOR } from "../sidebar/ComparisonGroupSelector";
 
 const PRIMARY_COLOR = "#1d4ed8";
 const GROUP_COLORS = ["#64748b", "#059669", "#7c3aed", "#dc2626", "#0891b2"];
@@ -106,10 +107,13 @@ export default function ComparisonRadarChart({
   }
 
   function buildGroupDefs(): GroupDef[] {
-    return groups.map((g, i) => ({
+    const nonNacional = groups.filter((g) => g !== "nacional");
+    return groups.map((g) => ({
       id: g,
       label: getGroupLabel(g),
-      color: GROUP_COLORS[i] ?? GROUP_COLORS[GROUP_COLORS.length - 1],
+      color: g === "nacional"
+        ? NACIONAL_COLOR
+        : GROUP_COLORS[nonNacional.indexOf(g)] ?? GROUP_COLORS[GROUP_COLORS.length - 1],
     }));
   }
 
@@ -184,6 +188,32 @@ export default function ComparisonRadarChart({
     );
   }
 
+  function renderLegend({ payload }: { payload?: Array<{ value?: string; color?: string }> }) {
+    if (!payload?.length) return null;
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 20px", padding: "8px 0 0 40px" }}>
+        {payload.map((entry, i) => {
+          const label = entry.value ?? "";
+          const color = entry.color ?? "#6b7280";
+          const isPrimary = label === primaryState;
+          return (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ display: "block", width: 20, height: 2.5, background: color, borderRadius: 2, flexShrink: 0 }} />
+              <span>
+                <p style={{ margin: 0, fontSize: 12, fontWeight: isPrimary ? 700 : 500, color: "var(--text-1)", lineHeight: 1.25 }}>
+                  {label}
+                </p>
+                {isPrimary && (
+                  <p style={{ margin: 0, fontSize: 10, color: "var(--text-3)", lineHeight: 1 }}>Estado seleccionado</p>
+                )}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
     <div>
       {/* Toggle pill */}
@@ -238,7 +268,7 @@ export default function ComparisonRadarChart({
                 strokeWidth={g.id === "nacional" ? 1.5 : 2}
               />
             ))}
-            <Legend wrapperStyle={{ fontSize: 12 }} />
+            <Legend content={renderLegend} />
             <Tooltip content={renderTooltip} />
           </RadarChart>
         </ResponsiveContainer>
@@ -265,7 +295,7 @@ export default function ComparisonRadarChart({
               unit=" pts"
             />
             <Tooltip content={renderTooltip} />
-            <Legend verticalAlign="top" wrapperStyle={{ fontSize: 12, paddingBottom: 12 }} />
+            <Legend content={renderLegend} verticalAlign="top" wrapperStyle={{ paddingBottom: 12 }} />
             <Bar
               dataKey={primaryState}
               fill={PRIMARY_COLOR}
