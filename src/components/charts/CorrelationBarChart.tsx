@@ -32,7 +32,7 @@ export default function CorrelationBarChart({ rows, significanceThreshold = 0.05
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={Math.max(240, data.length * 28)}>
+    <ResponsiveContainer width="100%" height={Math.max(360, data.length * 28)}>
       <BarChart data={data} layout="vertical" margin={{ top: 4, right: 40, bottom: 4, left: 4 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
         <XAxis

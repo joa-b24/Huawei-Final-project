@@ -21,6 +21,7 @@ type Props = {
   highlightState?: string;
   xUnit?: string;
   yUnit?: string;
+  groupStateColors?: Map<string, string>;
 };
 
 function scatterStrength(r2: number): { label: string; level: "strong" | "moderate" | "weak" | "none" } {
@@ -60,16 +61,19 @@ function detectOutliers(pts: ScatterPoint[]): Set<string> {
 }
 
 const CustomDot = (props: any) => {
-  const { cx, cy, payload, highlightState, outlierStates } = props;
+  const { cx, cy, payload, highlightState, outlierStates, groupStateColors } = props;
   const isHighlight = payload.state === highlightState;
   const isOutlier = outlierStates?.has(payload.state);
+  const groupColor: string | undefined = groupStateColors?.get(payload.state);
+  const fillColor = isOutlier ? "var(--text-3)" : isHighlight ? "var(--blue)" : (groupColor ?? "#93c5fd");
   return (
     <g opacity={isOutlier ? 0.3 : 1}>
       {isHighlight && !isOutlier && <circle cx={cx} cy={cy} r={10} fill="var(--blue)" opacity={0.15} />}
+      {groupColor && !isHighlight && !isOutlier && <circle cx={cx} cy={cy} r={7} fill={groupColor} opacity={0.18} />}
       <circle
         cx={cx} cy={cy}
         r={isHighlight ? 6 : 4}
-        fill={isOutlier ? "var(--text-3)" : isHighlight ? "var(--blue)" : "#93c5fd"}
+        fill={fillColor}
         stroke="#fff"
         strokeWidth={1}
       />
@@ -82,7 +86,7 @@ const CustomDot = (props: any) => {
   );
 };
 
-export default function PairScatterChart({ data, xLabel, yLabel, highlightState, xUnit = "", yUnit = "" }: Props) {
+export default function PairScatterChart({ data, xLabel, yLabel, highlightState, xUnit = "", yUnit = "", groupStateColors }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panX, setPanX] = useState(0);
@@ -263,7 +267,7 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
           <Scatter
             dataKey="y"
             data={data}
-            shape={(props: any) => <CustomDot {...props} highlightState={highlightState} outlierStates={excludeOutliers ? outlierStates : undefined} />}
+            shape={(props: any) => <CustomDot {...props} highlightState={highlightState} outlierStates={excludeOutliers ? outlierStates : undefined} groupStateColors={groupStateColors} />}
             isAnimationActive={false}
           />
         </ComposedChart>

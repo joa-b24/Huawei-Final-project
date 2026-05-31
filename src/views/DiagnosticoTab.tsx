@@ -16,6 +16,7 @@ import TabNarrative from "../components/feedback/TabNarrative";
 import { calcNationalMean, calcDelta, isStateOutlier, normalizeForRadar } from "../lib/stats";
 import type { RankingEntry, TipoValor } from "../types/dataStandard";
 import type { StateMetricRecord } from "../types/dataset";
+import ComparisonGroupSelector, { GROUP_COLORS } from "../components/sidebar/ComparisonGroupSelector";
 
 function guessTipoValor(metricId: string, unit: string): TipoValor {
   if (unit === "%" || metricId.endsWith("_pct")) return "percentage";
@@ -115,8 +116,6 @@ export default function DiagnosticoTab({ appData }: Props) {
     return result;
   }, [secondaryGroup, activeVariableIds, dataset.records, appData.pcaResults]);
 
-  // Same palette as ComparisonRadarChart — groups are indexed by position in comparisonGroups
-  const GROUP_COLORS = ["#64748b", "#059669", "#7c3aed", "#dc2626", "#0891b2"];
   type GroupLine = { value: number; label: string; color: string };
 
   const nonNacionalGroups = comparisonGroups.filter((g) => g !== "nacional");
@@ -490,18 +489,20 @@ export default function DiagnosticoTab({ appData }: Props) {
               style={{ marginTop: 16 }}
             >
               {activeVariableIds.length > 1 && (
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                  <span style={{ fontSize: 12, color: "var(--text-3)" }}>Variable:</span>
-                  <select
-                    className="ranking-var-select"
-                    value={effectiveChartVarId}
-                    onChange={(e) => setActiveChartVarId(e.target.value)}
-                  >
-                    {activeVariableIds.map((vid) => {
-                      const lbl = dataset.metricCatalog.find((m) => m.id === vid)?.label ?? vid;
-                      return <option key={vid} value={vid}>{lbl}</option>;
-                    })}
-                  </select>
+                <div className="var-pill-row">
+                  {activeVariableIds.map((vid) => {
+                    const lbl = dataset.metricCatalog.find((m) => m.id === vid)?.label ?? vid;
+                    return (
+                      <button
+                        key={vid}
+                        type="button"
+                        className={`var-pill-btn${effectiveChartVarId === vid ? " active" : ""}`}
+                        onClick={() => setActiveChartVarId(vid)}
+                      >
+                        {lbl}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
               {!municipalMode && (
@@ -549,8 +550,8 @@ export default function DiagnosticoTab({ appData }: Props) {
           {/* Two-column: distribution (left) + map (right) */}
           <div className="two-col">
             {/* Left: histogram + boxplot + narrative */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <section className="panel">
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, height: "100%" }}>
+              <section className="panel" style={{ flex: 1 }}>
                 <div className="ranking-panel-header">
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <p className="panel-title" style={{ margin: 0 }}>Distribución nacional</p>
@@ -889,119 +890,4 @@ function DiagnosticoNarrative({
   );
 }
 
-// ── Selector de grupos de comparación ────────────────────────────────────────
-
-const MAX_COMPARISON_GROUPS = 3;
-
-function ComparisonGroupSelector({
-  groups,
-  onGroupsChange,
-  regionGroupId,
-  primaryClusterGroupId,
-  primaryClusterLabel,
-  primaryState,
-  allStateNames,
-  groupColorMap,
-}: {
-  groups: string[];
-  onGroupsChange: (groups: string[]) => void;
-  regionGroupId: string | null;
-  primaryClusterGroupId: string | null;
-  primaryClusterLabel: string | null;
-  primaryState: string;
-  allStateNames: string[];
-  groupColorMap: Map<string, string>;
-}) {
-  function toggle(g: string) {
-    onGroupsChange(
-      groups.includes(g)
-        ? groups.filter((x) => x !== g)
-        : groups.length < MAX_COMPARISON_GROUPS
-        ? [...groups, g]
-        : groups
-    );
-  }
-
-  const stateGroups = groups.filter((g) => g !== "nacional" && !g.startsWith("r:") && !g.startsWith("c:"));
-  const availableStates = allStateNames.filter((s) => s !== primaryState && !groups.includes(s));
-
-  function GroupDot({ groupId }: { groupId: string }) {
-    const color = groupColorMap.get(groupId);
-    if (!color) return null;
-    return <span className="comparison-group-dot" style={{ background: color }} />;
-  }
-
-  return (
-    <div className="comparison-group-selector">
-      <label className="comparison-group-option">
-        <input
-          type="checkbox"
-          checked={groups.includes("nacional")}
-          onChange={() => toggle("nacional")}
-          disabled={groups.includes("nacional") && groups.length === 1}
-        />
-        <span>Nacional</span>
-      </label>
-
-      {regionGroupId && (
-        <label className="comparison-group-option">
-          <input
-            type="checkbox"
-            checked={groups.includes(regionGroupId)}
-            onChange={() => toggle(regionGroupId)}
-            disabled={!groups.includes(regionGroupId) && groups.length >= MAX_COMPARISON_GROUPS}
-          />
-          {groups.includes(regionGroupId) && <GroupDot groupId={regionGroupId} />}
-          <span>Región {regionGroupId.slice(2)}</span>
-        </label>
-      )}
-
-      {primaryClusterGroupId && (
-        <label className="comparison-group-option">
-          <input
-            type="checkbox"
-            checked={groups.includes(primaryClusterGroupId)}
-            onChange={() => toggle(primaryClusterGroupId)}
-            disabled={!groups.includes(primaryClusterGroupId) && groups.length >= MAX_COMPARISON_GROUPS}
-          />
-          {groups.includes(primaryClusterGroupId) && <GroupDot groupId={primaryClusterGroupId} />}
-          <span>{primaryClusterLabel}</span>
-        </label>
-      )}
-
-      <div className="comparison-state-picker">
-        <select
-          className="comparison-select comparison-select--sm"
-          value=""
-          onChange={(e) => {
-            const s = e.target.value;
-            if (s && !groups.includes(s) && groups.length < MAX_COMPARISON_GROUPS) {
-              onGroupsChange([...groups, s]);
-            }
-          }}
-          disabled={groups.length >= MAX_COMPARISON_GROUPS}
-        >
-          <option value="">+ Estado…</option>
-          {availableStates.map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
-        {stateGroups.map((s) => {
-          const color = groupColorMap.get(s);
-          return (
-            <span
-              key={s}
-              className="comparison-state-chip"
-              style={color ? { background: `color-mix(in srgb, ${color} 15%, transparent)`, color, borderColor: `color-mix(in srgb, ${color} 40%, transparent)` } : undefined}
-            >
-              {color && <span className="comparison-group-dot" style={{ background: color }} />}
-              {s}
-              <button type="button" onClick={() => toggle(s)} style={color ? { color } : undefined}>×</button>
-            </span>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
     

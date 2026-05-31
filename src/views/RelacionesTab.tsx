@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import type { AppData } from "../services/DataService";
 import CorrelationBarChart from "../components/charts/CorrelationBarChart";
@@ -11,6 +11,7 @@ import TabNarrative from "../components/feedback/TabNarrative";
 import { corrPValue } from "../lib/stats";
 import type { StateCard } from "../types/dataStandard";
 import type { StateMetricRecord } from "../types/dataset";
+import ComparisonGroupSelector, { GROUP_COLORS } from "../components/sidebar/ComparisonGroupSelector";
 
 function buildStateCardsFromRecords(records: StateMetricRecord[]): Record<string, StateCard> {
   const result: Record<string, StateCard> = {};
@@ -34,6 +35,54 @@ export default function RelacionesTab({ appData }: Props) {
 
   const [selectedX, setSelectedX] = useState<string | null>(null);
   const [selectedY, setSelectedY] = useState<string | null>(null);
+
+  // ── Grupos de comparación en scatter ─────────────────────────────────────
+  const [comparisonGroups, setComparisonGroups] = useState<string[]>(["nacional"]);
+  const [showGroups, setShowGroups] = useState(false);
+
+  useEffect(() => { if (!comparisonGroups.some((g) => g !== "nacional")) setShowGroups(false); }, [comparisonGroups]);
+
+  const stateRegionMap = useMemo(
+    () => Object.fromEntries(dataset.records.map((r) => [r.state, r.region ?? ""])),
+    [dataset.records]
+  );
+  const stateRegion = primaryState ? (stateRegionMap[primaryState] ?? null) : null;
+  const regionGroupId = stateRegion ? `r:${stateRegion}` : null;
+
+  const primaryPcaRecord = useMemo(
+    () => appData.pcaResults?.records.find((r) => r.state === primaryState) ?? null,
+    [appData.pcaResults, primaryState]
+  );
+  const primaryClusterGroupId = primaryPcaRecord !== null ? `c:${primaryPcaRecord.cluster}` : null;
+  const primaryClusterLabel = primaryPcaRecord !== null
+    ? (appData.pcaResults?.cluster_stats[String(primaryPcaRecord.cluster)]?.label ?? `Cluster ${primaryPcaRecord.cluster}`)
+    : null;
+
+  const allStateNames = useMemo(() => dataset.records.map((r) => r.state), [dataset.records]);
+
+  const groupColorMap = useMemo(() => {
+    const map = new Map<string, string>();
+    comparisonGroups.forEach((g, i) => map.set(g, GROUP_COLORS[i] ?? GROUP_COLORS[GROUP_COLORS.length - 1]));
+    return map;
+  }, [comparisonGroups]);
+
+  const nonNacionalGroups = comparisonGroups.filter((g) => g !== "nacional");
+
+  const groupStateColors = useMemo((): Map<string, string> => {
+    if (!showGroups || !nonNacionalGroups.length) return new Map();
+    const map = new Map<string, string>();
+    nonNacionalGroups.forEach((g) => {
+      const color = groupColorMap.get(g) ?? "#6b7280";
+      if (g.startsWith("r:")) {
+        dataset.records.filter((r) => r.region === g.slice(2)).forEach((r) => map.set(r.state, color));
+      } else if (g.startsWith("c:")) {
+        (appData.pcaResults?.cluster_stats[g.slice(2)]?.states ?? []).forEach((s) => map.set(s, color));
+      } else {
+        map.set(g, color);
+      }
+    });
+    return map;
+  }, [showGroups, nonNacionalGroups, groupColorMap, dataset.records, appData.pcaResults]);
 
   const xVarId = selectedX && activeVariableIds.includes(selectedX)
     ? selectedX
@@ -119,7 +168,7 @@ export default function RelacionesTab({ appData }: Props) {
         <>
           <div className="corr-var-selectors">
             <div className="corr-var-selector">
-              <span className="corr-var-selector__label">Eje Y — vertical</span>
+              <span className="corr-var-selector__label">Variable de objetivo</span>
               <select
                 className="comparison-select"
                 value={yVarId ?? ""}
@@ -131,7 +180,7 @@ export default function RelacionesTab({ appData }: Props) {
               </select>
             </div>
             <div className="corr-var-selector">
-              <span className="corr-var-selector__label">Eje X — horizontal</span>
+              <span className="corr-var-selector__label">Variable de dispersión (X)</span>
               <select
                 className="comparison-select"
                 value={xVarId ?? ""}
@@ -143,6 +192,32 @@ export default function RelacionesTab({ appData }: Props) {
               </select>
             </div>
           </div>
+
+        <section className="comparison-panel" style={{ marginTop: 0, marginBottom: 16 }}>
+          <div className="comparison-panel__header">
+            <span className="comparison-panel__title">Grupos de comparación (scatter)</span>
+            {nonNacionalGroups.length > 0 && (
+              <button
+                type="button"
+                className={`groups-toggle-btn${showGroups ? " active" : ""}`}
+                onClick={() => setShowGroups((v) => !v)}
+                title="Colorear puntos del scatter por grupo"
+              >
+                Mostrar en scatter
+              </button>
+            )}
+          </div>
+          <ComparisonGroupSelector
+            groups={comparisonGroups}
+            onGroupsChange={setComparisonGroups}
+            regionGroupId={regionGroupId}
+            primaryClusterGroupId={primaryClusterGroupId}
+            primaryClusterLabel={primaryClusterLabel}
+            primaryState={primaryState}
+            allStateNames={allStateNames}
+            groupColorMap={groupColorMap}
+          />
+        </section>
 
         <div className="two-col">
           <section className="panel">
@@ -213,6 +288,7 @@ export default function RelacionesTab({ appData }: Props) {
               highlightState={primaryState ?? undefined}
               xUnit={xUnit}
               yUnit={yUnit}
+              groupStateColors={showGroups ? groupStateColors : undefined}
             />
           </section>
         </div>

@@ -782,7 +782,8 @@ select {
   font-size: 13px; color: var(--text-1); background: var(--surface);
 }
 
-.var-chip-list { display: flex; flex-direction: column; gap: 4px; max-height: 420px; overflow-y: auto; }
+.var-chip-list { display: flex; flex-direction: column; gap: 4px; max-height: 415px; overflow-y: auto; overflow-x: hidden; }
+.var-chip-divider { height: 1px; background: var(--border); margin: 4px 0; flex-shrink: 0; }
 .var-chip-clear { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: 11px; color: var(--text-3); cursor: pointer; text-align: left; transition: all 0.1s; }
 .var-filter-row { display: flex; gap: 4px; margin: 4px 0; }
 .var-filter-btn { flex: 1; padding: 3px 0; font-size: 10px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: transparent; color: var(--text-3); cursor: pointer; transition: all 0.12s; }
@@ -907,13 +908,18 @@ select {
 .ranking-panel-header { margin-bottom: 16px; padding-right: 120px; }
 
 .ranking-var-select { font-size: 12px; font-weight: 600; color: var(--text-2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 5px; background: var(--surface-plain); cursor: pointer; max-width: 320px; margin-top: 10px; }
+.var-pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.var-pill-btn { padding: 4px 11px; border-radius: 99px; border: 1px solid var(--border); background: transparent; color: var(--text-2); font-size: 11px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: border-color 0.12s, color 0.12s, background 0.12s; }
+.var-pill-btn:hover { border-color: var(--blue); color: var(--blue); }
+.var-pill-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
 
 /* Toggle pill */
 .toggle-pill { display: inline-flex; ; border: 2px solid var(--blue); border-radius: 100px; overflow: hidden; flex-shrink: 0; position: absolute; top: 18px; right: 24px; }
 .toggle-pill__btn { padding: 2px 14px; background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-3); white-space: nowrap; transition: background 0.12s, color 0.12s; }
 .toggle-pill__btn.active { background: var(--blue); color: #fff; }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px;}
-.two-col > .panel { margin-top: 24; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; margin-top: 24px; }
+.two-col > .panel,
+.two-col > div > .panel { margin-top: 0; }
 
 @media (max-width: 900px) {
   .dashboard-block-header {
@@ -961,7 +967,16 @@ select {
 .catalog-browser { display: flex; flex-direction: column; gap: 16px; }
 .catalog-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .catalog-controls .state-search { flex: 1; min-width: 180px; }
-.catalog-controls .comparison-select { min-width: 160px; width: auto; flex-shrink: 0; }
+/* Column header filters */
+.catalog-col-header { cursor: pointer; position: relative; user-select: none; white-space: nowrap; }
+.catalog-col-header:hover { color: var(--blue); }
+.catalog-col-header.filtered { color: var(--blue); }
+.catalog-col-header__inner { display: inline-flex; align-items: center; gap: 2px; }
+.col-filter-backdrop { position: fixed; inset: 0; z-index: 99; }
+.catalog-col-dropdown { position: absolute; top: calc(100% + 4px); left: 0; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.14); z-index: 100; padding: 4px; }
+.catalog-col-dropdown button { display: block; width: 100%; text-align: left; padding: 5px 10px; font-size: 12px; border: none; background: none; cursor: pointer; border-radius: 4px; color: var(--text-2); }
+.catalog-col-dropdown button:hover { background: var(--blue-light); color: var(--blue); }
+.catalog-col-dropdown button.active { color: var(--blue); font-weight: 600; background: var(--blue-light); }
 .catalog-actions { display: flex; gap: 8px; margin-left: auto; }
 .catalog-action-icon { width: 32px; height: 32px; padding: 0 !important; display: inline-flex !important; align-items: center; justify-content: center; }
 .catalog-action-icon svg { display: block; }

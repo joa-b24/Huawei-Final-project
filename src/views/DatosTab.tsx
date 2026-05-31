@@ -100,6 +100,19 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
     ).length;
   }, [selectedVar, appData.municipalManifest]);
 
+  const coverageMap = useMemo(() => {
+    const munVarIds = new Set<string>();
+    if (appData.municipalManifest) {
+      Object.values(appData.municipalManifest.states).forEach((s) => s.variables.forEach((v) => munVarIds.add(v)));
+    }
+    const histVarIds = new Set(appData.temporalVariables ?? []);
+    const map = new Map<string, { hasMunicipal: boolean; hasHistorical: boolean }>();
+    for (const m of appData.dataset.metricCatalog) {
+      map.set(m.id, { hasMunicipal: munVarIds.has(m.id), hasHistorical: histVarIds.has(m.id) });
+    }
+    return map;
+  }, [appData.municipalManifest, appData.temporalVariables, appData.dataset.metricCatalog]);
+
   const [temporalYears, setTemporalYears] = useState<number[]>([]);
   useEffect(() => {
     if (mode !== "panel" || !selectedVar) { setTemporalYears([]); return; }
@@ -121,6 +134,7 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
             catalog={catalog}
             editedIds={editedIds}
             hiddenIds={hiddenIds}
+            coverageMap={coverageMap}
             onSelectVariable={openPanel}
             onNewOperation={openWizardNew}
             onToggleHidden={handleToggleHidden}
