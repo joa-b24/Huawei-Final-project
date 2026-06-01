@@ -1,7 +1,7 @@
 # Manual de Usuario - Observatorio de Indicadores Territoriales
 
-**Versión:** 1.4 | **Proyecto:** Huawei México - Dashboard Territorial  
-**Última actualización:** Mayo 2026
+**Versión:** 1.5 | **Proyecto:** Huawei México - Dashboard Territorial  
+**Última actualización:** Junio 2026
 
 ---
 
@@ -10,6 +10,7 @@
 - [Manual de Usuario - Observatorio de Indicadores Territoriales](#manual-de-usuario---observatorio-de-indicadores-territoriales)
   - [Tabla de contenidos](#tabla-de-contenidos)
   - [1. Requisitos previos](#1-requisitos-previos)
+    - [Alternativa: GitHub Codespaces (sin instalación local)](#alternativa-github-codespaces-sin-instalación-local)
   - [2. Instalación y primer arranque](#2-instalación-y-primer-arranque)
   - [3. Navegación de la interfaz](#3-navegación-de-la-interfaz)
   - [4. Guía por sección de análisis](#4-guía-por-sección-de-análisis)
@@ -36,45 +37,53 @@ Las siguientes herramientas deben estar instaladas en el sistema. Son dependenci
 | npm | 9.x | `npm --version` | incluido con Node.js |
 | Python | 3.9+ | `python3 --version` | [python.org/downloads](https://www.python.org/downloads/) |
 | Git | cualquier reciente | `git --version` | [git-scm.com](https://git-scm.com) |
-| Git LFS | cualquier reciente | `git lfs --version` | [git-lfs.com](https://git-lfs.com) |
+| Git LFS *(opcional)* | cualquier reciente | `git lfs --version` | [git-lfs.com](https://git-lfs.com) |
 
-> **¿No tienes alguna herramienta instalada?**  
-> Instalar Node.js desde [nodejs.org](https://nodejs.org) (incluye npm automáticamente). Para Python, descargar el instalador desde [python.org](https://www.python.org/downloads/) — marcar la casilla **"Add Python to PATH"** durante la instalación en Windows. Git LFS: una vez instalado Git, ejecutar `git lfs install` una sola vez.
+**Notas de instalación:**
+- Node.js incluye npm automáticamente.
+- En Windows, marcar **"Add Python to PATH"** durante la instalación de Python.
+- **Git LFS solo es necesario si se van a modificar o subir archivos de datos pesados** (GeoJSON, JSONs municipales). Para únicamente ejecutar y explorar el dashboard no se requiere.
 
 ### Alternativa: GitHub Codespaces (sin instalación local)
 
-Si no es posible instalar las herramientas localmente, el repositorio puede ejecutarse directamente en el navegador usando GitHub Codespaces:
+GitHub Codespaces permite ejecutar el proyecto directamente en el navegador sin instalar nada. El entorno ya incluye Node.js, Python, Git y Git LFS preconfigurados.
 
 1. Abrir [github.com/joa-b24/Huawei-Final-project](https://github.com/joa-b24/Huawei-Final-project)
 2. Hacer clic en **Code → Codespaces → Create codespace on main**
-3. Esperar a que el entorno cargue (~1-2 min), luego ejecutar `npm install && npm run dev` en la terminal integrada
-4. Codespaces abrirá automáticamente una URL pública para acceder al dashboard
+3. Esperar a que el entorno cargue (~2-3 min)
+4. En la terminal integrada, ejecutar:
+   ```bash
+   npm install && npm run dev
+   ```
+5. Codespaces genera automáticamente una URL pública para acceder al dashboard — aparece como notificación o en la pestaña **Ports**
 
-> Codespaces tiene un límite de horas gratuitas por mes en cuentas GitHub gratuitas. Para uso prolongado se recomienda la instalación local.
+> Codespaces tiene un límite de horas gratuitas por mes en cuentas GitHub gratuitas (actualmente 120 h/mes en el plan Free). Para uso prolongado se recomienda la instalación local.
 
 ---
 
 ## 2. Instalación y primer arranque
 
 ```bash
-# 1. Clonar y descargar archivos grandes
+# 1. Clonar el repositorio
 git clone https://github.com/joa-b24/Huawei-Final-project.git
 cd Huawei-Final-project
+
+# 2. Descargar archivos de datos pesados (solo si tienes Git LFS instalado)
 git lfs install && git lfs pull
 
-# 2. Instalar dependencias del frontend
+# 3. Instalar dependencias del frontend
 npm install
 
-# 3. Levantar la aplicación
+# 4. Levantar la aplicación
 npm run dev
 ```
 
 La aplicación estará disponible en `http://localhost:5173`.
 
-> Los archivos de datos ya están incluidos en el repositorio (`public/data/`). No es necesario ejecutar el pipeline para usar el dashboard.
+> Los archivos de datos ya están incluidos en el repositorio (`public/data/`). El paso de Git LFS descarga el contenido real de archivos pesados como el GeoJSON nacional y los JSONs municipales — si lo omites, esos archivos llegan como punteros de texto vacíos y los mapas no cargarán.
 
 <!-- SCREENSHOT: Vista inicial del dashboard al cargar — mapa de México coloreado, sidebar con chips de variables, KPI cards en la parte superior -->
-> 📸 *[Imagen: Vista inicial del dashboard]*
+> *[Imagen: Vista inicial del dashboard]*
 
 Si al abrir el dashboard no se ven el mapa, los KPI cards o el sidebar, revisar la [sección de problemas frecuentes](#7-solución-de-problemas-frecuentes).
 
@@ -84,19 +93,19 @@ Si al abrir el dashboard no se ven el mapa, los KPI cards o el sidebar, revisar 
 
 La interfaz se divide en dos áreas:
 
-- **Sidebar:** que permite seleccionar un estado foco y variables.
-- **Area de análisis:** 4 pestañas interactivas. Diagnóstico, Impacto, Territorial y Evolución, además de pestañas no interactivas como Estructura, Datos o Ayuda.
+- **Sidebar:** selección de estado foco, variables activas y grupos de comparación.
+- **Área de análisis:** pestañas interactivas — Diagnóstico, Impacto, Territorial y Evolución — y pestañas informativas como Estructura, Datos y Ayuda.
 
 **Seleccionar un estado:**  
 Escribir en el buscador (acepta texto parcial, ej. `"jal"` para Jalisco) o hacer clic directamente sobre el mapa. El estado seleccionado aparece como etiqueta azul con botón `×` para deseleccionar.
 
 <!-- SCREENSHOT: Sidebar con un estado seleccionado (etiqueta azul) y varios chips de variables activos con badges MUN/HIST -->
-> 📸 *[Imagen: Sidebar con estado y variables seleccionados]*
+> *[Imagen: Sidebar con estado y variables seleccionados]*
 
 **Seleccionar variables:**  
-Las variables disponibles aparecen como chips debajo del buscador. Activar o desactivar con clic. Máximo 5 activas simultáneamente.
+Las variables disponibles aparecen como chips. Activar o desactivar con clic. Máximo 5 activas simultáneamente.
 
-Cada chip puede mostrar una o dos insignias que indican qué tipo de datos extra están disponibles para esa variable:
+Cada chip puede mostrar una o dos insignias que indican qué tipo de datos extra están disponibles:
 
 | Insignia | Color | Significado |
 |---|---|---|
@@ -105,9 +114,19 @@ Cada chip puede mostrar una o dos insignias que indican qué tipo de datos extra
 
 Usar los filtros **Todas / Municipal / Histórica** sobre los chips para mostrar únicamente las variables con esa cobertura.
 
-Las variables activas determinan qué se muestra en todos los gráficos. La variable que se visualiza en los paneles de distribución, mapa y ranking se selecciona de forma unificada desde la sección **"Análisis de variable"** — cambiarla ahí sincroniza todos los paneles automáticamente.
+**Rol de las variables:**  
+Cada variable tiene un rol que define cómo se interpretan sus valores: `higher_better` (más es mejor, ej. cobertura de internet) o `lower_better` (menos es mejor, ej. pobreza). Este rol determina el color de los deltas en las KPI cards y el orden de los rankings — siempre se ordenan de "mejor desempeño" a "peor", independientemente de si los valores son más altos o más bajos.
 
-> El sidebar se oculta automáticamente al abrir las pestañas **Datos** y **Estructura** para aprovechar el ancho completo de pantalla. Vuelve a aparecer al regresar a Diagnóstico, Impacto o Evolución.
+**Grupos de comparación:**  
+En el sidebar, debajo de las variables, se pueden activar hasta 3 grupos de referencia para superponer en los gráficos del tab Diagnóstico:
+- **Nacional:** promedio de los 32 estados
+- **Región:** promedio de los estados de la misma región geográfica
+- **Estado individual:** seleccionar uno o más estados con el dropdown
+
+**Indicador de advertencia `⚠`:**  
+Aparece en KPI cards y en el gráfico de distribución cuando el valor del estado es un atípico estadístico según el método IQR (está por debajo de Q1 − 1.5·IQR o por encima de Q3 + 1.5·IQR respecto a los 32 estados). Un estado atípico se aleja significativamente del rango donde se concentra la mayoría del país — puede ser positivo (líder claro) o negativo (rezago severo) dependiendo del rol de la variable.
+
+> El sidebar se oculta automáticamente al abrir las pestañas **Datos** y **Estructura** para aprovechar el ancho completo. Vuelve al regresar a Diagnóstico, Impacto o Evolución.
 
 ---
 
@@ -121,23 +140,25 @@ Perfil del estado seleccionado y su posición respecto al resto del país. Es la
 
 **KPI Cards**
 
-Cada card muestra el valor del estado para una variable activa y un delta respecto a la media nacional. El color del delta indica si el estado está en ventaja (verde) o desventaja (rojo) según la naturaleza de la variable — para métricas donde más es mejor (ej. cobertura de internet), un valor superior a la media aparece en verde; para métricas donde menos es mejor (ej. pobreza), la lógica se invierte. Un ícono `⚠` y borde ámbar indican un valor atípico.
+Cada card muestra el valor del estado para una variable activa junto con:
 
-Las cards muestran un distintivo **MUN** cuando la variable tiene datos municipales disponibles para el estado actualmente seleccionado.
+- **Delta:** diferencia respecto a la media nacional, en puntos de la unidad de la variable. Verde si el estado está en ventaja según el rol de la variable; rojo si está en desventaja.
+- **Badge MUN:** indica que la variable tiene cobertura municipal para el estado seleccionado — el botón "Ver municipios" estará disponible para esa variable.
+- **Indicador `⚠` (atípico):** el valor del estado cae fuera del rango esperado por IQR. El borde de la card cambia a ámbar. Puede significar liderazgo claro o rezago severo — leer junto al delta para interpretar la dirección.
 
 <!-- SCREENSHOT: Fila de KPI cards mostrando deltas en verde/rojo, al menos una con ícono de atípico y una con badge MUN -->
-> 📸 *[Imagen: KPI cards con deltas, marcador de atípico y badge MUN]*
+> *[Imagen: KPI cards con deltas, marcador de atípico y badge MUN]*
 
 ---
 
 **Perfil comparativo (Radar / Barras)**
 
-Gráfico de araña con las variables activas. El estado seleccionado siempre aparece en azul. Todos los valores están normalizados a escala 0–100 para que variables con unidades distintas sean comparables en el mismo gráfico.
+Gráfico de araña con las variables activas. El estado seleccionado siempre aparece en azul. Todos los valores están normalizados a escala 0–100 para que variables con unidades distintas sean comparables en el mismo gráfico (100 = mejor valor entre los 32 estados para esa variable).
 
-Usar el toggle **Radar | Barras** para cambiar entre representaciones. Los grupos de comparación activos (Nacional, Región, estado individual) aparecen superpuestos en ambas vistas.
+Los grupos de comparación activados en el sidebar (Nacional, Región, estado individual) aparecen superpuestos como líneas adicionales. Usar el toggle **Radar | Barras** para cambiar entre representaciones.
 
 <!-- SCREENSHOT: Gráfico de radar con el estado en azul y comparación nacional superpuesta -->
-> 📸 *[Imagen: Radar comparativo con grupos de comparación]*
+> *[Imagen: Radar comparativo con grupos de comparación]*
 
 ---
 
@@ -170,7 +191,7 @@ El botón **"Ver municipios →"** aparece debajo de "Análisis de variable" ún
 Cada panel tiene su propio selector de variable, por lo que es posible ver distribución, mapa y ranking de variables distintas al mismo tiempo. Para volver a la vista nacional usar el botón **"← Vista nacional"**.
 
 <!-- SCREENSHOT: Vista municipal activa — mapa con zoom al estado, histograma de municipios y ranking municipal -->
-> 📸 *[Imagen: Vista municipal con mapa con zoom y ranking de municipios]*
+> *[Imagen: Vista municipal con mapa con zoom y ranking de municipios]*
 
 > Los datos municipales disponibles dependen del estado y de las variables activas. No todas las variables tienen cobertura municipal completa.
 
@@ -189,7 +210,7 @@ Agrupa los estados según similitud de perfil multidimensional usando clustering
 **Mapa de clusters:** coroplético coloreado por cluster, mostrando la distribución geográfica de los grupos.
 
 <!-- SCREENSHOT: Sección Estructura con scatter PCA y mapa de clusters visibles, nota metodológica en la parte superior -->
-> 📸 *[Imagen: Vista completa de Estructura con nota metodológica y scatter PCA]*
+> *[Imagen: Vista completa de Estructura con nota metodológica y scatter PCA]*
 
 ---
 
@@ -225,12 +246,11 @@ Muestra el comportamiento histórico de los indicadores del estado seleccionado.
 
 1. Colocar el archivo fuente en `data/raw/`
 2. Crear o adaptar un script en `scripts/etl/`
-3. Registrar las variables en `data/catalogs/variables.catalog.json` (`label`, `unit`, `direction`)
-4. Ejecutar el pipeline y publicar:
+3. Registrar las variables en `data/catalogs/variables.catalog.json` con los campos `label`, `unit` y `direction` (`higher_better` o `lower_better`)
+4. Ejecutar el pipeline:
    ```bash
    python3 scripts/etl/build_<fuente>.py
    npm run data:build:analytics
-   npm run data:publish
    ```
 
 ### Variables municipales
@@ -299,7 +319,7 @@ El estado seleccionado puede no tener datos municipales para las variables activ
 Verificar que existen los archivos en `public/data/geo/municipios/` y `public/data/outputs/municipal/` para el estado en cuestión.
 
 **El sidebar no muestra variables o aparece vacío**  
-`public/data/` puede estar incompleto. Ejecutar `npm run data:publish` para restaurar los archivos desde `data/processed/`.
+`public/data/` puede estar incompleto o los archivos llegaron como punteros LFS. Verificar con `git lfs pull` y, si el problema persiste, ejecutar `npm run data:build:analytics` para regenerar los archivos de variables.
 
 **Error `ModuleNotFoundError` al ejecutar el pipeline**  
 ```bash
