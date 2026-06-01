@@ -16,7 +16,7 @@ import TabNarrative from "../components/feedback/TabNarrative";
 import { calcNationalMean, calcDelta, isStateOutlier, normalizeForRadar } from "../lib/stats";
 import type { RankingEntry, TipoValor } from "../types/dataStandard";
 import type { StateMetricRecord } from "../types/dataset";
-import { GROUP_COLORS } from "../components/sidebar/ComparisonGroupSelector";
+import { GROUP_COLORS, NACIONAL_COLOR } from "../components/sidebar/ComparisonGroupSelector";
 
 function guessTipoValor(metricId: string, unit: string): TipoValor {
   if (unit === "%" || metricId.endsWith("_pct")) return "percentage";
@@ -106,10 +106,12 @@ export default function DiagnosticoTab({ appData }: Props) {
 
   const nonNacionalGroups = comparisonGroups.filter((g) => g !== "nacional");
 
-  // Single source of truth: groupId → color, indexed by position in comparisonGroups (matches radar)
   const groupColorMap = useMemo(() => {
     const map = new Map<string, string>();
-    comparisonGroups.forEach((g, i) => map.set(g, GROUP_COLORS[i] ?? GROUP_COLORS[GROUP_COLORS.length - 1]));
+    map.set("nacional", NACIONAL_COLOR);
+    comparisonGroups
+      .filter((g) => g !== "nacional")
+      .forEach((g, i) => map.set(g, GROUP_COLORS[i] ?? GROUP_COLORS[GROUP_COLORS.length - 1]));
     return map;
   }, [comparisonGroups]);
 

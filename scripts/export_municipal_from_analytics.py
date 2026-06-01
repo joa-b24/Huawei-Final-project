@@ -384,6 +384,63 @@ def write_manifest(state_var_ids: dict[str, list[str]]) -> None:
     print(f"\n  municipal_manifest.json: {len(state_var_ids)} estados, {total} variables únicas")
 
 
+_ANALYTICS_SLIM_FIELDS = [
+    "cvegeo", "cve_ent", "nom_ent", "nom_mun",
+    "pobtot_iter",
+    "graproes", "pct_sin_escolaridad_15ymas", "pct_analfabetismo_15ymas", "pct_posbasica_18ymas",
+    "pct_pob_0_14", "pct_pob_15_64", "pct_pob_65_mas",
+    "pct_mujeres", "pct_hombres", "indice_masculinidad",
+    "loc_pct_4g_garantizada", "pob_pct_4g_garantizada",
+    "loc_pct_movil", "pob_pct_movil",
+    "loc_pct_5g_garantizada", "pob_pct_5g_garantizada",
+    "localidades_n",
+    "irs_indice", "irs_grado_texto",
+    "irs_pct_viv_sin_agua", "irs_pct_viv_sin_drenaje", "irs_pct_viv_sin_luz",
+    "irs_pct_sin_derechohabiencia",
+    "ookla_int_avg_speed", "ookla_pct_4g", "ookla_pct_5g", "ookla_cubierto",
+    "brecha_4g_pp", "brecha_3g_pp",
+    "cluster_id", "cluster_label",
+    "rf_4g_esperada", "rf_brecha_4g_pp", "rf_factor_principal",
+]
+
+
+def embed_municipalities(analytics: list[dict]) -> None:
+    """Embebe registros wide-format de municipios dentro de {state_code}.json existente.
+
+    Añade la clave 'municipalities' al archivo que ya contiene 'variables'.
+    Elimina archivos *.analytics.json legacy si existen.
+    """
+    by_state: dict[str, list[dict]] = {}
+    for rec in analytics:
+        cve_ent = str(rec.get("cve_ent", "")).zfill(2)
+        state_code = INEGI_TO_CODE.get(cve_ent)
+        if not state_code:
+            continue
+        slim = {k: rec[k] for k in _ANALYTICS_SLIM_FIELDS if k in rec}
+        by_state.setdefault(state_code, []).append(slim)
+
+    today = str(date.today())
+    total_kb = 0
+    for state_code, records in sorted(by_state.items()):
+        state_path = MUNICIPAL_DIR / f"{state_code}.json"
+        if state_path.exists():
+            state_data = json.loads(state_path.read_text(encoding="utf-8"))
+        else:
+            state_data = {"state_code": state_code, "variables": {}}
+        state_data["municipalities"] = records
+        state_data["updated_at"] = today
+        _write_json(state_path, state_data)
+        kb = state_path.stat().st_size // 1024
+        total_kb += kb
+        print(f"  {state_code}.json: {len(records)} municipios  {kb} KB")
+
+    for stale in sorted(MUNICIPAL_DIR.glob("*.analytics.json")):
+        stale.unlink()
+        print(f"  [rm] {stale.name}")
+
+    print(f"  Total: {total_kb} KB ({total_kb // 1024} MB)")
+
+
 def main() -> None:
     print("Leyendo municipios_master_analytics.json...")
     analytics_path = ANALYTICS_PATH if ANALYTICS_PATH.exists() else (
@@ -409,6 +466,9 @@ def main() -> None:
 
     print("\nAgregando a nivel estatal en combined.json...")
     aggregate_to_state(by_state)
+
+    print("\nEmbebiendo municipalities en archivos por estado...")
+    embed_municipalities(analytics)
 
     print("\nEjecutando analytics...")
     trigger_analytics(sorted(state_var_ids.keys()))

@@ -18,7 +18,7 @@ type Props = {
   description: string;
   points: LorenzPoint[];
   gini: number;
-  nationalGini: number;
+  nationalGini?: number;
 };
 
 function coverageShareAtHalfPopulation(points: { popShare: number; lorenz: number }[]): number | null {
@@ -53,7 +53,9 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
 
   const halfCoverage = coverageShareAtHalfPopulation(data);
   const deltaNational =
-    Number.isFinite(gini) && Number.isFinite(nationalGini) ? gini - nationalGini : Number.NaN;
+    Number.isFinite(gini) && nationalGini != null && Number.isFinite(nationalGini)
+      ? gini - nationalGini
+      : Number.NaN;
   const colors = giniColor(gini);
 
   return (
@@ -97,7 +99,7 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
           {Number.isFinite(nationalGini) && (
             <div style={{ background: "#f1f5f9", borderRadius: 8, padding: "6px 12px", fontSize: "0.82rem", color: "#334155" }}>
               <span style={{ color: "#94a3b8" }}>Nacional </span>
-              <strong>{nationalGini.toFixed(3)}</strong>
+              <strong>{nationalGini!.toFixed(3)}</strong>
             </div>
           )}
           {Number.isFinite(deltaNational) && (

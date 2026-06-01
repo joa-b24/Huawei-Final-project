@@ -13,11 +13,11 @@ import RelacionesTab from "../views/RelacionesTab";
 import EstructuraTab from "../views/EstructuraTab";
 import EvolucionTab from "../views/EvolucionTab";
 import DatosTab from "../views/DatosTab";
-import StateTerritorialAnalysis from "../components/state-analysis/StateTerritorialAnalysis";
+import TerritorialTab from "../views/TerritorialTab";
 import HelpModal from "../components/feedback/HelpModal";
 
 function buildTabs(appData: AppData, activeVarIds: string[]): Tab[] {
-  const hasMunicipal = appData.dataset.municipios.length > 0;
+  const hasMunicipal = appData.municipalManifest !== null && Object.keys(appData.municipalManifest.states).length > 0;
   const temporalSet = new Set(appData.temporalVariables ?? []);
   const hasTemporalData = activeVarIds.some((id) => temporalSet.has(id));
   return [
@@ -202,10 +202,7 @@ function Dashboard({ appData }: { appData: AppData }) {
               <EvolucionTab appData={appData} />
             </TabPanel>
             <TabPanel id="territorial" activeTab={state.activeTab}>
-              <StateTerritorialAnalysis
-                stateAnalytics={appData.dataset.stateAnalytics}
-                municipios={appData.dataset.municipios}
-              />
+              <TerritorialTab appData={appData} />
             </TabPanel>
           </>
         )}

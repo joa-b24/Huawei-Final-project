@@ -9,7 +9,7 @@ import InfoTooltip from "../components/feedback/InfoTooltip";
 import InsightBox from "../components/feedback/InsightBox";
 import TabNarrative from "../components/feedback/TabNarrative";
 import { corrPValue } from "../lib/stats";
-import { GROUP_COLORS } from "../components/sidebar/ComparisonGroupSelector";
+import { GROUP_COLORS, NACIONAL_COLOR } from "../components/sidebar/ComparisonGroupSelector";
 import type { StateCard } from "../types/dataStandard";
 import type { StateMetricRecord } from "../types/dataset";
 
@@ -38,7 +38,10 @@ export default function RelacionesTab({ appData }: Props) {
 
   const groupColorMap = useMemo(() => {
     const map = new Map<string, string>();
-    comparisonGroups.forEach((g, i) => map.set(g, GROUP_COLORS[i] ?? GROUP_COLORS[GROUP_COLORS.length - 1]));
+    map.set("nacional", NACIONAL_COLOR);
+    comparisonGroups
+      .filter((g) => g !== "nacional")
+      .forEach((g, i) => map.set(g, GROUP_COLORS[i] ?? GROUP_COLORS[GROUP_COLORS.length - 1]));
     return map;
   }, [comparisonGroups]);
 

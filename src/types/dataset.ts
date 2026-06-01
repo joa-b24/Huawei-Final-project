@@ -1,5 +1,4 @@
-import type { MunicipioAnalyticsRecord, StateAnalyticsPayload } from "./analytics";
-
+import type { StateAnalyticsPayload } from "./analytics";
 export type { MunicipioAnalyticsRecord, StateAnalyticsPayload } from "./analytics";
 
 export type MetricDefinition = {
@@ -26,5 +25,4 @@ export type DashboardDataset = {
   records: StateMetricRecord[];
   /** Analítica territorial (pipeline municipal); puede ser null si falla la carga. */
   stateAnalytics: StateAnalyticsPayload | null;
-  municipios: MunicipioAnalyticsRecord[];
 };
