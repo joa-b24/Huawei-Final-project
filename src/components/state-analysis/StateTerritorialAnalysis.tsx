@@ -8,14 +8,13 @@ import EmptyState from "../EmptyState";
 import TabNarrative from "../feedback/TabNarrative";
 import LorenzCurveChart from "./LorenzCurveChart";
 import MunicipioScatterExplore from "./MunicipioScatterExplore";
-import MunicipiosTable from "./MunicipiosTable";
 import MunicipioRfDiagnostico from "./MunicipioRfDiagnostico";
 import {
   TERRITORIAL_VARIABLES,
   CONTEXTUAL_METRICS,
   VAR_ID_TO_SCATTER_KEY,
 } from "./analysisMetrics";
-import type { TerritorialVarKey } from "./analysisMetrics";
+import type { TerritorialVarKey, ScatterMetricKey } from "./analysisMetrics";
 
 export type { AnalysisMetricKey } from "./analysisMetrics";
 export { ANALYSIS_METRICS } from "./analysisMetrics";
@@ -145,35 +144,30 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
     );
   }
 
+  if (availableVars.length === 0) {
+    return (
+      <EmptyState
+        title="Sin variables territoriales disponibles"
+        description="Activa en el panel lateral una variable con datos municipales (4G, móvil, rezago social u Ookla) para ver el análisis de desigualdad intraestatal."
+      />
+    );
+  }
+
   const hasRf = (stateRow.rf_feature_importances?.length ?? 0) > 0;
 
   return (
     <div className="tab-content">
       {/* ── Variable selector ── */}
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
+      <div className="var-pill-row">
         {availableVars.map((v) => {
           const isActive = activeVariableIds.some((id) => VAR_ID_TO_SCATTER_KEY[id] === v.key);
           const isSelected = v.key === selectedVarKey;
           return (
             <button
               key={v.key}
+              className={`var-pill-btn${isSelected ? " active" : ""}`}
               onClick={() => setSelectedVarKey(v.key)}
-              style={{
-                padding: "5px 12px",
-                borderRadius: 6,
-                border: isSelected
-                  ? "2px solid var(--accent, #2563eb)"
-                  : "1px solid var(--border, #e2e8f0)",
-                background: isSelected
-                  ? "var(--accent, #2563eb)"
-                  : isActive
-                  ? "var(--accent-soft, #eff6ff)"
-                  : "white",
-                color: isSelected ? "white" : "var(--text-1, #0f172a)",
-                fontSize: 12,
-                fontWeight: isSelected ? 600 : 400,
-                cursor: "pointer",
-              }}
+              type="button"
             >
               {isActive && !isSelected ? "★ " : ""}
               {v.label}
@@ -231,12 +225,21 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
 
       <section className="panel">
         <p className="panel-title">Explorador de dispersión municipal</p>
-        <MunicipioScatterExplore municipios={municipiosEstado} activeVariableIds={activeVariableIds} />
+        <MunicipioScatterExplore
+          municipios={municipiosEstado}
+          activeVariableIds={activeVariableIds}
+          fixedYKey={selectedVar.key as ScatterMetricKey}
+        />
       </section>
 
       <section className="panel">
-        <p className="panel-title">Tabla de municipios</p>
-        <MunicipiosTable municipios={municipiosEstado} />
+        <p className="panel-title">Extremos municipales — {selectedVar.label}</p>
+        <ExtremeMunicipioCards
+          municipios={municipiosEstado}
+          varKey={selectedVar.key}
+          varLabel={selectedVar.label}
+          varUnit={selectedVar.unit}
+        />
       </section>
 
       {hasRf && (
@@ -253,6 +256,120 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
+
+function ExtremeMunicipioCards({
+  municipios,
+  varKey,
+  varLabel,
+  varUnit,
+}: {
+  municipios: MunicipioAnalyticsRecord[];
+  varKey: string;
+  varLabel: string;
+  varUnit: string;
+}) {
+  const sorted = useMemo(() => {
+    return municipios
+      .map((m) => {
+        const v = (m as Record<string, unknown>)[varKey];
+        const value = typeof v === "number" && isFinite(v) ? v : null;
+        return { name: m.nom_mun, value, pop: m.pobtot_iter };
+      })
+      .filter((m): m is { name: string; value: number; pop: number } => m.value !== null)
+      .sort((a, b) => b.value - a.value);
+  }, [municipios, varKey]);
+
+  const k = Math.min(3, sorted.length);
+  if (k === 0) {
+    return <p style={{ color: "var(--text-3)", fontSize: 13, padding: "12px 0" }}>Sin datos para esta variable.</p>;
+  }
+
+  const top = sorted.slice(0, k);
+  const bottom = sorted.slice(-k).reverse();
+  const total = sorted.length;
+
+  const lowerIsBetter = varKey === "brecha_4g_pp" || varKey === "irs_indice";
+
+  const fmt = (v: number) =>
+    varUnit === "%" || varUnit === "pp"
+      ? `${v.toFixed(1)}${varUnit}`
+      : varUnit === "Mbps"
+      ? `${v.toFixed(1)} Mbps`
+      : v.toLocaleString("es-MX", { maximumFractionDigits: 1 });
+
+  const renderCards = (
+    items: { name: string; value: number; pop: number }[],
+    isTop: boolean,
+    startRank: number
+  ) => {
+    const isGood = isTop !== lowerIsBetter;
+    const bg = isGood
+      ? "color-mix(in srgb, #22c55e 8%, transparent)"
+      : "color-mix(in srgb, #ef4444 8%, transparent)";
+    const border = isGood ? "#bbf7d0" : "#fecaca";
+    const valueColor = isGood ? "#16a34a" : "#dc2626";
+
+    return (
+      <div style={{ display: "flex", gap: 8 }}>
+        {items.map((m, i) => (
+          <div
+            key={m.name}
+            style={{
+              flex: 1,
+              background: bg,
+              border: `1px solid ${border}`,
+              borderRadius: 8,
+              padding: "10px 12px",
+              minWidth: 0,
+            }}
+          >
+            <p style={{ fontSize: 10, color: "var(--text-3)", margin: "0 0 2px" }}>
+              #{startRank + i} de {total}
+            </p>
+            <p
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: "var(--text-1)",
+                margin: "0 0 4px",
+                lineHeight: 1.3,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+              title={m.name}
+            >
+              {m.name}
+            </p>
+            <p style={{ fontSize: 16, fontWeight: 700, color: valueColor, margin: "0 0 2px" }}>
+              {fmt(m.value)}
+            </p>
+            <p style={{ fontSize: 10, color: "var(--text-3)", margin: 0 }}>
+              {m.pop.toLocaleString("es-MX")} hab.
+            </p>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div>
+        <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-2)", margin: "0 0 8px" }}>
+          {lowerIsBetter ? `Menor ${varLabel}` : `Mayor ${varLabel}`}
+        </p>
+        {renderCards(top, true, 1)}
+      </div>
+      <div>
+        <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-2)", margin: "0 0 8px" }}>
+          {lowerIsBetter ? `Mayor ${varLabel}` : `Menor ${varLabel}`}
+        </p>
+        {renderCards(bottom, false, total - bottom.length + 1)}
+      </div>
+    </div>
+  );
+}
 
 function SpearmanVector({
   varLabel,

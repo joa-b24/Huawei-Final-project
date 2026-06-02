@@ -15,11 +15,19 @@ import EvolucionTab from "../views/EvolucionTab";
 import DatosTab from "../views/DatosTab";
 import TerritorialTab from "../views/TerritorialTab";
 import HelpModal from "../components/feedback/HelpModal";
+import { VAR_ID_TO_SCATTER_KEY, TERRITORIAL_VARIABLES } from "../components/state-analysis/analysisMetrics";
+import { humanizeVarId } from "../utils/humanize";
+
+const _territorialKeys = new Set(TERRITORIAL_VARIABLES.map((v) => v.key));
 
 function buildTabs(appData: AppData, activeVarIds: string[]): Tab[] {
   const hasMunicipal = appData.municipalManifest !== null && Object.keys(appData.municipalManifest.states).length > 0;
   const temporalSet = new Set(appData.temporalVariables ?? []);
   const hasTemporalData = activeVarIds.some((id) => temporalSet.has(id));
+  const hasTerritorialVar = activeVarIds.some((id) => {
+    const k = VAR_ID_TO_SCATTER_KEY[id];
+    return k !== undefined && _territorialKeys.has(k as (typeof TERRITORIAL_VARIABLES)[number]["key"]);
+  });
   return [
     { id: "diagnostico", label: "Diagnóstico" },
     { id: "relaciones", label: "Impacto" },
@@ -27,8 +35,10 @@ function buildTabs(appData: AppData, activeVarIds: string[]): Tab[] {
     {
       id: "territorial",
       label: "Territorial",
-      disabled: !hasMunicipal,
-      disabledReason: "Requiere datos municipales (npm run data:build:analytics)",
+      disabled: !hasMunicipal || !hasTerritorialVar,
+      disabledReason: !hasMunicipal
+        ? "Requiere datos municipales (npm run data:build:analytics)"
+        : "Activa una variable con datos municipales para ver el análisis territorial",
     },
   ];
 }
@@ -104,7 +114,7 @@ function Dashboard({ appData }: { appData: AppData }) {
       .filter((m) => !hidden.has(m.id))
       .map((m) => ({
         id: m.id,
-        label: m.label,
+        label: m.label && m.label !== m.id ? m.label : humanizeVarId(m.id),
         category: m.category,
         role: roleMap.get(m.id) ?? "both",
         hasMunicipal: munVarIds.has(m.id),

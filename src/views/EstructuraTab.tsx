@@ -13,8 +13,10 @@ import { useAppContext } from "../context/AppContext";
 import type { AppData, PcaRecord, PcaResults } from "../services/DataService";
 import EmptyState from "../components/EmptyState";
 import RankingTable from "../components/charts/RankingTable";
+import ChoroplethMap from "../components/charts/ChoroplethMap";
 import TabNarrative from "../components/feedback/TabNarrative";
 import InfoTooltip from "../components/feedback/InfoTooltip";
+import { humanizeVarId } from "../utils/humanize";
 import type { RankingEntry } from "../types/dataStandard";
 
 const CLUSTER_COLORS = ["#0d3d73", "#2E7D32", "#F57F17", "#B71C1C", "#6A1B9A"];
@@ -197,16 +199,13 @@ function EstructuraNarrative({
   const peers = clusterStat?.states.filter((s) => s !== record.state) ?? [];
   const peerSample = peers.slice(0, 3).join(", ") + (peers.length > 3 ? " y otros" : "");
 
-  // Varianza explicada por PC1 y PC2
   const [v1, v2] = pcaResults.variance_explained;
   const v1pct = (v1 * 100).toFixed(0);
   const v2pct = (v2 * 100).toFixed(0);
 
-  // Posición en el espacio de componentes
   const pc1Dir = record.pc1 >= 0 ? "por encima" : "por debajo";
   const pc2Dir = record.pc2 >= 0 ? "por encima" : "por debajo";
 
-  // Índice relativo al promedio del grupo
   const indexVsGroup = clusterStat
     ? record.index - clusterStat.mean_index
     : null;
@@ -240,9 +239,9 @@ function EstructuraNarrative({
       <p style={S}>
         En el espacio de componentes principales, el estado se ubica{" "}
         <strong>{pc1Dir} del centro</strong> en PC1 (el eje que concentra el{" "}
-        <strong>{v1pct}&nbsp;%</strong> de la variación entre estados — generalmente el nivel general de
-        desarrollo digital) y <strong>{pc2Dir} del centro</strong> en PC2 (contraste secundario entre
-        dimensiones, <strong>{v2pct}&nbsp;%</strong> de varianza). Juntos, ambos ejes resumen{" "}
+        <strong>{v1pct}&nbsp;%</strong> de la variación entre estados) y{" "}
+        <strong>{pc2Dir} del centro</strong> en PC2 (<strong>{v2pct}&nbsp;%</strong> de varianza).
+        Juntos, ambos ejes resumen{" "}
         <strong>{(Number(v1pct) + Number(v2pct)).toFixed(0)}&nbsp;%</strong> de la información multivariada.
       </p>
 
@@ -250,72 +249,288 @@ function EstructuraNarrative({
         <p style={{ ...S, margin: 0, padding: "8px 12px", background: "color-mix(in srgb, var(--amber) 10%, transparent)", borderRadius: 6, borderLeft: "3px solid var(--amber)" }}>
           <strong>Perfil atípico:</strong> la distancia de Mahalanobis de este estado supera el umbral
           esperado (χ² p&nbsp;=&nbsp;0.95), lo que indica una combinación <em>inusual</em> de fortalezas
-          y rezagos que no encaja completamente con ningún grupo. Requiere análisis complementario.
+          y rezagos que no encaja completamente con ningún grupo.
         </p>
       )}
     </div>
   );
 }
 
-// ── Nota metodológica ─────────────────────────────────────────────────────────
+// ── Nota metodológica (colapsable) ────────────────────────────────────────────
 
-function MethodologyNote({ pcaResults }: { pcaResults: PcaResults }) {
+function MethodologyNote({
+  pcaResults,
+  varCatalog,
+}: {
+  pcaResults: PcaResults;
+  varCatalog: { id: string; label: string }[];
+}) {
+  const [open, setOpen] = useState(false);
+
+  const varLabels = useMemo(
+    () => pcaResults.loadings.variables.map((id) => varCatalog.find((v) => v.id === id)?.label ?? humanizeVarId(id)),
+    [pcaResults.loadings.variables, varCatalog]
+  );
+
   const [v1, v2] = pcaResults.variance_explained;
   const nClusters = Object.keys(pcaResults.cluster_stats).length;
   const nStates = pcaResults.records.length;
-  const clusterList = Object.values(pcaResults.cluster_stats)
-    .sort((a, b) => b.mean_index - a.mean_index);
+  const clusterList = Object.values(pcaResults.cluster_stats).sort(
+    (a, b) => b.mean_index - a.mean_index
+  );
+
   const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px", fontSize: 13 } as const;
   const Sh = { ...S, fontWeight: 600, color: "var(--text-1)", margin: "12px 0 4px" } as const;
 
   return (
-    <div style={{ marginBottom: 16, padding: "12px 14px", background: "color-mix(in srgb, var(--blue) 5%, transparent)", borderRadius: 6, borderLeft: "3px solid var(--blue-mid)" }}>
-      <p style={{ ...S, fontWeight: 700, color: "var(--text-1)", margin: "0 0 10px", fontSize: 14 }}>¿Cómo se calculó este análisis?</p>
+    <div style={{ marginBottom: 16 }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          background: "none",
+          border: "1px solid var(--border)",
+          borderRadius: 6,
+          padding: "6px 12px",
+          fontSize: 12,
+          color: "var(--text-2)",
+          cursor: "pointer",
+          width: "100%",
+          textAlign: "left",
+        }}
+      >
+        <span style={{ fontSize: 10 }}>{open ? "▲" : "▼"}</span>
+        Nota metodológica — cómo se calculó este análisis
+        <span style={{ marginLeft: "auto", fontSize: 11, color: "var(--text-3)" }}>
+          {open ? "Ocultar" : "Mostrar"}
+        </span>
+      </button>
+      {open && (
+        <div style={{ marginTop: 8, padding: "12px 14px", background: "color-mix(in srgb, var(--blue) 5%, transparent)", borderRadius: 6, borderLeft: "3px solid var(--blue-mid)" }}>
+          <p style={{ ...S, fontWeight: 700, color: "var(--text-1)", margin: "0 0 10px", fontSize: 14 }}>
+            ¿Cómo se calculó este análisis?
+          </p>
 
-      <p style={Sh}>Reducción de dimensiones (PCA)</p>
-      <p style={S}>
-        El análisis parte de {nStates} estados y docenas de indicadores de conectividad, adopción digital y contexto socioeconómico.
-        El <strong>Análisis de Componentes Principales</strong> reduce esa información a unos pocos "ejes" sin perder lo esencial:
-        encuentra combinaciones lineales de todas las variables que capturan la mayor variación posible entre estados, en orden de importancia.
-        Todos los indicadores se normalizan primero para que tengan el mismo peso independientemente de su unidad o escala.
-      </p>
+          <p style={Sh}>Reducción de dimensiones (PCA)</p>
+          <p style={S}>
+            El análisis parte de {nStates} estados y {varLabels.length} indicadores de conectividad,
+            adopción digital y contexto socioeconómico. El <strong>Análisis de Componentes Principales</strong>{" "}
+            reduce esa información a unos pocos "ejes" sin perder lo esencial: encuentra combinaciones
+            lineales que capturan la mayor variación posible entre estados. Todos los indicadores se
+            normalizan primero para tener el mismo peso independientemente de su unidad.
+          </p>
 
-      <p style={Sh}>PC1 — eje principal ({(v1 * 100).toFixed(1)} % de la varianza total)</p>
-      <p style={S}>
-        El primer componente concentra el <strong>{(v1 * 100).toFixed(1)} %</strong> de toda la diferencia entre estados.
-        En la práctica refleja el <em>nivel general de desarrollo digital e infraestructura</em>:
-        estados a la derecha del scatter tienen mayores coberturas de red, mayor uso de internet y smartphones, y economías más productivas;
-        estados a la izquierda presentan mayor rezago en adopción y conectividad.
-        El <strong>Índice Digital-Territorial (0–100)</strong> es simplemente la proyección de cada estado sobre PC1,
-        reescalada para que el mayor valor sea 100. Es un resumen de posición relativa, no un juicio absoluto.
-      </p>
+          <p style={Sh}>Variables incluidas ({varLabels.length})</p>
+          <ul style={{ margin: "0 0 8px", paddingLeft: 18, columns: 2, lineHeight: 1.8, color: "#334155", fontSize: 12 }}>
+            {varLabels.map((l) => (
+              <li key={l}>{l}</li>
+            ))}
+          </ul>
 
-      <p style={Sh}>PC2 — contraste secundario ({(v2 * 100).toFixed(1)} % de la varianza total)</p>
-      <p style={S}>
-        El segundo componente captura <em>diferencias dentro de un mismo nivel</em> de desarrollo digital — por ejemplo,
-        estados con buena cobertura de red pero bajo uso real de servicios digitales, o alta conectividad en zonas urbanas pero con indicadores socioeconómicos adversos.
-        Añade matiz al análisis: estados con índice similar pueden estar en posiciones verticales muy distintas en el scatter,
-        lo que indica que su "mezcla" de indicadores es diferente aunque el nivel general sea parecido.
-        Juntos, PC1 + PC2 explican el <strong>{((v1 + v2) * 100).toFixed(0)} %</strong> de la variación entre los {nStates} estados.
-      </p>
+          <p style={Sh}>PC1 — eje principal ({(v1 * 100).toFixed(1)} % de la varianza total)</p>
+          <p style={S}>
+            El primer componente concentra el <strong>{(v1 * 100).toFixed(1)} %</strong> de toda la
+            diferencia entre estados. En la práctica refleja el <em>nivel general de desarrollo digital
+            e infraestructura</em>: estados a la derecha del scatter tienen mayores coberturas de red,
+            mayor uso de internet y economías más productivas. El <strong>Índice Digital-Territorial
+            (0–100)</strong> es la proyección sobre PC1, reescalada para que el mayor valor sea 100.
+          </p>
 
-      <p style={Sh}>Grupos estructurales (K-Means, {nClusters} clusters)</p>
-      <p style={S}>
-        Los grupos se formaron agrupando los estados por cercanía en el espacio PC1–PC2 con el algoritmo <strong>K-Means</strong>.
-        El resultado son {nClusters} perfiles estructurales distintos:
-      </p>
-      <ul style={{ margin: "0 0 8px", paddingLeft: 18, lineHeight: S.lineHeight, color: S.color, fontSize: S.fontSize }}>
-        {clusterList.map((c) => (
-          <li key={c.label} style={{ marginBottom: 4 }}>
-            <strong>{c.label}</strong> — {c.states.length} estados, índice promedio {c.mean_index.toFixed(1)}/100
-          </li>
-        ))}
-      </ul>
-      <p style={{ ...S, margin: 0, fontSize: 12, color: "var(--text-3)", borderTop: "1px solid var(--border)", paddingTop: 8 }}>
-        Los estados marcados como <strong>atípicos</strong> tienen una <em>distancia de Mahalanobis</em> inusualmente alta respecto al centroide de su grupo —
-        su combinación de fortalezas y rezagos no encaja bien con ningún perfil típico y merece análisis complementario.
-      </p>
+          <p style={Sh}>PC2 — contraste secundario ({(v2 * 100).toFixed(1)} % de la varianza total)</p>
+          <p style={S}>
+            Captura <em>diferencias dentro de un mismo nivel</em> de desarrollo digital. Juntos,
+            PC1 + PC2 explican el <strong>{((v1 + v2) * 100).toFixed(0)} %</strong> de la variación
+            entre los {nStates} estados.
+          </p>
+
+          <p style={Sh}>Grupos estructurales (K-Means, {nClusters} clusters)</p>
+          <ul style={{ margin: "0 0 8px", paddingLeft: 18, lineHeight: S.lineHeight, color: S.color, fontSize: S.fontSize }}>
+            {clusterList.map((c) => (
+              <li key={c.label} style={{ marginBottom: 4 }}>
+                <strong>{c.label}</strong> — {c.states.length} estados, índice promedio {c.mean_index.toFixed(1)}/100
+              </li>
+            ))}
+          </ul>
+          <p style={{ ...S, margin: 0, fontSize: 12, color: "var(--text-3)", borderTop: "1px solid var(--border)", paddingTop: 8 }}>
+            Los estados marcados como <strong>atípicos</strong> tienen una{" "}
+            <em>distancia de Mahalanobis</em> inusualmente alta respecto al centroide de su grupo.
+          </p>
+        </div>
+      )}
     </div>
+  );
+}
+
+// ── Cargas PC1 ────────────────────────────────────────────────────────────────
+
+function LoadingsPanel({
+  pcaResults,
+  varCatalog,
+}: {
+  pcaResults: PcaResults;
+  varCatalog: { id: string; label: string }[];
+}) {
+  const sorted = useMemo(() => {
+    return pcaResults.loadings.variables
+      .map((id, i) => ({
+        label: varCatalog.find((v) => v.id === id)?.label ?? humanizeVarId(id),
+        pc1: pcaResults.loadings.pc1[i] ?? 0,
+      }))
+      .sort((a, b) => Math.abs(b.pc1) - Math.abs(a.pc1));
+  }, [pcaResults.loadings, varCatalog]);
+
+  const maxAbs = useMemo(() => Math.max(...sorted.map((r) => Math.abs(r.pc1))), [sorted]);
+
+  return (
+    <section className="panel">
+      <div className="panel-title-row">
+        <p className="panel-title" style={{ margin: 0 }}>Cargas PC1 — influencia de cada variable</p>
+        <InfoTooltip
+          wide
+          text={
+            <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Qué son las cargas (loadings)</p>
+              <p style={{ margin: "0 0 8px" }}>
+                La <strong>carga PC1</strong> de una variable indica cuánto contribuye al primer componente
+                principal. Valores absolutos mayores = más influyente en el índice.
+              </p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Signo</p>
+              <p style={{ margin: 0 }}>
+                <strong style={{ color: "#2563eb" }}>Positivo</strong> → la variable sube con el índice
+                (mayor cobertura, mayor acceso). <strong style={{ color: "#dc2626" }}>Negativo</strong> → va
+                en sentido contrario (p. ej. rezago social sube cuando el índice baja).
+              </p>
+            </div>
+          }
+        />
+      </div>
+      <p style={{ fontSize: 12, color: "var(--text-3)", margin: "4px 0 14px" }}>
+        Ordenado por influencia absoluta. Azul = positivo con el índice · Rojo = inverso.
+      </p>
+      <div style={{ maxHeight: 360, overflowY: "auto", paddingRight: 4 }}>
+        {sorted.map(({ label, pc1 }) => {
+          const pct = maxAbs > 0 ? (Math.abs(pc1) / maxAbs) * 100 : 0;
+          const color = pc1 >= 0 ? "#2563eb" : "#dc2626";
+          return (
+            <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <span
+                style={{
+                  fontSize: 11,
+                  width: 200,
+                  flexShrink: 0,
+                  color: "var(--text-2)",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                title={label}
+              >
+                {label}
+              </span>
+              <div style={{ flex: 1, height: 6, background: "#f1f5f9", borderRadius: 3, overflow: "hidden" }}>
+                <div style={{ width: `${pct}%`, height: "100%", background: color, borderRadius: 3 }} />
+              </div>
+              <span
+                style={{
+                  fontSize: 11,
+                  width: 52,
+                  textAlign: "right",
+                  color,
+                  fontVariantNumeric: "tabular-nums",
+                  flexShrink: 0,
+                }}
+              >
+                {pc1 >= 0 ? "+" : ""}{pc1.toFixed(3)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+// ── Estados del mismo grupo ───────────────────────────────────────────────────
+
+function PeersSection({
+  primaryRecord,
+  pcaResults,
+}: {
+  primaryRecord: PcaRecord;
+  pcaResults: PcaResults;
+}) {
+  const clusterStat = pcaResults.cluster_stats[String(primaryRecord.cluster)];
+  const peers = useMemo(
+    () =>
+      pcaResults.records
+        .filter((r) => r.cluster === primaryRecord.cluster)
+        .sort((a, b) => b.index - a.index),
+    [pcaResults.records, primaryRecord.cluster]
+  );
+
+  const nationalMean = useMemo(
+    () => pcaResults.records.reduce((s, r) => s + r.index, 0) / pcaResults.records.length,
+    [pcaResults.records]
+  );
+
+  const groupLabel = clusterStat?.label ?? `Grupo ${primaryRecord.cluster}`;
+
+  return (
+    <section className="panel">
+      <div className="panel-title-row">
+        <p className="panel-title" style={{ margin: 0 }}>
+          Estados en el mismo grupo — <em>{groupLabel}</em>
+        </p>
+        <span style={{ fontSize: 12, color: "var(--text-3)" }}>
+          {peers.length} estado{peers.length !== 1 ? "s" : ""} · media del grupo:{" "}
+          <strong>{clusterStat?.mean_index.toFixed(1) ?? "—"}</strong>
+        </span>
+      </div>
+      <table className="ranking-table" style={{ marginTop: 10 }}>
+        <thead>
+          <tr>
+            <th style={{ width: 32 }}>#</th>
+            <th>Estado</th>
+            <th>Índice</th>
+            <th>vs media nacional</th>
+          </tr>
+        </thead>
+        <tbody>
+          {peers.map((r, i) => {
+            const diff = r.index - nationalMean;
+            const isPrimary = r.state === primaryRecord.state;
+            return (
+              <tr
+                key={r.state}
+                style={
+                  isPrimary
+                    ? { fontWeight: 700, background: "var(--accent-soft, #eff6ff)" }
+                    : undefined
+                }
+              >
+                <td style={{ color: "var(--text-3)" }}>{i + 1}</td>
+                <td style={{ color: isPrimary ? "var(--blue)" : undefined }}>
+                  {r.state}
+                  {isPrimary && <span style={{ fontSize: 10, marginLeft: 4 }}>●</span>}
+                </td>
+                <td style={{ fontVariantNumeric: "tabular-nums" }}>{r.index.toFixed(1)}</td>
+                <td
+                  style={{
+                    color: diff >= 0 ? "var(--green)" : "var(--red)",
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {diff >= 0 ? "+" : ""}{diff.toFixed(1)}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </section>
   );
 }
 
@@ -329,6 +544,14 @@ export default function EstructuraTab({ appData }: Props) {
   const { pcaResults } = appData;
 
   const [rankingView, setRankingView] = useState<"table" | "lollipop">("lollipop");
+
+  const varCatalog = useMemo(
+    () => appData.dataset.metricCatalog.map((m) => ({
+      id: m.id,
+      label: m.label && m.label !== m.id ? m.label : humanizeVarId(m.id),
+    })),
+    [appData.dataset.metricCatalog]
+  );
 
   const primaryRecord = useMemo(
     () => pcaResults?.records.find((r) => r.state === primaryState) ?? null,
@@ -363,6 +586,30 @@ export default function EstructuraTab({ appData }: Props) {
     [pcaResults]
   );
 
+  const clusterColorOverrides = useMemo(() => {
+    if (!pcaResults) return undefined;
+    const map = new Map<string, string>();
+    pcaResults.records.forEach((r) => map.set(r.state, clusterColor(r.cluster)));
+    return map;
+  }, [pcaResults]);
+
+  const clusterLabelOverrides = useMemo(() => {
+    if (!pcaResults) return undefined;
+    const map = new Map<string, string>();
+    pcaResults.records.forEach((r) => {
+      const label = pcaResults.cluster_stats[String(r.cluster)]?.label ?? `Cluster ${r.cluster}`;
+      map.set(r.state, label);
+    });
+    return map;
+  }, [pcaResults]);
+
+  const clusterLegend = useMemo(() => {
+    if (!pcaResults) return [];
+    return Object.entries(pcaResults.cluster_stats)
+      .map(([id, stat]) => ({ id: Number(id), label: stat.label, color: clusterColor(Number(id)) }))
+      .sort((a, b) => a.id - b.id);
+  }, [pcaResults]);
+
   if (!pcaResults) {
     return (
       <EmptyState
@@ -378,7 +625,7 @@ export default function EstructuraTab({ appData }: Props) {
         title="Estructura digital-territorial"
         description="Grupos estructurales e índice compuesto derivados de análisis multivariado sobre los 32 estados."
       >
-        <MethodologyNote pcaResults={pcaResults} />
+        <MethodologyNote pcaResults={pcaResults} varCatalog={varCatalog} />
         {primaryRecord ? (
           <EstructuraNarrative record={primaryRecord} pcaResults={pcaResults} />
         ) : (
@@ -417,15 +664,18 @@ export default function EstructuraTab({ appData }: Props) {
             <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
               <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo leer este gráfico</p>
               <p style={{ margin: "0 0 10px" }}>
-                Cada <strong>punto</strong> es un estado ubicado en el espacio de dos componentes principales (PC1 horizontal, PC2 vertical). Estados <strong>cercanos entre sí</strong> tienen perfiles multivariados similares; estados alejados difieren estructuralmente.
+                Cada <strong>punto</strong> es un estado ubicado en el espacio de dos componentes principales.
+                Estados <strong>cercanos entre sí</strong> tienen perfiles multivariados similares.
               </p>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Ejes — qué mide cada uno</p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Ejes</p>
               <p style={{ margin: "0 0 10px" }}>
-                <strong>PC1</strong> (horizontal) captura la mayor parte de la variación entre estados: suele reflejar el <em>nivel general de conectividad y desarrollo digital</em>. Estados a la derecha tienden a tener mejores indicadores. <strong>PC2</strong> (vertical) captura contrastes secundarios — diferencias entre dimensiones dentro de un nivel similar de desarrollo.
+                <strong>PC1</strong> (horizontal) refleja el nivel general de conectividad y desarrollo digital.
+                <strong> PC2</strong> (vertical) captura contrastes secundarios entre dimensiones.
               </p>
               <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Grupos y atípicos</p>
               <p style={{ margin: 0 }}>
-                El <strong>color</strong> indica el grupo k-means. El <strong>punto azul</strong> es el estado seleccionado. Los grupos son descriptivos: no implican clasificación oficial. Un punto muy separado del grupo puede ser estructuralmente atípico.
+                El <strong>color</strong> indica el grupo k-means. El <strong>punto azul</strong> es el estado
+                seleccionado. Un punto muy separado de su grupo puede ser estructuralmente atípico.
               </p>
             </div>
           } />
@@ -441,6 +691,29 @@ export default function EstructuraTab({ appData }: Props) {
         />
       </section>
 
+      <section className="panel">
+        <p className="panel-title">Distribución geográfica por grupo estructural</p>
+        <p style={{ fontSize: 12, color: "var(--text-3)", margin: "4px 0 10px" }}>
+          Cada estado coloreado según su grupo k-means. Clic en un estado para seleccionarlo.
+        </p>
+        <ChoroplethMap
+          appData={appData}
+          varId=""
+          stateColorOverrides={clusterColorOverrides}
+          stateLabelOverrides={clusterLabelOverrides}
+        />
+        <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginTop: 10 }}>
+          {clusterLegend.map((c) => (
+            <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ width: 12, height: 12, borderRadius: 3, background: c.color, flexShrink: 0 }} />
+              <span style={{ fontSize: 11, color: "var(--text-2)" }}>{c.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <LoadingsPanel pcaResults={pcaResults} varCatalog={varCatalog} />
+
       <section className="panel ranking-panel">
         <div className="ranking-panel-header">
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -449,11 +722,13 @@ export default function EstructuraTab({ appData }: Props) {
               <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
                 <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Índice Digital-Territorial</p>
                 <p style={{ margin: "0 0 10px" }}>
-                  Puntuación compuesta (0–100) calculada como proyección de cada estado sobre el primer componente principal, reescalada para que el mayor valor sea 100. Sintetiza el perfil multivariado en una sola dimensión de orden.
+                  Puntuación compuesta (0–100) calculada como proyección sobre PC1, reescalada para que
+                  el mayor valor sea 100. Sintetiza el perfil multivariado en una sola dimensión de orden.
                 </p>
                 <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Interpretación</p>
                 <p style={{ margin: 0 }}>
-                  Un índice alto no implica liderazgo en <em>todas</em> las variables, sino que el estado tiene en promedio un mejor posicionamiento relativo en las dimensiones capturadas por PC1. El <strong>% vs media</strong> muestra la distancia porcentual al promedio nacional del índice.
+                  Un índice alto no implica liderazgo en <em>todas</em> las variables, sino mejor
+                  posicionamiento promedio en las dimensiones capturadas por PC1.
                 </p>
               </div>
             } />
@@ -483,6 +758,10 @@ export default function EstructuraTab({ appData }: Props) {
           view={rankingView}
         />
       </section>
+
+      {primaryRecord && (
+        <PeersSection primaryRecord={primaryRecord} pcaResults={pcaResults} />
+      )}
     </div>
   );
 }

@@ -8,7 +8,9 @@ const GEO_URL = "/data/estados.geojson";
 type Props = {
   appData: AppData;
   varId: string;
-  groupStateNames?: Map<string, string>; // stateName → color
+  groupStateNames?: Map<string, string>; // stateName → color (border highlight)
+  stateColorOverrides?: Map<string, string>; // stateName → fill color (e.g. cluster map)
+  stateLabelOverrides?: Map<string, string>; // stateName → tooltip label
 };
 
 function interpolateColor(t: number): string {
@@ -19,7 +21,7 @@ function interpolateColor(t: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-export default function ChoroplethMap({ appData, varId, groupStateNames }: Props) {
+export default function ChoroplethMap({ appData, varId, groupStateNames, stateColorOverrides, stateLabelOverrides }: Props) {
   const { state: appState, dispatch } = useAppContext();
   const { primaryState } = appState;
   const { dataset } = appData;
@@ -63,7 +65,7 @@ export default function ChoroplethMap({ appData, varId, groupStateNames }: Props
     [dataset.records, primaryState]
   );
 
-  if (!varId) {
+  if (!varId && !stateColorOverrides) {
     return (
       <p style={{ textAlign: "center", color: "var(--text-3)", fontSize: 13, padding: "24px 0" }}>
         Activa al menos una variable en el panel lateral.
@@ -111,7 +113,9 @@ export default function ChoroplethMap({ appData, varId, groupStateNames }: Props
                       value !== undefined && maxVal !== minVal
                         ? (value - minVal) / (maxVal - minVal)
                         : 0.5;
-                    const fill = value !== undefined ? interpolateColor(t) : "var(--border)";
+                    const fill = stateColorOverrides
+                      ? (stateColorOverrides.get(stateName) ?? "var(--border)")
+                      : value !== undefined ? interpolateColor(t) : "var(--border)";
                     return (
                       <Geography
                         key={geo.rsmKey}
@@ -126,8 +130,9 @@ export default function ChoroplethMap({ appData, varId, groupStateNames }: Props
                         }}
                         onClick={() => dispatch({ type: "SET_PRIMARY_STATE", stateName })}
                         onMouseEnter={(e: any) => {
-                          const label =
-                            value !== undefined
+                          const label = stateLabelOverrides?.get(stateName)
+                            ? `${stateName}: ${stateLabelOverrides.get(stateName)}`
+                            : value !== undefined
                               ? `${stateName}: ${value.toFixed(1)}${metricDef?.unit ? " " + metricDef.unit : ""}`
                               : `${stateName}: sin datos`;
                           setTooltip({ ...getRelativePos(e), content: label });
@@ -204,14 +209,16 @@ export default function ChoroplethMap({ appData, varId, groupStateNames }: Props
         );
       })()}
 
-      <div className="legend-map" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, justifyContent: "center" }}>
-        <span style={{ fontSize: 11, color: "var(--text-3)" }}>Menor</span>
-        <div style={{
-          width: 140, height: 10, borderRadius: 5,
-          background: "linear-gradient(to right, rgb(210,220,235), rgb(60,120,225))",
-        }} />
-        <span style={{ fontSize: 11, color: "var(--text-3)" }}>Mayor</span>
-      </div>
+      {!stateColorOverrides && (
+        <div className="legend-map" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, justifyContent: "center" }}>
+          <span style={{ fontSize: 11, color: "var(--text-3)" }}>Menor</span>
+          <div style={{
+            width: 140, height: 10, borderRadius: 5,
+            background: "linear-gradient(to right, rgb(210,220,235), rgb(60,120,225))",
+          }} />
+          <span style={{ fontSize: 11, color: "var(--text-3)" }}>Mayor</span>
+        </div>
+      )}
 
       <p style={{ textAlign: "center", fontSize: 11, color: "var(--text-3)", margin: "4px 0 0" }}>
       </p>

@@ -54,16 +54,18 @@ function LollipopTooltip({ active, payload, label, metricLabel, unit, direction 
 }
 
 function LollipopShapeColumn({ x, y, width, height, fill, isHighlighted, rank }: any) {
-  if (!height || height <= 0) return null;
+  if (!height) return null;
   const cx = x + width / 2;
   const r = isHighlighted ? 9 : 5;
+  const dotY = height >= 0 ? y : y + height;
+  const baseY = height >= 0 ? y + height : y;
   return (
     <g>
-      <line x1={cx} y1={y + height} x2={cx} y2={y} stroke={fill} strokeWidth={isHighlighted ? 3 : 1.5} opacity={isHighlighted ? 1 : 0.8} />
-      <circle cx={cx} cy={y} r={r} fill={fill} stroke="var(--surface)" strokeWidth={isHighlighted ? 2.5 : 1.5} />
-      {isHighlighted && <circle cx={cx} cy={y} r={r + 4} fill="none" stroke={fill} strokeWidth={1.5} opacity={0.3} />}
+      <line x1={cx} y1={baseY} x2={cx} y2={dotY} stroke={fill} strokeWidth={isHighlighted ? 3 : 1.5} opacity={isHighlighted ? 1 : 0.8} />
+      <circle cx={cx} cy={dotY} r={r} fill={fill} stroke="var(--surface)" strokeWidth={isHighlighted ? 2.5 : 1.5} />
+      {isHighlighted && <circle cx={cx} cy={dotY} r={r + 4} fill="none" stroke={fill} strokeWidth={1.5} opacity={0.3} />}
       {isHighlighted && rank != null && (
-        <text x={cx} y={y - r - 5} textAnchor="middle" fontSize={9} fill={fill} fontWeight={700}>#{rank}</text>
+        <text x={cx} y={dotY - r - 5} textAnchor="middle" fontSize={9} fill={fill} fontWeight={700}>#{rank}</text>
       )}
     </g>
   );

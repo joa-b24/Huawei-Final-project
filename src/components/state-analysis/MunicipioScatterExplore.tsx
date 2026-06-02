@@ -16,7 +16,7 @@ import {
   VAR_ID_TO_SCATTER_KEY,
   type ScatterMetricKey,
 } from "./analysisMetrics";
-import InterpretationHelp from "./InterpretationHelp";
+import InfoTooltip from "../feedback/InfoTooltip";
 import { getPairInterpretation } from "./pairInterpretations";
 
 function pickMetric(m: MunicipioAnalyticsRecord, k: ScatterMetricKey): number {
@@ -26,8 +26,8 @@ function pickMetric(m: MunicipioAnalyticsRecord, k: ScatterMetricKey): number {
 
 type Props = {
   municipios: MunicipioAnalyticsRecord[];
-  /** Variable IDs active in the sidebar — used to highlight matching scatter metrics. */
   activeVariableIds?: string[];
+  fixedYKey?: ScatterMetricKey;
 };
 
 const CLUSTER_COLOR_BY_LABEL: Record<string, string> = {
@@ -62,15 +62,16 @@ function resolveAxisPair(
   return { x, y };
 }
 
-export default function MunicipioScatterExplore({ municipios, activeVariableIds = [] }: Props) {
+export default function MunicipioScatterExplore({ municipios, activeVariableIds = [], fixedYKey }: Props) {
   const [xKey, setXKey] = useState<ScatterMetricKey>("graproes");
-  const [yKey, setYKey] = useState<ScatterMetricKey>("pob_pct_4g_garantizada");
+  const [yKeyState, setYKeyState] = useState<ScatterMetricKey>("pob_pct_4g_garantizada");
+
+  const yKey = fixedYKey ?? yKeyState;
 
   const xMeta = SCATTER_METRICS.find((m) => m.key === xKey)!;
   const yMeta = SCATTER_METRICS.find((m) => m.key === yKey)!;
   const sameAxis = xKey === yKey;
 
-  /** Set of ScatterMetricKeys that correspond to currently active sidebar variables. */
   const activeKeys = useMemo(() => {
     const s = new Set<ScatterMetricKey>();
     for (const varId of activeVariableIds) {
@@ -80,7 +81,6 @@ export default function MunicipioScatterExplore({ municipios, activeVariableIds 
     return s;
   }, [activeVariableIds]);
 
-  /** Sorted metric options: active ones first (marked), then the rest alphabetically. */
   const metricOptions = useMemo(() => {
     const active = SCATTER_METRICS.filter((m) => activeKeys.has(m.key as ScatterMetricKey));
     const rest = SCATTER_METRICS.filter((m) => !activeKeys.has(m.key as ScatterMetricKey));
@@ -88,14 +88,18 @@ export default function MunicipioScatterExplore({ municipios, activeVariableIds 
   }, [activeKeys]);
 
   const setXKeySafe = (next: ScatterMetricKey) => {
-    const resolved = resolveAxisPair(next, yKey);
-    setXKey(resolved.x);
-    setYKey(resolved.y);
+    if (fixedYKey) {
+      setXKey(next === fixedYKey ? (SCATTER_METRICS.find((m) => m.key !== fixedYKey)?.key ?? next) : next);
+    } else {
+      const resolved = resolveAxisPair(next, yKey);
+      setXKey(resolved.x);
+      setYKeyState(resolved.y);
+    }
   };
   const setYKeySafe = (next: ScatterMetricKey) => {
     const resolved = resolveAxisPair(xKey, next);
     setXKey(resolved.x);
-    setYKey(resolved.y);
+    setYKeyState(resolved.y);
   };
 
   const colorEchoesCoverageAxis = xKey === "pob_pct_4g_garantizada" || yKey === "pob_pct_4g_garantizada";
@@ -168,35 +172,51 @@ export default function MunicipioScatterExplore({ municipios, activeVariableIds 
 
   const rhoInterpretation =
     rho === null
-      ? "No se puede estimar Spearman con el subconjunto actual."
+      ? null
       : Math.abs(rho) < 0.2
         ? "asociación débil o casi nula"
         : Math.abs(rho) < 0.5
           ? `asociación moderada ${rho > 0 ? "positiva" : "negativa"}`
           : `asociación fuerte ${rho > 0 ? "positiva" : "negativa"}`;
 
+  const pairContextual = !sameAxis ? getPairInterpretation(xKey, yKey, rho) : null;
+
+  const tooltipContent = (
+    <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+      <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo leer la dispersión</p>
+      <p style={{ margin: "0 0 8px" }}>
+        Cada punto es un municipio. El <strong>tamaño</strong> representa la población.
+        El <strong>color</strong> indica el perfil de cobertura 4G dentro del estado (3 grupos k-means).
+      </p>
+      <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Spearman (ρ)</p>
+      <p style={{ margin: "0 0 8px" }}>
+        Mide asociación monotónica entre los dos ejes. ρ cercano a ±1 indica relación fuerte;
+        cercano a 0, relación débil o nula. No implica causalidad.
+      </p>
+      {colorEchoesCoverageAxis && (
+        <p style={{ margin: "0 0 8px", background: "#fffbeb", borderRadius: 6, padding: "6px 8px", border: "1px solid #fde68a", color: "#b45309" }}>
+          El color del punto ya refleja cobertura 4G. Con cobertura en un eje la gráfica repite la
+          misma dimensión; conviene usar otro eje (escolaridad, edad o rezago social).
+        </p>
+      )}
+      <p style={{ margin: 0, fontSize: 11, color: "var(--text-3)" }}>
+        Puntos aislados de la nube principal son municipios atípicos. Conviene revisarlos individualmente.
+      </p>
+    </div>
+  );
+
   return (
     <div>
-      <div className="section-heading">
-        <h2>Exploración municipal (dispersión)</h2>
-        <p>
-          Cada punto es un municipio (tamaño = población). El color indica el perfil de cobertura
-          4G dentro del estado. Spearman entre los ejes seleccionados:{" "}
-          <strong>
-            {sameAxis
-              ? "— (elige dos variables diferentes)"
-              : rho === null
-                ? "— (pocos datos o sin varianza)"
-                : rho.toFixed(3)}
-          </strong>
-          .
-          {activeKeys.size > 0 && (
-            <span style={{ marginLeft: 8, fontSize: 11, color: "var(--text-3)" }}>
-              (★ = variable activa en el panel lateral)
-            </span>
-          )}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-1)", margin: 0 }}>
+          Explorador de dispersión municipal
         </p>
+        {activeKeys.size > 0 && (
+          <span style={{ fontSize: 11, color: "var(--text-3)" }}>★ = variable activa en el panel lateral</span>
+        )}
+        <InfoTooltip wide text={tooltipContent} />
       </div>
+
       <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 12, alignItems: "flex-end" }}>
         <div className="metric-control">
           <label htmlFor="scatter-x">Eje horizontal</label>
@@ -213,56 +233,53 @@ export default function MunicipioScatterExplore({ municipios, activeVariableIds 
             ))}
           </select>
         </div>
-        <div className="metric-control">
-          <label htmlFor="scatter-y">Eje vertical</label>
-          <select
-            id="scatter-y"
-            value={yKey}
-            onChange={(e) => setYKeySafe(e.target.value as ScatterMetricKey)}
-          >
-            {metricOptions.map((m) => (
-              <option key={m.key} value={m.key} disabled={m.key === xKey}>
-                {activeKeys.has(m.key as ScatterMetricKey) ? `★ ${m.label}` : m.label}
-                {m.key === xKey ? " (eje horizontal)" : ""}
-              </option>
-            ))}
-          </select>
-        </div>
+        {!fixedYKey && (
+          <div className="metric-control">
+            <label htmlFor="scatter-y">Eje vertical</label>
+            <select
+              id="scatter-y"
+              value={yKey}
+              onChange={(e) => setYKeySafe(e.target.value as ScatterMetricKey)}
+            >
+              {metricOptions.map((m) => (
+                <option key={m.key} value={m.key} disabled={m.key === xKey}>
+                  {activeKeys.has(m.key as ScatterMetricKey) ? `★ ${m.label}` : m.label}
+                  {m.key === xKey ? " (eje horizontal)" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+        {fixedYKey && (
+          <div className="metric-control">
+            <label>Eje vertical</label>
+            <span style={{ fontSize: 12, color: "var(--text-2)", padding: "4px 0", display: "block" }}>
+              {yMeta.label} <span style={{ color: "var(--text-3)", fontSize: 11 }}>(fijo)</span>
+            </span>
+          </div>
+        )}
       </div>
-      <InterpretationHelp
-        topic={`Dispersión municipal: eje X = ${xMeta.label}; eje Y = ${yMeta.label}`}
-        caption="Ayuda: dispersión"
-        heading="Interpretación posible"
-      >
-        <p>
-          Eje X: <strong>{xMeta.label}</strong>; eje Y: <strong>{yMeta.label}</strong>. Hay{" "}
-          <strong>{municipios.length}</strong> municipios; el color es el perfil de cobertura (3 grupos
-          por estado, k-medias con cobertura 4G, escolaridad y % de población 65+).
+
+      {/* Scatter narrative */}
+      {!sameAxis && rho !== null && rhoInterpretation && (
+        <p style={{ fontSize: 13, color: "var(--text-2)", margin: "0 0 12px", lineHeight: 1.6 }}>
+          <strong>{filtered.length}</strong> municipios graficados. Correlación Spearman entre{" "}
+          <strong>{xMeta.label}</strong> y <strong>{yMeta.label}</strong>:{" "}
+          <strong
+            style={{
+              color:
+                Math.abs(rho) >= 0.4
+                  ? rho > 0 ? "var(--green)" : "var(--red)"
+                  : "var(--text-2)",
+            }}
+          >
+            ρ = {rho >= 0 ? "+" : ""}{rho.toFixed(3)}
+          </strong>{" "}
+          ({rhoInterpretation}).
+          {pairContextual && <>{" "}{pairContextual}</>}
         </p>
-        <p>
-          Con estos ejes, Spearman sugiere <strong>{rhoInterpretation}</strong>
-          {rho !== null ? ` (ρ = ${rho.toFixed(3)})` : ""}.
-        </p>
-        {(() => {
-          const contextual = getPairInterpretation(xKey, yKey, rho);
-          return contextual ? (
-            <p style={{ background: "#eff6ff", borderRadius: 8, padding: "8px 10px", border: "1px solid #bfdbfe" }}>
-              <strong>Lectura indicativa:</strong> {contextual}
-            </p>
-          ) : null;
-        })()}
-        <p style={{ fontSize: "0.82rem", color: "#64748b" }}>
-          Los puntos aislados de la nube principal son municipios atípicos. Conviene revisarlos
-          individualmente: pueden reflejar casos particulares y no la tendencia del estado.
-        </p>
-        {colorEchoesCoverageAxis ? (
-          <p style={{ fontSize: "0.82rem", color: "#b45309", background: "#fffbeb", borderRadius: 8, padding: "8px 10px", border: "1px solid #fde68a" }}>
-            El color del punto ya refleja el nivel de cobertura 4G del municipio. Con cobertura en
-            un eje la gráfica repite la misma dimensión; conviene usar otro eje (escolaridad, edad
-            o rezago social).
-          </p>
-        ) : null}
-      </InterpretationHelp>
+      )}
+
       <div className="chart-frame">
         {sameAxis ? (
           <p style={{ padding: 24, color: "#64748b" }}>
@@ -316,11 +333,6 @@ export default function MunicipioScatterExplore({ municipios, activeVariableIds 
         <p style={{ marginTop: 8, fontSize: "0.82rem", color: "#475569" }}>
           Municipios más atípicos en este cruce:{" "}
           <strong>{outliers.map((o) => o.name).join(", ")}</strong>.
-        </p>
-      )}
-      {filtered.length > 0 && !sameAxis && (
-        <p style={{ marginTop: 4, fontSize: "0.82rem", color: "var(--text-3)" }}>
-          {filtered.length} de {municipios.length} municipios con datos en ambos ejes.
         </p>
       )}
     </div>
