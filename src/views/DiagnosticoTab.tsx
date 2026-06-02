@@ -437,9 +437,9 @@ export default function DiagnosticoTab({ appData }: Props) {
             <TabNarrative
               title={municipalMode
                 ? `Vista municipal — ${histMetricDef?.label ?? effectiveChartVarId}`
-                : `Análisis de variable — ${histMetricDef?.label ?? effectiveChartVarId}`}
+                : `Vista nacional: ${histMetricDef?.label ?? effectiveChartVarId}`}
               description={municipalMode
-                ? "Histograma, mapa y ranking de municipios del estado para la variable seleccionada."
+                ? `Distribución, mapa y ranking de municipios de ${primaryState ?? "este estado"} para la variable seleccionada.`
                 : "Distribución entre los 32 estados, mapa coroplético y ranking nacional para la variable seleccionada."}
               style={{ marginTop: 16 }}
             >
@@ -469,6 +469,14 @@ export default function DiagnosticoTab({ appData }: Props) {
                   primaryState={primaryState}
                   rankingRow={rankingRows.find((r) => r.state === primaryState) ?? null}
                   totalStates={dataset.records.length}
+                />
+              )}
+              {municipalMode && (
+                <MunicipalNarrative
+                  stateName={primaryState ?? "este estado"}
+                  varLabel={histMetricDef?.label ?? effectiveChartVarId ?? ""}
+                  varUnit={histMetricDef?.unit}
+                  direction={histMetricDef ? getMetricPolaridad(histMetricDef.id) : "higher_better"}
                 />
               )}
             </TabNarrative>
@@ -627,6 +635,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                 view={rankingView}
                 direction={effectiveRankingDirection}
                 groupLines={rankingGroupLines}
+                showNational={comparisonGroups.includes("nacional")}
               />
             ) : (
               <EmptyState
@@ -722,6 +731,38 @@ function DistributionInsights({
         Media: <strong>{mean.toFixed(2)}</strong> · σ: <strong>{std.toFixed(2)}</strong>
         {zScore !== null && <> · z del estado: <strong>{zScore >= 0 ? "+" : ""}{zScore.toFixed(2)}</strong></>}
         {normalityNote && <> · {normalityNote}</>}
+      </p>
+    </div>
+  );
+}
+
+// ── Narrativa vista municipal ─────────────────────────────────────────────────
+
+function MunicipalNarrative({
+  stateName,
+  varLabel,
+  varUnit,
+  direction,
+}: {
+  stateName: string;
+  varLabel: string;
+  varUnit?: string;
+  direction: import("../types/dataStandard").MetricPolaridad;
+}) {
+  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
+  const betterWord = direction === "lower_better" ? "menor" : "mayor";
+  return (
+    <div style={{ marginTop: 12, padding: "0 4px" }}>
+      <p style={S}>
+        Distribución de <strong>{varLabel}</strong>{varUnit ? ` (${varUnit})` : ""} entre los
+        municipios de <strong>{stateName}</strong>.
+      </p>
+      <p style={S}>
+        El <strong>histograma</strong> muestra cómo se reparte la variable entre municipios —
+        una distribución muy dispersa indica desigualdad intraestatal alta.
+        El <strong>mapa</strong> permite identificar patrones geográficos dentro del estado.
+        El <strong>ranking</strong> señala los municipios con {betterWord} y menor desempeño relativo
+        al promedio estatal.
       </p>
     </div>
   );

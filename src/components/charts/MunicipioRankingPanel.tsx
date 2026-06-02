@@ -50,12 +50,13 @@ export default function MunicipioRankingPanel({ features, combined, munVars, var
       pct: avg !== 0 ? ((r.value - avg) / Math.abs(avg)) * 100 : 0,
     });
 
+    const k = Math.min(10, Math.max(3, Math.floor(sorted.length / 3)));
     return {
-      top: sorted.slice(0, 10).map(toRow),
+      top: sorted.slice(0, k).map(toRow),
       bottom: sorted
-        .slice(-10)
+        .slice(-k)
         .reverse()
-        .map((r, i) => toRow(r, sorted.length - 10 + i)),
+        .map((r, i) => toRow(r, sorted.length - 1 - i)),
     };
   }, [combined, varId, direction, nameMap]);
 

@@ -195,7 +195,7 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
             />
             <Tooltip
               formatter={(value: number, name: string) =>
-                name === "Desigualdad" ? null : [`${(value * 100).toFixed(1)}%`, name]
+                name === "Área Gini" ? null : [`${(value * 100).toFixed(1)}%`, name]
               }
               labelFormatter={(_, payload) =>
                 payload?.[0]?.payload
@@ -205,11 +205,25 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
               contentStyle={{ fontSize: "0.82rem", borderRadius: 8 }}
             />
 
-            {/* Gini shaded area */}
+            {/* Lorenz base (transparent) — establishes stack baseline so giniGap renders above the curve */}
+            <Area
+              type="monotone"
+              dataKey="lorenz"
+              name="Lorenz (cobertura)"
+              stackId="gini"
+              fill="transparent"
+              fillOpacity={0}
+              stroke="none"
+              dot={false}
+              isAnimationActive={false}
+              legendType="none"
+            />
+            {/* Gini shaded area — stacked on top of lorenz baseline */}
             <Area
               type="monotone"
               dataKey="giniGap"
-              name="Desigualdad"
+              name="Área Gini"
+              stackId="gini"
               fill="url(#lorenzFill)"
               stroke="none"
               fillOpacity={1}
@@ -221,11 +235,22 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
             <Line
               type="linear"
               dataKey="equality"
-              name="Todos iguales"
+              name="Igualdad perfecta"
               stroke="#94a3b8"
               strokeDasharray="6 4"
               dot={false}
               strokeWidth={1.5}
+              isAnimationActive={false}
+            />
+
+            {/* Lorenz curve */}
+            <Line
+              type="monotone"
+              dataKey="lorenz"
+              name="Lorenz (cobertura 4G)"
+              stroke="#2563eb"
+              dot={false}
+              strokeWidth={2.5}
               isAnimationActive={false}
             />
 

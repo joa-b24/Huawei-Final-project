@@ -14,6 +14,7 @@ type Props = {
   view?: "table" | "bars" | "lollipop";
   direction?: MetricPolaridad;
   groupLines?: { value: number; label: string; color: string }[];
+  showNational?: boolean;
 };
 
 function LollipopTooltip({ active, payload, label, metricLabel, unit, direction }: any) {
@@ -68,7 +69,7 @@ function LollipopShapeColumn({ x, y, width, height, fill, isHighlighted, rank }:
   );
 }
 
-export default function RankingTable({ rows, highlightState, comparisonState, comparisonStates, groupStateColors, metricLabel, unit = "", total = 32, view = "table", direction, groupLines }: Props) {
+export default function RankingTable({ rows, highlightState, comparisonState, comparisonStates, groupStateColors, metricLabel, unit = "", total = 32, view = "table", direction, groupLines, showNational = true }: Props) {
   const topThird = Math.ceil(total / 3);
   const bottomThird = Math.floor((2 * total) / 3);
   const missing = total - rows.length;
@@ -172,13 +173,15 @@ export default function RankingTable({ rows, highlightState, comparisonState, co
                 return <LollipopShapeColumn {...props} fill={d?.color ?? "var(--border)"} isHighlighted={d?.isHighlighted} rank={d?.rank} />;
               }}
             />
-            <ReferenceLine
-              y={nationalMean}
-              stroke="#94a3b8"
-              strokeDasharray="4 3"
-              strokeWidth={1.5}
-              label={{ value: "Media", fontSize: 9, fill: "#94a3b8", position: "insideTopRight" }}
-            />
+            {showNational && (
+              <ReferenceLine
+                y={nationalMean}
+                stroke="#94a3b8"
+                strokeDasharray="4 3"
+                strokeWidth={1.5}
+                label={{ value: "Media", fontSize: 9, fill: "#94a3b8", position: "insideTopRight" }}
+              />
+            )}
             {groupLines?.map((gl, i) => (
               <ReferenceLine
                 key={`gl-${i}`}
