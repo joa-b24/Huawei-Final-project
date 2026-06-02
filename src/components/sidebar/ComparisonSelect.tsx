@@ -1,4 +1,9 @@
-import type { ComparisonTarget } from "../../context/AppContext";
+type ComparisonTarget =
+  | "nacional"
+  | "region_norte" | "region_noreste" | "region_noroeste"
+  | "region_centro" | "region_oriente" | "region_occidente"
+  | "region_bajio" | "region_sur" | "region_sureste"
+  | "cluster_1" | "cluster_2" | "cluster_3" | "cluster_4";
 
 const OPTIONS: { value: ComparisonTarget; label: string; available: boolean }[] = [
   { value: "nacional", label: "Promedio nacional", available: true },

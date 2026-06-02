@@ -10,6 +10,7 @@ export type AppState = {
   primaryState: string | null;
   activeTab: TabId;
   activeVariableIds: string[];
+  comparisonGroups: string[];
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -20,14 +21,15 @@ type Action =
   | { type: "SET_PRIMARY_STATE"; stateName: string | null }
   | { type: "SET_TAB"; tab: TabId }
   | { type: "TOGGLE_VARIABLE"; variableId: string }
-  | { type: "SET_VARIABLES"; variableIds: string[] };
+  | { type: "SET_VARIABLES"; variableIds: string[] }
+  | { type: "SET_COMPARISON_GROUPS"; groups: string[] };
 
 const MAX_ACTIVE_VARIABLES = 5;
 
 function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case "SET_PRIMARY_STATE":
-      return { ...state, primaryState: action.stateName };
+      return { ...state, primaryState: action.stateName, comparisonGroups: ["nacional"] };
     case "SET_TAB":
       return { ...state, activeTab: action.tab };
     case "TOGGLE_VARIABLE": {
@@ -42,6 +44,8 @@ function reducer(state: AppState, action: Action): AppState {
     }
     case "SET_VARIABLES":
       return { ...state, activeVariableIds: action.variableIds.slice(0, MAX_ACTIVE_VARIABLES) };
+    case "SET_COMPARISON_GROUPS":
+      return { ...state, comparisonGroups: action.groups };
     default:
       return state;
   }
@@ -52,17 +56,18 @@ function reducer(state: AppState, action: Action): AppState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DEFAULT_VARIABLES = [
-  "carencia_servicios_basicos_pct",
+  "poblacion_en_localidades_con_4g_garantizada_pct",
+  "personas_usuarias_internet_pct",
+  "rezago_educativo_pct",
   "pobreza_pct",
-  "pct_analfabetismo_15ymas",
   "pib_per_capita",
-  "poblacion_en_localidades_con_5g_garantizada_pct",
 ];
 
 const initialState: AppState = {
   primaryState: "Ciudad de Mexico",
   activeTab: "diagnostico",
   activeVariableIds: DEFAULT_VARIABLES,
+  comparisonGroups: ["nacional"],
 };
 
 type AppContextValue = {
@@ -88,4 +93,5 @@ export const actions = {
   setTab: (tab: TabId): Action => ({ type: "SET_TAB", tab }),
   toggleVariable: (variableId: string): Action => ({ type: "TOGGLE_VARIABLE", variableId }),
   setVariables: (variableIds: string[]): Action => ({ type: "SET_VARIABLES", variableIds }),
+  setComparisonGroups: (groups: string[]): Action => ({ type: "SET_COMPARISON_GROUPS", groups }),
 };

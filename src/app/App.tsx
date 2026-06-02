@@ -13,12 +13,13 @@ import RelacionesTab from "../views/RelacionesTab";
 import EstructuraTab from "../views/EstructuraTab";
 import EvolucionTab from "../views/EvolucionTab";
 import DatosTab from "../views/DatosTab";
-import StateTerritorialAnalysis from "../components/state-analysis/StateTerritorialAnalysis";
+import TerritorialTab from "../views/TerritorialTab";
 import HelpModal from "../components/feedback/HelpModal";
 
-function buildTabs(appData: AppData): Tab[] {
-  const hasMunicipal = appData.dataset.municipios.length > 0;
-  const hasTemporalData = (appData.temporalVariables?.length ?? 0) > 0;
+function buildTabs(appData: AppData, activeVarIds: string[]): Tab[] {
+  const hasMunicipal = appData.municipalManifest !== null && Object.keys(appData.municipalManifest.states).length > 0;
+  const temporalSet = new Set(appData.temporalVariables ?? []);
+  const hasTemporalData = activeVarIds.some((id) => temporalSet.has(id));
   return [
     { id: "diagnostico", label: "Diagnóstico" },
     { id: "relaciones", label: "Impacto" },
@@ -72,13 +73,44 @@ function Dashboard({ appData }: { appData: AppData }) {
     [appData.dataset.records]
   );
 
+  const primaryRecord = useMemo(
+    () => appData.dataset.records.find((r) => r.state === state.primaryState) ?? null,
+    [appData.dataset.records, state.primaryState]
+  );
+  const regionGroupId = primaryRecord?.region ? `r:${primaryRecord.region}` : null;
+
+  const primaryPcaRecord = useMemo(
+    () => appData.pcaResults?.records.find((r) => r.state === state.primaryState) ?? null,
+    [appData.pcaResults, state.primaryState]
+  );
+  const primaryClusterGroupId = primaryPcaRecord !== null ? `c:${primaryPcaRecord.cluster}` : null;
+  const primaryClusterLabel = primaryPcaRecord !== null
+    ? (appData.pcaResults?.cluster_stats[String(primaryPcaRecord.cluster)]?.label ?? `Cluster ${primaryPcaRecord.cluster}`)
+    : null;
+
+  const munVarIds = useMemo(() => {
+    if (!appData.municipalManifest) return new Set<string>();
+    const all = new Set<string>();
+    Object.values(appData.municipalManifest.states).forEach((s) => s.variables.forEach((v) => all.add(v)));
+    return all;
+  }, [appData.municipalManifest]);
+
+  const histVarIds = useMemo(() => new Set(appData.temporalVariables), [appData.temporalVariables]);
+
   const allVars = useMemo(() => {
     const hidden = loadHiddenIds();
     const roleMap = new Map(appData.variablesCatalog.map((v) => [v.variable_id, v.role ?? "both"]));
     return appData.dataset.metricCatalog
       .filter((m) => !hidden.has(m.id))
-      .map((m) => ({ id: m.id, label: m.label, category: m.category, role: roleMap.get(m.id) ?? "both" }));
-  }, [appData.dataset.metricCatalog, appData.variablesCatalog, catalogVersion]);
+      .map((m) => ({
+        id: m.id,
+        label: m.label,
+        category: m.category,
+        role: roleMap.get(m.id) ?? "both",
+        hasMunicipal: munVarIds.has(m.id),
+        hasHistorical: histVarIds.has(m.id),
+      }));
+  }, [appData.dataset.metricCatalog, appData.variablesCatalog, munVarIds, histVarIds, catalogVersion]);
 
   // Deactivate any variable that got hidden
   useEffect(() => {
@@ -99,8 +131,14 @@ function Dashboard({ appData }: { appData: AppData }) {
         activeVarIds={state.activeVariableIds}
         onToggleVar={(id) => dispatch(actions.toggleVariable(id))}
         onClearVars={() => dispatch(actions.setVariables([]))}
+        comparisonGroups={state.comparisonGroups}
+        onComparisonGroupsChange={(groups) => dispatch(actions.setComparisonGroups(groups))}
+        regionGroupId={regionGroupId}
+        primaryClusterGroupId={primaryClusterGroupId}
+        primaryClusterLabel={primaryClusterLabel}
+        hidden={datosOpen || estructuraOpen}
       />
-      <MainContent>
+      <MainContent noSidebar={datosOpen || estructuraOpen}>
         <h1 className="page-title">Análisis de Indicadores Estatales</h1>
         <div className="tab-bar-row">
           <p className="tab-section-label">
@@ -108,7 +146,7 @@ function Dashboard({ appData }: { appData: AppData }) {
           </p>
           <div style={{ display: "flex", alignItems: "stretch" }}>
             <TabBar
-              tabs={buildTabs(appData)}
+              tabs={buildTabs(appData, state.activeVariableIds)}
               activeTab={datosOpen || estructuraOpen ? "__none__" : state.activeTab}
               onTabChange={(id) => { setDatosOpen(false); setEstructuraOpen(false); dispatch(actions.setTab(id as TabId)); }}
             />
@@ -164,10 +202,7 @@ function Dashboard({ appData }: { appData: AppData }) {
               <EvolucionTab appData={appData} />
             </TabPanel>
             <TabPanel id="territorial" activeTab={state.activeTab}>
-              <StateTerritorialAnalysis
-                stateAnalytics={appData.dataset.stateAnalytics}
-                municipios={appData.dataset.municipios}
-              />
+              <TerritorialTab appData={appData} />
             </TabPanel>
           </>
         )}

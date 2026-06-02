@@ -109,7 +109,7 @@ const PAIR_MAP: Record<string, Interpretation> = {
   },
 };
 
-function pairKey(a: AnalysisMetricKey, b: AnalysisMetricKey): string | null {
+function pairKey(a: string, b: string): string | null {
   const k1 = `${a}|${b}`;
   const k2 = `${b}|${a}`;
   if (PAIR_MAP[k1]) return k1;
@@ -118,8 +118,8 @@ function pairKey(a: AnalysisMetricKey, b: AnalysisMetricKey): string | null {
 }
 
 export function getPairInterpretation(
-  a: AnalysisMetricKey,
-  b: AnalysisMetricKey,
+  a: string,
+  b: string,
   rho: number | null
 ): string | null {
   if (a === b) return null;

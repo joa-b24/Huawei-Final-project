@@ -7,6 +7,7 @@ type Props = {
   highlightState?: string;
   comparisonState?: string;
   comparisonStates?: string[];
+  groupStateColors?: Map<string, string>;
   metricLabel: string;
   unit?: string;
   total?: number;
@@ -51,20 +52,23 @@ function LollipopTooltip({ active, payload, label, metricLabel, unit, direction 
   );
 }
 
-function LollipopShapeColumn({ x, y, width, height, fill, isHighlighted }: any) {
+function LollipopShapeColumn({ x, y, width, height, fill, isHighlighted, rank }: any) {
   if (!height || height <= 0) return null;
   const cx = x + width / 2;
-  const r = isHighlighted ? 7 : 5;
+  const r = isHighlighted ? 9 : 5;
   return (
     <g>
-      <line x1={cx} y1={y + height} x2={cx} y2={y} stroke={fill} strokeWidth={isHighlighted ? 3 : 2} opacity={0.9} />
+      <line x1={cx} y1={y + height} x2={cx} y2={y} stroke={fill} strokeWidth={isHighlighted ? 3 : 1.5} opacity={isHighlighted ? 1 : 0.8} />
       <circle cx={cx} cy={y} r={r} fill={fill} stroke="var(--surface)" strokeWidth={isHighlighted ? 2.5 : 1.5} />
-      {isHighlighted && <circle cx={cx} cy={y} r={r + 3} fill="none" stroke={fill} strokeWidth={1} opacity={0.35} />}
+      {isHighlighted && <circle cx={cx} cy={y} r={r + 4} fill="none" stroke={fill} strokeWidth={1.5} opacity={0.3} />}
+      {isHighlighted && rank != null && (
+        <text x={cx} y={y - r - 5} textAnchor="middle" fontSize={9} fill={fill} fontWeight={700}>#{rank}</text>
+      )}
     </g>
   );
 }
 
-export default function RankingTable({ rows, highlightState, comparisonState, comparisonStates, metricLabel, unit = "", total = 32, view = "table", direction, groupLines }: Props) {
+export default function RankingTable({ rows, highlightState, comparisonState, comparisonStates, groupStateColors, metricLabel, unit = "", total = 32, view = "table", direction, groupLines }: Props) {
   const topThird = Math.ceil(total / 3);
   const bottomThird = Math.floor((2 * total) / 3);
   const missing = total - rows.length;
@@ -80,22 +84,23 @@ export default function RankingTable({ rows, highlightState, comparisonState, co
     return "rank-mid";
   }
 
-  function barFill(rank: number, isHighlighted: boolean, isComparison: boolean) {
-    if (isHighlighted) return "var(--blue)";
-    if (isComparison) return "#64748b";
-    if (rank <= topThird) return "var(--green)";
-    if (rank > bottomThird) return "var(--red)";
-    return "var(--amber)";
-  }
+  const nationalMean = (() => {
+    const r = rows.find((r) => r.pct_vs_mean !== -100);
+    if (!r) return rows.reduce((s, r) => s + r.value, 0) / Math.max(rows.length, 1);
+    return r.value / (1 + r.pct_vs_mean / 100);
+  })();
 
-  const barData = rows.map((row) => ({
-    name: row.estado,
-    value: row.value,
-    rank: row.rank,
-    pct: row.pct_vs_mean,
-    isHighlighted: highlightState === row.estado,
-    isComparison: allComparisonStates.has(row.estado) && highlightState !== row.estado,
-  }));
+  const barData = rows.map((row) => {
+    const isHighlighted = highlightState === row.estado;
+    const isComp = allComparisonStates.has(row.estado) && !isHighlighted;
+    let color: string;
+    if (isHighlighted) color = "var(--blue)";
+    else if (isComp) color = groupStateColors?.get(row.estado) ?? "#64748b";
+    else if (row.rank <= topThird) color = "var(--green)";
+    else if (row.rank > bottomThird) color = "var(--red)";
+    else color = "var(--amber)";
+    return { name: row.estado, value: row.value, rank: row.rank, pct: row.pct_vs_mean, isHighlighted, isComparison: isComp, color };
+  });
 
   const chartTooltipFormatter = (v: number, _: string, props: { payload?: { rank?: number; pct?: number } }) => {
     const rank = props.payload?.rank;
@@ -122,7 +127,7 @@ export default function RankingTable({ rows, highlightState, comparisonState, co
             <Tooltip formatter={chartTooltipFormatter} />
             <Bar dataKey="value" radius={[0, 3, 3, 0]} isAnimationActive={false}>
               {barData.map((d, i) => (
-                <Cell key={i} fill={barFill(d.rank, d.isHighlighted, d.isComparison)} opacity={d.isHighlighted ? 1 : 0.8} />
+                <Cell key={i} fill={d.color} opacity={d.isHighlighted ? 1 : 0.8} />
               ))}
             </Bar>
           </BarChart>
@@ -164,9 +169,15 @@ export default function RankingTable({ rows, highlightState, comparisonState, co
               isAnimationActive={false}
               shape={(props: any) => {
                 const d = barData[props.index];
-                const fill = d ? barFill(d.rank, d.isHighlighted, d.isComparison) : "var(--border)";
-                return <LollipopShapeColumn {...props} fill={fill} isHighlighted={d?.isHighlighted} />;
+                return <LollipopShapeColumn {...props} fill={d?.color ?? "var(--border)"} isHighlighted={d?.isHighlighted} rank={d?.rank} />;
               }}
+            />
+            <ReferenceLine
+              y={nationalMean}
+              stroke="#94a3b8"
+              strokeDasharray="4 3"
+              strokeWidth={1.5}
+              label={{ value: "Media", fontSize: 9, fill: "#94a3b8", position: "insideTopRight" }}
             />
             {groupLines?.map((gl, i) => (
               <ReferenceLine

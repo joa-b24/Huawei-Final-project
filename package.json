@@ -11,7 +11,8 @@
     "data:build:endutih": "python3 scripts/build_endutih_2024.py",
     "data:report:endutih": "python3 scripts/build_data_quality_report.py",
     "data:build:all": "python3 scripts/build_endutih_2024.py && python3 scripts/build_data_quality_report.py",
-    "data:build:analytics": "python3 scripts/build_municipal_analytics.py",
+    "data:build:analytics": "python3 scripts/build_municipal_analytics.py && python3 scripts/export_municipal_from_analytics.py",
+    "data:export:municipal": "python3 scripts/export_municipal_from_analytics.py",
     "data:recluster": "python3 scripts/recluster_municipal.py",
     "data:enrich:rf": "python3 scripts/enrich_rf_diagnostics.py",
     "data:build:context": "python3 scripts/etl/build_context_variables.py",
@@ -20,7 +21,9 @@
     "data:import": "python3 scripts/import_variable.py",
     "data:layer1": "python3 scripts/analytics/layer1_descriptive.py",
     "data:layer1:municipal": "python3 scripts/analytics/layer1_municipal.py",
-    "data:pipeline": "python3 scripts/combine_data.py && python3 scripts/analytics/layer1_descriptive.py"
+    "data:pipeline": "python3 scripts/combine_data.py && python3 scripts/analytics/layer1_descriptive.py",
+    "data:build:temporal": "python scripts/analytics/build_temporal_outputs.py",
+    "data:build:pca": "python scripts/analytics/pca.py"
   },
   "dependencies": {
     "lucide-react": "^1.14.0",

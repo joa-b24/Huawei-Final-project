@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { useAppContext } from "../../context/AppContext";
 import type { AppData } from "../../services/DataService";
@@ -7,6 +7,7 @@ const GEO_URL = "/data/estados.geojson";
 
 type Props = {
   appData: AppData;
+  varId: string;
   groupStateNames?: Map<string, string>; // stateName → color
 };
 
@@ -18,55 +19,30 @@ function interpolateColor(t: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-export default function ChoroplethMap({ appData, groupStateNames }: Props) {
+export default function ChoroplethMap({ appData, varId, groupStateNames }: Props) {
   const { state: appState, dispatch } = useAppContext();
-  const { primaryState, activeVariableIds } = appState;
+  const { primaryState } = appState;
   const { dataset } = appData;
 
-  const [selectedVarId, setSelectedVarId] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; content: string } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const effectiveVarId =
-    selectedVarId && activeVariableIds.includes(selectedVarId)
-      ? selectedVarId
-      : (activeVariableIds[0] ?? null);
-
-  useEffect(() => {
-    if (effectiveVarId && !activeVariableIds.includes(effectiveVarId)) {
-      setSelectedVarId(null);
-    }
-  }, [activeVariableIds, effectiveVarId]);
-
-
-  const metricDef = effectiveVarId
-    ? dataset.metricCatalog.find((m) => m.id === effectiveVarId)
+  const metricDef = varId
+    ? dataset.metricCatalog.find((m) => m.id === varId)
     : null;
-
-  const stateValues = useMemo(() => {
-    if (!effectiveVarId) return new Map<string, number>();
-    const map = new Map<string, number>();
-    for (const r of dataset.records) {
-      const v = r.metrics[effectiveVarId];
-      if (typeof v === "number" && !isNaN(v) && r.stateCode) {
-        map.set(r.stateCode, v);
-      }
-    }
-    return map;
-  }, [effectiveVarId, dataset.records]);
 
   // Map cve_ent → value for color lookup
   const cveToValue = useMemo(() => {
-    if (!effectiveVarId) return new Map<string, number>();
+    if (!varId) return new Map<string, number>();
     const map = new Map<string, number>();
     for (const r of dataset.records) {
-      const v = r.metrics[effectiveVarId];
+      const v = r.metrics[varId];
       if (typeof v === "number" && !isNaN(v) && r.cveEnt) {
         map.set(r.cveEnt, v);
       }
     }
     return map;
-  }, [effectiveVarId, dataset.records]);
+  }, [varId, dataset.records]);
 
   const cveToState = useMemo(() => {
     const map = new Map<string, string>();
@@ -87,7 +63,7 @@ export default function ChoroplethMap({ appData, groupStateNames }: Props) {
     [dataset.records, primaryState]
   );
 
-  if (!effectiveVarId) {
+  if (!varId) {
     return (
       <p style={{ textAlign: "center", color: "var(--text-3)", fontSize: 13, padding: "24px 0" }}>
         Activa al menos una variable en el panel lateral.
@@ -102,20 +78,6 @@ export default function ChoroplethMap({ appData, groupStateNames }: Props) {
 
   return (
     <div ref={containerRef} style={{ position: "relative" }}>
-      {activeVariableIds.length > 1 && (
-        <div className="ranking-panel-header" style={{ marginBottom: 8 }}>
-          <select
-            className="ranking-var-select"
-            value={effectiveVarId}
-            onChange={(e) => setSelectedVarId(e.target.value)}
-          >
-            {activeVariableIds.map((varId) => {
-              const lbl = dataset.metricCatalog.find((m) => m.id === varId)?.label ?? varId;
-              return <option key={varId} value={varId}>{lbl}</option>;
-            })}
-          </select>
-        </div>
-      )}
 
       <ComposableMap
         projection="geoMercator"

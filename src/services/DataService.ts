@@ -86,6 +86,12 @@ export type PcaResults = {
   cluster_stats: Record<string, PcaClusterStat>;
 };
 
+export type TemporalVarMeta = {
+  label: string;
+  unit: string;
+  source: string;
+};
+
 export type AppData = {
   dataset: DashboardDataset;
   correlations: CorrelationsPayload;
@@ -98,6 +104,8 @@ export type AppData = {
   pcaResults: PcaResults | null;
   /** Variable IDs that have temporal JSON files available */
   temporalVariables: string[];
+  /** Label/unit/source metadata for temporal-only variables */
+  temporalMeta: Record<string, TemporalVarMeta>;
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -178,7 +186,6 @@ async function fetchJsonOptional<T>(path: string, fallback: T): Promise<T> {
 function buildDataset(
   combinedPayload: any,
   stateAnalytics: StateAnalyticsPayload | null,
-  municipios: MunicipioAnalyticsRecord[]
 ): DashboardDataset {
   const metricMap = new Map<string, MetricDefinition>();
 
@@ -208,15 +215,26 @@ function buildDataset(
     metricCatalog: Array.from(metricMap.values()),
     records,
     stateAnalytics,
-    municipios,
   };
+}
+
+/** Carga los datos municipales analíticos para un estado. Lazy: sólo cuando abre la tab territorial. */
+export async function loadStateMunicipalAnalytics(stateCode: string): Promise<MunicipioAnalyticsRecord[]> {
+  try {
+    const res = await fetch(`/data/outputs/municipal/${stateCode}.json`);
+    if (!res.ok) return [];
+    const payload = await res.json() as { municipalities?: MunicipioAnalyticsRecord[] };
+    return payload.municipalities ?? [];
+  } catch {
+    return [];
+  }
 }
 
 export async function loadAppData(): Promise<AppData> {
   const EMPTY_COMBINED = { metric_catalog: [], records: [], sources: [], updated_at: "" };
   const EMPTY_CORRELATIONS: CorrelationsPayload = { pearson: { variables: [], matrix: [], note: "" }, spearman: { variables: [], matrix: [], note: "" } };
 
-  const [combined, correlations, distributions, univariateStats, rankings, outliers, catalogPayload, stateAnalytics, municipios, municipalManifest, pcaResults, temporalManifest] =
+  const [combined, correlations, distributions, univariateStats, rankings, outliers, catalogPayload, stateAnalytics, municipalManifest, pcaResults, temporalManifest] =
     await Promise.all([
       fetchJsonOptional<any>("/data/state_dashboard.combined.json", EMPTY_COMBINED),
       fetchJsonOptional<CorrelationsPayload>("/data/outputs/state/correlations.json", EMPTY_CORRELATIONS),
@@ -226,14 +244,13 @@ export async function loadAppData(): Promise<AppData> {
       fetchJsonOptional<Record<string, OutlierEntry>>("/data/outputs/state/outliers_iqr.json", {}),
       fetchJsonOptional<{ variables: VariableCatalogEntry[] }>("/data/variables.catalog.json", { variables: [] }),
       fetchJsonOptional<StateAnalyticsPayload | null>("/data/state_analytics_dashboard.json", null),
-      fetchJsonOptional<MunicipioAnalyticsRecord[]>("/data/municipios_master_analytics.json", []),
       fetchJsonOptional<MunicipalManifest | null>("/data/municipal_manifest.json", null),
       fetchJsonOptional<PcaResults | null>("/data/outputs/pca/pca_results.json", null),
       fetchJsonOptional<{ variables: string[] } | null>("/data/outputs/temporal/manifest.json", null),
     ]);
 
   return {
-    dataset: buildDataset(combined, stateAnalytics, municipios),
+    dataset: buildDataset(combined, stateAnalytics),
     correlations,
     distributions,
     univariateStats,
@@ -243,5 +260,6 @@ export async function loadAppData(): Promise<AppData> {
     municipalManifest,
     pcaResults,
     temporalVariables: temporalManifest?.variables ?? [],
+    temporalMeta: (temporalManifest as any)?.metadata ?? {},
   };
 }

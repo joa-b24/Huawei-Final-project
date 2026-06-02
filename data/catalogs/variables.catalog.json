@@ -1014,6 +1014,51 @@
       "direction": "lower_better",
       "role": "target",
       "fuente_sugerida": "BIT / Ookla 2024"
+    },
+    {
+      "variable_id": "hogares_con_internet_pct",
+      "nombre": "Hogares con acceso a internet",
+      "label": "Hogares con internet",
+      "descripcion": "Porcentaje de hogares con acceso a internet (ENDUTIH 2015-2024).",
+      "unidad_base": "%",
+      "unidad": "%",
+      "categoria_id": "infraestructura_digital",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH 2015-2024",
+      "sinonimos": [
+        "Pct_Hogares_Internet"
+      ]
+    },
+    {
+      "variable_id": "uso_internet_educacion_pct",
+      "nombre": "Uso de internet para educación",
+      "label": "Internet: educación",
+      "descripcion": "Porcentaje de usuarios de internet que lo usan para actividades educativas (ENDUTIH 2015-2024).",
+      "unidad_base": "%",
+      "unidad": "%",
+      "categoria_id": "infraestructura_digital",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH 2015-2024",
+      "sinonimos": [
+        "Pct_Uso_Educacion"
+      ]
+    },
+    {
+      "variable_id": "uso_internet_gobierno_pct",
+      "nombre": "Uso de internet para trámites gubernamentales",
+      "label": "Internet: gobierno",
+      "descripcion": "Porcentaje de usuarios de internet que realizan trámites gubernamentales en línea (ENDUTIH 2015-2024).",
+      "unidad_base": "%",
+      "unidad": "%",
+      "categoria_id": "infraestructura_digital",
+      "tipo_valor": "number",
+      "agregacion_default": "avg",
+      "fuente_sugerida": "INEGI ENDUTIH 2015-2024",
+      "sinonimos": [
+        "Pct_Uso_Gobierno"
+      ]
     }
   ]
 }

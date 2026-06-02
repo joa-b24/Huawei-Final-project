@@ -10,12 +10,12 @@ type Props = {
   features: GeoFeature[];
   combined: CombinedData;
   munVars: MunVar[];
+  varId: string;
 };
 
 type Row = { rank: number; name: string; value: number; pct: number };
 
-export default function MunicipioRankingPanel({ features, combined, munVars }: Props) {
-  const [varId, setVarId] = useState(munVars[0]?.id ?? "");
+export default function MunicipioRankingPanel({ features, combined, munVars, varId }: Props) {
   const [view, setView] = useState<"top" | "bottom">("top");
 
   const currentVar = munVars.find((v) => v.id === varId) ?? munVars[0];
@@ -82,17 +82,6 @@ export default function MunicipioRankingPanel({ features, combined, munVars }: P
             }
           />
         </div>
-        {munVars.length > 1 && (
-          <select
-            className="ranking-var-select"
-            value={varId}
-            onChange={(e) => setVarId(e.target.value)}
-          >
-            {munVars.map((v) => (
-              <option key={v.id} value={v.id}>{v.label}</option>
-            ))}
-          </select>
-        )}
       </div>
 
       <div

@@ -8,7 +8,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   demografia: "#be185d",
 };
 
-type VarItem = { id: string; label: string; category?: string; role?: string };
+type VarItem = { id: string; label: string; category?: string; role?: string; hasMunicipal?: boolean; hasHistorical?: boolean };
 
 type Props = {
   vars: VarItem[];
@@ -17,40 +17,54 @@ type Props = {
   onToggle: (id: string) => void;
 };
 
+function VarRow({
+  id,
+  label,
+  category,
+  hasMunicipal,
+  hasHistorical,
+  isActive,
+  isDisabled,
+  maxActive,
+  onToggle,
+}: VarItem & { isActive: boolean; isDisabled: boolean; maxActive: number; onToggle: (id: string) => void }) {
+  const dotColor = category ? (CATEGORY_COLORS[category] ?? "#6b7280") : "#6b7280";
+  return (
+    <div
+      className={`va-row${isActive ? " active" : ""}${isDisabled ? " muted" : ""}`}
+      onClick={() => !isDisabled && onToggle(id)}
+      role="button"
+      tabIndex={isDisabled ? -1 : 0}
+      onKeyDown={(e) => { if (e.key === "Enter" && !isDisabled) onToggle(id); }}
+      title={isDisabled ? `Máximo ${maxActive} variables activas` : label}
+    >
+      <span className="va-dot" style={{ background: dotColor }} />
+      <span className="va-name">{label}</span>
+      {hasMunicipal && <span className="va-tag">MUN</span>}
+      {hasHistorical && <span className="va-tag va-tag--hist">HIST</span>}
+    </div>
+  );
+}
+
 export default function VarChipList({ vars, activeIds, maxActive = 5, onToggle }: Props) {
   const atLimit = activeIds.length >= maxActive;
+  const activeVars = vars.filter((v) => activeIds.includes(v.id));
+  const inactiveVars = vars.filter((v) => !activeIds.includes(v.id));
 
   return (
-    <div className="var-chip-list">
-      {vars.map(({ id, label, category, role }) => {
-        const isActive = activeIds.includes(id);
-        const isDisabled = !isActive && atLimit;
-        const isContext = role === "context";
-        const dotColor = category ? (CATEGORY_COLORS[category] ?? "#6b7280") : "#6b7280";
-        const titleText = isDisabled
-          ? `Máximo ${maxActive} variables activas`
-          : isContext
-          ? `${label} — variable contextual (referencia, no análisis primario)`
-          : label;
-        return (
-          <button
-            key={id}
-            type="button"
-            className={`var-chip${isActive ? " active" : ""}${isDisabled ? " disabled" : ""}${isContext ? " var-chip--context" : ""}`}
-            onClick={() => { if (!isDisabled) onToggle(id); }}
-            aria-pressed={isActive}
-            title={titleText}
-          >
-            <span
-              className="var-chip__dot"
-              aria-hidden="true"
-              style={{ background: dotColor }}
-            />
-            {label}
-            {isContext && <span className="var-chip__role-tag">ctx</span>}
-          </button>
-        );
-      })}
+    <div className="va-list-wrap">
+      <div className="va-list">
+        <div className="va-list-inner">
+          {activeVars.map((v) => (
+            <VarRow key={v.id} {...v} isActive={true} isDisabled={false} maxActive={maxActive} onToggle={onToggle} />
+          ))}
+          {activeVars.length > 0 && inactiveVars.length > 0 && <div className="va-divider" />}
+          {inactiveVars.map((v) => (
+            <VarRow key={v.id} {...v} isActive={false} isDisabled={atLimit} maxActive={maxActive} onToggle={onToggle} />
+          ))}
+        </div>
+      </div>
+      <div className="va-fade" />
     </div>
   );
 }

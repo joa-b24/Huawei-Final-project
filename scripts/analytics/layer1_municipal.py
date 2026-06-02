@@ -145,7 +145,7 @@ def main() -> None:
             return
         state_codes = [
             f.stem for f in sorted(MUNICIPAL_DIR.glob("*.json"))
-            if f.stem != "analytics"
+            if "." not in f.stem
         ]
 
     if not state_codes:
