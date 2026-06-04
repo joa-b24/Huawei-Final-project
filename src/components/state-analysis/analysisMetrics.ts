@@ -18,6 +18,10 @@ export const COVERAGE_METRIC_KEY: AnalysisMetricKey = "pob_pct_4g_garantizada";
 export const SCATTER_METRICS = [
   { key: "pob_pct_4g_garantizada", label: "Cobertura 4G pob. (%)", unit: "%" },
   { key: "loc_pct_4g_garantizada", label: "Cobertura 4G loc. (%)", unit: "%" },
+  { key: "pob_pct_movil", label: "Cobertura movil pob. (%)", unit: "%" },
+  { key: "loc_pct_movil", label: "Cobertura movil loc. (%)", unit: "%" },
+  { key: "pob_pct_5g_garantizada", label: "Cobertura 5G pob. (%)", unit: "%" },
+  { key: "loc_pct_5g_garantizada", label: "Cobertura 5G loc. (%)", unit: "%" },
   { key: "graproes", label: "Escolaridad promedio", unit: "años" },
   { key: "pct_pob_0_14", label: "Pob. 0–14 años", unit: "%" },
   { key: "pct_pob_15_64", label: "Pob. 15–64 años", unit: "%" },
@@ -59,6 +63,10 @@ export const CONTEXTUAL_METRICS = [
 export const VAR_ID_TO_SCATTER_KEY: Record<string, ScatterMetricKey> = {
   "poblacion_en_localidades_con_4g_garantizada_pct": "pob_pct_4g_garantizada",
   "localidades_con_4g_garantizada_pct": "loc_pct_4g_garantizada",
+  "poblacion_en_localidades_con_cobertura_movil_pct": "pob_pct_movil",
+  "localidades_con_cobertura_movil_pct": "loc_pct_movil",
+  "poblacion_en_localidades_con_5g_garantizada_pct": "pob_pct_5g_garantizada",
+  "localidades_con_5g_garantizada_pct": "loc_pct_5g_garantizada",
   "escolaridad_promedio_anios": "graproes",
   "pob_0_14_pct": "pct_pob_0_14",
   "pob_15_64_pct": "pct_pob_15_64",

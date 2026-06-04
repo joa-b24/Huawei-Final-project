@@ -24,21 +24,30 @@ function buildTabs(appData: AppData, activeVarIds: string[]): Tab[] {
   const hasMunicipal = appData.municipalManifest !== null && Object.keys(appData.municipalManifest.states).length > 0;
   const temporalSet = new Set(appData.temporalVariables ?? []);
   const hasTemporalData = activeVarIds.some((id) => temporalSet.has(id));
+  const municipalVarIds = new Set<string>();
+  if (appData.municipalManifest) {
+    Object.values(appData.municipalManifest.states).forEach((s) => s.variables.forEach((v) => municipalVarIds.add(v)));
+  }
   const hasTerritorialVar = activeVarIds.some((id) => {
     const k = VAR_ID_TO_SCATTER_KEY[id];
-    return k !== undefined && _territorialKeys.has(k as (typeof TERRITORIAL_VARIABLES)[number]["key"]);
+    return municipalVarIds.has(id) && k !== undefined && _territorialKeys.has(k as (typeof TERRITORIAL_VARIABLES)[number]["key"]);
   });
   return [
     { id: "diagnostico", label: "Diagnóstico" },
     { id: "relaciones", label: "Impacto" },
-    ...(hasTemporalData ? [{ id: "temporal", label: "Evolución" } as Tab] : []),
+    {
+      id: "temporal",
+      label: "Evolución",
+      disabled: !hasTemporalData,
+      disabledReason: "Activa una variable con datos historicos para ver evolucion",
+    },
     {
       id: "territorial",
       label: "Territorial",
       disabled: !hasMunicipal || !hasTerritorialVar,
       disabledReason: !hasMunicipal
         ? "Requiere datos municipales (npm run data:build:analytics)"
-        : "Activa una variable con datos municipales para ver el análisis territorial",
+        : "Activa una variable con datos municipales disponible para analisis territorial",
     },
   ];
 }
@@ -51,6 +60,14 @@ function Dashboard({ appData }: { appData: AppData }) {
   const [helpOpen, setHelpOpen] = useState(false);
 
   const hasPca = appData.pcaResults !== null;
+  const tabs = useMemo(() => buildTabs(appData, state.activeVariableIds), [appData, state.activeVariableIds]);
+
+  useEffect(() => {
+    const current = tabs.find((tab) => tab.id === state.activeTab);
+    if (current?.disabled) {
+      dispatch(actions.setTab("diagnostico"));
+    }
+  }, [dispatch, state.activeTab, tabs]);
 
   function exportSnapshot() {
     const styles = Array.from(document.styleSheets)
@@ -156,7 +173,7 @@ function Dashboard({ appData }: { appData: AppData }) {
           </p>
           <div style={{ display: "flex", alignItems: "stretch" }}>
             <TabBar
-              tabs={buildTabs(appData, state.activeVariableIds)}
+              tabs={tabs}
               activeTab={datosOpen || estructuraOpen ? "__none__" : state.activeTab}
               onTabChange={(id) => { setDatosOpen(false); setEstructuraOpen(false); dispatch(actions.setTab(id as TabId)); }}
             />

@@ -3,7 +3,6 @@ import type { VariableCatalogEntry } from "../../../types/dataStandard";
 import type { OperationType } from "../../../lib/dataStorage";
 import type { ParsedRow } from "../../../lib/csvParser";
 import type { Granularity } from "./Step1OperationType";
-import { exportImportedEntryAsWideJson } from "../../../lib/dataExport";
 
 type CoercedRow = { state_code: string; cve_mun?: string; value: number; year: number };
 
@@ -286,22 +285,6 @@ export default function Step4Confirm({
 
       <div className="wizard-nav">
         <button className="btn-ghost" onClick={onBack} type="button">← Atrás</button>
-        <button
-          className="btn-ghost"
-          onClick={() =>
-            exportImportedEntryAsWideJson({
-              id: `export-${Date.now()}`,
-              variable_id: variable.variable_id,
-              operation,
-              granularity: isMunicipal ? "municipal" : "state",
-              rows: coerced,
-              savedAt: new Date().toISOString(),
-            })
-          }
-          type="button"
-        >
-          Exportar JSON
-        </button>
         <button
           className="btn-primary"
           disabled={coerced.length === 0 || (hasYearConflict && !yearConfirmed)}

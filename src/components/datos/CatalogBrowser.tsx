@@ -1,7 +1,6 @@
 import { useMemo, useRef, useState } from "react";
-import { ChevronDown, Download, Eye, EyeOff, MoveDownRight, MoveUpRight, Plus, X } from "lucide-react";
+import { ChevronDown, Eye, EyeOff, MoveDownRight, MoveUpRight, Plus, X } from "lucide-react";
 import type { VariableCatalogEntry, CategoryId, VariableRole } from "../../types/dataStandard";
-import { exportCatalog } from "../../lib/dataExport";
 
 type Props = {
   catalog: VariableCatalogEntry[];
@@ -161,14 +160,6 @@ export default function CatalogBrowser({
             title="Nueva operación"
           >
             <Plus size={16} />
-          </button>
-          <button
-            className="btn-ghost catalog-action-icon"
-            onClick={() => exportCatalog(catalog)}
-            type="button"
-            title="Exportar catálogo"
-          >
-            <Download size={16} />
           </button>
         </div>
       </div>

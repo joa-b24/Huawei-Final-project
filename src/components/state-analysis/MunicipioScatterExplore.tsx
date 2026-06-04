@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CartesianGrid,
   ResponsiveContainer,
@@ -13,7 +13,6 @@ import type { MunicipioAnalyticsRecord } from "../../types/analytics";
 import { spearmanSafe } from "../../utils/spearman";
 import {
   SCATTER_METRICS,
-  VAR_ID_TO_SCATTER_KEY,
   type ScatterMetricKey,
 } from "./analysisMetrics";
 import InfoTooltip from "../feedback/InfoTooltip";
@@ -26,8 +25,8 @@ function pickMetric(m: MunicipioAnalyticsRecord, k: ScatterMetricKey): number {
 
 type Props = {
   municipios: MunicipioAnalyticsRecord[];
-  activeVariableIds?: string[];
   fixedYKey?: ScatterMetricKey;
+  allowedMetricKeys?: ScatterMetricKey[];
 };
 
 const CLUSTER_COLOR_BY_LABEL: Record<string, string> = {
@@ -62,34 +61,38 @@ function resolveAxisPair(
   return { x, y };
 }
 
-export default function MunicipioScatterExplore({ municipios, activeVariableIds = [], fixedYKey }: Props) {
+export default function MunicipioScatterExplore({ municipios, fixedYKey, allowedMetricKeys }: Props) {
   const [xKey, setXKey] = useState<ScatterMetricKey>("graproes");
   const [yKeyState, setYKeyState] = useState<ScatterMetricKey>("pob_pct_4g_garantizada");
 
   const yKey = fixedYKey ?? yKeyState;
 
-  const xMeta = SCATTER_METRICS.find((m) => m.key === xKey)!;
-  const yMeta = SCATTER_METRICS.find((m) => m.key === yKey)!;
+  const xMeta = SCATTER_METRICS.find((m) => m.key === xKey) ?? SCATTER_METRICS[0];
+  const yMeta = SCATTER_METRICS.find((m) => m.key === yKey) ?? SCATTER_METRICS[0];
   const sameAxis = xKey === yKey;
 
-  const activeKeys = useMemo(() => {
-    const s = new Set<ScatterMetricKey>();
-    for (const varId of activeVariableIds) {
-      const k = VAR_ID_TO_SCATTER_KEY[varId];
-      if (k) s.add(k);
-    }
-    return s;
-  }, [activeVariableIds]);
-
   const metricOptions = useMemo(() => {
-    const active = SCATTER_METRICS.filter((m) => activeKeys.has(m.key as ScatterMetricKey));
-    const rest = SCATTER_METRICS.filter((m) => !activeKeys.has(m.key as ScatterMetricKey));
-    return [...active, ...rest];
-  }, [activeKeys]);
+    const allowed = allowedMetricKeys ? new Set(allowedMetricKeys) : null;
+    return SCATTER_METRICS.filter((m) => {
+      const key = m.key as ScatterMetricKey;
+      if (allowed && !allowed.has(key)) return false;
+      return municipios.filter((mun) => Number.isFinite(pickMetric(mun, key))).length >= 5;
+    });
+  }, [allowedMetricKeys, municipios]);
+
+  useEffect(() => {
+    if (metricOptions.length === 0) return;
+    if (!metricOptions.some((m) => m.key === xKey)) {
+      setXKey(metricOptions.find((m) => m.key !== yKey)?.key ?? metricOptions[0].key);
+    }
+    if (!fixedYKey && !metricOptions.some((m) => m.key === yKey)) {
+      setYKeyState(metricOptions.find((m) => m.key !== xKey)?.key ?? metricOptions[0].key);
+    }
+  }, [fixedYKey, metricOptions, xKey, yKey]);
 
   const setXKeySafe = (next: ScatterMetricKey) => {
     if (fixedYKey) {
-      setXKey(next === fixedYKey ? (SCATTER_METRICS.find((m) => m.key !== fixedYKey)?.key ?? next) : next);
+      setXKey(next === fixedYKey ? (metricOptions.find((m) => m.key !== fixedYKey)?.key ?? next) : next);
     } else {
       const resolved = resolveAxisPair(next, yKey);
       setXKey(resolved.x);
@@ -211,9 +214,6 @@ export default function MunicipioScatterExplore({ municipios, activeVariableIds 
         <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-1)", margin: 0 }}>
           Explorador de dispersión municipal
         </p>
-        {activeKeys.size > 0 && (
-          <span style={{ fontSize: 11, color: "var(--text-3)" }}>★ = variable activa en el panel lateral</span>
-        )}
         <InfoTooltip wide text={tooltipContent} />
       </div>
 
@@ -227,7 +227,7 @@ export default function MunicipioScatterExplore({ municipios, activeVariableIds 
           >
             {metricOptions.map((m) => (
               <option key={m.key} value={m.key} disabled={m.key === yKey}>
-                {activeKeys.has(m.key as ScatterMetricKey) ? `★ ${m.label}` : m.label}
+                {m.label}
                 {m.key === yKey ? " (eje vertical)" : ""}
               </option>
             ))}
@@ -243,7 +243,7 @@ export default function MunicipioScatterExplore({ municipios, activeVariableIds 
             >
               {metricOptions.map((m) => (
                 <option key={m.key} value={m.key} disabled={m.key === xKey}>
-                  {activeKeys.has(m.key as ScatterMetricKey) ? `★ ${m.label}` : m.label}
+                  {m.label}
                   {m.key === xKey ? " (eje horizontal)" : ""}
                 </option>
               ))}

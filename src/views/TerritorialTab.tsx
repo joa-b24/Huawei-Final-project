@@ -5,6 +5,7 @@ import { loadStateMunicipalAnalytics } from "../services/DataService";
 import type { MunicipioAnalyticsRecord } from "../types/analytics";
 import StateTerritorialAnalysis from "../components/state-analysis/StateTerritorialAnalysis";
 import EmptyState from "../components/EmptyState";
+import { TERRITORIAL_VARIABLES, VAR_ID_TO_SCATTER_KEY } from "../components/state-analysis/analysisMetrics";
 
 type Props = { appData: AppData };
 
@@ -12,6 +13,7 @@ export default function TerritorialTab({ appData }: Props) {
   const { state: appState } = useAppContext();
   const { primaryState, activeVariableIds } = appState;
   const { dataset, municipalManifest } = appData;
+  const territorialKeys = useMemo(() => new Set(TERRITORIAL_VARIABLES.map((v) => v.key)), []);
 
   const stateCode = useMemo(
     () => dataset.records.find((r) => r.state === primaryState)?.stateCode ?? null,
@@ -22,6 +24,15 @@ export default function TerritorialTab({ appData }: Props) {
   const [loading, setLoading] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const loadedCodeRef = useRef<string | null>(null);
+
+  const activeTerritorialVariableIds = useMemo(() => {
+    if (!stateCode || !municipalManifest) return [];
+    const stateVars = new Set(municipalManifest.states[stateCode]?.variables ?? []);
+    return activeVariableIds.filter((id) => {
+      const key = VAR_ID_TO_SCATTER_KEY[id];
+      return stateVars.has(id) && key !== undefined && territorialKeys.has(key as (typeof TERRITORIAL_VARIABLES)[number]["key"]);
+    });
+  }, [activeVariableIds, municipalManifest, stateCode, territorialKeys]);
 
   useEffect(() => {
     if (!stateCode || stateCode === loadedCodeRef.current) return;
@@ -62,10 +73,10 @@ export default function TerritorialTab({ appData }: Props) {
   }
 
   return (
-    <StateTerritorialAnalysis
-      stateAnalytics={dataset.stateAnalytics}
-      municipios={municipios}
-      activeVariableIds={activeVariableIds}
-    />
+      <StateTerritorialAnalysis
+        stateAnalytics={dataset.stateAnalytics}
+        municipios={municipios}
+        activeVariableIds={activeTerritorialVariableIds}
+      />
   );
 }

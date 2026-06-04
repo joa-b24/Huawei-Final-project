@@ -37,6 +37,17 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
   // ── variable selector ────────────────────────────────────────────────────
   const [selectedVarKey, setSelectedVarKey] = useState<TerritorialVarKey>("pob_pct_4g_garantizada");
 
+  const activeTerritorialKeys = useMemo(() => {
+    const keys = new Set<TerritorialVarKey>();
+    for (const id of activeVariableIds) {
+      const key = VAR_ID_TO_SCATTER_KEY[id];
+      if (key && TERRITORIAL_VARIABLES.some((v) => v.key === key)) {
+        keys.add(key as TerritorialVarKey);
+      }
+    }
+    return keys;
+  }, [activeVariableIds]);
+
   useEffect(() => {
     const firstMatch = activeVariableIds
       .map((id) => VAR_ID_TO_SCATTER_KEY[id])
@@ -66,11 +77,18 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
   const availableVars = useMemo(
     () =>
       TERRITORIAL_VARIABLES.filter((v) => {
+        if (!activeTerritorialKeys.has(v.key)) return false;
         const n = municipiosEstado.filter((m) => isFinite(getMunValue(m, v.key))).length;
         return n >= 5;
       }),
-    [municipiosEstado]
+    [activeTerritorialKeys, municipiosEstado]
   );
+
+  useEffect(() => {
+    if (availableVars.length > 0 && !availableVars.some((v) => v.key === selectedVarKey)) {
+      setSelectedVarKey(availableVars[0].key);
+    }
+  }, [availableVars, selectedVarKey]);
 
   // ── values & weights ─────────────────────────────────────────────────────
   const selectedValues = useMemo(
@@ -148,10 +166,17 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
     return (
       <EmptyState
         title="Sin variables territoriales disponibles"
-        description="Activa en el panel lateral una variable con datos municipales (4G, móvil, rezago social u Ookla) para ver el análisis de desigualdad intraestatal."
+        description="Activa en el panel lateral una variable con datos municipales disponible para analisis territorial."
       />
     );
   }
+
+  const scatterAllowedKeys = Array.from(
+    new Set<ScatterMetricKey>([
+      ...availableVars.map((v) => v.key as ScatterMetricKey),
+      ...CONTEXTUAL_METRICS.map((v) => v.key as ScatterMetricKey),
+    ])
+  );
 
   const hasRf = (stateRow.rf_feature_importances?.length ?? 0) > 0;
 
@@ -160,7 +185,6 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
       {/* ── Variable selector ── */}
       <div className="var-pill-row">
         {availableVars.map((v) => {
-          const isActive = activeVariableIds.some((id) => VAR_ID_TO_SCATTER_KEY[id] === v.key);
           const isSelected = v.key === selectedVarKey;
           return (
             <button
@@ -169,7 +193,6 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
               onClick={() => setSelectedVarKey(v.key)}
               type="button"
             >
-              {isActive && !isSelected ? "★ " : ""}
               {v.label}
             </button>
           );
@@ -227,8 +250,8 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
         <p className="panel-title">Explorador de dispersión municipal</p>
         <MunicipioScatterExplore
           municipios={municipiosEstado}
-          activeVariableIds={activeVariableIds}
           fixedYKey={selectedVar.key as ScatterMetricKey}
+          allowedMetricKeys={scatterAllowedKeys}
         />
       </section>
 

@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, ComposedChart, ReferenceLine, ResponsiveContainer, Scatter, Tooltip, XAxis, YAxis } from "recharts";
 import type { MetricPolaridad, RankingEntry } from "../../types/dataStandard";
 import MissingDataNote from "../feedback/MissingDataNote";
 
@@ -53,19 +53,34 @@ function LollipopTooltip({ active, payload, label, metricLabel, unit, direction 
   );
 }
 
-function LollipopShapeColumn({ x, y, width, height, fill, isHighlighted, rank }: any) {
+function LollipopStem({ x, y, width, height, fill, isHighlighted }: any) {
   if (!height) return null;
   const cx = x + width / 2;
+  return (
+    <line
+      x1={cx}
+      y1={y + height}
+      x2={cx}
+      y2={y}
+      stroke={fill}
+      strokeWidth={isHighlighted ? 3 : 1.5}
+      opacity={isHighlighted ? 1 : 0.8}
+    />
+  );
+}
+
+function LollipopDot({ cx, cy, payload }: any) {
+  if (!Number.isFinite(cx) || !Number.isFinite(cy)) return null;
+  const fill = payload?.color ?? "var(--border)";
+  const isHighlighted = !!payload?.isHighlighted;
+  const rank = payload?.rank;
   const r = isHighlighted ? 9 : 5;
-  const dotY = height >= 0 ? y : y + height;
-  const baseY = height >= 0 ? y + height : y;
   return (
     <g>
-      <line x1={cx} y1={baseY} x2={cx} y2={dotY} stroke={fill} strokeWidth={isHighlighted ? 3 : 1.5} opacity={isHighlighted ? 1 : 0.8} />
-      <circle cx={cx} cy={dotY} r={r} fill={fill} stroke="var(--surface)" strokeWidth={isHighlighted ? 2.5 : 1.5} />
-      {isHighlighted && <circle cx={cx} cy={dotY} r={r + 4} fill="none" stroke={fill} strokeWidth={1.5} opacity={0.3} />}
+      <circle cx={cx} cy={cy} r={r} fill={fill} stroke="var(--surface)" strokeWidth={isHighlighted ? 2.5 : 1.5} />
+      {isHighlighted && <circle cx={cx} cy={cy} r={r + 4} fill="none" stroke={fill} strokeWidth={1.5} opacity={0.3} />}
       {isHighlighted && rank != null && (
-        <text x={cx} y={dotY - r - 5} textAnchor="middle" fontSize={9} fill={fill} fontWeight={700}>#{rank}</text>
+        <text x={cx} y={cy - r - 5} textAnchor="middle" fontSize={9} fill={fill} fontWeight={700}>#{rank}</text>
       )}
     </g>
   );
@@ -144,7 +159,7 @@ export default function RankingTable({ rows, highlightState, comparisonState, co
     return (
       <div>
         <ResponsiveContainer width="100%" height={480}>
-          <BarChart data={barData} margin={{ top: 16, right: 16, bottom: 80, left: 0 }}>
+          <ComposedChart data={barData} margin={{ top: 16, right: 16, bottom: 80, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis
               dataKey="name"
@@ -171,9 +186,21 @@ export default function RankingTable({ rows, highlightState, comparisonState, co
               dataKey="value"
               isAnimationActive={false}
               shape={(props: any) => {
-                const d = barData[props.index];
-                return <LollipopShapeColumn {...props} fill={d?.color ?? "var(--border)"} isHighlighted={d?.isHighlighted} rank={d?.rank} />;
+                const d = barData[props.index] ?? props.payload;
+                return (
+                  <LollipopStem
+                    {...props}
+                    fill={d?.color ?? "var(--border)"}
+                    isHighlighted={d?.isHighlighted}
+                  />
+                );
               }}
+            />
+            <Scatter
+              data={barData}
+              dataKey="value"
+              isAnimationActive={false}
+              shape={(props: any) => <LollipopDot {...props} />}
             />
             {showNational && (
               <ReferenceLine
@@ -194,7 +221,7 @@ export default function RankingTable({ rows, highlightState, comparisonState, co
                 label={{ value: gl.label, fontSize: 10, fill: gl.color, position: i % 2 === 0 ? "insideTopLeft" : "insideTopRight" }}
               />
             ))}
-          </BarChart>
+          </ComposedChart>
         </ResponsiveContainer>
         <MissingDataNote count={missing} total={total} />
       </div>
