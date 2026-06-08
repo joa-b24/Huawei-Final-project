@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import InfoTooltip from "../feedback/InfoTooltip";
 import InlineBoxplot from "./InlineBoxplot";
+import ChartWrapper from "./ChartWrapper";
 
 type GeoFeature = { properties: Record<string, any> };
 type VarRecord = { cve_mun: string; value: number };
@@ -18,6 +19,7 @@ type Props = {
   combined: CombinedData;
   munVars: MunVar[];
   varId: string;
+  primaryState?: string;
 };
 
 const MAX_TOOLTIP_ITEMS = 10;
@@ -45,9 +47,7 @@ function MunBinTooltip({ active, payload }: any) {
       {shown.length > 0 && (
         <div style={twoCol ? { display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: 10, rowGap: 1 } : {}}>
           {shown.map((m) => (
-            <span key={m} style={{ display: "block", fontSize: 11, lineHeight: 1.7, color: "var(--text-2)" }}>
-              {m}
-            </span>
+            <span key={m} style={{ display: "block", fontSize: 11, lineHeight: 1.7, color: "var(--text-2)" }}>{m}</span>
           ))}
         </div>
       )}
@@ -60,7 +60,7 @@ function MunBinTooltip({ active, payload }: any) {
   );
 }
 
-export default function MunicipioDistPanel({ features, combined, munVars, varId }: Props) {
+export default function MunicipioDistPanel({ features, combined, munVars, varId, primaryState }: Props) {
   const currentVar = munVars.find((v) => v.id === varId) ?? munVars[0];
   const unit = currentVar?.unit;
   const varLabel = currentVar?.label ?? varId;
@@ -80,12 +80,10 @@ export default function MunicipioDistPanel({ features, combined, munVars, varId 
     const vals = validRecords.map((r) => r.value);
     const min = Math.min(...vals);
     const max = Math.max(...vals);
-    const domainMin = min;
-    const domainMax = max;
     if (min === max) {
       return {
         bins: [{ lo: min, hi: max, center: min, count: validRecords.length, muns: validRecords.map((r) => nameMap.get(r.cve_mun) ?? r.cve_mun) }],
-        domainMin, domainMax,
+        domainMin: min, domainMax: max,
       };
     }
     const step = (max - min) / 10;
@@ -101,7 +99,7 @@ export default function MunicipioDistPanel({ features, combined, munVars, varId 
       b[idx].count++;
       b[idx].muns.push(nameMap.get(r.cve_mun) ?? r.cve_mun);
     }
-    return { bins: b, domainMin, domainMax };
+    return { bins: b, domainMin: min, domainMax: max };
   }, [validRecords, nameMap]);
 
   const boxplotValues = useMemo(
@@ -113,65 +111,56 @@ export default function MunicipioDistPanel({ features, combined, munVars, varId 
   const mean = preStats?.mean ?? (validRecords.length ? validRecords.reduce((s, r) => s + r.value, 0) / validRecords.length : null);
 
   return (
-    <section className="panel">
-      <div className="ranking-panel-header">
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <p className="panel-title" style={{ margin: 0 }}>Distribución municipal</p>
-          <InfoTooltip text="Histograma de los municipios del estado para la variable seleccionada. Cada barra muestra cuántos municipios caen en ese rango de valores. El boxplot debajo indica la mediana, el rango intercuartílico y los valores atípicos." />
+    <ChartWrapper
+      panelTitle="Distribución municipal"
+      tooltip={<InfoTooltip wide text={
+        <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+          <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Distribución municipal</p>
+          <p style={{ margin: "0 0 8px" }}>
+            Histograma de los municipios del estado para la variable seleccionada. Cada barra muestra cuántos municipios caen en ese rango de valores. Pasa el cursor sobre una barra para ver los nombres.
+          </p>
+          <p style={{ margin: "0 0 8px" }}>
+            El <strong>boxplot</strong> debajo resume la distribución: la caja cubre el 50&nbsp;% central de los municipios, la línea sólida es la mediana y los puntos naranjas son municipios atípicos.
+          </p>
+          <p style={{ margin: 0, color: "var(--text-3)" }}>
+            Una distribución muy dispersa o bimodal indica polarización interna significativa. Usa el botón <strong>«← Vista nacional»</strong> para regresar al análisis comparativo entre estados.
+          </p>
         </div>
-      </div>
-
+      } />}
+      title={varLabel}
+      description={`Distribución entre municipios del estado${unit ? ` (${unit})` : ""}.`}
+      chartType="Histograma municipal"
+      municipalState={primaryState}
+    >
       {!validRecords.length ? (
         <p style={{ color: "var(--text-3)", fontSize: 13, textAlign: "center", padding: "24px 0" }}>
           Sin datos para esta variable.
         </p>
       ) : (
         <>
-          <ResponsiveContainer width="100%" height={220}>
+          <div className="chart-rc-wrap" style={{ height: 220 }}>
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart data={bins} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-              <XAxis
-                dataKey="center"
-                tickFormatter={(v: number) => v.toFixed(0)}
-                tick={{ fontSize: 11, fill: "var(--text-3)" }}
-                axisLine={false}
-                tickLine={false}
-              />
+              <XAxis dataKey="center" tickFormatter={(v: number) => v.toFixed(0)} tick={{ fontSize: 11, fill: "var(--text-3)" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fill: "var(--text-3)" }} axisLine={false} tickLine={false} width={28} />
               <Tooltip content={<MunBinTooltip />} />
               {mean !== null && (
-                <ReferenceLine
-                  x={mean}
-                  stroke="var(--text-3)"
-                  strokeDasharray="4 4"
-                  label={{ value: "Media", fontSize: 10, fill: "var(--text-3)", position: "insideTopRight" }}
-                />
+                <ReferenceLine x={mean} stroke="var(--text-3)" strokeDasharray="4 4" />
               )}
               <Bar dataKey="count" radius={[3, 3, 0, 0]} isAnimationActive={false}>
-                {bins.map((_, i) => (
-                  <Cell key={i} fill="var(--blue-mid)" opacity={0.7} />
-                ))}
+                {bins.map((_, i) => <Cell key={i} fill="var(--blue-mid)" opacity={0.7} />)}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-
+          </div>
           {boxplotValues.length >= 4 && (
             <div style={{ padding: "0 16px 0 28px", marginTop: 2 }}>
-              <InlineBoxplot
-                stateValues={boxplotValues}
-                domainMin={domainMin}
-                domainMax={domainMax}
-                nationalMean={mean ?? undefined}
-              />
+              <InlineBoxplot stateValues={boxplotValues} domainMin={domainMin} domainMax={domainMax} nationalMean={mean ?? undefined} />
             </div>
           )}
-
-          <p style={{ textAlign: "center", fontSize: 11, color: "var(--text-3)", margin: "2px 0 0" }}>
-            {varLabel} — distribución entre municipios del estado
-            {unit ? ` (${unit})` : ""}
-          </p>
         </>
       )}
-    </section>
+    </ChartWrapper>
   );
 }

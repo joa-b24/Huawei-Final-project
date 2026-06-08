@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { MoveDownRight, MoveUpRight } from "lucide-react";
+import { createPortal } from "react-dom";
+import { MoveDownRight, MoveUpRight, Trash2 } from "lucide-react";
 import type {
   VariableCatalogEntry,
   CategoryId,
@@ -38,10 +39,29 @@ type Props = {
   municipalStatesCount: number;
   historicalYears?: number[];
   onUpdateData: () => void;
+  onDelete?: () => void;
   onBack: () => void;
 };
 
 type SaveStatus = "idle" | "saving" | "done" | "error";
+type DeleteStatus = "idle" | "confirm" | "deleting" | "done" | "error";
+
+async function deleteVariableApi(variable_id: string): Promise<{ ok: boolean; log: string[] }> {
+  try {
+    const res = await fetch("/api/pipeline/delete-variable", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ variable_id }),
+    });
+    if (!res.ok) throw new Error("Server Error");
+    return await res.json();
+  } catch {
+    return {
+      ok: false,
+      log: ["No se pudo completar la acción. Esta función está disponible solo en entorno local."],
+    };
+  }
+}
 
 async function saveMetadata(
   variable_id: string,
@@ -53,9 +73,13 @@ async function saveMetadata(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ variable_id, catalog_entry }),
     });
+    if (!res.ok) throw new Error("Server Error");
     return await res.json();
-  } catch (err) {
-    return { ok: false, log: [String(err)] };
+  } catch {
+    return {
+      ok: false,
+      log: ["No se pudo completar la acción. Esta función puede estar disponible solo en entorno local."],
+    };
   }
 }
 
@@ -67,12 +91,27 @@ export default function VariablePanel({
   municipalStatesCount,
   historicalYears = [],
   onUpdateData,
+  onDelete,
   onBack,
 }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState<VariableCatalogEntry>(v);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [log, setLog] = useState<string[]>([]);
+  const [deleteStatus, setDeleteStatus] = useState<DeleteStatus>("idle");
+  const [deleteLog, setDeleteLog] = useState<string[]>([]);
+
+  async function handleDelete() {
+    setDeleteStatus("deleting");
+    const result = await deleteVariableApi(v.variable_id);
+    setDeleteLog(result.log);
+    if (result.ok) {
+      setDeleteStatus("done");
+      onDelete?.();
+    } else {
+      setDeleteStatus("error");
+    }
+  }
 
   function handleChange(field: keyof VariableCatalogEntry, value: string) {
     setDraft((prev) => ({ ...prev, [field]: value }));
@@ -289,14 +328,53 @@ export default function VariablePanel({
           <h2 className="var-panel__name">{v.nombre}</h2>
           <span className="catalog-var-id">{v.variable_id}</span>
         </div>
-        <div className="var-panel__actions">
-          <button className="btn-ghost" type="button" onClick={startEdit}>
-            Editar metadatos
-          </button>
-          <button className="btn-primary" type="button" onClick={onUpdateData}>
-            Actualizar datos
-          </button>
-        </div>
+        {import.meta.env.DEV && (
+          <div className="var-panel__actions">
+            <button className="btn-ghost" type="button" onClick={startEdit}>
+              Editar metadatos
+            </button>
+            <button className="btn-primary" type="button" onClick={onUpdateData}>
+              Actualizar datos
+            </button>
+            <button className="btn-danger" type="button" onClick={() => setDeleteStatus("confirm")}>
+              <Trash2 size={13} /> Eliminar
+            </button>
+          </div>
+        )}
+
+      {deleteStatus !== "idle" && deleteStatus !== "done" && createPortal(
+        <div className="delete-modal-overlay">
+          <div className="delete-modal">
+            <h3 className="delete-modal__title">¿Eliminar variable?</h3>
+            <p className="delete-modal__body">
+              Se eliminará <strong>{v.nombre}</strong> (<code>{v.variable_id}</code>) del catálogo y de todos los archivos de datos.
+            </p>
+            {historicalYears.length > 0 && (
+              <p className="delete-modal__warn">
+                · Datos históricos: {historicalYears.length} año(s) ({historicalYears[0]}–{historicalYears[historicalYears.length - 1]}) serán eliminados de <code>outputs/temporal/</code>.
+              </p>
+            )}
+            {municipalStatesCount > 0 && (
+              <p className="delete-modal__warn">
+                · Datos municipales en {municipalStatesCount} estado(s) serán eliminados de <code>outputs/municipal/</code>.
+              </p>
+            )}
+            <p className="delete-modal__warn">Esta acción no se puede deshacer.</p>
+            <div className="delete-modal__actions">
+              <button className="btn-ghost" type="button" onClick={() => setDeleteStatus("idle")} disabled={deleteStatus === "deleting"}>
+                Cancelar
+              </button>
+              <button className="btn-danger" type="button" onClick={handleDelete} disabled={deleteStatus === "deleting"}>
+                {deleteStatus === "deleting" ? "Eliminando…" : "Confirmar eliminación"}
+              </button>
+            </div>
+            {deleteStatus === "error" && deleteLog.length > 0 && (
+              <pre className="pipeline-log" style={{ marginTop: 12 }}>{deleteLog.join("\n")}</pre>
+            )}
+          </div>
+        </div>,
+        document.body
+      )}
       </div>
 
       {v.descripcion && (

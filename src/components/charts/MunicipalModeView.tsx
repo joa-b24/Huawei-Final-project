@@ -87,16 +87,20 @@ export default function MunicipalModeView({ stateCode, primaryState, munVars, va
   return (
     <>
       <div className="two-col" style={{ marginTop: 8 }}>
-        <MunicipioDistPanel features={features} combined={combined} munVars={munVars} varId={varId} />
+        <section className="panel">
+          <MunicipioDistPanel features={features} combined={combined} munVars={munVars} varId={varId} primaryState={primaryState} />
+        </section>
         {bbox ? (
-          <MunicipioMapPanel
-            features={features}
-            combined={combined}
-            bbox={bbox}
-            munVars={munVars}
-            varId={varId}
-            primaryState={primaryState}
-          />
+          <section className="panel">
+            <MunicipioMapPanel
+              features={features}
+              combined={combined}
+              bbox={bbox}
+              munVars={munVars}
+              varId={varId}
+              primaryState={primaryState}
+            />
+          </section>
         ) : (
           <section className="panel">
             <p style={{ color: "var(--text-3)", fontSize: 13 }}>Sin bbox disponible.</p>
@@ -104,7 +108,9 @@ export default function MunicipalModeView({ stateCode, primaryState, munVars, va
         )}
       </div>
 
-      <MunicipioRankingPanel features={features} combined={combined} munVars={munVars} varId={varId} />
+      <section className="panel ranking-panel">
+        <MunicipioRankingPanel features={features} combined={combined} munVars={munVars} varId={varId} primaryState={primaryState} />
+      </section>
     </>
   );
 }

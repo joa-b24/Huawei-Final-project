@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import InfoTooltip from "../feedback/InfoTooltip";
+import ChartWrapper from "./ChartWrapper";
 import type { MunVar } from "./MunicipioDistPanel";
 
 type GeoFeature = { properties: Record<string, any> };
@@ -11,11 +12,12 @@ type Props = {
   combined: CombinedData;
   munVars: MunVar[];
   varId: string;
+  primaryState?: string;
 };
 
 type Row = { rank: number; name: string; value: number; pct: number };
 
-export default function MunicipioRankingPanel({ features, combined, munVars, varId }: Props) {
+export default function MunicipioRankingPanel({ features, combined, munVars, varId, primaryState }: Props) {
   const [view, setView] = useState<"top" | "bottom">("top");
 
   const currentVar = munVars.find((v) => v.id === varId) ?? munVars[0];
@@ -36,76 +38,61 @@ export default function MunicipioRankingPanel({ features, combined, munVars, var
 
     if (!withData.length) return { top: [], bottom: [] };
 
-    const sorted =
-      direction === "lower_better"
-        ? [...withData].sort((a, b) => a.value - b.value)
-        : [...withData].sort((a, b) => b.value - a.value);
+    const sorted = direction === "lower_better"
+      ? [...withData].sort((a, b) => a.value - b.value)
+      : [...withData].sort((a, b) => b.value - a.value);
 
     const avg = sorted.reduce((s, r) => s + r.value, 0) / sorted.length;
-
     const toRow = (r: { name: string; value: number }, i: number): Row => ({
-      rank: i + 1,
-      name: r.name,
-      value: r.value,
+      rank: i + 1, name: r.name, value: r.value,
       pct: avg !== 0 ? ((r.value - avg) / Math.abs(avg)) * 100 : 0,
     });
 
     const k = Math.min(10, Math.max(3, Math.floor(sorted.length / 3)));
     return {
       top: sorted.slice(0, k).map(toRow),
-      bottom: sorted
-        .slice(-k)
-        .reverse()
-        .map((r, i) => toRow(r, sorted.length - 1 - i)),
+      bottom: sorted.slice(-k).reverse().map((r, i) => toRow(r, sorted.length - 1 - i)),
     };
   }, [combined, varId, direction, nameMap]);
 
   const isGood = (pct: number) =>
-    (direction === "higher_better" && pct >= 0) ||
-    (direction === "lower_better" && pct <= 0);
+    (direction === "higher_better" && pct >= 0) || (direction === "lower_better" && pct <= 0);
 
   const rows = view === "top" ? top : bottom;
 
+  const togglePill = (
+    <div className="toggle-pill" role="group" aria-label="Vista del ranking">
+      <button type="button" className={`toggle-pill__btn${view === "top" ? " active" : ""}`} onClick={() => setView("top")}>
+        Mejor desempeño
+      </button>
+      <button type="button" className={`toggle-pill__btn${view === "bottom" ? " active" : ""}`} onClick={() => setView("bottom")}>
+        Menor desempeño
+      </button>
+    </div>
+  );
+
   return (
-    <section className="panel ranking-panel">
-      <div className="ranking-panel-header">
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <p className="panel-title" style={{ margin: 0 }}>Ranking municipal</p>
-          <InfoTooltip
-            wide
-            text={
-              <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-                <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Posición relativa</p>
-                <p style={{ margin: 0 }}>
-                  Municipios ordenados de <strong>mejor a peor</strong> desempeño según la dirección de la variable. El <strong>% vs media</strong> indica cuánto se aleja el municipio del promedio estatal: verde = favorable, rojo = desfavorable.
-                </p>
-              </div>
-            }
-          />
-        </div>
-      </div>
-
-      <div
-        className="toggle-pill ranking-panel__toggle"
-        role="group"
-        aria-label="Vista del ranking"
-      >
-        <button
-          type="button"
-          className={`toggle-pill__btn${view === "top" ? " active" : ""}`}
-          onClick={() => setView("top")}
-        >
-          Mejor desempeño
-        </button>
-        <button
-          type="button"
-          className={`toggle-pill__btn${view === "bottom" ? " active" : ""}`}
-          onClick={() => setView("bottom")}
-        >
-          Menor desempeño
-        </button>
-      </div>
-
+    <ChartWrapper
+      panelTitle="Ranking municipal"
+      tooltip={
+        <InfoTooltip wide text={
+          <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+            <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Posición relativa</p>
+            <p style={{ margin: "0 0 8px" }}>
+              Municipios ordenados de <strong>mejor a peor</strong> desempeño según la dirección de la variable. El <strong>% vs media</strong> indica cuánto se aleja el municipio del promedio estatal: verde = favorable, rojo = desfavorable.
+            </p>
+            <p style={{ margin: 0, color: "var(--text-3)" }}>
+              Los municipios en los últimos lugares son las zonas con mayor necesidad de atención para reducir las brechas internas del estado. Usa el botón <strong>«← Vista nacional»</strong> para regresar al análisis comparativo entre estados.
+            </p>
+          </div>
+        } />
+      }
+      title={varLabel}
+      description="Municipios con mayor y menor desempeño relativo al promedio estatal."
+      chartType="Ranking municipal"
+      municipalState={primaryState}
+      headerActions={togglePill}
+    >
       {!rows.length ? (
         <p style={{ color: "var(--text-3)", fontSize: 13, padding: "24px 0", textAlign: "center" }}>
           Sin datos para esta variable.
@@ -126,20 +113,14 @@ export default function MunicipioRankingPanel({ features, combined, munVars, var
                 <td style={{ color: "var(--text-3)", width: 32 }}>{row.rank}</td>
                 <td>{row.name}</td>
                 <td style={{ fontVariantNumeric: "tabular-nums" }}>{row.value.toFixed(1)}</td>
-                <td
-                  style={{
-                    color: isGood(row.pct) ? "var(--green)" : "var(--red)",
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {row.pct >= 0 ? "+" : ""}
-                  {row.pct.toFixed(1)}%
+                <td style={{ color: isGood(row.pct) ? "var(--green)" : "var(--red)", fontVariantNumeric: "tabular-nums" }}>
+                  {row.pct >= 0 ? "+" : ""}{row.pct.toFixed(1)}%
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
-    </section>
+    </ChartWrapper>
   );
 }

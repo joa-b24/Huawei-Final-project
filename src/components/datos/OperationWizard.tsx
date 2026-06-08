@@ -22,6 +22,8 @@ export default function OperationWizard({ catalog, initialVariable, metricYears,
   const [completarOnly, setCompletarOnly] = useState(false);
   const [variable, setVariable] = useState<VariableCatalogEntry | null>(initialVariable ?? null);
   const [parsedRows, setParsedRows] = useState<ParsedRow[]>([]);
+  const [valueColumn, setValueColumn] = useState<string>("value");
+  const [manualYear, setManualYear] = useState<number | undefined>(undefined);
 
   const existingYear =
     isNew === false && variable ? metricYears[variable.variable_id] : undefined;
@@ -65,7 +67,11 @@ export default function OperationWizard({ catalog, initialVariable, metricYears,
         <Step3FileUpload
           granularity={granularity}
           variableId={variable.variable_id}
-          onParsed={(rows) => setParsedRows(rows)}
+          onParsed={(rows, _headers, col, yr) => {
+            setParsedRows(rows);
+            setValueColumn(col);
+            setManualYear(yr);
+          }}
           onBack={() => setStep(1)}
           onNext={() => setStep(3)}
           hasData={parsedRows.length > 0}
@@ -79,6 +85,8 @@ export default function OperationWizard({ catalog, initialVariable, metricYears,
           variable={variable}
           existingYear={existingYear}
           rows={parsedRows}
+          valueColumn={valueColumn}
+          manualYear={manualYear}
           onBack={() => setStep(2)}
           onDone={onDone}
         />

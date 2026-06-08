@@ -6,6 +6,7 @@ import { giniPercentileAmongStates, strengthLabel } from "../../utils/stateAnaly
 import { useAppContext } from "../../context/AppContext";
 import EmptyState from "../EmptyState";
 import TabNarrative from "../feedback/TabNarrative";
+import InfoTooltip from "../feedback/InfoTooltip";
 import LorenzCurveChart from "./LorenzCurveChart";
 import MunicipioScatterExplore from "./MunicipioScatterExplore";
 import MunicipioRfDiagnostico from "./MunicipioRfDiagnostico";
@@ -200,7 +201,7 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
       </div>
 
       <TabNarrative
-        title={`Análisis territorial — ${selectedVar.label}`}
+        title={`Análisis territorial - ${selectedVar.label}`}
         description={`Desigualdad intraestatal de ${selectedVar.label.toLowerCase()} entre municipios de ${primaryState ?? "este estado"}.`}
       >
         <TerritorialNarrative
@@ -216,26 +217,53 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
         />
       </TabNarrative>
 
-      <div className="two-col">
-        <section className="panel">
-          <p className="panel-title">
-            Curva de Lorenz — {selectedVar.label}
-            {lorenzInput.shifted && (
-              <span style={{ fontSize: 10, color: "var(--text-3)", marginLeft: 6 }}>
-                (valores desplazados a ≥0)
-              </span>
-            )}
-          </p>
-          <LorenzCurveChart
-            title=""
+      <div className="two-col territorial-chart-grid">
+        {/* Left: Gini + extremos */}
+        <LorenzCurveChart
+            title={`Desigualdad territorial - ${selectedVar.label}${lorenzInput.shifted ? " (desplazados ≥0)" : ""}`}
             description={`Distribución de ${selectedVar.label.toLowerCase()} ponderada por ${
               selectedVar.weight === "localidades_n" ? "número de localidades" : "población"
             }.`}
             points={lorenz}
             gini={giniClient}
             nationalGini={nationalGiniRef}
+            tooltip={
+              <InfoTooltip text={
+                <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                  <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Curva de Lorenz</p>
+                  <p style={{ margin: "0 0 8px" }}>
+                    Muestra qué tan desigual es la distribución de {selectedVar.label.toLowerCase()} entre municipios.
+                    La línea azul es la distribución real; cuanto más se aleja de la diagonal gris, mayor desigualdad.
+                  </p>
+                  <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Coeficiente de Gini</p>
+                  <p style={{ margin: 0 }}>
+                    Resumidor numérico: <strong>0</strong> = distribución perfectamente igualitaria entre municipios,{" "}
+                    <strong>1</strong> = todo concentrado en un solo municipio.
+                  </p>
+                </div>
+              } />
+            }
+        />
+
+        {/* Right: Scatter + correlaciones */}
+        <MunicipioScatterExplore
+            municipios={municipiosEstado}
+            fixedYKey={selectedVar.key as ScatterMetricKey}
+            allowedMetricKeys={scatterAllowedKeys}
+        />
+      </div>
+
+      <div className="two-col" style={{ alignItems: "stretch" }}>
+        <section className="panel">
+          <p className="panel-title">Extremos municipales — {selectedVar.label}</p>
+          <ExtremeMunicipioCards
+            municipios={municipiosEstado}
+            varKey={selectedVar.key}
+            varLabel={selectedVar.label}
+            varUnit={selectedVar.unit}
           />
         </section>
+
         <section className="panel">
           <p className="panel-title">Correlaciones contextuales (Spearman)</p>
           <SpearmanVector
@@ -245,25 +273,6 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
           />
         </section>
       </div>
-
-      <section className="panel">
-        <p className="panel-title">Explorador de dispersión municipal</p>
-        <MunicipioScatterExplore
-          municipios={municipiosEstado}
-          fixedYKey={selectedVar.key as ScatterMetricKey}
-          allowedMetricKeys={scatterAllowedKeys}
-        />
-      </section>
-
-      <section className="panel">
-        <p className="panel-title">Extremos municipales — {selectedVar.label}</p>
-        <ExtremeMunicipioCards
-          municipios={municipiosEstado}
-          varKey={selectedVar.key}
-          varLabel={selectedVar.label}
-          varUnit={selectedVar.unit}
-        />
-      </section>
 
       {hasRf && (
         <section className="panel">
@@ -277,6 +286,7 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
     </div>
   );
 }
+
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
@@ -440,6 +450,58 @@ function SpearmanVector({
   );
 }
 
+function giniInterpretLevel(g: number): { label: string; message: string } {
+  if (g < 0.1)
+    return {
+      label: "muy baja",
+      message: `La variable está distribuida de forma bastante uniforme entre los municipios - no hay concentración notable.`,
+    };
+  if (g < 0.25)
+    return {
+      label: "baja",
+      message: `La distribución es relativamente homogénea. La mayor parte de los municipios tiene valores similares.`,
+    };
+  if (g < 0.35)
+    return {
+      label: "moderada",
+      message: `Existe desigualdad intermunicipal perceptible. Algunos municipios concentran más la variable que el resto, aunque sin llegar a extremos.`,
+    };
+  if (g < 0.45)
+    return {
+      label: "alta",
+      message: `La distribución es claramente desigual. Municipios con mayor acceso coexisten con zonas de rezago significativo dentro del mismo estado.`,
+    };
+  return {
+    label: "crítica",
+    message: `Existe una concentración crítica: la variable se acumula en muy pocos municipios. Esto señala rezago estructural en la mayor parte del territorio estatal y requiere atención diferenciada.`,
+  };
+}
+
+function giniVsNationalMessage(gini: number, nationalGiniRef: number): string {
+  const delta = gini - nationalGiniRef;
+  if (Math.abs(delta) < 0.02)
+    return `Su nivel de desigualdad intraestatal es similar al promedio del país (Gini nacional: ${nationalGiniRef.toFixed(3)}).`;
+  if (delta > 0.08)
+    return `Su desigualdad intraestatal es notablemente mayor que el promedio nacional (Gini nacional: ${nationalGiniRef.toFixed(3)}), lo que sugiere una distribución especialmente concentrada.`;
+  if (delta > 0.02)
+    return `Su nivel de desigualdad intraestatal supera al promedio nacional (Gini nacional: ${nationalGiniRef.toFixed(3)}).`;
+  if (delta < -0.08)
+    return `Su desigualdad intraestatal es notablemente menor que el promedio nacional (Gini nacional: ${nationalGiniRef.toFixed(3)}), indicando una distribución más equitativa que la norma.`;
+  return `Su nivel de desigualdad intraestatal es menor que el promedio nacional (Gini nacional: ${nationalGiniRef.toFixed(3)}).`;
+}
+
+function percentileMessage(p: number): string {
+  if (p >= 90)
+    return `Se ubica entre los estados con mayor desigualdad intraestatal del país (percentil ${p}). La concentración territorial es una problemática central.`;
+  if (p >= 75)
+    return `Se encuentra en el cuarto más alto de desigualdad intraestatal (percentil ${p}). Hay municipios significativamente rezagados.`;
+  if (p >= 50)
+    return `Su posición en el ranking de desigualdad es media-alta (percentil ${p}).`;
+  if (p >= 25)
+    return `Su desigualdad intraestatal está por debajo de la mitad nacional (percentil ${p}).`;
+  return `Se encuentra entre los estados con menor desigualdad intraestatal del país (percentil ${p}).`;
+}
+
 function TerritorialNarrative({
   stateName,
   varLabel,
@@ -467,26 +529,46 @@ function TerritorialNarrative({
     .filter((c) => isFinite(c.rho))
     .sort((a, b) => Math.abs(b.rho) - Math.abs(a.rho))[0];
 
+  const giniValid = isFinite(giniClient);
+  const giniInterp = giniValid ? giniInterpretLevel(giniClient) : null;
+
   return (
     <div>
       <p style={S}>
         En <strong>{stateName}</strong> se analizan <strong>{nMunicipios}</strong> municipios
-        para <strong>{varLabel}</strong>
-        {varUnit ? ` (${varUnit})` : ""}.{" "}
-        Coeficiente de Gini: <strong>{isFinite(giniClient) ? giniClient.toFixed(3) : "—"}</strong>
-        {nationalGiniRef != null && ` · referencia nacional: ${nationalGiniRef.toFixed(3)}`}.
-        {percentileRank != null && (
-          <>{" "}Percentil {percentileRank} en desigualdad intraestatal entre los 32 estados.</>
+        para <strong>{varLabel}</strong>{varUnit ? ` (${varUnit})` : ""}.{" "}
+        {giniValid ? (
+          <>
+            El coeficiente de Gini es <strong>{giniClient.toFixed(3)}</strong>, lo que refleja una
+            desigualdad intraestatal <strong>{giniInterp!.label}</strong>.{" "}
+            {giniInterp!.message}
+          </>
+        ) : (
+          <>No se pudo calcular el coeficiente de Gini para esta variable.</>
         )}
         {lorenzShifted && (
           <>{" "}Los valores negativos fueron desplazados a ≥0 para el cálculo de Lorenz.</>
         )}
       </p>
+
+      {giniValid && nationalGiniRef != null && (
+        <p style={S}>
+          {giniVsNationalMessage(giniClient, nationalGiniRef)}
+          {percentileRank != null && <>{" "}{percentileMessage(percentileRank)}</>}
+        </p>
+      )}
+
       {strongest && Math.abs(strongest.rho) > 0.1 && (
         <p style={S}>
-          Correlación más fuerte con variables contextuales: <strong>{strongest.label}</strong>{" "}
-          (ρ = {strongest.rho >= 0 ? "+" : ""}
-          {strongest.rho.toFixed(2)}, {strengthLabel(strongest.rho)}).
+          {Math.abs(strongest.rho) >= 0.5
+            ? <>La variable contextual con mayor asociación es <strong>{strongest.label}</strong>{" "}
+                (ρ = {strongest.rho >= 0 ? "+" : ""}{strongest.rho.toFixed(2)}, correlación {strengthLabel(strongest.rho)}),
+                lo que sugiere una relación relevante con la distribución territorial de {varLabel}.
+              </>
+            : <>La asociación más notable con variables contextuales es <strong>{strongest.label}</strong>{" "}
+                (ρ = {strongest.rho >= 0 ? "+" : ""}{strongest.rho.toFixed(2)}, {strengthLabel(strongest.rho)}).
+              </>
+          }
         </p>
       )}
     </div>

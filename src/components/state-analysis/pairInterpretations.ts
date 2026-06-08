@@ -1,4 +1,3 @@
-import type { AnalysisMetricKey } from "./analysisMetrics";
 
 type Interpretation = {
   positive: string;
@@ -129,30 +128,4 @@ export function getPairInterpretation(
   if (rho === null) return interp.weak;
   if (Math.abs(rho) < 0.2) return interp.weak;
   return rho > 0 ? interp.positive : interp.negative;
-}
-
-export function getStrongestPairInterpretation(
-  labels: string[],
-  keys: AnalysisMetricKey[],
-  matrix: (number | null)[][],
-  direction: "positive" | "negative"
-): string | null {
-  let best: { i: number; j: number; value: number } | null = null;
-  for (let i = 0; i < matrix.length; i++) {
-    for (let j = i + 1; j < matrix[i].length; j++) {
-      const v = matrix[i][j];
-      if (typeof v !== "number" || !Number.isFinite(v)) continue;
-      if (direction === "positive" && v > 0 && (!best || v > best.value)) {
-        best = { i, j, value: v };
-      }
-      if (direction === "negative" && v < 0 && (!best || v < best.value)) {
-        best = { i, j, value: v };
-      }
-    }
-  }
-  if (!best) return null;
-  const interp = getPairInterpretation(keys[best.i], keys[best.j], best.value);
-  return interp
-    ? `${labels[best.i]} vs ${labels[best.j]} (${best.value.toFixed(2)}) — ${interp}`
-    : null;
 }

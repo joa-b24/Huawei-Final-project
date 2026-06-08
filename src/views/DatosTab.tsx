@@ -152,6 +152,7 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
             municipalStatesCount={municipalStatesCount}
             historicalYears={temporalYears}
             onUpdateData={() => openWizardForVariable(selectedVar)}
+            onDelete={() => { bump(); setSelectedVar(undefined); setMode("catalog"); }}
             onBack={() => setMode("catalog")}
           />
         </section>
@@ -166,12 +167,18 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
           >
             ← Volver al catálogo
           </button>
-          <OperationWizard
-            catalog={catalog}
-            initialVariable={wizardInitialVar}
-            metricYears={metricYears}
-            onDone={handleWizardDone}
-          />
+          {import.meta.env.PROD ? (
+            <div className="env-guard-banner">
+              La importación y edición de datos está disponible únicamente en entorno local para asegurar validación antes de publicar cambios.
+            </div>
+          ) : (
+            <OperationWizard
+              catalog={catalog}
+              initialVariable={wizardInitialVar}
+              metricYears={metricYears}
+              onDone={handleWizardDone}
+            />
+          )}
         </section>
       )}
     </div>

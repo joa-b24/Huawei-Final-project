@@ -8,6 +8,7 @@ export type MetricDefinition = {
   category: string;
   description: string;
   year?: number;
+  direction?: "higher_better" | "lower_better";
 };
 
 export type StateMetricRecord = {

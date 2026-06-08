@@ -16,6 +16,8 @@ import InfoTooltip from "../components/feedback/InfoTooltip";
 import TabNarrative from "../components/feedback/TabNarrative";
 import { GROUP_COLORS, NACIONAL_COLOR } from "../components/sidebar/ComparisonGroupSelector";
 import { humanizeVarId } from "../utils/humanize";
+import ChartWrapper from "../components/charts/ChartWrapper";
+import type { LegendItem } from "../components/charts/ChartWrapper";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,6 +46,7 @@ type LogisticForecast = {
   passed_inflection: boolean;
   velocity: string;
   velocity_label: string;
+  direction?: "higher_better" | "lower_better";
 } | null;
 
 type StateForecast = {
@@ -267,9 +270,12 @@ function SCurveInsights({
   const fmt = (v: number) =>
     varUnit === "%" ? `${v.toFixed(1)}%` : v.toLocaleString("es-MX", { maximumFractionDigits: 1 });
 
+  const isMature = logistic.velocity.startsWith("Maduración");
   const velocityColor =
-    logistic.velocity === "Acelerada" ? "var(--green)" :
-    logistic.velocity === "Moderada"  ? "var(--amber)" : "var(--text-3)";
+    logistic.velocity === "Acelerada"        ? "var(--green)"  :
+    logistic.velocity === "Moderada"         ? "var(--amber)"  :
+    logistic.velocity === "Maduración rápida"? "var(--blue)"   :
+    isMature                                  ? "var(--text-3)" : "var(--text-3)";
 
   return (
     <div className="scurve-insights">
@@ -279,7 +285,9 @@ function SCurveInsights({
       </div>
       <div className="scurve-insights__grid">
         <div className="scurve-insights__item">
-          <span className="scurve-insights__label">Techo de saturación</span>
+          <span className="scurve-insights__label">
+            {logistic.direction === "lower_better" ? "Piso de saturación" : "Techo de saturación"}
+          </span>
           <span className="scurve-insights__value">{fmt(logistic.ceiling)}</span>
         </div>
         <div className="scurve-insights__item">
@@ -289,28 +297,25 @@ function SCurveInsights({
             {fmt(logistic.gap)}
           </span>
         </div>
-        <div className="scurve-insights__item">
-          <span className="scurve-insights__label">Punto de inflexión</span>
-          <span className="scurve-insights__value">
-            {logistic.inflection_year}
-            <span style={{ fontSize: 10, color: "var(--text-3)", marginLeft: 4 }}>
-              ({logistic.passed_inflection ? "superado" : "no alcanzado"})
+        {!isMature && (
+          <div className="scurve-insights__item">
+            <span className="scurve-insights__label">Punto de inflexión</span>
+            <span className="scurve-insights__value">
+              {logistic.inflection_year}
+              <span style={{ fontSize: 10, color: "var(--text-3)", marginLeft: 4 }}>
+                ({logistic.passed_inflection ? "superado" : "próximo"})
+              </span>
             </span>
-          </span>
-        </div>
+          </div>
+        )}
         <div className="scurve-insights__item">
-          <span className="scurve-insights__label">Velocidad</span>
+          <span className="scurve-insights__label">{isMature ? "Fase" : "Velocidad"}</span>
           <span className="scurve-insights__value" style={{ color: velocityColor }}>
             {logistic.velocity}
           </span>
         </div>
       </div>
-      <p className="scurve-insights__desc">
-        {logistic.velocity_label}.{" "}
-        {logistic.passed_inflection
-          ? `${primaryState} ya superó el punto de mayor aceleración (${logistic.inflection_year}) y converge hacia la saturación.`
-          : `${primaryState} aún no alcanza el pico de adopción más agresiva (${logistic.inflection_year}).`}
-      </p>
+      <p className="scurve-insights__desc">{logistic.velocity_label}.</p>
     </div>
   );
 }
@@ -319,73 +324,115 @@ function SCurveInsights({
 
 function EvolucionNarrative({
   primaryState, primaryTrend, primaryForecast, varLabel, varUnit,
-  nacionalLastValue, groupStateColors,
+  varDirection, nacionalLastValue, groupStateColors,
 }: {
   primaryState: string | null;
   primaryTrend: { start: { anio: number; value: number }; end: { anio: number; value: number } } | null;
   primaryForecast: StateForecast | null;
   varLabel: string;
   varUnit: string;
+  varDirection: string;
   nacionalLastValue: number | null;
   groupStateColors: Map<string, string>;
 }) {
   if (!primaryState || !primaryTrend || !primaryForecast) return null;
 
+  const isLower = varDirection === "lower_better";
   const fmt = (v: number) =>
     varUnit === "%" ? `${v.toFixed(1)}%` : v.toLocaleString("es-MX", { maximumFractionDigits: 1 });
+  const fmtDelta = (v: number) =>
+    varUnit === "%" ? `${Math.abs(v).toFixed(1)} pp` : Math.abs(v).toLocaleString("es-MX", { maximumFractionDigits: 1 });
+  const ppUnit = varUnit === "%" ? " pp" : (varUnit ? ` ${varUnit}` : "");
 
   const { start, end } = primaryTrend;
   const delta = end.value - start.value;
-  const deltaStr = `${delta >= 0 ? "+" : ""}${fmt(delta)}`;
-  const trendDesc =
-    delta > 2 ? "una trayectoria de crecimiento sostenido" :
-    delta > 0 ? "un leve incremento" :
-    delta < -2 ? "una trayectoria de descenso" :
-    "una trayectoria estable";
+  // Para lower_better, "mejora" es delta negativo (baja)
+  const improvement = isLower ? -delta : delta;
+  const relChange = start.value > 0 ? (improvement / Math.abs(start.value)) * 100 : null;
 
+  // ── Verbo de apertura ────────────────────────────────────────────────────
+  const openingVerb =
+    relChange !== null
+      ? relChange >= 30  ? "ha consolidado un avance destacado"
+      : relChange >= 15  ? "ha registrado un crecimiento sostenido"
+      : relChange >= 5   ? "ha mostrado un progreso gradual"
+      : relChange > 0    ? "ha experimentado una ligera mejora"
+      : relChange > -5   ? "ha mantenido una trayectoria prácticamente estable"
+      : relChange > -15  ? "ha presentado un retroceso moderado"
+      : "ha experimentado un retroceso significativo"
+      : improvement > 2 ? "ha registrado un incremento" : improvement < -2 ? "ha presentado una caída" : "se ha mantenido estable";
+
+  // ── Nota de consistencia (R²) ────────────────────────────────────────────
   const { ols, holt } = primaryForecast;
-  const r2Quality = ols.r2 != null
-    ? ols.r2 >= 0.85 ? "muy regular y predecible"
-    : ols.r2 >= 0.5 ? "con cierta variabilidad interanual"
-    : "con alta variabilidad año a año"
+  const consistencyNote =
+    ols.r2 == null ? null
+    : ols.r2 >= 0.93 ? "Este avance ha sido sumamente ordenado año con año, lo que demuestra que no es un fenómeno aislado sino una tendencia sostenida."
+    : ols.r2 >= 0.80 ? "Esta trayectoria ha sido consistente a lo largo del período, reflejando un patrón estable de progreso."
+    : ols.r2 >= 0.60 ? "La trayectoria muestra cierta variabilidad interanual, aunque la dirección general es clara."
+    : "La serie presenta oscilaciones notables; la tendencia debe interpretarse con cautela dado el comportamiento irregular.";
+
+  // ── Posición nacional ────────────────────────────────────────────────────
+  const nacionalDiff = nacionalLastValue != null ? end.value - nacionalLastValue : null;
+  // Para lower_better, estar por debajo de la media es favorable
+  const isAboveNacional = nacionalDiff !== null && nacionalDiff > 0;
+  const isFavorableVsNacional = isLower ? !isAboveNacional : isAboveNacional;
+  const posAdverb =
+    nacionalDiff === null ? null
+    : Math.abs(nacionalDiff) >= 15 ? (isFavorableVsNacional ? "firmemente" : "significativamente")
+    : Math.abs(nacionalDiff) >= 5  ? (isFavorableVsNacional ? "claramente" : "notablemente")
+    : Math.abs(nacionalDiff) >= 1  ? (isFavorableVsNacional ? "ligeramente" : "ligeramente")
     : null;
+  const posDirection =
+    nacionalDiff === null ? null
+    : isAboveNacional ? "por encima" : "por debajo";
+  const posLabel = isFavorableVsNacional ? "ventaja" : "brecha";
+
+  // ── Proyección Holt ──────────────────────────────────────────────────────
   const holtNext = holt[0];
 
-  const nacionalDiff = nacionalLastValue != null ? end.value - nacionalLastValue : null;
-
-  const S = { lineHeight: 1.65, color: "var(--text-2)", margin: "0 0 8px", fontSize: 13 } as const;
+  const S = { lineHeight: 1.7, color: "var(--text-2)", margin: "0 0 10px", fontSize: 13 } as const;
 
   return (
     <div style={{ padding: "4px 0" }}>
+      {/* Párrafo 1: trayectoria histórica */}
       <p style={S}>
-        <strong>{primaryState}</strong> muestra {trendDesc} en <em>{varLabel}</em>: pasó de{" "}
-        <strong>{fmt(start.value)}</strong> en {start.anio} a <strong>{fmt(end.value)}</strong> en{" "}
-        {end.anio} (variación acumulada: <strong>{deltaStr}{varUnit === "%" ? " pp" : ""}</strong>).
-        {r2Quality && (
-          <>{" "}La regresión lineal (R²={ols.r2!.toFixed(2)}) describe una tendencia {r2Quality}.</>
-        )}
+        <strong>{primaryState}</strong> {openingVerb} en <em>{varLabel}</em>, pasando de{" "}
+        <strong>{fmt(start.value)}</strong> en {start.anio} a{" "}
+        <strong>{fmt(end.value)}</strong> en {end.anio}{" "}
+        (un {delta >= 0 ? "aumento" : "descenso"} de <strong>{fmtDelta(delta)}</strong>).
+        {consistencyNote && <>{" "}{consistencyNote}</>}
       </p>
-      {nacionalDiff != null && (
-        <p style={S}>
-          La media nacional en {end.anio} era <strong>{fmt(nacionalLastValue!)}</strong>.{" "}
-          <strong>{primaryState}</strong> se ubica{" "}
-          <strong style={{ color: nacionalDiff >= 0 ? "var(--green)" : "var(--red)" }}>
-            {nacionalDiff >= 0 ? "+" : ""}{fmt(nacionalDiff)} pp {nacionalDiff >= 0 ? "por encima" : "por debajo"}
-          </strong>{" "}
-          del promedio nacional, indicando un desempeño {nacionalDiff >= 0 ? "superior" : "inferior"} al resto del país.
+
+      {/* Párrafo 2: posición nacional + proyección */}
+      {(nacionalDiff != null || holtNext) && (
+        <p style={{ ...S, margin: groupStateColors.size > 0 ? "0 0 10px" : 0 }}>
+          {nacionalDiff != null && posDirection && (
+            <>
+              En el panorama federal, {primaryState} se mantiene
+              {posAdverb ? ` ${posAdverb}` : ""} <strong style={{ color: isFavorableVsNacional ? "var(--green)" : "var(--red)" }}>
+                {posDirection} del promedio nacional
+              </strong>{" "}
+              (<strong>{fmt(nacionalLastValue!)}</strong>), con una {posLabel} de{" "}
+              <strong>{fmtDelta(nacionalDiff)}</strong>{ppUnit}.
+              {holtNext ? " " : ""}
+            </>
+          )}
+          {holtNext && (
+            <>
+              De mantener este mismo ritmo, los modelos de proyección estiman que{" "}
+              <strong>{primaryState}</strong> {isLower ? "registrará" : "alcanzará"} una{" "}
+              {isLower ? "reducción a" : "cobertura del"} <strong>{fmt(holtNext.value)}{varUnit === "%" ? "%" : varUnit ? ` ${varUnit}` : ""}</strong>{" "}
+              para el año <strong>{holtNext.year}</strong>.
+            </>
+          )}
         </p>
       )}
+
+      {/* Párrafo 3: grupos de comparación */}
       {groupStateColors.size > 0 && (
-        <p style={S}>
-          Las líneas de colores corresponden a los grupos de comparación activos en el panel lateral
-          (región, clúster o estados específicos). Permiten contextualizar la trayectoria de{" "}
-          <strong>{primaryState}</strong> frente a sus pares seleccionados.
-        </p>
-      )}
-      {holtNext && (
         <p style={{ ...S, margin: 0 }}>
-          El modelo Holt-Winters proyecta <strong>{fmt(holtNext.value)}{varUnit}</strong> para{" "}
-          {holtNext.year}, asumiendo continuidad de la tendencia reciente.
+          Las líneas de colores en el gráfico corresponden a los grupos de comparación activos en el panel lateral,
+          lo que permite contextualizar la trayectoria de <strong>{primaryState}</strong> frente a sus pares seleccionados.
         </p>
       )}
     </div>
@@ -393,6 +440,21 @@ function EvolucionNarrative({
 }
 
 // ─── Panel de pendientes por estado ──────────────────────────────────────────
+
+const SLOPE_TOOLTIP = (
+  <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Velocidad de cambio por estado</p>
+    <p style={{ margin: "0 0 8px" }}>
+      Muestra la <strong>pendiente de la regresión lineal (OLS)</strong> calculada sobre la serie histórica completa de cada estado. Indica cuántos puntos porcentuales crece (o decrece) la variable en promedio por año.
+    </p>
+    <p style={{ margin: "0 0 8px" }}>
+      <strong>Verde</strong> = crecimiento positivo · <strong>Rojo</strong> = tendencia a la baja · <strong>Azul</strong> = estado seleccionado.
+    </p>
+    <p style={{ margin: 0, color: "var(--text-3)", fontSize: 11 }}>
+      La pendiente OLS describe la trayectoria promedio pero no captura cambios de ritmo recientes. Compara con la proyección Holt-Winters en el gráfico de serie de tiempo para detectar si el estado aceleró o desaceleró recientemente.
+    </p>
+  </div>
+);
 
 function SlopePanel({
   forecastData, codeToEstado, primaryState, varUnit, varLabel,
@@ -416,17 +478,21 @@ function SlopePanel({
 
   const maxAbs = Math.max(...slopes.map((s) => Math.abs(s.slope)));
 
+  const slopeDownloadData = useMemo(
+    () => slopes.map((s) => ({ Estado: s.state, "Pendiente (pp/año)": s.slope })),
+    [slopes]
+  );
+
   return (
-    <section className="panel">
-      <p className="panel-title">
-        Velocidad de cambio por estado — {varLabel}
-        <span style={{ fontSize: 11, fontWeight: 400, color: "var(--text-3)", marginLeft: 6 }}>
-          pendiente OLS · pp/año
-        </span>
-      </p>
-      <p style={{ fontSize: 12, color: "var(--text-3)", margin: "0 0 14px" }}>
-        Estados con mayor pendiente positiva han crecido más rápido en el período histórico disponible.
-      </p>
+    <ChartWrapper
+      standalone
+      panelTitle="Velocidad de cambio"
+      title={`Velocidad de cambio: ${varLabel}`}
+      description={`Pendiente OLS · pp/año — Estados con mayor pendiente positiva han crecido más rápido.`}
+      chartType="Barras horizontales"
+      tooltip={<InfoTooltip wide text={SLOPE_TOOLTIP} />}
+      downloadTableData={slopeDownloadData}
+    >
       <div style={{ maxHeight: 400, overflowY: "auto", paddingRight: 4 }}>
         {slopes.map(({ state, slope }) => {
           const pct = maxAbs > 0 ? (Math.abs(slope) / maxAbs) * 100 : 0;
@@ -481,7 +547,7 @@ function SlopePanel({
           );
         })}
       </div>
-    </section>
+    </ChartWrapper>
   );
 }
 
@@ -604,6 +670,30 @@ export default function EvolucionTab({ appData }: Props) {
     return rows[rows.length - 1]["__nacional__"] as number;
   }, [showNacional, chartData]);
 
+  const tsLegend = useMemo((): LegendItem[] => {
+    const items: LegendItem[] = [{ color: "#94a3b8", label: "Todos los estados" }];
+    if (primaryState) items.push({ color: "var(--blue)", label: primaryState });
+    if (primaryForecast) items.push({ color: "var(--blue)", label: "Tendencia OLS" });
+    if (showNacional) items.push({ color: NACIONAL_COLOR, label: "Media nacional" });
+    if (primaryForecast?.holt?.length) items.push({ color: "#7c3aed", label: "Proyección Holt" });
+    const seen = new Set<string>();
+    groupStateColors.forEach((color) => {
+      if (!seen.has(color)) { seen.add(color); items.push({ color, label: "Grupo comparación" }); }
+    });
+    return items;
+  }, [primaryState, primaryForecast, showNacional, groupStateColors]);
+
+  const tsDownloadData = useMemo(() => {
+    if (!chartData.length || !primaryState) return [];
+    return chartData.map((row) => ({
+      Año: row.anio,
+      [primaryState]: (row[primaryState] as number | undefined) ?? null,
+      ...(showNacional && row["__nacional__"] !== undefined
+        ? { Nacional: row["__nacional__"] as number }
+        : {}),
+    }));
+  }, [chartData, primaryState, showNacional]);
+
   // ─── Guards ──────────────────────────────────────────────────────────────────
 
   if (!availableVars.length) {
@@ -672,6 +762,7 @@ export default function EvolucionTab({ appData }: Props) {
             primaryForecast={primaryForecast}
             varLabel={varLabel}
             varUnit={varUnit}
+            varDirection={varMeta?.direction ?? "higher_better"}
             nacionalLastValue={nacionalLastValue}
             groupStateColors={groupStateColors}
           />
@@ -688,41 +779,39 @@ export default function EvolucionTab({ appData }: Props) {
       )}
 
       {/* Chart panel */}
-      <div className="panel" style={{ marginTop: primaryForecast?.logistic ? 0 : undefined }}>
-        <div className="panel-title-row">
-          <div>
-            <h3 className="panel-title" style={{ margin: "0 0 2px" }}>{varLabel}</h3>
-            {varSource && (
-              <span style={{ fontSize: 11, color: "var(--text-3)" }}>{varSource}</span>
-            )}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            {varUnit && (
-              <span style={{ fontSize: 12, color: "var(--text-3)", fontWeight: 400 }}>({varUnit})</span>
-            )}
-            <InfoTooltip wide text={
-              <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-                <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo leer el gráfico</p>
+      <ChartWrapper
+        standalone
+        panelTitle="Serie de tiempo"
+        title={`${varLabel}${varUnit ? ` (${varUnit})` : ""}`}
+        description={varSource || "Serie de tiempo histórica por estado con proyección Holt-Winters."}
+        chartType="Serie de tiempo"
+        tooltip={
+          <InfoTooltip wide text={
+            <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Serie de tiempo</p>
+              <p style={{ margin: "0 0 8px" }}>
+                Cada <strong>línea gris</strong> es un estado. La <strong style={{ color: "var(--blue)" }}>línea azul sólida</strong> es el estado seleccionado y la <strong style={{ color: "var(--blue)", opacity: 0.6 }}>azul punteada</strong> es su tendencia OLS (regresión lineal sobre el período completo). El <strong style={{ color: "#7c3aed" }}>punto morado</strong> es la proyección Holt-Winters para el año siguiente.
+              </p>
+              {showNacional && (
                 <p style={{ margin: "0 0 8px" }}>
-                  Cada línea gris es un estado. La <strong style={{ color: "var(--blue)" }}>línea azul sólida</strong> es el estado seleccionado.
-                  La <strong style={{ color: "var(--blue)" }}>línea azul punteada</strong> es la tendencia OLS.
-                  El <strong style={{ color: "#7c3aed" }}>punto morado</strong> es la proyección Holt para el año siguiente.
+                  La <strong style={{ color: NACIONAL_COLOR }}>línea gris punteada</strong> es la media nacional año a año.
                 </p>
-                {showNacional && (
-                  <p style={{ margin: "0 0 8px" }}>
-                    La <strong style={{ color: NACIONAL_COLOR }}>línea gris punteada</strong> es la media nacional.
-                  </p>
-                )}
-                {hasGroups && (
-                  <p style={{ margin: 0 }}>
-                    Las <strong>líneas de colores</strong> corresponden a los grupos de comparación activos en el panel lateral.
-                  </p>
-                )}
-              </div>
-            } />
-          </div>
-        </div>
-
+              )}
+              {hasGroups && (
+                <p style={{ margin: "0 0 8px" }}>
+                  Las <strong>líneas de colores</strong> corresponden a los grupos de comparación activos en el panel lateral izquierdo.
+                </p>
+              )}
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Indicadores superiores</p>
+              <p style={{ margin: 0, color: "var(--text-3)", fontSize: 11 }}>
+                <strong style={{ color: "var(--text-2)" }}>Último valor</strong>: dato más reciente disponible · <strong style={{ color: "var(--text-2)" }}>Variación</strong>: cambio acumulado desde el primer año de la serie · <strong style={{ color: "var(--text-2)" }}>Pendiente OLS</strong>: cambio promedio por año; R² indica qué tan lineal es la trayectoria (1 = perfectamente lineal).
+              </p>
+            </div>
+          } />
+        }
+        legend={tsLegend}
+        downloadTableData={tsDownloadData}
+      >
         {/* KPI strip */}
         {primaryTrend && primaryForecast && delta !== null && (
           <KpiStrip
@@ -822,7 +911,7 @@ export default function EvolucionTab({ appData }: Props) {
             ))}
           </LineChart>
         </ResponsiveContainer>
-      </div>
+      </ChartWrapper>
 
       {/* Slope comparison panel */}
       {forecastData && (

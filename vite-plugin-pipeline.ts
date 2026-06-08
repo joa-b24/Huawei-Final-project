@@ -1,20 +1,22 @@
 import type { Plugin } from "vite";
+import { writeFileSync, mkdirSync } from "fs";
+import { join } from "path";
+import { execFileSync } from "child_process";
 
 function runScript(
   server: Parameters<NonNullable<Plugin["configureServer"]>>[0],
-  scriptCmd: string,
+  scriptArgs: string[],
   log: string[]
 ): boolean {
   const python = process.env.PYTHON_CMD ?? "python";
-  const cmd = `${python} ${scriptCmd}`;
-  log.push(`\n$ ${cmd}`);
+  log.push(`\n$ ${python} ${scriptArgs.join(" ")}`);
   try {
-    const { execSync } = require("child_process");
-    const out = execSync(cmd, { cwd: server.config.root, encoding: "utf-8", stderr: "pipe", timeout: 120_000 });
+    const out = execFileSync(python, scriptArgs, { cwd: server.config.root, encoding: "utf-8", stdio: "pipe", timeout: 120_000 });
     log.push(out.trim());
     return true;
   } catch (err: any) {
-    log.push(`✗ Error:\n${err.stderr ?? err.stdout ?? String(err)}`);
+    const detail = err.stderr?.trim() || err.stdout?.trim() || String(err);
+    log.push(`✗ Error:\n${detail}`);
     return false;
   }
 }
@@ -33,15 +35,63 @@ export default function pipelinePlugin(): Plugin {
           try {
             const data = JSON.parse(body);
             const root = server.config.root;
-            const { writeFileSync, mkdirSync } = require("fs");
-            const { join } = require("path");
             const importsDir = join(root, "data", "processed", "imports");
             mkdirSync(importsDir, { recursive: true });
             const filename = `${data.variable_id}_metadata.json`;
             const filepath = join(importsDir, filename);
             writeFileSync(filepath, JSON.stringify(data, null, 2), "utf-8");
             log.push(`✓ Payload escrito: data/processed/imports/${filename}`);
-            const ok = runScript(server, "scripts/update_variable_metadata.py", log);
+            const ok = runScript(server, ["scripts/update_variable_metadata.py"], log);
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = ok ? 200 : 500;
+            res.end(JSON.stringify({ ok, log }));
+          } catch (err: any) {
+            log.push(`✗ ${String(err)}`);
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 500;
+            res.end(JSON.stringify({ ok: false, log }));
+          }
+        });
+      });
+
+      server.middlewares.use("/api/pipeline/delete-variable", (req, res) => {
+        if (req.method !== "POST") { res.statusCode = 405; res.end(); return; }
+        let body = "";
+        req.on("data", (chunk) => (body += chunk.toString()));
+        req.on("end", () => {
+          const log: string[] = [];
+          try {
+            const { variable_id } = JSON.parse(body);
+            if (!variable_id || typeof variable_id !== "string") throw new Error("variable_id requerido");
+            const ok = runScript(server, ["scripts/delete_variable.py", variable_id], log);
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = ok ? 200 : 500;
+            res.end(JSON.stringify({ ok, log }));
+          } catch (err: any) {
+            log.push(`✗ ${String(err)}`);
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 500;
+            res.end(JSON.stringify({ ok: false, log }));
+          }
+        });
+      });
+
+      server.middlewares.use("/api/pipeline/run-pca", (req, res) => {
+        if (req.method !== "POST") { res.statusCode = 405; res.end(); return; }
+        let body = "";
+        req.on("data", (chunk) => (body += chunk.toString()));
+        req.on("end", () => {
+          const log: string[] = [];
+          try {
+            const config = JSON.parse(body);
+            if (!config.id || !config.variables?.length) throw new Error("id y variables son requeridos");
+            const root = server.config.root;
+            const pcaConfigDir = join(root, "data", "processed", "pca_configs");
+            mkdirSync(pcaConfigDir, { recursive: true });
+            const configPath = join(pcaConfigDir, `${config.id}.json`);
+            writeFileSync(configPath, JSON.stringify(config, null, 2), "utf-8");
+            log.push(`✓ Config escrita: ${configPath}`);
+            const ok = runScript(server, ["scripts/analytics/run_custom_pca.py", configPath], log);
             res.setHeader("Content-Type", "application/json");
             res.statusCode = ok ? 200 : 500;
             res.end(JSON.stringify({ ok, log }));
@@ -55,31 +105,22 @@ export default function pipelinePlugin(): Plugin {
       });
 
       server.middlewares.use("/api/pipeline/import", (req, res) => {
-        if (req.method !== "POST") {
-          res.statusCode = 405;
-          res.end();
-          return;
-        }
+        if (req.method !== "POST") { res.statusCode = 405; res.end(); return; }
 
         let body = "";
         req.on("data", (chunk) => (body += chunk.toString()));
         req.on("end", () => {
           const log: string[] = [];
-
           try {
             const data = JSON.parse(body);
             const root = server.config.root;
             const importsDir = join(root, "data", "processed", "imports");
-
             mkdirSync(importsDir, { recursive: true });
-
             const filename = `${data.variable_id}_${data.operation}.json`;
             const filepath = join(importsDir, filename);
             writeFileSync(filepath, JSON.stringify(data, null, 2), "utf-8");
             log.push(`✓ Archivo escrito: data/processed/imports/${filename}`);
-
-            // import_variable.py ejecuta combine síncrono + dispara layer1 en background
-            const ok = runScript(server, "scripts/import_variable.py", log);
+            const ok = runScript(server, ["scripts/import_variable.py"], log);
             res.setHeader("Content-Type", "application/json");
             res.statusCode = ok ? 200 : 500;
             res.end(JSON.stringify({ ok, log }));

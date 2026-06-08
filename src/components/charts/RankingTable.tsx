@@ -1,6 +1,10 @@
+import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ComposedChart, ReferenceLine, ResponsiveContainer, Scatter, Tooltip, XAxis, YAxis } from "recharts";
 import type { MetricPolaridad, RankingEntry } from "../../types/dataStandard";
 import MissingDataNote from "../feedback/MissingDataNote";
+import ChartWrapper from "./ChartWrapper";
+
+const RANKING_DESC = "Ordena las entidades de mayor a menor valor para identificar liderazgo o rezago relativo.";
 
 type Props = {
   rows: RankingEntry[];
@@ -11,10 +15,13 @@ type Props = {
   metricLabel: string;
   unit?: string;
   total?: number;
-  view?: "table" | "bars" | "lollipop";
+  initialView?: "table" | "bars" | "lollipop";
   direction?: MetricPolaridad;
   groupLines?: { value: number; label: string; color: string }[];
   showNational?: boolean;
+  tooltip?: React.ReactNode;
+  panelTitle?: string;
+  standalone?: boolean;
 };
 
 function LollipopTooltip({ active, payload, label, metricLabel, unit, direction }: any) {
@@ -58,13 +65,8 @@ function LollipopStem({ x, y, width, height, fill, isHighlighted }: any) {
   const cx = x + width / 2;
   return (
     <line
-      x1={cx}
-      y1={y + height}
-      x2={cx}
-      y2={y}
-      stroke={fill}
-      strokeWidth={isHighlighted ? 3 : 1.5}
-      opacity={isHighlighted ? 1 : 0.8}
+      x1={cx} y1={y + height} x2={cx} y2={y}
+      stroke={fill} strokeWidth={isHighlighted ? 3 : 1.5} opacity={isHighlighted ? 1 : 0.8}
     />
   );
 }
@@ -75,18 +77,35 @@ function LollipopDot({ cx, cy, payload }: any) {
   const isHighlighted = !!payload?.isHighlighted;
   const rank = payload?.rank;
   const r = isHighlighted ? 9 : 5;
+  // Flip label below dot when near the top to avoid clipping
+  const labelY = cy < 28 ? cy + r + 12 : cy - r - 5;
   return (
     <g>
       <circle cx={cx} cy={cy} r={r} fill={fill} stroke="var(--surface)" strokeWidth={isHighlighted ? 2.5 : 1.5} />
       {isHighlighted && <circle cx={cx} cy={cy} r={r + 4} fill="none" stroke={fill} strokeWidth={1.5} opacity={0.3} />}
       {isHighlighted && rank != null && (
-        <text x={cx} y={cy - r - 5} textAnchor="middle" fontSize={9} fill={fill} fontWeight={700}>#{rank}</text>
+        <text x={cx} y={labelY} textAnchor="middle" fontSize={9} fill={fill} fontWeight={700}>#{rank}</text>
       )}
     </g>
   );
 }
 
-export default function RankingTable({ rows, highlightState, comparisonState, comparisonStates, groupStateColors, metricLabel, unit = "", total = 32, view = "table", direction, groupLines, showNational = true }: Props) {
+export default function RankingTable({
+  rows, highlightState, comparisonState, comparisonStates, groupStateColors,
+  metricLabel, unit = "", total = 32, initialView = "table", direction, groupLines,
+  showNational = true, tooltip, panelTitle, standalone,
+}: Props) {
+  const [view, setView] = useState<"table" | "bars" | "lollipop">(initialView);
+
+  const togglePill = (
+    <div className="toggle-pill" role="group">
+      <button type="button" className={`toggle-pill__btn${view === "table" ? " active" : ""}`} onClick={() => setView("table")}>Tabla</button>
+      <button type="button" className={`toggle-pill__btn${view === "lollipop" ? " active" : ""}`} onClick={() => setView("lollipop")}>Lollipop</button>
+    </div>
+  );
+
+  const chartType = view === "bars" ? "Ranking — barras" : view === "lollipop" ? "Ranking — lollipop" : "Ranking — tabla";
+
   const topThird = Math.ceil(total / 3);
   const bottomThird = Math.floor((2 * total) / 3);
   const missing = total - rows.length;
@@ -128,151 +147,128 @@ export default function RankingTable({ rows, highlightState, comparisonState, co
     return [`#${rank}  ${v.toFixed(1)}${unitStr}${pctStr}`, metricLabel];
   };
 
-  if (view === "bars") {
-    return (
-      <div>
-        <ResponsiveContainer width="100%" height={Math.max(280, rows.length * 14)}>
-          <BarChart data={barData} layout="vertical" margin={{ top: 4, right: 48, bottom: 4, left: 4 }}>
-            <XAxis type="number" tick={{ fontSize: 10, fill: "var(--text-3)" }} axisLine={false} tickLine={false} />
-            <YAxis
-              type="category"
-              dataKey="name"
-              tick={{ fontSize: 10, fill: "var(--text-2)" }}
-              axisLine={false}
-              tickLine={false}
-              width={130}
-            />
-            <Tooltip formatter={chartTooltipFormatter} />
-            <Bar dataKey="value" radius={[0, 3, 3, 0]} isAnimationActive={false}>
-              {barData.map((d, i) => (
-                <Cell key={i} fill={d.color} opacity={d.isHighlighted ? 1 : 0.8} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-        <MissingDataNote count={missing} total={total} />
-      </div>
-    );
-  }
-
-  if (view === "lollipop") {
-    return (
-      <div>
-        <ResponsiveContainer width="100%" height={480}>
-          <ComposedChart data={barData} margin={{ top: 16, right: 16, bottom: 80, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-            <XAxis
-              dataKey="name"
-              tick={{ fontSize: 9, fill: "var(--text-2)" }}
-              tickLine={false}
-              axisLine={false}
-              angle={-45}
-              textAnchor="end"
-              interval={0}
-              height={80}
-            />
-            <YAxis
-              tick={{ fontSize: 10, fill: "var(--text-3)" }}
-              tickLine={false}
-              axisLine={false}
-              width={40}
-            />
-            <Tooltip
-              content={(props) => (
-                <LollipopTooltip {...props} metricLabel={metricLabel} unit={unit} direction={direction} />
-              )}
-            />
-            <Bar
-              dataKey="value"
-              isAnimationActive={false}
-              shape={(props: any) => {
-                const d = barData[props.index] ?? props.payload;
-                return (
-                  <LollipopStem
-                    {...props}
-                    fill={d?.color ?? "var(--border)"}
-                    isHighlighted={d?.isHighlighted}
-                  />
-                );
-              }}
-            />
-            <Scatter
-              data={barData}
-              dataKey="value"
-              isAnimationActive={false}
-              shape={(props: any) => <LollipopDot {...props} />}
-            />
-            {showNational && (
-              <ReferenceLine
-                y={nationalMean}
-                stroke="#94a3b8"
-                strokeDasharray="4 3"
-                strokeWidth={1.5}
-                label={{ value: "Media", fontSize: 9, fill: "#94a3b8", position: "insideTopRight" }}
-              />
-            )}
-            {groupLines?.map((gl, i) => (
-              <ReferenceLine
-                key={`gl-${i}`}
-                y={gl.value}
-                stroke={gl.color}
-                strokeDasharray="5 3"
-                strokeWidth={1.5}
-                label={{ value: gl.label, fontSize: 10, fill: gl.color, position: i % 2 === 0 ? "insideTopLeft" : "insideTopRight" }}
-              />
-            ))}
-          </ComposedChart>
-        </ResponsiveContainer>
-        <MissingDataNote count={missing} total={total} />
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div style={{ overflowY: "auto", maxHeight: 420 }}>
-        <table className="ranking-table" aria-label={`Ranking: ${metricLabel}`}>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Estado</th>
-              <th>Variable{unit && ` (${unit})`}</th>
-              <th>vs media</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => {
-              const isHighlighted = !!highlightState && row.estado === highlightState;
-              const isComp = !isHighlighted && allComparisonStates.has(row.estado);
-              const deltaPositive = row.pct_vs_mean >= 0;
-              const isGood = direction === "lower_better" ? !deltaPositive : deltaPositive;
-              return (
-                <tr
-                  key={row.rank}
-                  className={isHighlighted ? "highlighted" : isComp ? "comparison" : ""}
-                  style={
-                    isHighlighted
-                      ? { boxShadow: "inset 3px 0 0 var(--blue)", background: "color-mix(in srgb, var(--blue) 8%, transparent)" }
-                      : isComp
-                      ? { boxShadow: "inset 3px 0 0 #64748b", background: "color-mix(in srgb, #64748b 6%, transparent)" }
-                      : undefined
-                  }
-                >
-                  <td>
-                    <span className={rankClass(row.rank)}>{row.rank}</span>
-                  </td>
-                  <td style={{ fontWeight: isHighlighted ? 700 : isComp ? 600 : undefined }}>{row.estado}</td>
-                  <td style={{ fontFamily: "var(--font-mono)" }}>{row.value.toFixed(1)}</td>
-                  <td style={{ color: isGood ? "var(--green)" : "var(--red)", fontFamily: "var(--font-mono)" }}>
-                    {deltaPositive ? "+" : ""}{row.pct_vs_mean.toFixed(1)} %
-                  </td>
+    <ChartWrapper
+      title={metricLabel}
+      variableName={metricLabel}
+      chartType={chartType}
+      description={RANKING_DESC}
+      panelTitle={panelTitle}
+      tooltip={tooltip}
+      standalone={standalone}
+      headerActions={togglePill}
+    >
+      <div>
+        {view === "bars" && (
+          <div className="chart-rc-wrap" style={{ height: Math.max(280, rows.length * 14) }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={barData} layout="vertical" margin={{ top: 4, right: 48, bottom: 4, left: 4 }}>
+              <XAxis type="number" tick={{ fontSize: 10, fill: "var(--text-3)" }} axisLine={false} tickLine={false} />
+              <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: "var(--text-2)" }} axisLine={false} tickLine={false} width={130} />
+              <Tooltip formatter={chartTooltipFormatter} />
+              <Bar dataKey="value" radius={[0, 3, 3, 0]} isAnimationActive={false}>
+                {barData.map((d, i) => (
+                  <Cell key={i} fill={d.color} opacity={d.isHighlighted ? 1 : 0.8} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          </div>
+        )}
+
+        {view === "lollipop" && (
+          <>
+          <div className="chart-rc-wrap" style={{ height: "clamp(400px, 56vh, 680px)" }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={barData} margin={{ top: 28, right: 16, bottom: 4, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+              <XAxis dataKey="name" tick={{ fontSize: 9, fill: "var(--text-2)" }} tickLine={false} axisLine={false} angle={-45} textAnchor="end" interval={0} height={90} />
+              <YAxis tick={{ fontSize: 10, fill: "var(--text-3)" }} tickLine={false} axisLine={false} width={40} domain={[0, "auto"]} />
+              <Tooltip content={(props) => <LollipopTooltip {...props} metricLabel={metricLabel} unit={unit} direction={direction} />} />
+              <Bar
+                dataKey="value"
+                isAnimationActive={false}
+                shape={(props: any) => {
+                  const d = barData[props.index] ?? props.payload;
+                  return <LollipopStem {...props} fill={d?.color ?? "var(--border)"} isHighlighted={d?.isHighlighted} />;
+                }}
+              />
+              <Scatter data={barData} dataKey="value" isAnimationActive={false} shape={(props: any) => <LollipopDot {...props} />} />
+              {showNational && (
+                <ReferenceLine y={nationalMean} stroke="#94a3b8" strokeDasharray="4 3" strokeWidth={1.5}  />
+              )}
+              {groupLines?.map((gl, i) => (
+                <ReferenceLine key={`gl-${i}`} y={gl.value} stroke={gl.color} strokeDasharray="5 3" strokeWidth={1.5} />
+              ))}
+            </ComposedChart>
+          </ResponsiveContainer>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "3px 14px", padding: "8px 4px 2px", fontSize: 10.5, color: "var(--text-3)" }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: "var(--blue)" }} />
+              Valor estatal
+            </span>
+            {showNational && (
+              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <svg width="18" height="10" style={{ flexShrink: 0 }}><line x1="0" y1="5" x2="18" y2="5" stroke="#94a3b8" strokeDasharray="4 2" strokeWidth="1.5" /></svg>
+                Media nacional
+              </span>
+            )}
+            {groupLines && groupLines.length > 0 && groupLines.map((gl) => (
+              <span key={gl.label} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <svg width="18" height="10" style={{ flexShrink: 0 }}><line x1="0" y1="5" x2="18" y2="5" stroke={gl.color} strokeDasharray="5 2" strokeWidth="1.5" /></svg>
+                {gl.label}
+              </span>
+            ))}
+          </div>
+          </>
+        )}
+
+        {view === "table" && (
+          <div style={{ overflowY: "auto", maxHeight: 420 }}>
+            <table className="ranking-table" aria-label={`Ranking: ${metricLabel}`}>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Estado</th>
+                  <th>Variable{unit && ` (${unit})`}</th>
+                  <th>vs media</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {rows.map((row) => {
+                  const isHighlighted = !!highlightState && row.estado === highlightState;
+                  const isComp = !isHighlighted && allComparisonStates.has(row.estado);
+                  const deltaPositive = row.pct_vs_mean >= 0;
+                  const isGood = direction === "lower_better" ? !deltaPositive : deltaPositive;
+                  return (
+                    <tr
+                      key={row.rank}
+                      className={isHighlighted ? "highlighted" : isComp ? "comparison" : ""}
+                      style={
+                        isHighlighted
+                          ? { boxShadow: "inset 3px 0 0 var(--blue)", background: "color-mix(in srgb, var(--blue) 8%, transparent)" }
+                          : isComp
+                          ? { boxShadow: "inset 3px 0 0 #64748b", background: "color-mix(in srgb, #64748b 6%, transparent)" }
+                          : undefined
+                      }
+                    >
+                      <td><span className={rankClass(row.rank)}>{row.rank}</span></td>
+                      <td style={{ fontWeight: isHighlighted ? 700 : isComp ? 600 : undefined }}>{row.estado}</td>
+                      <td style={{ fontFamily: "var(--font-mono)" }}>{row.value.toFixed(1)}</td>
+                      <td style={{ color: isGood ? "var(--green)" : "var(--red)", fontFamily: "var(--font-mono)" }}>
+                        {deltaPositive ? "+" : ""}{row.pct_vs_mean.toFixed(1)} %
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <MissingDataNote count={missing} total={total} />
       </div>
-      <MissingDataNote count={missing} total={total} />
-    </div>
+    </ChartWrapper>
   );
 }

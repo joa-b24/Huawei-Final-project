@@ -3,29 +3,79 @@ import type { VariableCatalogEntry } from "../../../types/dataStandard";
 import type { OperationType } from "../../../lib/dataStorage";
 import type { ParsedRow } from "../../../lib/csvParser";
 import type { Granularity } from "./Step1OperationType";
+import { resolveStateCode } from "../../../lib/stateResolver";
 
 type CoercedRow = { state_code: string; cve_mun?: string; value: number; year: number };
+
+export type CoerceResult = {
+  rows: CoercedRow[];
+  unmappedKeys: string[];   // raw geo values that couldn't be resolved
+  discarded: number;        // rows dropped for reasons other than unmapped geo
+};
 
 // JSON uploads can produce numbers even though ParsedRow says string — cast everything.
 function str(v: unknown): string { return v != null ? String(v) : ""; }
 function strOrUndef(v: unknown): string | undefined { return v != null ? String(v) : undefined; }
 
-function coerceRows(rows: ParsedRow[]): CoercedRow[] {
-  return rows
-    .map((r) => {
-      const cveMun = strOrUndef(r.cve_mun ?? r.cvegeo ?? r.cve_geo);
-      // Derive state_code from cvegeo: zero-pad to 5 digits first so that
-      // 4-digit codes (states 1-9, e.g. "5012") resolve correctly to "05"
-      const rawSc = str(r.state_code ?? r.estado);
-      const state_code = rawSc || (cveMun && cveMun.length >= 4 ? cveMun.padStart(5, "0").slice(0, 2) : "");
-      return {
-        state_code,
-        cve_mun: cveMun,
-        value: parseFloat(str(r.value) || "0"),
-        year: parseInt(str(r.year ?? r.anio)),
-      };
-    })
-    .filter((r) => r.state_code && !isNaN(r.value) && !isNaN(r.year));
+function coerceRows(
+  rows: ParsedRow[],
+  valueColumn: string,
+  manualYear?: number,
+): CoerceResult {
+  const unmappedSet = new Set<string>();
+  const result: CoercedRow[] = [];
+  let discarded = 0;
+
+  for (const r of rows) {
+    const cveMun = strOrUndef(r.cve_mun ?? r.cvegeo ?? r.cve_geo ?? r.clave_municipio);
+
+    // --- Resolve state_code via stateResolver (accepts names, CVE_ENT, aliases, codes) ---
+    const rawSc =
+      r.state_code ?? r.estado ?? r.entidad ?? r.entidad_federativa ??
+      r["Entidad federativa"] ?? r.nombre_estado ?? r["nombre estado"] ??
+      r.cve_ent ?? r.CVE_ENT ?? r.clave_estado ?? r["clave_estado"] ?? r["Clave estado"];
+
+    let state_code: string;
+    if (rawSc != null && String(rawSc).trim() !== "") {
+      const resolved = resolveStateCode(String(rawSc));
+      if (resolved) {
+        state_code = resolved;
+      } else {
+        unmappedSet.add(String(rawSc).trim());
+        // Try to derive from cvegeo as last resort
+        state_code = cveMun ? (cveMun.padStart(5, "0").slice(0, 2)) : "";
+        // Attempt to resolve the numeric prefix too
+        if (state_code) {
+          state_code = resolveStateCode(String(parseInt(state_code))) ?? state_code;
+        }
+      }
+    } else if (cveMun && cveMun.length >= 4) {
+      // Derive from cvegeo: numeric prefix → lookup
+      const numPrefix = String(parseInt(cveMun.padStart(5, "0").slice(0, 2)));
+      state_code = resolveStateCode(numPrefix) ?? cveMun.padStart(5, "0").slice(0, 2);
+    } else {
+      state_code = "";
+    }
+
+    // --- Year: row column takes precedence, falls back to manualYear ---
+    const rawYear = r.year ?? r.anio ?? r.año ?? r.periodo;
+    const year = rawYear !== undefined && rawYear !== ""
+      ? parseInt(str(rawYear))
+      : (manualYear ?? NaN);
+
+    // --- Value from the selected column ---
+    const rawVal = r[valueColumn];
+    const value = parseFloat(str(rawVal) || "NaN");
+
+    if (!state_code || isNaN(value) || isNaN(year)) {
+      discarded++;
+      continue;
+    }
+
+    result.push({ state_code, cve_mun: cveMun, value, year });
+  }
+
+  return { rows: result, unmappedKeys: [...unmappedSet], discarded };
 }
 
 function deriveOperation(
@@ -69,9 +119,13 @@ async function runPipeline(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    return await res.json();
+    const data = await res.json();
+    return { ok: res.ok && data.ok, log: data.log ?? [] };
   } catch (err) {
-    return { ok: false, log: [String(err)] };
+    return {
+      ok: false,
+      log: [`Error de conexión: ${String(err)}. Verifica que el servidor local esté corriendo.`],
+    };
   }
 }
 
@@ -88,6 +142,8 @@ type Props = {
   variable: VariableCatalogEntry;
   existingYear?: number;
   rows: ParsedRow[];
+  valueColumn: string;
+  manualYear?: number;
   onBack: () => void;
   onDone: () => void;
 };
@@ -101,6 +157,8 @@ export default function Step4Confirm({
   variable,
   existingYear,
   rows,
+  valueColumn,
+  manualYear,
   onBack,
   onDone,
 }: Props) {
@@ -110,7 +168,7 @@ export default function Step4Confirm({
   const [updateStateLevel, setUpdateStateLevel] = useState(true);
 
   const operation = deriveOperation(granularity, isNew, completarOnly);
-  const coerced = coerceRows(rows);
+  const { rows: coerced, unmappedKeys, discarded } = coerceRows(rows, valueColumn, manualYear);
   const isMunicipal = granularity === "municipal";
 
   const munCount = isMunicipal
@@ -210,7 +268,13 @@ export default function Step4Confirm({
         </div>
         <div className="confirm-summary__row">
           <span>Año</span>
-          <strong>{incomingYear ?? "—"}</strong>
+          <strong>
+            {incomingYear ?? (manualYear ? `${manualYear} (manual)` : "—")}
+          </strong>
+        </div>
+        <div className="confirm-summary__row">
+          <span>Columna de valor</span>
+          <strong><code>{valueColumn}</code></strong>
         </div>
         <div className="confirm-summary__row">
           <span>Registros</span>
@@ -240,9 +304,20 @@ export default function Step4Confirm({
             )}
           </>
         )}
-        {coerced.length < rows.length && (
+        {unmappedKeys.length > 0 && (
+          <div className="wizard-warn-box" style={{ marginTop: 8, padding: "8px 12px", background: "var(--amber-bg, #fef3c7)", border: "1px solid var(--amber, #d97706)", borderRadius: "var(--radius)", fontSize: 13 }}>
+            <strong>{unmappedKeys.length} clave{unmappedKeys.length !== 1 ? "s" : ""} geográfica{unmappedKeys.length !== 1 ? "s" : ""} no reconocida{unmappedKeys.length !== 1 ? "s" : ""}:</strong>
+            <p style={{ margin: "4px 0 0", fontFamily: "monospace", fontSize: 12 }}>
+              {unmappedKeys.join(" · ")}
+            </p>
+            <p style={{ margin: "4px 0 0", opacity: 0.8 }}>
+              Las filas con estas claves se descartaron. Revisa la ortografía o usa el código INEGI (CVE_ENT).
+            </p>
+          </div>
+        )}
+        {discarded > 0 && (
           <p className="wizard-warn">
-            {rows.length - coerced.length} filas descartadas por valores inválidos o sin año.
+            {discarded} fila{discarded !== 1 ? "s" : ""} descartada{discarded !== 1 ? "s" : ""} por valores inválidos o sin año.
           </p>
         )}
       </div>

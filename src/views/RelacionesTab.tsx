@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { captureElementToPng, createZip, dataUrlToBytes, triggerDownload } from "../lib/chartExport";
 import { useAppContext } from "../context/AppContext";
 import type { AppData } from "../services/DataService";
 import CorrelationBarChart from "../components/charts/CorrelationBarChart";
+import ChartWrapper from "../components/charts/ChartWrapper";
 import PairScatterChart from "../components/charts/PairScatterChart";
 import MultivariateRegressionPlot from "../components/charts/MultivariateRegressionPlot";
 import EmptyState from "../components/EmptyState";
@@ -35,6 +37,10 @@ export default function RelacionesTab({ appData }: Props) {
 
   const [selectedX, setSelectedX] = useState<string | null>(null);
   const [selectedY, setSelectedY] = useState<string | null>(null);
+  const [corrFullscreen, setCorrFullscreen] = useState(false);
+  const corrBarRef = useRef<HTMLDivElement>(null);
+  const corrScatterRef = useRef<HTMLDivElement>(null);
+  const [regDownloadFn, setRegDownloadFn] = useState<(() => Promise<void>) | null>(null);
 
   const groupColorMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -124,11 +130,32 @@ export default function RelacionesTab({ appData }: Props) {
 
   const hasCorrData = correlations.pearson.variables.length > 0;
 
+  const fsChartH = corrFullscreen
+    ? Math.max(380, Math.floor((window.innerHeight - 360) / 2))
+    : undefined;
+
+  async function handleCorrDownload() {
+    const barEl = corrBarRef.current;
+    const scatterEl = corrScatterRef.current;
+    if (!barEl || !scatterEl) return;
+    function slug(s: string) { return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 30); }
+    const [barUrl, scatterUrl] = await Promise.all([
+      captureElementToPng(barEl, `Correlaciones con ${yLabel}`),
+      captureElementToPng(scatterEl, `${xLabel} vs ${yLabel}`),
+    ]);
+    const zipBytes = createZip([
+      { name: `correlaciones-${slug(yLabel)}.png`, data: dataUrlToBytes(barUrl) },
+      { name: `dispersion-${slug(xLabel)}-vs-${slug(yLabel)}.png`, data: dataUrlToBytes(scatterUrl) },
+    ]);
+    const url = URL.createObjectURL(new Blob([zipBytes.buffer as ArrayBuffer], { type: "application/zip" }));
+    triggerDownload(url, `correlacion-${slug(yLabel)}.zip`);
+  }
+
   return (
     <div className="tab-content">
       <TabNarrative
         title="Análisis de impacto"
-        description="Relaciones estadísticas entre variables activas: correlación de Pearson, dispersión por par de estados y regresión OLS multivariada estandarizada."
+        description="Relaciones estadísticas entre variables activas: correlación de Pearson, dispersión por par de variables y regresión multivariada."
       >
         {corrRows.length > 0 ? (
           <ImpactoNarrative yLabel={yLabel} corrRows={corrRows} n={dataset.records.length} />
@@ -146,14 +173,20 @@ export default function RelacionesTab({ appData }: Props) {
       {activeVariableIds.length >= 2 && (
         <>
           {/* Unified correlation panel */}
-          <section className="panel">
-            <div className="panel-title-row">
-              <p className="panel-title" style={{ margin: 0 }}>Correlación univariada</p>
+          <ChartWrapper
+            standalone
+            panelTitle="Correlación"
+            title="Correlación univariada"
+            description={`Coeficientes de Pearson de ${yLabel} con las demás variables activas. El botón de descarga exporta las 2 gráficas en un archivo ZIP.`}
+            chartType="Correlación"
+            onDownload={handleCorrDownload}
+            onFullscreenChange={setCorrFullscreen}
+            tooltip={
               <InfoTooltip wide text={
                 <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-                  <p style={{ fontWeight: 700, margin: "0 0 6px", color: "var(--text-1)" }}>Coeficiente de Pearson (r)</p>
+                  <p style={{ fontWeight: 700, margin: "0 0 6px", color: "var(--text-1)" }}>Coeficientes de correlación</p>
                   <p style={{ margin: "0 0 8px" }}>
-                    Mide la asociación <strong>lineal</strong> entre cada variable X y la Y seleccionada. Rango: −1 a +1.
+                    Mide la asociación <strong>lineal</strong> (Pearson) entre cada variable y la variable objetivo seleccionada. Rango: −1 a +1. El signo indica dirección (directa o inversa); el valor absoluto indica intensidad.
                   </p>
                   <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 8, fontSize: 11 }}>
                     <thead>
@@ -171,88 +204,101 @@ export default function RelacionesTab({ appData }: Props) {
                       ))}
                     </tbody>
                   </table>
-                  <p style={{ margin: "0 0 8px", color: "var(--text-3)", fontSize: 11 }}>
-                    Correlación no implica causalidad. Una r alta puede reflejar un factor latente común (p.ej. nivel de desarrollo general del estado).
+                  <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Diagrama de dispersión</p>
+                  <p style={{ margin: "0 0 8px" }}>
+                    Muestra cada estado como un punto según sus valores en dos variables. Permite ver si la relación es realmente lineal, si hay estados atípicos que distorsionan el coeficiente r, o si el patrón cambia en distintos rangos de valores. <strong>Haz clic en una barra</strong> del gráfico de correlación para actualizar qué par de variables se muestra aquí.
                   </p>
-                  <p style={{ margin: 0, fontWeight: 600, color: "var(--text-2)", fontSize: 11 }}>
-                    Haz clic en una barra para seleccionar esa variable en el diagrama de dispersión.
+                  <p style={{ margin: 0, color: "var(--text-3)", fontSize: 11 }}>
+                    Correlación no implica causalidad. Una r alta puede reflejar un factor subyacente común, como el nivel general de desarrollo del estado.
                   </p>
                 </div>
               } />
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10 }}>
-              <span style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-3)" }}>
-                Variable objetivo
-              </span>
-              <select
-                className="comparison-select comparison-select--sm"
-                value={yVarId ?? ""}
-                onChange={(e) => setSelectedY(e.target.value)}
-                style={{ maxWidth: 400 }}
-              >
-                {activeVariableIds.map((id) => (
-                  <option key={id} value={id}>{getLabelAndUnit(id).label}</option>
-                ))}
-              </select>
-            </div>
+            }
+          >
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <span style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-3)" }}>
+                  Variable objetivo
+                </span>
+                <select
+                  className="comparison-select comparison-select--sm"
+                  value={yVarId ?? ""}
+                  onChange={(e) => setSelectedY(e.target.value)}
+                  style={{ maxWidth: 400 }}
+                >
+                  {activeVariableIds.map((id) => (
+                    <option key={id} value={id}>{getLabelAndUnit(id).label}</option>
+                  ))}
+                </select>
+              </div>
 
-            <div className="two-col" style={{ marginTop: 8 }}>
-              <div>
-                <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 600, color: "var(--text-2)" }}>
-                  Correlaciones con {yLabel}
-                </p>
-                {corrRows.length > 0 ? (
-                  <CorrelationBarChart
-                    rows={corrRows}
-                    selectedId={xVarId}
-                    onBarClick={setSelectedX}
+              <div className="two-col corr-charts">
+                <div ref={corrBarRef}>
+                  <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 600, color: "var(--text-2)" }}>
+                    Correlaciones con {yLabel}
+                  </p>
+                  {corrRows.length > 0 ? (
+                    <CorrelationBarChart
+                      rows={corrRows}
+                      selectedId={xVarId}
+                      onBarClick={setSelectedX}
+                      chartHeight={fsChartH}
+                    />
+                  ) : hasCorrData ? (
+                    <EmptyState title="Variable no encontrada" description="La variable seleccionada no está en la matriz de correlaciones." />
+                  ) : (
+                    <EmptyState title="Sin correlaciones precalculadas" description="Ejecuta npm run pipeline:layer1 para generar correlations.json." />
+                  )}
+                </div>
+
+                <div ref={corrScatterRef}>
+                  <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 600, color: "var(--text-2)" }}>
+                    {xLabel} vs {yLabel}
+                  </p>
+                  <PairScatterChart
+                    data={scatterData}
+                    xLabel={xLabel}
+                    yLabel={yLabel}
+                    highlightState={primaryState ?? undefined}
+                    xUnit={xUnit}
+                    yUnit={yUnit}
+                    groupStateColors={nonNacionalGroups.length > 0 ? groupStateColors : undefined}
+                    chartHeight={fsChartH}
                   />
-                ) : hasCorrData ? (
-                  <EmptyState title="Variable no encontrada" description="La variable seleccionada no está en la matriz de correlaciones." />
-                ) : (
-                  <EmptyState title="Sin correlaciones precalculadas" description="Ejecuta npm run pipeline:layer1 para generar correlations.json." />
-                )}
-              </div>
-
-              <div>
-                <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 600, color: "var(--text-2)" }}>
-                  {xLabel} vs {yLabel}
-                </p>
-                <PairScatterChart
-                  data={scatterData}
-                  xLabel={xLabel}
-                  yLabel={yLabel}
-                  highlightState={primaryState ?? undefined}
-                  xUnit={xUnit}
-                  yUnit={yUnit}
-                  groupStateColors={nonNacionalGroups.length > 0 ? groupStateColors : undefined}
-                />
+                </div>
               </div>
             </div>
-          </section>
+          </ChartWrapper>
 
-          <section className="panel">
-            <div className="panel-title-row">
-              <p className="panel-title" style={{ margin: 0 }}>Regresión multivariada (OLS estandarizado)</p>
+          <ChartWrapper
+            standalone
+            panelTitle="Regresión OLS"
+            title="Regresión multivariada (OLS estandarizado)"
+            description="Modelo OLS múltiple calculado en cliente sobre los 32 estados. Coeficientes β estandarizados con intervalos de confianza al 95%. La descarga exporta coeficientes PNG, tabla CSV y ajuste del modelo PNG en un ZIP."
+            chartType="Regresión OLS"
+            onDownload={regDownloadFn ?? undefined}
+            tooltip={
               <InfoTooltip wide text={
                 <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-                  <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Coeficientes beta (β estandarizados)</p>
+                  <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Funcionalidad del panel</p>
                   <p style={{ margin: "0 0 10px" }}>
-                    Cada β indica cuántas desviaciones estándar cambia Y por cada desviación estándar de X, <em>manteniendo las demás variables constantes</em>. Al estar estandarizados, son comparables entre sí: mayor |β| = mayor contribución marginal.
+                    Permite construir un modelo estadístico que estima cuánto y en qué dirección influye un conjunto de variables sobre una variable objetivo, analizando todos los factores al mismo tiempo. A diferencia de la correlación simple, controla el efecto de cada variable mientras mantiene las demás constantes, lo que da una visión más completa de las relaciones entre indicadores.
                   </p>
                   <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Limitaciones</p>
                   <p style={{ margin: 0, color: "var(--text-3)" }}>
-                    Con solo 32 observaciones (estados), el modelo puede sobreajustarse si hay muchas variables. Alta multicolinealidad entre X's infla los errores estándar. Interpretar como asociación, no como causalidad.
+                    Con solo 32 observaciones (estados), el modelo puede sobreajustarse si se incluyen demasiadas variables. Interpretar los resultados como asociación estadística, no como causalidad.
                   </p>
                 </div>
               } />
-            </div>
+            }
+          >
             <MultivariateRegressionPlot
               stateCards={effectiveStateCards}
               metricOptions={metricOptions}
               defaultDependentVar={xVarId}
+              onDownloadFn={(fn) => setRegDownloadFn(fn !== null ? () => fn : null)}
             />
-          </section>
+          </ChartWrapper>
         </>
       )}
     </div>
@@ -269,6 +315,20 @@ function corrStrength(r: number): string {
   return "muy débil";
 }
 
+function corrLabel(r: number): string {
+  const str = corrStrength(r);
+  return r > 0 ? `${str} y directa` : `${str} e inversa`;
+}
+
+function dirInterpretation(r: number, label: string, yLabel: string): string {
+  return r > 0
+    ? `Los estados con mayor ${label} tienden a presentar también mayor ${yLabel}, lo que apunta a que ambos indicadores se mueven en la misma dirección.`
+    : `Los estados con mayor ${label} tienden a presentar menor ${yLabel}, evidenciando que ambos indicadores se mueven en sentidos opuestos.`;
+}
+
+const TRANSITIONS = ["En contraparte,", "Asimismo,", "Por su parte,", "Finalmente,"];
+const DETAIL_THRESHOLD = 4; // por debajo de este número se describe cada variable individualmente
+
 function ImpactoNarrative({
   yLabel,
   corrRows,
@@ -279,62 +339,87 @@ function ImpactoNarrative({
   n: number;
 }) {
   const sorted = [...corrRows].sort((a, b) => Math.abs(b.r) - Math.abs(a.r));
-  const top3 = sorted.slice(0, 3);
-  const significant = corrRows.filter((c) => c.pValue < 0.05);
-  const posSignif = significant.filter((c) => c.r > 0);
-  const negSignif = significant.filter((c) => c.r < 0);
+  const significant = sorted.filter((c) => c.pValue < 0.05);
+  const nonSignificant = sorted.filter((c) => c.pValue >= 0.05);
+  const minR = (1.96 / Math.sqrt(n - 2 + 1.96 ** 2 / n)).toFixed(2);
+  const manyVars = corrRows.length > DETAIL_THRESHOLD;
 
-  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
+  const S = { lineHeight: 1.7, color: "#334155", margin: "0 0 10px" } as const;
+  const Slist = { lineHeight: 1.6, color: "#334155", margin: "0 0 6px", fontSize: 13 } as const;
+
+  const sigPhrase = significant.length === 0
+    ? "Ninguna alcanza una asociación estadísticamente clara con los datos disponibles."
+    : significant.length === corrRows.length
+    ? `Las ${corrRows.length} alcanzan asociación estadísticamente clara (p < 0.05).`
+    : `De ellas, ${significant.length} ${significant.length === 1 ? "alcanza" : "alcanzan"} asociación estadísticamente clara (p < 0.05).`;
 
   return (
     <div>
+      {/* Apertura */}
       <p style={S}>
-        Se analiza la relación lineal de <strong>{corrRows.length}</strong> variable{corrRows.length !== 1 ? "s" : ""} con{" "}
-        <strong>{yLabel}</strong>, usando los {n} estados como observaciones.{" "}
-        {significant.length > 0 ? (
-          <><strong>{significant.length}</strong> de {corrRows.length} {significant.length === 1 ? "alcanza" : "alcanzan"} significancia estadística (p&nbsp;&lt;&nbsp;0.05).</>
-        ) : (
-          <>Ninguna correlación alcanza significancia estadística con n&nbsp;=&nbsp;{n}; las tendencias son indicativas.</>
-        )}
+        Analizando el comportamiento de los <strong>{n} estados</strong>, se estudió la relación
+        entre <strong>{corrRows.length} variable{corrRows.length !== 1 ? "s" : ""}</strong> y{" "}
+        <strong>{yLabel}</strong>. {sigPhrase}
       </p>
 
-      {top3.length > 0 && (
-        <p style={S}>
-          Las asociaciones más fuertes son:{" "}
-          {top3.map((c, i) => (
-            <span key={c.label}>
-              {i > 0 && "; "}
-              <strong>{c.label}</strong>{" "}(r&nbsp;=&nbsp;{c.r.toFixed(2)},{" "}
-              {corrStrength(c.r)} {c.r > 0 ? "positiva" : "negativa"}{c.pValue < 0.05 ? <>, p&nbsp;&lt;&nbsp;0.05</> : null})
-            </span>
-          ))}.
-        </p>
-      )}
-
-      {(posSignif.length > 0 || negSignif.length > 0) && (
-        <p style={S}>
-          {posSignif.length > 0 && (
-            <>
-              Asociación <strong>positiva</strong> significativa con:{" "}
-              <strong>{posSignif.map((c) => c.label).join(", ")}</strong> —{" "}
-              {posSignif.length === 1 ? "cuando esta variable aumenta" : "cuando estas variables aumentan"},{" "}
-              <strong>{yLabel}</strong> tiende a aumentar también.{" "}
-            </>
+      {/* Modo compacto (> DETAIL_THRESHOLD variables): listas agrupadas por significancia */}
+      {manyVars ? (
+        <>
+          {significant.length > 0 && (
+            <div style={{ marginBottom: 10 }}>
+              <p style={{ ...S, margin: "0 0 6px", fontWeight: 600 }}>
+                Con asociación estadísticamente clara (p &lt; 0.05):
+              </p>
+              {significant.map((c) => (
+                <p key={c.label} style={Slist}>
+                  <strong>{c.label}</strong> — correlación {corrLabel(c.r)} (r&nbsp;=&nbsp;{c.r.toFixed(2)}).{" "}
+                  {dirInterpretation(c.r, c.label, yLabel)}
+                </p>
+              ))}
+            </div>
           )}
-          {negSignif.length > 0 && (
-            <>
-              Asociación <strong>negativa</strong> significativa con:{" "}
-              <strong>{negSignif.map((c) => c.label).join(", ")}</strong> —{" "}
-              {negSignif.length === 1 ? "cuando esta variable aumenta" : "cuando estas variables aumentan"},{" "}
-              <strong>{yLabel}</strong> tiende a disminuir.
-            </>
+          {nonSignificant.length > 0 && (
+            <div style={{ marginBottom: 10 }}>
+              <p style={{ ...S, margin: "0 0 6px", fontWeight: 600 }}>
+                Sin significancia estadística (|r| &lt; {minR} con {n} estados):
+              </p>
+              <p style={Slist}>
+                {nonSignificant.map((c, i) => (
+                  <span key={c.label}>
+                    {i > 0 && ", "}
+                    <strong>{c.label}</strong> (r&nbsp;=&nbsp;{c.r.toFixed(2)})
+                  </span>
+                ))}.{" "}
+                Los patrones son indicativos pero no concluyentes con el tamaño de muestra disponible.
+              </p>
+            </div>
           )}
-        </p>
+        </>
+      ) : (
+        /* Modo detallado (≤ DETAIL_THRESHOLD variables): párrafo por variable */
+        sorted.map((c, i) => {
+          const isSig = c.pValue < 0.05;
+          const isWeak = Math.abs(c.r) < 0.35;
+          const transition = i === 0 ? null : TRANSITIONS[i - 1] ?? "Además,";
+          return (
+            <p key={c.label} style={S}>
+              {transition && <>{transition} </>}
+              <strong>{c.label}</strong> muestra una correlación {corrLabel(c.r)} (r&nbsp;=&nbsp;{c.r.toFixed(2)}
+              {isSig ? ", p < 0.05" : null}).{" "}
+              {isSig
+                ? dirInterpretation(c.r, c.label, yLabel)
+                : isWeak
+                ? `La asociación no supera el umbral de significancia para muestras de este tamaño (se requiere |r| > ${minR} con ${n} estados). Conviene revisar el diagrama de dispersión para verificar que no haya estados atípicos distorsionando el coeficiente.`
+                : `El patrón es indicativo pero no alcanza significancia estadística con n = ${n} estados.`
+              }
+            </p>
+          );
+        })
       )}
 
       <p style={{ lineHeight: 1.55, color: "var(--text-3)", fontSize: 12, margin: 0 }}>
-        Correlación no implica causalidad. Con n&nbsp;=&nbsp;{n} estados, se necesita |r|&nbsp;&gt;&nbsp;~0.35 para alcanzar p&nbsp;&lt;&nbsp;0.05.
-        Explora el diagrama de dispersión para identificar estados atípicos que puedan estar influyendo en el coeficiente.
+        Correlación no implica causalidad: una asociación alta puede reflejar un factor subyacente
+        común, como el nivel general de desarrollo del estado.
       </p>
     </div>
   );
