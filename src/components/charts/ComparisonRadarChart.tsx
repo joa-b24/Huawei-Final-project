@@ -17,10 +17,60 @@ import {
 } from "recharts";
 import EmptyState from "../EmptyState";
 import type { PcaResults } from "../../services/DataService";
-import { NACIONAL_COLOR } from "../sidebar/ComparisonGroupSelector";
+import { GROUP_COLORS, NACIONAL_COLOR } from "../sidebar/ComparisonGroupSelector";
+import ChartWrapper from "./ChartWrapper";
 
 const PRIMARY_COLOR = "#1d4ed8";
-const GROUP_COLORS = ["#64748b", "#059669", "#7c3aed", "#dc2626", "#0891b2"];
+
+function wrapText(text: string, maxCharsPerLine: number, maxLines: number): string[] {
+  const words = text.split(/\s+/);
+  const lines: string[] = [];
+  let i = 0;
+  while (i < words.length && lines.length < maxLines) {
+    let line = words[i];
+    i++;
+    while (i < words.length && `${line} ${words[i]}`.length <= maxCharsPerLine) {
+      line += ` ${words[i]}`;
+      i++;
+    }
+    const isLastLine = lines.length === maxLines - 1;
+    if (isLastLine && i < words.length) {
+      line = line.length <= maxCharsPerLine - 1 ? `${line}…` : `${line.slice(0, maxCharsPerLine - 1)}…`;
+    }
+    lines.push(line);
+  }
+  return lines;
+}
+
+function RadarAxisTick({
+  x, y, payload, textAnchor,
+}: {
+  x?: number; y?: number; payload?: { value?: string }; textAnchor?: "end" | "start" | "middle" | "inherit";
+}) {
+  const lines = wrapText(payload?.value ?? "", 25, 2);
+  const lineH = 13;
+  const offsetY = -((lines.length - 1) * lineH) / 2;
+  return (
+    <text x={x} y={y} textAnchor={textAnchor} fill="var(--text-3)" fontSize={11}>
+      {lines.map((line, i) => (
+        <tspan key={i} x={x} dy={i === 0 ? offsetY : lineH}>
+          {line}
+        </tspan>
+      ))}
+    </text>
+  );
+}
+
+function BarAxisTick({ x, y, payload }: { x?: number; y?: number; payload?: { value?: string } }) {
+  const lines = wrapText(payload?.value ?? "", 25, 2);
+  return (
+    <text x={x} y={(y ?? 0) + 6} textAnchor="middle" fill="var(--text-3)" fontSize={10}>
+      {lines.map((line, i) => (
+        <tspan key={i} x={x} dy={i === 0 ? 0 : 12}>{line}</tspan>
+      ))}
+    </text>
+  );
+}
 
 type Props = {
   primaryState: string | null;
@@ -32,6 +82,8 @@ type Props = {
   stateRegionMap: Record<string, string>;
   pcaResults?: PcaResults | null;
   groups: string[];
+  panelTitle?: string;
+  tooltip?: React.ReactNode;
 };
 
 function fmtRaw(v: number, unit: string): string {
@@ -54,6 +106,8 @@ export default function ComparisonRadarChart({
   stateRegionMap,
   pcaResults,
   groups,
+  panelTitle,
+  tooltip,
 }: Props) {
   const [view, setView] = useState<"radar" | "barras">("radar");
 
@@ -130,12 +184,44 @@ export default function ComparisonRadarChart({
   const groupDefs = buildGroupDefs();
 
   const chartData = variables.map((v) => {
-    const shortLabel = v.label.length > 26 ? v.label.slice(0, 26) + "…" : v.label;
+    const shortLabel = v.label.length > 50 ? v.label.slice(0, 50) + "…" : v.label;
     const entry: Record<string, string | number> = { axis: shortLabel, varId: v.id };
     entry[primaryState] = primaryValues[v.id] ?? 0;
     for (const g of groupDefs) entry[g.label] = getGroupValues(g.id)[v.id] ?? 0;
     return entry;
   });
+
+  // Tabla radar (variables como filas, estados como columnas — para vista lado-a-lado)
+  const downloadTableData = variables.map((v) => {
+    const label = v.label.length > 50 ? v.label.slice(0, 50) + "…" : v.label;
+    const unit = v.unit ?? "";
+    const fmt = (raw: number | null): string => (raw !== null ? fmtRaw(raw, unit) : "—");
+    const row: Record<string, string> = { Variable: label };
+    row[primaryState] = fmt(rawMap?.get(primaryState)?.[v.id] ?? null);
+    for (const g of groupDefs) row[g.label] = fmt(getRawValueByName(g.label, v.id));
+    return row;
+  });
+
+  // Tabla barras (transpuesta: estados/grupos como filas, variables como columnas)
+  const downloadTableDataBars = (() => {
+    const colLabel = (v: { label: string }) =>
+      v.label.length > 18 ? v.label.slice(0, 17) + "…" : v.label;
+    const rows: Array<Record<string, string>> = [];
+    const entities = [{ id: primaryState, label: primaryState }, ...groupDefs.map((g) => ({ id: g.id, label: g.label }))];
+    for (const entity of entities) {
+      const row: Record<string, string> = { "Estado/Grupo": entity.label };
+      for (const v of variables) {
+        const unit = v.unit ?? "";
+        const fmt = (raw: number | null): string => (raw !== null ? fmtRaw(raw, unit) : "—");
+        const raw = entity.id === primaryState
+          ? (rawMap?.get(primaryState)?.[v.id] ?? null)
+          : getRawValueByName(entity.label, v.id);
+        row[colLabel(v)] = fmt(raw);
+      }
+      rows.push(row);
+    }
+    return rows;
+  })();
 
   function getRawValueByName(name: string, varId: string): number | null {
     if (!rawMap) return null;
@@ -214,39 +300,37 @@ export default function ComparisonRadarChart({
     );
   }
 
-  return (
-    <div>
-      {/* Toggle pill */}
-      <div
-        className="toggle-pill"
-        role="group"
-        style={{ marginBottom: 16 }}
-        onKeyDown={(e) => {
-          if (e.key === "ArrowLeft") setView("radar");
-          if (e.key === "ArrowRight") setView("barras");
-        }}
-      >
-        <button
-          type="button"
-          className={`toggle-pill__btn${view === "radar" ? " active" : ""}`}
-          onClick={() => setView("radar")}
-        >
-          Radar
-        </button>
-        <button
-          type="button"
-          className={`toggle-pill__btn${view === "barras" ? " active" : ""}`}
-          onClick={() => setView("barras")}
-        >
-          Barras
-        </button>
-      </div>
+  const togglePill = (
+    <div
+      className="toggle-pill"
+      role="group"
+      onKeyDown={(e) => {
+        if (e.key === "ArrowLeft") setView("radar");
+        if (e.key === "ArrowRight") setView("barras");
+      }}
+    >
+      <button type="button" className={`toggle-pill__btn${view === "radar" ? " active" : ""}`} onClick={() => setView("radar")}>Radar</button>
+      <button type="button" className={`toggle-pill__btn${view === "barras" ? " active" : ""}`} onClick={() => setView("barras")}>Barras</button>
+    </div>
+  );
 
+  return (
+    <ChartWrapper
+      panelTitle={panelTitle}
+      tooltip={tooltip}
+      title={primaryState ?? "Sin estado"}
+      description="Percentil 0–100 normalizado sobre los 32 estados. En variables de polaridad negativa la escala se invierte."
+      chartType={view === "radar" ? "Radar" : "Barras comparativas"}
+      headerActions={togglePill}
+      downloadTableData={view === "barras" ? downloadTableDataBars : downloadTableData}
+      tableLayout="below"
+    >
       {view === "radar" ? (
-        <ResponsiveContainer width="100%" height={320}>
+        <div className="chart-rc-wrap" style={{ height: 320 }}>
+        <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={chartData} margin={{ top: 10, right: 40, bottom: 10, left: 40 }}>
             <PolarGrid stroke="var(--border)" />
-            <PolarAngleAxis dataKey="axis" tick={{ fontSize: 11, fill: "var(--text-3)" }} />
+            <PolarAngleAxis dataKey="axis" tick={<RadarAxisTick />} />
             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
             <Radar
               name={primaryState}
@@ -272,20 +356,23 @@ export default function ComparisonRadarChart({
             <Tooltip content={renderTooltip} />
           </RadarChart>
         </ResponsiveContainer>
+        </div>
       ) : (
-        <ResponsiveContainer width="100%" height={Math.max(240, variables.length * 52)}>
+        <div className="chart-rc-wrap" style={{ height: Math.max(240, variables.length * 52) }}>
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
             barCategoryGap="25%"
-            margin={{ top: 4, right: 16, bottom: 64, left: 4 }}
+            margin={{ top: 4, right: 16, bottom: 8, left: 4 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis
               dataKey="axis"
-              tick={{ fontSize: 10, fill: "var(--text-3)" }}
-              angle={-30}
-              textAnchor="end"
+              tick={<BarAxisTick />}
+              tickLine={false}
+              axisLine={false}
               interval={0}
+              height={44}
             />
             <YAxis
               domain={[0, 100]}
@@ -313,7 +400,8 @@ export default function ComparisonRadarChart({
             ))}
           </BarChart>
         </ResponsiveContainer>
+        </div>
       )}
-    </div>
+    </ChartWrapper>
   );
 }

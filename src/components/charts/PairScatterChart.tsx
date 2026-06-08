@@ -22,6 +22,7 @@ type Props = {
   xUnit?: string;
   yUnit?: string;
   groupStateColors?: Map<string, string>;
+  chartHeight?: number;
 };
 
 function scatterStrength(r2: number): { label: string; level: "strong" | "moderate" | "weak" | "none" } {
@@ -86,7 +87,7 @@ const CustomDot = (props: any) => {
   );
 };
 
-export default function PairScatterChart({ data, xLabel, yLabel, highlightState, xUnit = "", yUnit = "", groupStateColors }: Props) {
+export default function PairScatterChart({ data, xLabel, yLabel, highlightState, xUnit = "", yUnit = "", groupStateColors, chartHeight = 300 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panX, setPanX] = useState(0);
@@ -142,7 +143,7 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
     if (!dragStart.current || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const chartW = Math.max(rect.width - 96, 1); // subtract margins + YAxis width
-    const chartH = 264; // 300 - top(8) - bottom(28) margins
+    const chartH = chartHeight - 36; // height - top(8) - bottom(28) margins
     const dx = e.clientX - dragStart.current.mx;
     const dy = e.clientY - dragStart.current.my;
     setPanX(dragStart.current.px - (dx / chartW) * (2 * xHalf / zoomLevel));
@@ -194,13 +195,22 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
             </span>
           )}
           {outlierStates.size > 0 && (
-            <button
-              type="button"
-              className={`btn-ghost scatter-outlier-toggle${excludeOutliers ? " active" : ""}`}
-              onClick={() => setExcludeOutliers((v) => !v)}
-            >
-              {excludeOutliers ? "Mostrando atípicos" : `Excluir (${outlierStates.size} atíp.)`}
-            </button>
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <button
+                type="button"
+                className={`btn-ghost scatter-outlier-toggle${excludeOutliers ? " active" : ""}`}
+                onClick={() => setExcludeOutliers((v) => !v)}
+              >
+                {excludeOutliers ? "Mostrando atípicos" : `Excluir (${outlierStates.size} atíp.)`}
+              </button>
+              <span
+                title="Excluir atípicos ayuda a comprobar si la relación entre variables se mantiene sin que puntos extremos dominen la tendencia."
+                aria-label="Información sobre exclusión de atípicos"
+                style={{ cursor: "help", fontSize: 11, color: "var(--text-3)", border: "1px solid var(--border)", borderRadius: "50%", width: 16, height: 16, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+              >
+                i
+              </span>
+            </span>
           )}
           {zoomLevel > 1 && (
             <button
@@ -214,7 +224,7 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
           )}
         </div>
       </div>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={chartHeight}>
         <ComposedChart data={combined} margin={{ top: 8, right: 24, bottom: 28, left: 16 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
           <XAxis

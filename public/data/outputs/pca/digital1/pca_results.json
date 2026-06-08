@@ -1,0 +1,446 @@
+{
+  "updated_at": "2026-05-20",
+  "description": "Índice Digital-Territorial PCA mixto (0=mín, 100=máx)",
+  "sources": [
+    "INEGI ENDUTIH 2024",
+    "CONEVAL 2022 / INEGI PIBE 2024",
+    "BIT / IFT / Ookla 2025"
+  ],
+  "kmo": 0.7368,
+  "bartlett_p": 0.0,
+  "n_clusters": 3,
+  "variance_explained": [
+    0.6527,
+    0.1368
+  ],
+  "loadings": {
+    "variables": [
+      "personas_usuarias_internet_pct",
+      "personas_con_smartphone_pct",
+      "personas_banca_electronica_pct",
+      "personas_pagos_internet_pct",
+      "teledensidad_internet_movil",
+      "poblacion_en_localidades_con_4g_garantizada_pct",
+      "int_avg_speed",
+      "pobreza_pct",
+      "rezago_educativo_pct",
+      "ingreso_inferior_lp_pct",
+      "poblacion_afiliada_imss_pct",
+      "pib_per_capita",
+      "gini_pob_pct_4g",
+      "mean_graproes",
+      "p10_pob_pct_4g"
+    ],
+    "pc1": [
+      0.2473,
+      0.2367,
+      0.226,
+      0.2929,
+      0.173,
+      0.2515,
+      0.2476,
+      -0.2848,
+      -0.2703,
+      -0.2813,
+      0.2696,
+      0.1792,
+      -0.2661,
+      0.2417,
+      0.1291
+    ],
+    "pc2": [
+      -0.0351,
+      -0.0173,
+      0.0345,
+      -0.0903,
+      -0.0298,
+      0.1814,
+      0.0351,
+      0.1122,
+      0.0132,
+      0.1289,
+      -0.0985,
+      -0.0948,
+      -0.2037,
+      0.0631,
+      0.2182
+    ]
+  },
+  "records": [
+    {
+      "state": "Aguascalientes",
+      "index": 92.69,
+      "ranking": 7,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 0.9236,
+      "pc2": 0.258,
+      "is_outlier": false
+    },
+    {
+      "state": "Baja California",
+      "index": 99.16,
+      "ranking": 3,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 1.1641,
+      "pc2": 0.1325,
+      "is_outlier": false
+    },
+    {
+      "state": "Baja California Sur",
+      "index": 99.58,
+      "ranking": 2,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 1.2373,
+      "pc2": -0.1505,
+      "is_outlier": false
+    },
+    {
+      "state": "Campeche",
+      "index": 43.72,
+      "ranking": 24,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.5271,
+      "pc2": -0.5561,
+      "is_outlier": false
+    },
+    {
+      "state": "Chiapas",
+      "index": 0.0,
+      "ranking": 32,
+      "cluster": 1,
+      "cluster_label": "Cluster 3: Intermedio-Bajo",
+      "pc1": -2.0712,
+      "pc2": -0.0955,
+      "is_outlier": false
+    },
+    {
+      "state": "Chihuahua",
+      "index": 63.59,
+      "ranking": 18,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 0.2404,
+      "pc2": -1.0793,
+      "is_outlier": true
+    },
+    {
+      "state": "Ciudad de Mexico",
+      "index": 100.0,
+      "ranking": 1,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 1.1959,
+      "pc2": 0.114,
+      "is_outlier": false
+    },
+    {
+      "state": "Coahuila",
+      "index": 97.36,
+      "ranking": 5,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 1.1425,
+      "pc2": -0.0486,
+      "is_outlier": false
+    },
+    {
+      "state": "Colima",
+      "index": 96.04,
+      "ranking": 6,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 1.0563,
+      "pc2": 0.1548,
+      "is_outlier": false
+    },
+    {
+      "state": "Durango",
+      "index": 39.08,
+      "ranking": 28,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.6013,
+      "pc2": -0.9346,
+      "is_outlier": false
+    },
+    {
+      "state": "Estado de Mexico",
+      "index": 69.55,
+      "ranking": 16,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": 0.0777,
+      "pc2": 0.6386,
+      "is_outlier": false
+    },
+    {
+      "state": "Guanajuato",
+      "index": 53.21,
+      "ranking": 20,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.4176,
+      "pc2": 0.4208,
+      "is_outlier": false
+    },
+    {
+      "state": "Guerrero",
+      "index": 8.84,
+      "ranking": 30,
+      "cluster": 1,
+      "cluster_label": "Cluster 3: Intermedio-Bajo",
+      "pc1": -1.7722,
+      "pc2": -0.1247,
+      "is_outlier": false
+    },
+    {
+      "state": "Hidalgo",
+      "index": 52.53,
+      "ranking": 21,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.3679,
+      "pc2": 0.0761,
+      "is_outlier": false
+    },
+    {
+      "state": "Jalisco",
+      "index": 75.0,
+      "ranking": 13,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 0.4481,
+      "pc2": -0.2673,
+      "is_outlier": false
+    },
+    {
+      "state": "Michoacan",
+      "index": 45.87,
+      "ranking": 23,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.5939,
+      "pc2": 0.1018,
+      "is_outlier": false
+    },
+    {
+      "state": "Morelos",
+      "index": 72.37,
+      "ranking": 14,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": 0.1624,
+      "pc2": 0.6803,
+      "is_outlier": false
+    },
+    {
+      "state": "Nayarit",
+      "index": 52.25,
+      "ranking": 22,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.292,
+      "pc2": -0.3303,
+      "is_outlier": false
+    },
+    {
+      "state": "Nuevo Leon",
+      "index": 98.66,
+      "ranking": 4,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 1.204,
+      "pc2": -0.1366,
+      "is_outlier": false
+    },
+    {
+      "state": "Oaxaca",
+      "index": 1.65,
+      "ranking": 31,
+      "cluster": 1,
+      "cluster_label": "Cluster 3: Intermedio-Bajo",
+      "pc1": -2.0189,
+      "pc2": -0.0836,
+      "is_outlier": false
+    },
+    {
+      "state": "Puebla",
+      "index": 40.19,
+      "ranking": 25,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.8877,
+      "pc2": 0.6069,
+      "is_outlier": false
+    },
+    {
+      "state": "Queretaro",
+      "index": 76.82,
+      "ranking": 12,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 0.4927,
+      "pc2": -0.1924,
+      "is_outlier": false
+    },
+    {
+      "state": "Quintana Roo",
+      "index": 81.59,
+      "ranking": 10,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 0.634,
+      "pc2": -0.1135,
+      "is_outlier": false
+    },
+    {
+      "state": "San Luis Potosi",
+      "index": 40.13,
+      "ranking": 26,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.6814,
+      "pc2": -0.3868,
+      "is_outlier": false
+    },
+    {
+      "state": "Sinaloa",
+      "index": 78.84,
+      "ranking": 11,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 0.5613,
+      "pc2": -0.2013,
+      "is_outlier": false
+    },
+    {
+      "state": "Sonora",
+      "index": 89.77,
+      "ranking": 8,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 0.9489,
+      "pc2": -0.3241,
+      "is_outlier": false
+    },
+    {
+      "state": "Tabasco",
+      "index": 60.84,
+      "ranking": 19,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.1137,
+      "pc2": 0.1766,
+      "is_outlier": false
+    },
+    {
+      "state": "Tamaulipas",
+      "index": 84.03,
+      "ranking": 9,
+      "cluster": 0,
+      "cluster_label": "Cluster 1: Avanzado",
+      "pc1": 0.6862,
+      "pc2": 0.0229,
+      "is_outlier": false
+    },
+    {
+      "state": "Tlaxcala",
+      "index": 64.09,
+      "ranking": 17,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.1816,
+      "pc2": 1.013,
+      "is_outlier": false
+    },
+    {
+      "state": "Veracruz",
+      "index": 32.33,
+      "ranking": 29,
+      "cluster": 1,
+      "cluster_label": "Cluster 3: Intermedio-Bajo",
+      "pc1": -1.0973,
+      "pc2": 0.3641,
+      "is_outlier": false
+    },
+    {
+      "state": "Yucatan",
+      "index": 71.3,
+      "ranking": 15,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": 0.2021,
+      "pc2": 0.3223,
+      "is_outlier": false
+    },
+    {
+      "state": "Zacatecas",
+      "index": 40.03,
+      "ranking": 27,
+      "cluster": 2,
+      "cluster_label": "Cluster 2: Intermedio-Alto",
+      "pc1": -0.7536,
+      "pc2": -0.0576,
+      "is_outlier": false
+    }
+  ],
+  "cluster_stats": {
+    "0": {
+      "label": "Cluster 1: Avanzado",
+      "states": [
+        "Aguascalientes",
+        "Baja California",
+        "Baja California Sur",
+        "Chihuahua",
+        "Ciudad de Mexico",
+        "Coahuila",
+        "Colima",
+        "Jalisco",
+        "Nuevo Leon",
+        "Queretaro",
+        "Quintana Roo",
+        "Sinaloa",
+        "Sonora",
+        "Tamaulipas"
+      ],
+      "mean_index": 88.08
+    },
+    "1": {
+      "label": "Cluster 3: Intermedio-Bajo",
+      "states": [
+        "Chiapas",
+        "Guerrero",
+        "Oaxaca",
+        "Veracruz"
+      ],
+      "mean_index": 10.71
+    },
+    "2": {
+      "label": "Cluster 2: Intermedio-Alto",
+      "states": [
+        "Campeche",
+        "Durango",
+        "Estado de Mexico",
+        "Guanajuato",
+        "Hidalgo",
+        "Michoacan",
+        "Morelos",
+        "Nayarit",
+        "Puebla",
+        "San Luis Potosi",
+        "Tabasco",
+        "Tlaxcala",
+        "Yucatan",
+        "Zacatecas"
+      ],
+      "mean_index": 53.23
+    }
+  },
+  "analysis_id": "digital1",
+  "analysis_name": "Análisis digital-territorial",
+  "index_name": "Índice Digital-Territorial"
+}

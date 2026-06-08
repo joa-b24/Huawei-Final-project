@@ -1,0 +1,31 @@
+{
+  "active": "digital1",
+  "analyses": [
+    {
+      "id": "digital1",
+      "name": "Análisis digital-territorial",
+      "index_name": "Índice Digital-Territorial",
+      "created_at": "2026-05-20",
+      "variables": [
+        "personas_usuarias_internet_pct",
+        "personas_con_smartphone_pct",
+        "personas_banca_electronica_pct",
+        "personas_pagos_internet_pct",
+        "teledensidad_internet_movil",
+        "poblacion_en_localidades_con_4g_garantizada_pct",
+        "int_avg_speed",
+        "pobreza_pct",
+        "rezago_educativo_pct",
+        "ingreso_inferior_lp_pct",
+        "poblacion_afiliada_imss_pct",
+        "pib_per_capita",
+        "gini_pob_pct_4g",
+        "mean_graproes",
+        "p10_pob_pct_4g"
+      ],
+      "n_clusters": 3,
+      "normalize": true,
+      "readonly": true
+    }
+  ]
+}

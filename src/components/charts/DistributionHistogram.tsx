@@ -1,5 +1,6 @@
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { HistogramData } from "../../types/dataStandard";
+import ChartWrapper from "./ChartWrapper";
 
 type GroupLine = { value: number; label: string; color: string };
 
@@ -8,6 +9,9 @@ type Props = {
   highlightValue?: number | null;
   nationalMean?: number | null;
   label?: string;
+  panelTitle?: string;
+  tooltip?: React.ReactNode;
+  footer?: React.ReactNode;
   binStates?: string[][];
   highlightState?: string | null;
   comparisonValue?: number | null;
@@ -62,7 +66,7 @@ function BinTooltip({ active, payload }: any) {
   );
 }
 
-export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label, binStates, highlightState, comparisonValue, comparisonLabel, groupLines }: Props) {
+export default function DistributionHistogram({ histogram, highlightValue, nationalMean, label, panelTitle, tooltip, footer, binStates, highlightState, comparisonValue, comparisonLabel, groupLines }: Props) {
   const { bins, counts } = histogram;
   const hasEdges = bins.length > counts.length; // n+1 edges vs n centers
 
@@ -93,8 +97,16 @@ export default function DistributionHistogram({ histogram, highlightValue, natio
       : -1;
 
   return (
-    <div>
-      <ResponsiveContainer width="100%" height={300}>
+    <ChartWrapper
+      panelTitle={panelTitle}
+      tooltip={tooltip}
+      title={label ?? "Distribución"}
+      description="Distribución de valores entre los 32 estados de la variable seleccionada."
+      chartType="Histograma"
+    >
+      <div>
+      <div className="chart-rc-wrap" style={{ height: 300 }}>
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
           <XAxis
@@ -111,7 +123,6 @@ export default function DistributionHistogram({ histogram, highlightValue, natio
               x={nationalMean}
               stroke="var(--text-3)"
               strokeDasharray="4 4"
-              label={{ value: "Media", fontSize: 10, fill: "var(--text-3)", position: "insideTopRight" }}
             />
           )}
           {comparisonValue != null && (
@@ -129,7 +140,6 @@ export default function DistributionHistogram({ histogram, highlightValue, natio
               stroke={gl.color}
               strokeDasharray="6 3"
               strokeWidth={2}
-              label={{ value: gl.label, fontSize: 10, fill: gl.color, position: i % 2 === 0 ? "insideBottomLeft" : "insideBottomRight" }}
             />
           ))}
           <Bar dataKey="count" radius={[3, 3, 0, 0]} isAnimationActive={false}>
@@ -143,9 +153,43 @@ export default function DistributionHistogram({ histogram, highlightValue, natio
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-      {label && (
-        <p style={{ textAlign: "center", fontSize: 11, color: "var(--text-3)", margin: "2px 0 0" }}>{label}</p>
-      )}
-    </div>
+      </div>
+      {footer}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "3px 14px", padding: "8px 28px 2px", fontSize: 10.5, color: "var(--text-3)" }}>
+        <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ display: "inline-block", width: 18, height: 2, background: "var(--text-3)", borderRadius: 1 }} />
+          Bigotes
+        </span>
+        <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ display: "inline-block", width: 14, height: 12, background: "var(--blue-light)", border: "1.5px solid var(--blue-mid)", borderRadius: 1 }} />
+          RIC (Q₁–Q₃)
+        </span>
+        <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ display: "inline-block", width: 2.5, height: 14, background: "var(--blue)", borderRadius: 1 }} />
+          Mediana
+        </span>
+        <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <svg width="18" height="10" style={{ flexShrink: 0 }}><line x1="0" y1="5" x2="18" y2="5" stroke="var(--text-3)" strokeDasharray="4 2" strokeWidth="1.5" /></svg>
+          Media nac.
+        </span>
+        <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: "var(--blue)" }} />
+          {highlightState ?? "Estado selec."}
+        </span>
+        {groupLines?.map((gl, i) => (
+          <span key={`leg-gl-${i}`} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <svg width="18" height="10" style={{ flexShrink: 0 }}>
+              <line x1="0" y1="5" x2="18" y2="5" stroke={gl.color} strokeDasharray="6 3" strokeWidth="2" />
+            </svg>
+            {gl.label}
+          </span>
+        ))}
+        <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", border: "2.5px solid var(--amber)", background: "transparent" }} />
+          Atípico
+        </span>
+      </div>
+      </div>
+    </ChartWrapper>
   );
 }

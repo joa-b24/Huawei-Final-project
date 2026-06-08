@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import type { LorenzPoint } from "../../utils/gini";
 import InterpretationHelp from "./InterpretationHelp";
+import ChartWrapper from "../charts/ChartWrapper";
 
 type Props = {
   title: string;
@@ -19,6 +20,7 @@ type Props = {
   points: LorenzPoint[];
   gini: number;
   nationalGini?: number;
+  tooltip?: React.ReactNode;
 };
 
 function coverageShareAtHalfPopulation(points: { popShare: number; lorenz: number }[]): number | null {
@@ -56,14 +58,27 @@ function vsNationalLabel(delta: number): string {
 }
 
 function giniCompareSentence(g: number, delta: number, national: number): string {
-  const vs = vsNationalLabel(delta);
-  if (g < 0.01) {
-    return `Gini ${formatGiniValue(g)} (muy bajo). El estado queda ${vs} el promedio del país (${formatGiniValue(national)}).`;
+  const nat = formatGiniValue(national);
+  if (g < 0.01)
+    return `Gini ${formatGiniValue(g)}: distribución prácticamente uniforme entre municipios. El estado está por debajo del promedio nacional (${nat}), lo que indica equidad territorial alta.`;
+
+  if (g < 0.12) {
+    const pos = delta > 0.02 ? `ligeramente por encima del promedio nacional (${nat})` : delta < -0.02 ? `por debajo del promedio nacional (${nat}), con mejor equidad relativa` : `en línea con el promedio nacional (${nat})`;
+    return `Gini ${formatGiniValue(g)}: desigualdad baja. La mayor parte de los municipios tiene niveles similares. El estado se ubica ${pos}.`;
   }
-  return `Gini ${formatGiniValue(g)}. El estado queda ${vs} el promedio del país (${formatGiniValue(national)}).`;
+  if (g < 0.25) {
+    const pos = delta > 0.02 ? `por encima del promedio nacional (${nat})` : delta < -0.02 ? `por debajo del promedio nacional (${nat})` : `cerca del promedio nacional (${nat})`;
+    return `Gini ${formatGiniValue(g)}: concentración moderada. Existe variación notable entre municipios. El estado queda ${pos}.`;
+  }
+  if (g < 0.45) {
+    const cmp = delta > 0.02 ? `supera al promedio nacional (${nat}), lo que sugiere una problemática territorial más aguda que la norma` : delta < -0.02 ? `es menor que el promedio nacional (${nat}), aunque sigue siendo alta` : `es similar al promedio nacional (${nat})`;
+    return `Gini ${formatGiniValue(g)}: concentración alta. La variable se distribuye de forma claramente desigual entre municipios. La desigualdad del estado ${cmp}.`;
+  }
+  const cmp = delta > 0.02 ? `notablemente superior al promedio nacional (${nat})` : delta < -0.02 ? `inferior al promedio nacional (${nat}), aunque en nivel crítico` : `en nivel similar al promedio nacional (${nat})`;
+  return `Gini ${formatGiniValue(g)}: concentración crítica. El servicio se acumula en muy pocos municipios, señal de rezago estructural. Su nivel de desigualdad es ${cmp}.`;
 }
 
-export default function LorenzCurveChart({ title, description, points, gini, nationalGini }: Props) {
+export default function LorenzCurveChart({ title, description, points, gini, nationalGini, tooltip }: Props) {
   const data =
     points.length > 0
       ? points.map((p) => ({ ...p, giniGap: Math.max(0, p.equality - p.lorenz) }))
@@ -80,17 +95,18 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
   const colors = giniColor(gini);
 
   return (
+    <ChartWrapper
+      panelTitle="Curva de Lorenz"
+      tooltip={tooltip}
+      chartType="Curva de Lorenz"
+      standalone
+    >
     <div>
       {/* Header */}
       <div className="section-heading">
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
           <div style={{ flex: 1 }}>
             {title ? <h2 style={{ margin: 0 }}>{title}</h2> : null}
-            {description ? (
-              <p style={{ marginTop: title ? 4 : 0, marginBottom: 0, color: "#475569", fontSize: "0.88rem" }}>
-                {description}
-              </p>
-            ) : null}
           </div>
           {Number.isFinite(gini) && (
             <div style={{
@@ -167,7 +183,7 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
       </InterpretationHelp>
 
       {/* Chart */}
-      <div className="chart-frame" style={{ height: 300 }}>
+      <div className="chart-frame">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={data} margin={{ top: 12, right: 20, left: 0, bottom: 8 }}>
             <defs>
@@ -209,7 +225,7 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
             <Area
               type="monotone"
               dataKey="lorenz"
-              name="Lorenz (cobertura)"
+              name="Lorenz"
               stackId="gini"
               fill="transparent"
               fillOpacity={0}
@@ -247,7 +263,7 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
             <Line
               type="monotone"
               dataKey="lorenz"
-              name="Lorenz (cobertura 4G)"
+              name="Lorenz"
               stroke="#2563eb"
               dot={false}
               strokeWidth={2.5}
@@ -299,5 +315,6 @@ export default function LorenzCurveChart({ title, description, points, gini, nat
         Punto azul = valor acumulado de la mitad con menor acceso. Más sombra = mayor diferencia entre municipios.
       </p>
     </div>
+    </ChartWrapper>
   );
 }

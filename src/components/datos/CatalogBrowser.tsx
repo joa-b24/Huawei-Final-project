@@ -153,14 +153,16 @@ export default function CatalogBrowser({
               <X size={14} /> {activeColFilters}
             </button>
           )}
-          <button
-            className="btn-primary catalog-action-icon"
-            onClick={onNewOperation}
-            type="button"
-            title="Nueva operación"
-          >
-            <Plus size={16} />
-          </button>
+          {import.meta.env.DEV && (
+            <button
+              className="btn-primary catalog-action-icon"
+              onClick={onNewOperation}
+              type="button"
+              title="Nueva operación"
+            >
+              <Plus size={16} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -207,7 +209,7 @@ export default function CatalogBrowser({
                   isHidden ? "catalog-row--hidden" : "",
                 ].filter(Boolean).join(" ")}
                 onClick={() => onSelectVariable(v)}
-                title="Clic para editar o añadir datos"
+                title={import.meta.env.PROD ? "Ver detalles de la variable" : "Clic para editar o añadir datos"}
               >
                 <td>
                   <span className="catalog-var-name">

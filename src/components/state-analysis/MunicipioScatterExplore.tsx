@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import ChartWrapper from "../charts/ChartWrapper";
 import {
   CartesianGrid,
   ResponsiveContainer,
@@ -209,54 +210,59 @@ export default function MunicipioScatterExplore({ municipios, fixedYKey, allowed
   );
 
   return (
+  <ChartWrapper
+    panelTitle="Gráfico de dispersión con peso"
+    title={`Explorador municipal - ${yMeta.label}`}
+    description="Cada punto es un municipio; el tamaño refleja la población y el color el grupo de cobertura 4G."
+    chartType="Dispersión municipal"
+    headerActions={<InfoTooltip wide text={tooltipContent} />}
+    standalone
+  >
     <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-1)", margin: 0 }}>
-          Explorador de dispersión municipal
-        </p>
-        <InfoTooltip wide text={tooltipContent} />
-      </div>
-
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 12, alignItems: "flex-end" }}>
-        <div className="metric-control">
-          <label htmlFor="scatter-x">Eje horizontal</label>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10, alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <label htmlFor="scatter-x" style={{ fontSize: 11, fontWeight: 600, color: "var(--text-3)", whiteSpace: "nowrap" }}>
+            Eje X
+          </label>
           <select
             id="scatter-x"
+            className="comparison-select"
             value={xKey}
             onChange={(e) => setXKeySafe(e.target.value as ScatterMetricKey)}
+            style={{ fontSize: 12, padding: "3px 24px 3px 8px" }}
           >
             {metricOptions.map((m) => (
               <option key={m.key} value={m.key} disabled={m.key === yKey}>
                 {m.label}
-                {m.key === yKey ? " (eje vertical)" : ""}
               </option>
             ))}
           </select>
         </div>
         {!fixedYKey && (
-          <div className="metric-control">
-            <label htmlFor="scatter-y">Eje vertical</label>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <label htmlFor="scatter-y" style={{ fontSize: 11, fontWeight: 600, color: "var(--text-3)", whiteSpace: "nowrap" }}>
+              Eje Y
+            </label>
             <select
               id="scatter-y"
+              className="comparison-select"
               value={yKey}
               onChange={(e) => setYKeySafe(e.target.value as ScatterMetricKey)}
+              style={{ fontSize: 12, padding: "3px 24px 3px 8px" }}
             >
               {metricOptions.map((m) => (
                 <option key={m.key} value={m.key} disabled={m.key === xKey}>
                   {m.label}
-                  {m.key === xKey ? " (eje horizontal)" : ""}
                 </option>
               ))}
             </select>
           </div>
         )}
         {fixedYKey && (
-          <div className="metric-control">
-            <label>Eje vertical</label>
-            <span style={{ fontSize: 12, color: "var(--text-2)", padding: "4px 0", display: "block" }}>
-              {yMeta.label} <span style={{ color: "var(--text-3)", fontSize: 11 }}>(fijo)</span>
-            </span>
-          </div>
+          <span style={{ fontSize: 11, color: "var(--text-3)" }}>
+            Y: <strong style={{ color: "var(--text-2)" }}>{yMeta.label}</strong>{" "}
+            <span style={{ color: "var(--text-3)", fontSize: 10 }}>(fijo)</span>
+          </span>
         )}
       </div>
 
@@ -336,5 +342,6 @@ export default function MunicipioScatterExplore({ municipios, fixedYKey, allowed
         </p>
       )}
     </div>
+    </ChartWrapper>
   );
 }

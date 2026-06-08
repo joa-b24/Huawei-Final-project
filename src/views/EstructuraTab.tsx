@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   CartesianGrid,
   Cell,
@@ -10,14 +10,16 @@ import {
   YAxis,
 } from "recharts";
 import { useAppContext } from "../context/AppContext";
-import type { AppData, PcaRecord, PcaResults } from "../services/DataService";
+import type { AppData, PcaManifest, PcaRecord, PcaResults } from "../services/DataService";
 import EmptyState from "../components/EmptyState";
 import RankingTable from "../components/charts/RankingTable";
 import ChoroplethMap from "../components/charts/ChoroplethMap";
+import ChartWrapper from "../components/charts/ChartWrapper";
 import TabNarrative from "../components/feedback/TabNarrative";
 import InfoTooltip from "../components/feedback/InfoTooltip";
 import { humanizeVarId } from "../utils/humanize";
 import type { RankingEntry } from "../types/dataStandard";
+import PcaWizard from "../components/estructura/PcaWizard";
 
 const CLUSTER_COLORS = ["#0d3d73", "#2E7D32", "#F57F17", "#B71C1C", "#6A1B9A"];
 const clusterColor = (id: number) => CLUSTER_COLORS[id % CLUSTER_COLORS.length];
@@ -183,9 +185,11 @@ function PcaScatterChart({
 function EstructuraNarrative({
   record,
   pcaResults,
+  indexName,
 }: {
   record: PcaRecord;
   pcaResults: PcaResults;
+  indexName: string;
 }) {
   const nStates = pcaResults.records.length;
   const tier =
@@ -216,7 +220,7 @@ function EstructuraNarrative({
     <div>
       <p style={S}>
         <strong>{record.state}</strong> ocupa el lugar{" "}
-        <strong>{record.ranking} de {nStates}</strong> en el Índice Digital-Territorial
+        <strong>{record.ranking} de {nStates}</strong> en el {indexName}
         ({tier} nacional), con una puntuación de <strong>{record.index.toFixed(1)}/100</strong>.
         {indexVsGroup !== null && (
           <> Esto es <strong>{indexVsGroup >= 0 ? "+" : ""}{indexVsGroup.toFixed(1)} puntos</strong>{" "}
@@ -261,9 +265,11 @@ function EstructuraNarrative({
 function MethodologyNote({
   pcaResults,
   varCatalog,
+  indexName,
 }: {
   pcaResults: PcaResults;
   varCatalog: { id: string; label: string }[];
+  indexName: string;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -333,10 +339,8 @@ function MethodologyNote({
           <p style={Sh}>PC1 — eje principal ({(v1 * 100).toFixed(1)} % de la varianza total)</p>
           <p style={S}>
             El primer componente concentra el <strong>{(v1 * 100).toFixed(1)} %</strong> de toda la
-            diferencia entre estados. En la práctica refleja el <em>nivel general de desarrollo digital
-            e infraestructura</em>: estados a la derecha del scatter tienen mayores coberturas de red,
-            mayor uso de internet y economías más productivas. El <strong>Índice Digital-Territorial
-            (0–100)</strong> es la proyección sobre PC1, reescalada para que el mayor valor sea 100.
+            diferencia entre estados. El <strong>{indexName} (0–100)</strong> es la proyección
+            sobre PC1, reescalada para que el mayor valor sea 100.
           </p>
 
           <p style={Sh}>PC2 — contraste secundario ({(v2 * 100).toFixed(1)} % de la varianza total)</p>
@@ -385,9 +389,11 @@ function LoadingsPanel({
   const maxAbs = useMemo(() => Math.max(...sorted.map((r) => Math.abs(r.pc1))), [sorted]);
 
   return (
-    <section className="panel">
-      <div className="panel-title-row">
-        <p className="panel-title" style={{ margin: 0 }}>Cargas PC1 — influencia de cada variable</p>
+    <ChartWrapper
+      panelTitle="Cargas PC1"
+      title="Influencia de variables en PC1"
+      description="Ordenado por influencia absoluta. Azul = positivo con el índice · Rojo = inverso."
+      tooltip={
         <InfoTooltip
           wide
           text={
@@ -406,10 +412,9 @@ function LoadingsPanel({
             </div>
           }
         />
-      </div>
-      <p style={{ fontSize: 12, color: "var(--text-3)", margin: "4px 0 14px" }}>
-        Ordenado por influencia absoluta. Azul = positivo con el índice · Rojo = inverso.
-      </p>
+      }
+      standalone
+    >
       <div style={{ maxHeight: 360, overflowY: "auto", paddingRight: 4 }}>
         {sorted.map(({ label, pc1 }) => {
           const pct = maxAbs > 0 ? (Math.abs(pc1) / maxAbs) * 100 : 0;
@@ -449,7 +454,7 @@ function LoadingsPanel({
           );
         })}
       </div>
-    </section>
+    </ChartWrapper>
   );
 }
 
@@ -479,17 +484,13 @@ function PeersSection({
   const groupLabel = clusterStat?.label ?? `Grupo ${primaryRecord.cluster}`;
 
   return (
-    <section className="panel">
-      <div className="panel-title-row">
-        <p className="panel-title" style={{ margin: 0 }}>
-          Estados en el mismo grupo — <em>{groupLabel}</em>
-        </p>
-        <span style={{ fontSize: 12, color: "var(--text-3)" }}>
-          {peers.length} estado{peers.length !== 1 ? "s" : ""} · media del grupo:{" "}
-          <strong>{clusterStat?.mean_index.toFixed(1) ?? "—"}</strong>
-        </span>
-      </div>
-      <table className="ranking-table" style={{ marginTop: 10 }}>
+    <ChartWrapper
+      panelTitle="Mismo grupo estructural"
+      title={groupLabel}
+      description={`${peers.length} estado${peers.length !== 1 ? "s" : ""} · media del grupo: ${clusterStat?.mean_index.toFixed(1) ?? "—"}`}
+      standalone
+    >
+      <table className="ranking-table" style={{ marginTop: 4, width: "100%" }}>
         <thead>
           <tr>
             <th style={{ width: 32 }}>#</th>
@@ -530,7 +531,7 @@ function PeersSection({
           })}
         </tbody>
       </table>
-    </section>
+    </ChartWrapper>
   );
 }
 
@@ -541,9 +542,32 @@ type Props = { appData: AppData };
 export default function EstructuraTab({ appData }: Props) {
   const { state: appState } = useAppContext();
   const { primaryState } = appState;
-  const { pcaResults } = appData;
 
-  const [rankingView, setRankingView] = useState<"table" | "lollipop">("lollipop");
+  // ── Estado local: análisis activo y wizard ────────────────────────────────
+  const [manifest, setManifest] = useState<PcaManifest | null>(appData.pcaManifest);
+  const [activePca, setActivePca] = useState<PcaResults | null>(appData.pcaResults);
+  const [loadingPca, setLoadingPca] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
+
+  const pcaResults = activePca;
+  const indexName = pcaResults?.index_name ?? "Índice PCA";
+  const analysisName = pcaResults?.analysis_name ?? "Análisis";
+
+  // Cambiar análisis activo
+  const switchAnalysis = useCallback(async (id: string) => {
+    setLoadingPca(true);
+    try {
+      const res = await fetch(`/data/outputs/pca/${id}/pca_results.json`);
+      if (res.ok) {
+        const data: PcaResults = await res.json();
+        setActivePca(data);
+        // Actualizar manifest.active localmente (sin guardar en disco)
+        setManifest((prev) => prev ? { ...prev, active: id } : prev);
+      }
+    } finally {
+      setLoadingPca(false);
+    }
+  }, []);
 
   const varCatalog = useMemo(
     () => appData.dataset.metricCatalog.map((m) => ({
@@ -552,6 +576,18 @@ export default function EstructuraTab({ appData }: Props) {
     })),
     [appData.dataset.metricCatalog]
   );
+
+  // Variables disponibles para el wizard (tienen datos completos = están en univariateStats)
+  const availableVars = useMemo(
+    () => Object.keys(appData.univariateStats),
+    [appData.univariateStats]
+  );
+
+  const varLabelsMap = useMemo(() => {
+    const m: Record<string, string> = {};
+    varCatalog.forEach((v) => { m[v.id] = v.label; });
+    return m;
+  }, [varCatalog]);
 
   const primaryRecord = useMemo(
     () => pcaResults?.records.find((r) => r.state === primaryState) ?? null,
@@ -610,157 +646,215 @@ export default function EstructuraTab({ appData }: Props) {
       .sort((a, b) => a.id - b.id);
   }, [pcaResults]);
 
-  if (!pcaResults) {
+  if (!pcaResults && !manifest) {
     return (
       <EmptyState
         title="Análisis de estructura no disponible"
-        description="Ejecuta scripts/analytics/pca.py para generar pca_results.json."
+        description="Ejecuta scripts/analytics/pca.py para generar los archivos en public/data/outputs/pca/."
       />
     );
   }
 
   return (
     <div className="tab-content">
-      <TabNarrative
-        title="Estructura digital-territorial"
-        description="Grupos estructurales e índice compuesto derivados de análisis multivariado sobre los 32 estados."
-      >
-        <MethodologyNote pcaResults={pcaResults} varCatalog={varCatalog} />
-        {primaryRecord ? (
-          <EstructuraNarrative record={primaryRecord} pcaResults={pcaResults} />
-        ) : (
-          <p>Selecciona un estado en el panel lateral para ver su perfil estructural.</p>
-        )}
-      </TabNarrative>
-
-      {primaryRecord && (
-        <div className="kpi-grid-v2">
-          <PcaStatCard
-            label="Índice Digital-Territorial"
-            primary={`${primaryRecord.index.toFixed(1)} / 100`}
-            highlight
-          />
-          <PcaStatCard
-            label="Posición nacional"
-            primary={`#${primaryRecord.ranking}`}
-            secondary={`de ${pcaResults.records.length} estados`}
-          />
-          <PcaStatCard
-            label="Grupo estructural"
-            primary={primaryRecord.cluster_label}
-          />
-          <PcaStatCard
-            label="Perfil atípico"
-            primary={primaryRecord.is_outlier ? "Sí" : "No"}
-            warn={primaryRecord.is_outlier}
-          />
+      {/* ── Selector de análisis ── */}
+      {manifest && manifest.analyses.length > 0 && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            padding: "10px 16px",
+            background: "var(--surface)",
+            border: "1px solid var(--border)",
+            borderRadius: 10,
+            marginBottom: 16,
+            flexWrap: "wrap",
+          }}
+        >
+          <span style={{ fontSize: 13, color: "var(--text-2)", fontWeight: 600, flexShrink: 0 }}>
+            Análisis activo:
+          </span>
+          <select
+            value={manifest.active}
+            onChange={(e) => switchAnalysis(e.target.value)}
+            disabled={loadingPca}
+            style={{
+              flex: 1,
+              minWidth: 200,
+              padding: "6px 10px",
+              border: "1px solid var(--border)",
+              borderRadius: 6,
+              fontSize: 13,
+              background: "var(--surface)",
+              color: "var(--text-1)",
+              cursor: "pointer",
+            }}
+          >
+            {manifest.analyses.map((a) => (
+              <option key={a.id} value={a.id}>{a.name}</option>
+            ))}
+          </select>
+          {loadingPca && (
+            <span style={{ fontSize: 12, color: "var(--text-3)" }}>Cargando…</span>
+          )}
+          {import.meta.env.DEV && (
+            <button
+              type="button"
+              onClick={() => setShowWizard(true)}
+              style={{
+                padding: "6px 14px",
+                background: "var(--blue)",
+                color: "#fff",
+                border: "none",
+                borderRadius: 6,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+                flexShrink: 0,
+              }}
+            >
+              + Nuevo análisis
+            </button>
+          )}
         </div>
       )}
 
-      <section className="panel">
-        <div className="panel-title-row">
-          <p className="panel-title" style={{ margin: 0 }}>PC1 vs PC2</p>
-          <InfoTooltip wide text={
-            <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo leer este gráfico</p>
-              <p style={{ margin: "0 0 10px" }}>
-                Cada <strong>punto</strong> es un estado ubicado en el espacio de dos componentes principales.
-                Estados <strong>cercanos entre sí</strong> tienen perfiles multivariados similares.
-              </p>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Ejes</p>
-              <p style={{ margin: "0 0 10px" }}>
-                <strong>PC1</strong> (horizontal) refleja el nivel general de conectividad y desarrollo digital.
-                <strong> PC2</strong> (vertical) captura contrastes secundarios entre dimensiones.
-              </p>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Grupos y atípicos</p>
-              <p style={{ margin: 0 }}>
-                El <strong>color</strong> indica el grupo k-means. El <strong>punto azul</strong> es el estado
-                seleccionado. Un punto muy separado de su grupo puede ser estructuralmente atípico.
-              </p>
-            </div>
-          } />
-        </div>
-        <p style={{ margin: "4px 0 8px", fontSize: 12, color: "var(--text-3)" }}>
-          Cada punto es un estado, coloreado por grupo. El punto azul es{" "}
-          {primaryState ?? "el estado seleccionado"}.
-        </p>
-        <PcaScatterChart
-          data={scatterData}
-          primaryState={primaryState}
-          varExplained={pcaResults.variance_explained}
+      {/* ── Wizard (solo DEV) ── */}
+      {showWizard && manifest && import.meta.env.DEV && (
+        <PcaWizard
+          availableVariables={availableVars}
+          varLabels={varLabelsMap}
+          manifest={manifest}
+          onClose={() => setShowWizard(false)}
+          onDone={(newManifest, newResults) => {
+            setManifest(newManifest);
+            setActivePca(newResults);
+            setShowWizard(false);
+          }}
         />
-      </section>
+      )}
 
-      <section className="panel">
-        <p className="panel-title">Distribución geográfica por grupo estructural</p>
-        <p style={{ fontSize: 12, color: "var(--text-3)", margin: "4px 0 10px" }}>
-          Cada estado coloreado según su grupo k-means. Clic en un estado para seleccionarlo.
-        </p>
-        <ChoroplethMap
-          appData={appData}
-          varId=""
-          stateColorOverrides={clusterColorOverrides}
-          stateLabelOverrides={clusterLabelOverrides}
-        />
-        <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginTop: 10 }}>
-          {clusterLegend.map((c) => (
-            <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <div style={{ width: 12, height: 12, borderRadius: 3, background: c.color, flexShrink: 0 }} />
-              <span style={{ fontSize: 11, color: "var(--text-2)" }}>{c.label}</span>
+      {pcaResults && (
+        <>
+          <TabNarrative
+            title={analysisName}
+            description="Grupos estructurales e índice compuesto derivados de análisis multivariado sobre los 32 estados."
+          >
+            <MethodologyNote pcaResults={pcaResults} varCatalog={varCatalog} indexName={indexName} />
+            {primaryRecord ? (
+              <EstructuraNarrative record={primaryRecord} pcaResults={pcaResults} indexName={indexName} />
+            ) : (
+              <p>Selecciona un estado en el panel lateral para ver su perfil estructural.</p>
+            )}
+          </TabNarrative>
+
+          {/* ── KPI grid ── */}
+          {primaryRecord && (
+            <div className="kpi-grid-v2">
+              <PcaStatCard
+                label={indexName}
+                primary={`${primaryRecord.index.toFixed(1)} / 100`}
+                highlight
+              />
+              <PcaStatCard
+                label="Posición nacional"
+                primary={`#${primaryRecord.ranking}`}
+                secondary={`de ${pcaResults.records.length} estados`}
+              />
+              <PcaStatCard
+                label="Grupo estructural"
+                primary={primaryRecord.cluster_label}
+              />
+              <PcaStatCard
+                label="Perfil atípico"
+                primary={primaryRecord.is_outlier ? "Sí" : "No"}
+                warn={primaryRecord.is_outlier}
+              />
             </div>
-          ))}
-        </div>
-      </section>
+          )}
 
-      <LoadingsPanel pcaResults={pcaResults} varCatalog={varCatalog} />
+          {/* ── Mapa | Estados del mismo cluster (70 / 30) ── */}
+          <div style={{ display: "grid", gridTemplateColumns: "7fr 3fr", gap: 16, alignItems: "start" }}>
+            <ChartWrapper
+              panelTitle="Grupos estructurales"
+              title="Distribución geográfica por grupo"
+              description="Cada estado coloreado según su grupo k-means. Clic en un estado para seleccionarlo."
+              legend={clusterLegend.map((c) => ({ color: c.color, label: c.label }))}
+              standalone
+            >
+              <ChoroplethMap
+                appData={appData}
+                varId=""
+                stateColorOverrides={clusterColorOverrides}
+                stateLabelOverrides={clusterLabelOverrides}
+              />
+            </ChartWrapper>
 
-      <section className="panel ranking-panel">
-        <div className="ranking-panel-header">
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <p className="panel-title" style={{ margin: 0 }}>Ranking por índice</p>
-            <InfoTooltip wide text={
-              <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-                <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Índice Digital-Territorial</p>
-                <p style={{ margin: "0 0 10px" }}>
-                  Puntuación compuesta (0–100) calculada como proyección sobre PC1, reescalada para que
-                  el mayor valor sea 100. Sintetiza el perfil multivariado en una sola dimensión de orden.
-                </p>
-                <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Interpretación</p>
-                <p style={{ margin: 0 }}>
-                  Un índice alto no implica liderazgo en <em>todas</em> las variables, sino mejor
-                  posicionamiento promedio en las dimensiones capturadas por PC1.
-                </p>
+            {primaryRecord ? (
+              <PeersSection primaryRecord={primaryRecord} pcaResults={pcaResults} />
+            ) : (
+              <div className="panel" style={{ padding: 24, color: "var(--text-3)", fontSize: 13 }}>
+                Selecciona un estado para ver su grupo estructural.
               </div>
-            } />
+            )}
           </div>
-          <div className="toggle-pill ranking-panel__toggle" role="group">
-            <button
-              type="button"
-              className={`toggle-pill__btn${rankingView === "table" ? " active" : ""}`}
-              onClick={() => setRankingView("table")}
-            >
-              Tabla
-            </button>
-            <button
-              type="button"
-              className={`toggle-pill__btn${rankingView === "lollipop" ? " active" : ""}`}
-              onClick={() => setRankingView("lollipop")}
-            >
-              Lollipop
-            </button>
-          </div>
-        </div>
-        <RankingTable
-          rows={rankingRows}
-          highlightState={primaryState ?? undefined}
-          metricLabel="Índice Digital-Territorial"
-          unit="/100"
-          view={rankingView}
-        />
-      </section>
 
-      {primaryRecord && (
-        <PeersSection primaryRecord={primaryRecord} pcaResults={pcaResults} />
+          {/* ── Ranking por índice ── */}
+          <RankingTable
+            rows={rankingRows}
+            highlightState={primaryState ?? undefined}
+            metricLabel={indexName}
+            unit="/100"
+            initialView="lollipop"
+            standalone
+            tooltip={
+              <InfoTooltip wide text={
+                <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                  <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>{indexName}</p>
+                  <p style={{ margin: 0 }}>
+                    Puntuación compuesta (0–100) calculada como proyección sobre PC1, reescalada para que
+                    el mayor valor sea 100.
+                  </p>
+                </div>
+              } />
+            }
+          />
+
+          {/* ── Cargas PC1 | Posición estructural (50 / 50) ── */}
+          <div className="two-col" style={{ alignItems: "start" }}>
+            <LoadingsPanel pcaResults={pcaResults} varCatalog={varCatalog} />
+
+            <ChartWrapper
+              panelTitle="Posición estructural"
+              title={`PC1 vs PC2 — ${analysisName}`}
+              description={`Cada punto es un estado, coloreado por grupo. El punto azul es ${primaryState ?? "el estado seleccionado"}.`}
+              tooltip={
+                <InfoTooltip wide text={
+                  <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo leer este gráfico</p>
+                    <p style={{ margin: "0 0 10px" }}>
+                      Cada <strong>punto</strong> es un estado en el espacio de componentes principales.
+                      Estados <strong>cercanos entre sí</strong> tienen perfiles multivariados similares.
+                    </p>
+                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Grupos y atípicos</p>
+                    <p style={{ margin: 0 }}>
+                      El <strong>color</strong> indica el grupo k-means. El <strong>punto azul</strong> es el estado seleccionado.
+                    </p>
+                  </div>
+                } />
+              }
+              legend={clusterLegend.map((c) => ({ color: c.color, label: c.label }))}
+              standalone
+            >
+              <PcaScatterChart
+                data={scatterData}
+                primaryState={primaryState}
+                varExplained={pcaResults.variance_explained}
+              />
+            </ChartWrapper>
+          </div>
+        </>
       )}
     </div>
   );

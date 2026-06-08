@@ -15,9 +15,10 @@ type Props = {
   maxRows?: number;
   selectedId?: string | null;
   onBarClick?: (variableId: string) => void;
+  chartHeight?: number;
 };
 
-export default function CorrelationBarChart({ rows, significanceThreshold = 0.05, maxRows = 20, selectedId, onBarClick }: Props) {
+export default function CorrelationBarChart({ rows, significanceThreshold = 0.05, maxRows = 20, selectedId, onBarClick, chartHeight }: Props) {
   if (!rows.length) {
     return <EmptyState title="Sin correlaciones" description="Selecciona una variable objetivo." />;
   }
@@ -28,14 +29,33 @@ export default function CorrelationBarChart({ rows, significanceThreshold = 0.05
 
   const data = sorted.map((row) => ({
     variableId: row.variableId,
-    label: row.label.length > 36 ? row.label.slice(0, 36) + "…" : row.label,
+    label: row.label,
     r: row.r,
     pValue: row.pValue,
     significant: row.pValue === undefined || row.pValue < significanceThreshold,
   }));
 
+  function wrapLabel(text: string, maxChars = 30): string[] {
+    if (text.length <= maxChars) return [text];
+    const words = text.split(" ");
+    const lines: string[] = [];
+    let current = "";
+    for (const word of words) {
+      if (!current) { current = word; continue; }
+      if ((current + " " + word).length <= maxChars) {
+        current += " " + word;
+      } else {
+        lines.push(current);
+        current = word;
+        if (lines.length === 1) break;
+      }
+    }
+    if (current) lines.push(current);
+    return lines.slice(0, 3);
+  }
+
   return (
-    <ResponsiveContainer width="100%" height={Math.max(360, data.length * 28)}>
+    <ResponsiveContainer width="100%" height={chartHeight ?? Math.max(360, data.length * 38)}>
       <BarChart
         data={data}
         layout="vertical"
@@ -62,15 +82,20 @@ export default function CorrelationBarChart({ rows, significanceThreshold = 0.05
             const { x, y, payload } = props;
             const rowData = data.find((d) => d.label === payload.value);
             const isSelected = rowData?.variableId === selectedId;
+            const lines = wrapLabel(payload.value);
+            const lh = 13;
+            const offsetY = lines.length > 1 ? -(lh / 2) : 0;
             return (
               <text
-                x={x - 4} y={y} dy=".35em"
+                x={x - 4} y={y + offsetY}
                 textAnchor="end"
                 fontSize={11}
                 fill={isSelected ? "var(--blue)" : "var(--text-2)"}
                 fontWeight={isSelected ? 700 : 400}
               >
-                {payload.value}
+                {lines.map((line, i) => (
+                  <tspan key={i} x={x - 4} dy={i === 0 ? "0.35em" : lh}>{line}</tspan>
+                ))}
               </text>
             );
           }}

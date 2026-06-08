@@ -51,8 +51,9 @@
         "gap": 15.99,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -134,8 +135,9 @@
         "gap": 18.19,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -163,7 +165,7 @@
           35.016,
           36.144,
           37.209,
-          38.209,
+          38.208,
           39.143
         ]
       }
@@ -217,8 +219,9 @@
         "gap": 7.9,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -300,8 +303,9 @@
         "gap": 17.2,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -385,6 +389,7 @@
         "passed_inflection": true,
         "velocity": "Moderada",
         "velocity_label": "Crecimiento constante y estable",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -413,7 +418,7 @@
           38.368,
           39.28,
           39.965,
-          40.474
+          40.475
         ]
       }
     },
@@ -466,8 +471,9 @@
         "gap": 5.8,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Moderada",
-        "velocity_label": "Crecimiento constante y estable",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -491,10 +497,10 @@
           23.074,
           24.559,
           25.724,
-          26.614,
+          26.613,
           27.278,
           27.765,
-          28.12,
+          28.119,
           28.374,
           28.557
         ]
@@ -549,8 +555,9 @@
         "gap": 21.95,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -632,8 +639,9 @@
         "gap": 11.1,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -655,14 +663,14 @@
           23.013,
           25.075,
           26.984,
-          28.711,
+          28.71,
           30.239,
           31.566,
           32.699,
-          33.654,
+          33.653,
           34.448,
           35.102,
-          35.637
+          35.636
         ]
       }
     },
@@ -715,8 +723,9 @@
         "gap": 6.4,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Moderada",
-        "velocity_label": "Crecimiento constante y estable",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -798,8 +807,9 @@
         "gap": 2.4,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Moderada",
-        "velocity_label": "Crecimiento constante y estable",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -883,6 +893,7 @@
         "passed_inflection": true,
         "velocity": "Moderada",
         "velocity_label": "Crecimiento constante y estable",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -964,8 +975,9 @@
         "gap": 9.8,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1049,6 +1061,7 @@
         "passed_inflection": true,
         "velocity": "Moderada",
         "velocity_label": "Crecimiento constante y estable",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1130,8 +1143,9 @@
         "gap": 7.7,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1157,7 +1171,7 @@
           32.125,
           33.457,
           34.562,
-          35.466,
+          35.465,
           36.196,
           36.78,
           37.244
@@ -1213,8 +1227,9 @@
         "gap": 12.7,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Moderada",
-        "velocity_label": "Crecimiento constante y estable",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1239,7 +1254,7 @@
           41.593,
           43.584,
           45.146,
-          46.347,
+          46.346,
           47.255,
           47.934,
           48.437,
@@ -1296,8 +1311,9 @@
         "gap": 9.1,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1379,8 +1395,9 @@
         "gap": 13.9,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1462,8 +1479,9 @@
         "gap": 7.0,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Moderada",
-        "velocity_label": "Crecimiento constante y estable",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1545,8 +1563,9 @@
         "gap": 14.15,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1628,8 +1647,9 @@
         "gap": 5.3,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Moderada",
-        "velocity_label": "Crecimiento constante y estable",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1711,8 +1731,9 @@
         "gap": 8.9,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Moderada",
-        "velocity_label": "Crecimiento constante y estable",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1794,8 +1815,9 @@
         "gap": 13.3,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1879,6 +1901,7 @@
         "passed_inflection": true,
         "velocity": "Moderada",
         "velocity_label": "Crecimiento constante y estable",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1960,8 +1983,9 @@
         "gap": 9.0,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -1982,13 +2006,13 @@
           21.409,
           23.709,
           25.876,
-          27.861,
+          27.86,
           29.631,
           31.175,
           32.494,
           33.602,
           34.519,
-          35.27,
+          35.269,
           35.877,
           36.365
         ]
@@ -2045,6 +2069,7 @@
         "passed_inflection": true,
         "velocity": "Lenta",
         "velocity_label": "Adopción paulatina prolongada",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -2126,8 +2151,9 @@
         "gap": 9.18,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -2211,6 +2237,7 @@
         "passed_inflection": true,
         "velocity": "Moderada",
         "velocity_label": "Crecimiento constante y estable",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -2294,6 +2321,7 @@
         "passed_inflection": true,
         "velocity": "Moderada",
         "velocity_label": "Crecimiento constante y estable",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -2377,6 +2405,7 @@
         "passed_inflection": true,
         "velocity": "Moderada",
         "velocity_label": "Crecimiento constante y estable",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -2397,8 +2426,8 @@
           20.963,
           25.206,
           29.396,
-          33.296,
-          36.729,
+          33.297,
+          36.73,
           39.606,
           41.919,
           43.718,
@@ -2458,8 +2487,9 @@
         "gap": 11.4,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -2541,8 +2571,9 @@
         "gap": 14.2,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -2624,8 +2655,9 @@
         "gap": 11.36,
         "inflection_year": 2015,
         "passed_inflection": true,
-        "velocity": "Lenta",
-        "velocity_label": "Adopción paulatina prolongada",
+        "velocity": "Maduración",
+        "velocity_label": "El indicador ya superó su pico de crecimiento (antes del período disponible) y se aproxima gradualmente a su techo de saturación",
+        "direction": "higher_better",
         "proj_years": [
           2015,
           2016,
@@ -2642,7 +2674,7 @@
           2027
         ],
         "proj_values": [
-          17.779,
+          17.78,
           18.969,
           20.148,
           21.306,

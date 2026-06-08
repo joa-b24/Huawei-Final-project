@@ -205,14 +205,25 @@ export default function DiagnosticoTab({ appData }: Props) {
             };
           })
         : undefined;
+      const dir = getMetricPolaridad(varId, appData.variablesCatalog);
+      const validForRank = dataset.records.filter(
+        (r) => typeof r.metrics[varId] === "number" && !isNaN(r.metrics[varId])
+      );
+      const rankSorted =
+        dir === "lower_better"
+          ? [...validForRank].sort((a, b) => a.metrics[varId] - b.metrics[varId])
+          : [...validForRank].sort((a, b) => b.metrics[varId] - a.metrics[varId]);
+      const rankIdx = rankSorted.findIndex((r) => r.state === primaryState);
+      const rank = rankIdx >= 0 ? rankIdx + 1 : null;
       return {
         label: metricDef?.label ?? varId,
         value,
         unit: metricDef?.unit,
         tipoValor: guessTipoValor(varId, metricDef?.unit ?? ""),
         delta,
-        direction: getMetricPolaridad(varId, appData.variablesCatalog),
+        direction: dir,
         isOutlier: stateIsOutlier,
+        rank,
         comparisonLabel: comparisonLabel ?? undefined,
         comparisonDelta: compDelta,
         groupComparisons,
@@ -282,7 +293,6 @@ export default function DiagnosticoTab({ appData }: Props) {
   const effectiveChartVarId =
     activeChartVarId && activeVariableIds.includes(activeChartVarId) ? activeChartVarId : primaryVarId;
 
-  const [rankingView, setRankingView] = useState<"table" | "lollipop">("lollipop");
 
   const histMetricDef = effectiveChartVarId
     ? dataset.metricCatalog.find((m) => m.id === effectiveChartVarId)
@@ -373,7 +383,7 @@ export default function DiagnosticoTab({ appData }: Props) {
   return (
     <div className="tab-content">
       <TabNarrative
-        title="Descripción general"
+        title={`Diagnóstico general de ${primaryState}${stateRegion ? ` · Región ${stateRegion}` : ""}`}
         description="Vista del estado seleccionado frente al conjunto nacional, regiones, clusters o estados."
       >
         {kpiCards.length > 0 ? (
@@ -381,8 +391,6 @@ export default function DiagnosticoTab({ appData }: Props) {
             primaryState={primaryState}
             stateRegion={stateRegion}
             kpiCards={kpiCards}
-            rankingRow={primaryRankingRow}
-            rankingLabel={rankingLabel}
             totalStates={dataset.records.length}
           />
         ) : (
@@ -399,24 +407,6 @@ export default function DiagnosticoTab({ appData }: Props) {
       )}
 
       <section className="panel">
-        <div className="panel-title-row">
-          <p className="panel-title" style={{ margin: 0 }}>Perfil comparativo</p>
-          <InfoTooltip wide text={
-            <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Vista y normalización</p>
-              <p style={{ margin: "0 0 10px" }}>
-                Usa los botones <strong>Radar / Barras</strong> para cambiar el tipo de gráfico. Ambas vistas usan la misma escala de <strong>percentil 0–100</strong> sobre los 32 estados. En variables de polaridad negativa (ej. pobreza) la escala se invierte: 100 = mejor desempeño.
-              </p>
-              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo interpretar</p>
-              <p style={{ margin: "0 0 8px" }}>
-                En el radar: cuanto más alejado del centro, mayor ventaja relativa. El área encerrada refleja el desempeño agregado.
-              </p>
-              <p style={{ margin: 0 }}>
-                Los <strong>grupos de comparación</strong> se seleccionan en el panel superior (Nacional, Región, Cluster estructural o un estado específico). Selección máxima de 3 grupos. El hover muestra el valor real en unidades originales.
-              </p>
-            </div>
-          } />
-        </div>
         <ComparisonRadarChart
           primaryState={primaryState}
           stateRegion={stateRegion}
@@ -427,12 +417,55 @@ export default function DiagnosticoTab({ appData }: Props) {
           stateRegionMap={stateRegionMap}
           pcaResults={appData.pcaResults}
           groups={comparisonGroups}
+          panelTitle="Perfil comparativo"
+          tooltip={<InfoTooltip wide text={
+            <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Vista y normalización</p>
+              <p style={{ margin: "0 0 10px" }}>
+                Usa los botones <strong>Radar / Barras</strong> para cambiar el tipo de gráfico. Ambas vistas usan la misma escala de <strong>normalización</strong> (percentil 0-100) sobre los 32 estados. En variables de polaridad negativa (ej. pobreza) la escala se invierte: 100 = mejor desempeño.
+              </p>
+              <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>¿Cómo interpretar?</p>
+              <p style={{ margin: "0 0 8px" }}>
+                En el radar: cuanto más alejado del centro, mayor ventaja relativa. El área encerrada refleja el desempeño agregado.
+              </p>
+                            <p style={{ margin: "0 0 8px" }}>
+                En las barras: cuanto más alta la barra, mejor desempeño relativo. Las barras están en puntos normalizados, no en las unidades originales.
+              </p>
+              <p style={{ margin: 0 }}>
+                Los <strong>grupos de comparación</strong> se configuran en el panel lateral izquierdo: puedes añadir el promedio nacional, una región, un cluster estructural o un estado específico. El hover muestra el valor real en unidades originales.
+              </p>
+            </div>
+          } />}
         />
       </section>
 
       {primaryVarId && (
         <>
-          {/* Variable selector + narrative — always visible */}
+          {/* Section divider after Perfil comparativo */}
+          <div style={{ margin: "32px 0 0", display: "flex", alignItems: "center" }}>
+            <div style={{ flex: 1, height: 2, background: "var(--blue-mid)", borderRadius: 1 }} />
+          </div>
+
+          {/* Variable selector — standalone, outside narrative */}
+          {activeVariableIds.length > 1 && effectiveChartVarId && (
+            <div className="var-pill-row" style={{ marginTop: 16, marginBottom: 0 }}>
+              {activeVariableIds.map((vid) => {
+                const lbl = dataset.metricCatalog.find((m) => m.id === vid)?.label ?? vid;
+                return (
+                  <button
+                    key={vid}
+                    type="button"
+                    className={`var-pill-btn${effectiveChartVarId === vid ? " active" : ""}`}
+                    onClick={() => setActiveChartVarId(vid)}
+                  >
+                    {lbl}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Narrative — no chips inside */}
           {effectiveChartVarId && (
             <TabNarrative
               title={municipalMode
@@ -441,25 +474,8 @@ export default function DiagnosticoTab({ appData }: Props) {
               description={municipalMode
                 ? `Distribución, mapa y ranking de municipios de ${primaryState ?? "este estado"} para la variable seleccionada.`
                 : "Distribución entre los 32 estados, mapa coroplético y ranking nacional para la variable seleccionada."}
-              style={{ marginTop: 16 }}
+              style={{ marginTop: 10 }}
             >
-              {activeVariableIds.length > 1 && (
-                <div className="var-pill-row">
-                  {activeVariableIds.map((vid) => {
-                    const lbl = dataset.metricCatalog.find((m) => m.id === vid)?.label ?? vid;
-                    return (
-                      <button
-                        key={vid}
-                        type="button"
-                        className={`var-pill-btn${effectiveChartVarId === vid ? " active" : ""}`}
-                        onClick={() => setActiveChartVarId(vid)}
-                      >
-                        {lbl}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
               {!municipalMode && (
                 <DistributionInsights
                   varId={effectiveChartVarId}
@@ -469,6 +485,12 @@ export default function DiagnosticoTab({ appData }: Props) {
                   primaryState={primaryState}
                   rankingRow={rankingRows.find((r) => r.state === primaryState) ?? null}
                   totalStates={dataset.records.length}
+                  groupComparisons={nonNacionalGroups.flatMap((g) => {
+                    const gVal = computeGroupValue(g, effectiveChartVarId);
+                    return gVal !== null && highlightValue !== null
+                      ? [{ label: groupLabel(g), delta: calcDelta(highlightValue, gVal), color: groupColorMap.get(g) ?? "#6b7280" }]
+                      : [];
+                  })}
                 />
               )}
               {municipalMode && (
@@ -477,6 +499,7 @@ export default function DiagnosticoTab({ appData }: Props) {
                   varLabel={histMetricDef?.label ?? effectiveChartVarId ?? ""}
                   varUnit={histMetricDef?.unit}
                   direction={histMetricDef ? getMetricPolaridad(histMetricDef.id) : "higher_better"}
+                  activeGroupNames={nonNacionalGroups.map(groupLabel)}
                 />
               )}
             </TabNarrative>
@@ -484,7 +507,7 @@ export default function DiagnosticoTab({ appData }: Props) {
 
           {/* Municipal toggle — only when selected variable has municipal data */}
           {munVarsAvailable.some((v) => v.id === effectiveChartVarId) && (
-            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <button
                 type="button"
                 className={`groups-toggle-btn${municipalMode ? " active" : ""}`}
@@ -515,29 +538,6 @@ export default function DiagnosticoTab({ appData }: Props) {
             {/* Left: histogram + boxplot + narrative */}
             <div style={{ display: "flex", flexDirection: "column", gap: 12, height: "100%" }}>
               <section className="panel" style={{ flex: 1 }}>
-                <div className="ranking-panel-header">
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <p className="panel-title" style={{ margin: 0 }}>Distribución nacional</p>
-                    <InfoTooltip wide text={
-                      <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-                        <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Histograma</p>
-                        <p style={{ margin: "0 0 4px" }}>
-                          Los <strong>10 intervalos</strong> son pre-calculados y fijos (igual amplitud sobre el rango nacional); cada barra muestra cuántos estados caen en ese rango de valores.
-                        </p>
-                        <p style={{ margin: "0 0 10px" }}>
-                          La <strong>barra resaltada</strong> contiene al estado seleccionado. Pasa el cursor sobre una barra para ver qué estados pertenecen a ese intervalo.
-                        </p>
-                        <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Diagrama de caja (boxplot)</p>
-                        <p style={{ margin: "0 0 6px" }}>
-                          La <strong>caja</strong> enmarca el 50&nbsp;% central de los estados (Q₁ a Q₃). La línea sólida interior es la <strong>mediana</strong> (valor que divide exactamente a los 32 estados en dos mitades). La línea punteada es la <strong>media nacional</strong>.
-                        </p>
-                        <p style={{ margin: 0 }}>
-                          Los <strong>bigotes</strong> se extienden hasta 1.5&nbsp;×&nbsp;IQR desde cada extremo de la caja — lo que cubre el rango "esperado" sin casos extremos. Los <strong style={{ color: "var(--amber)" }}>puntos naranjas</strong> más allá de los bigotes son estados <em>atípicos</em>. El <strong style={{ color: "var(--blue)" }}>punto azul</strong> es el estado seleccionado.
-                        </p>
-                      </div>
-                    } />
-                  </div>
-                </div>
                 {distribution ? (
                   <DistributionHistogram
                     histogram={distribution.histogram}
@@ -548,6 +548,41 @@ export default function DiagnosticoTab({ appData }: Props) {
                     comparisonValue={nonNacionalGroups.length > 0 ? null : comparisonHistValue}
                     comparisonLabel={nonNacionalGroups.length > 0 ? undefined : (comparisonLabel ?? undefined)}
                     groupLines={nonNacionalGroups.length > 0 ? histGroupLines : undefined}
+                    label={histMetricDef?.label ?? effectiveChartVarId ?? ""}
+                    panelTitle="Distribución nacional"
+                    tooltip={<InfoTooltip wide text={
+                      <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                        <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Histograma</p>
+                        <p style={{ margin: "0 0 4px" }}>
+                          Los <strong>10 intervalos</strong> son pre-calculados y fijos (igual amplitud sobre el rango nacional); cada barra muestra cuántos estados caen en ese rango de valores.
+                        </p>
+                        <p style={{ margin: "0 0 10px" }}>
+                          La <strong>barra resaltada</strong> contiene al estado seleccionado. Pasa el cursor sobre una barra para ver qué estados pertenecen a ese intervalo.
+                        </p>
+                        <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Diagrama de caja (boxplot)</p>
+                        <p style={{ margin: "0 0 6px" }}>
+                          La <strong>caja</strong> enmarca el 50&nbsp;% central de los estados (Q₁ a Q₃). La línea sólida interior es la <strong>mediana</strong>; la línea punteada es la <strong>media nacional</strong>.
+                        </p>
+                        <p style={{ margin: "0 0 10px" }}>
+                          Los <strong>bigotes</strong> cubren el rango esperado (1.5&nbsp;×&nbsp;IQR). Los <strong style={{ color: "var(--amber)" }}>puntos naranjas</strong> son estados atípicos; el <strong style={{ color: "var(--blue)" }}>punto azul</strong> es el estado seleccionado.
+                        </p>
+                        <p style={{ margin: 0, color: "var(--text-3)" }}>
+                          Si la variable tiene datos municipales, el botón <strong>«Ver municipios →»</strong> (justo debajo) permite explorar la distribución interna del estado seleccionado.
+                        </p>
+                      </div>
+                    } />}
+                    footer={histStateValues.length >= 4 ? (
+                      <div style={{ padding: "0 16px 0 28px", marginTop: 2 }}>
+                        <InlineBoxplot
+                          stateValues={histStateValues}
+                          highlightState={primaryState}
+                          domainMin={Math.min(...histStateValues.map((d) => d.value))}
+                          domainMax={Math.max(...histStateValues.map((d) => d.value))}
+                          nationalMean={nationalMeanHist ?? undefined}
+                          groupMarkers={nonNacionalGroups.length > 0 ? histGroupLines : undefined}
+                        />
+                      </div>
+                    ) : undefined}
                   />
                 ) : (
                   <EmptyState
@@ -555,73 +590,36 @@ export default function DiagnosticoTab({ appData }: Props) {
                     description="Ejecuta npm run pipeline:layer1 para generar distribuciones."
                   />
                 )}
-                {histStateValues.length >= 4 && (
-                  <div style={{ padding: "0 16px 0 28px", marginTop: 2 }}>
-                    <InlineBoxplot
-                      stateValues={histStateValues}
-                      highlightState={primaryState}
-                      domainMin={Math.min(...histStateValues.map((d) => d.value))}
-                      domainMax={Math.max(...histStateValues.map((d) => d.value))}
-                      nationalMean={nationalMeanHist ?? undefined}
-                      groupMarkers={nonNacionalGroups.length > 0 ? histGroupLines : undefined}
-                    />
-                  </div>
-                )}
-                <p style={{ margin: "2px 0 0", fontSize: 11, color: "var(--text-3)", textAlign: "center" }}>
-                  {histMetricDef?.label ?? effectiveChartVarId} — distribución entre los 32 estados
-                </p>
               </section>
             </div>
 
             {/* Right: choropleth map */}
             <section className="panel">
-              <div className="panel-title-row">
-                <p className="panel-title" style={{ margin: 0 }}>Mapa coroplético</p>
-                <InfoTooltip text="Cada estado se colorea según su valor en la variable seleccionada. La escala de color va del tono más claro (valor menor) al más oscuro (valor mayor). Busca patrones espaciales: estados contiguos con colores similares sugieren agrupamientos regionales. Haz clic en cualquier estado para seleccionarlo como estado de análisis." />
-              </div>
-              <ChoroplethMap appData={appData} varId={effectiveChartVarId ?? ""} groupStateNames={groupStateColors} />
+              <ChoroplethMap
+                appData={appData}
+                varId={effectiveChartVarId ?? ""}
+                groupStateNames={groupStateColors}
+                panelTitle="Mapa coroplético"
+                tooltip={<InfoTooltip wide text={
+                  <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Mapa coroplético nacional</p>
+                    <p style={{ margin: "0 0 8px" }}>
+                      Cada estado se colorea según su valor en la variable seleccionada: tono más claro = valor menor, más oscuro = valor mayor. Busca patrones espaciales, ya que estados contiguos con colores similares sugieren agrupamientos regionales.
+                    </p>
+                    <p style={{ margin: "0 0 8px" }}>
+                      <strong>Haz clic en un estado</strong> para seleccionarlo como estado de análisis principal. Los grupos de comparación configurados en el panel lateral se destacan con bordes de color.
+                    </p>
+                    <p style={{ margin: 0, color: "var(--text-3)" }}>
+                      Si la variable tiene datos municipales disponibles, usa el botón <strong>«Ver municipios →»</strong> encima del histograma para explorar la distribución interna del estado.
+                    </p>
+                  </div>
+                } />}
+              />
             </section>
           </div>
 
           {/* Ranking panel — full width */}
           <section className="panel ranking-panel">
-            <div className="ranking-panel-header">
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <p className="panel-title" style={{ margin: 0 }}>Ranking nacional</p>
-                <InfoTooltip wide text={
-                  <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
-                    <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Posición relativa</p>
-                    <p style={{ margin: 0 }}>
-                      Los 32 estados ordenados de <strong>mejor a peor</strong> desempeño según la dirección de la variable. El <strong>% vs media</strong> indica cuánto se aleja el estado del promedio nacional: verde = favorable, rojo = desfavorable. El estado seleccionado y los grupos de comparación activos se resaltan.
-                    </p>
-                  </div>
-                } />
-              </div>
-            </div>
-            <div
-              className="toggle-pill ranking-panel__toggle"
-              role="group"
-              aria-label="Vista del ranking"
-              onKeyDown={(e) => {
-                if (e.key === "ArrowLeft") setRankingView("table");
-                if (e.key === "ArrowRight") setRankingView("lollipop");
-              }}
-            >
-              <button
-                type="button"
-                className={`toggle-pill__btn${rankingView === "table" ? " active" : ""}`}
-                onClick={() => setRankingView("table")}
-              >
-                Tabla
-              </button>
-              <button
-                type="button"
-                className={`toggle-pill__btn${rankingView === "lollipop" ? " active" : ""}`}
-                onClick={() => setRankingView("lollipop")}
-              >
-                Lollipop
-              </button>
-            </div>
             {rankingRows.length > 0 ? (
               <RankingTable
                 rows={rankingRows}
@@ -632,10 +630,27 @@ export default function DiagnosticoTab({ appData }: Props) {
                 groupStateColors={groupStateColors}
                 metricLabel={rankingMetricDef?.label ?? effectiveChartVarId ?? ""}
                 unit={rankingMetricDef?.unit}
-                view={rankingView}
+                initialView="lollipop"
                 direction={effectiveRankingDirection}
                 groupLines={rankingGroupLines}
                 showNational={comparisonGroups.includes("nacional")}
+                panelTitle="Ranking nacional"
+                tooltip={
+                  <InfoTooltip wide text={
+                    <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                      <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Ranking nacional</p>
+                      <p style={{ margin: "0 0 8px" }}>
+                        Los 32 estados ordenados de <strong>mejor a peor</strong> desempeño según la dirección de la variable. El <strong>% vs media</strong> indica cuánto se aleja el estado del promedio nacional: verde = favorable, rojo = desfavorable.
+                      </p>
+                      <p style={{ margin: "0 0 8px" }}>
+                        El estado de análisis y los grupos de comparación configurados en el panel lateral se resaltan con su color correspondiente.
+                      </p>
+                      <p style={{ margin: 0, color: "var(--text-3)" }}>
+                        Si la variable tiene datos municipales, usa el botón <strong>«Ver municipios →»</strong> en la sección superior para ver el ranking a nivel de municipio dentro del estado seleccionado.
+                      </p>
+                    </div>
+                  } />
+                }
               />
             ) : (
               <EmptyState
@@ -662,6 +677,7 @@ function DistributionInsights({
   primaryState,
   rankingRow,
   totalStates,
+  groupComparisons = [],
 }: {
   varId: string;
   stateValue: number | null;
@@ -670,67 +686,105 @@ function DistributionInsights({
   primaryState: string | null;
   rankingRow: import("../types/dataStandard").RankingEntry | null;
   totalStates: number;
+  groupComparisons?: { label: string; delta: number | null; color: string }[];
 }) {
-  if (!uniStat) return null;
+  if (!uniStat || !primaryState || stateValue === null) return null;
 
-  const { mean, std, skewness, q25, q50, q75 } = uniStat;
+  const { mean, std, skewness } = uniStat;
   if (mean === null || std === null || skewness === null) return null;
 
-  const zScore = stateValue !== null && std > 0 ? (stateValue - mean) / std : null;
+  const zScore = std > 0 ? (stateValue - mean) / std : null;
+  const delta = mean !== 0 ? ((stateValue - mean) / Math.abs(mean)) * 100 : 0;
+  const absDelta = Math.abs(delta).toFixed(1);
+  const isBelow = delta < 0;
+  const isNormal = normality?.is_normal;
 
-  let quartileLabel: string | null = null;
-  if (stateValue !== null && q25 !== null && q50 !== null && q75 !== null) {
-    if (stateValue >= q75) quartileLabel = "cuartil superior (top 25 % nacional)";
-    else if (stateValue >= q50) quartileLabel = "segundo cuartil (entre la mediana y Q₃)";
-    else if (stateValue >= q25) quartileLabel = "tercer cuartil (entre Q₁ y la mediana)";
-    else quartileLabel = "cuartil inferior (bottom 25 % nacional)";
+  function ordinalRank(rank: number): string {
+    if (rank === 1) return "primer lugar nacional";
+    if (rank === 2) return "segundo lugar nacional";
+    if (rank === 3) return "tercer lugar nacional";
+    if (rank === totalStates) return "último lugar nacional";
+    if (rank === totalStates - 1) return "penúltimo lugar nacional";
+    return `lugar ${rank} de ${totalStates}`;
   }
 
-  const skewDesc =
+  const rankPct = rankingRow ? (rankingRow.rank / totalStates) * 100 : null;
+  const perfOpener =
+    rankPct === null ? null
+    : rankPct <= 10 ? "exhibe uno de los mejores desempeños del país."
+    : rankPct <= 25 ? "se posiciona en el cuartil superior nacional."
+    : rankPct <= 50 ? "se sitúa por encima de la mediana nacional."
+    : rankPct <= 75 ? "se sitúa por debajo de la mediana nacional."
+    : "exhibe uno de los rezagos más pronunciados del país.";
+
+  const distDesc =
     Math.abs(skewness) < 0.5
-      ? "aproximadamente simétrica — la media es un buen punto de referencia"
+      ? "distribuye de forma aproximadamente simétrica entre los estados, por lo que la media es un punto de referencia confiable"
       : skewness > 0
-        ? "cola derecha — unos pocos estados con valores altos elevan la media; la mediana refleja mejor al estado 'típico'"
-        : "cola izquierda — unos pocos rezagados arrastran la media hacia abajo";
+        ? "presenta cola derecha: algunos estados con valores muy altos elevan la media por encima del estado típico, por lo que la mediana refleja mejor al estado representativo"
+        : "presenta cola izquierda: un grupo de estados rezagados arrastra la media hacia abajo, por lo que la mediana refleja mejor al estado representativo";
 
-  const normalityNote =
-    normality?.is_normal === true
-      ? `normal (Shapiro-Wilk p = ${normality.p_value?.toFixed(3)})`
-      : normality?.is_normal === false
-        ? `no normal (p = ${normality.p_value?.toFixed(3)}) — precaución con comparaciones basadas en σ`
-        : null;
+  const zAbs = zScore !== null ? Math.abs(zScore) : null;
+  const zDesc =
+    zAbs === null ? null
+    : zAbs >= 2.5 ? "una desconexión crítica que lo aleja radicalmente del comportamiento del conjunto"
+    : zAbs >= 2.0 ? "un comportamiento atípico que supera el umbral estándar de identificación de valores extremos"
+    : zAbs >= 1.5 ? "una desviación notable respecto al patrón nacional"
+    : zAbs >= 1.0 ? "una distancia moderada con respecto a la media"
+    : "una posición cercana al promedio nacional";
 
-  const rankPct = rankingRow ? Math.round((rankingRow.rank / totalStates) * 100) : null;
-  const rankTercile =
-    rankPct !== null
-      ? rankPct <= 33 ? "tercio superior"
-        : rankPct <= 66 ? "tercio medio"
-        : "tercio inferior"
+  const nonNormalNote =
+    isNormal === false && zAbs !== null
+      ? `El test Shapiro-Wilk confirma que la distribución no sigue una curva normal (p = ${normality?.p_value?.toFixed(3)}): los extremos o la asimetría son más pronunciados de lo esperado. Esto significa que estar a ${zAbs.toFixed(1)} σ de la media no equivale al mismo percentil que en una distribución simétrica, por lo que la magnitud del z-score debe leerse junto con la posición en el ranking.`
       : null;
 
-  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
+  const activeGroups = groupComparisons.filter((g) => g.delta !== null);
+
+  const S = { lineHeight: 1.7, color: "#334155", margin: "0 0 10px" } as const;
+  const Sfooter = { lineHeight: 1.5, color: "var(--text-3)", fontSize: 11, margin: 0, borderTop: "1px solid var(--border)", paddingTop: 6 } as const;
 
   return (
     <div style={{ marginTop: 12, padding: "0 4px" }}>
-      {primaryState && stateValue !== null && (
+      <p style={S}>
+        <strong>{primaryState}</strong>{perfOpener ? ` ${perfOpener}` : ","} Su valor de{" "}
+        <strong>{stateValue.toFixed(2)}</strong> está un{" "}
+        <strong>{absDelta}%</strong> {isBelow ? "por debajo" : "por encima"} del promedio nacional ({mean.toFixed(2)}),
+        situándolo en el{" "}
+        {rankingRow
+          ? <strong>{ordinalRank(rankingRow.rank)}</strong>
+          : "ranking sin posición calculada"
+        }.
+      </p>
+
+      <p style={S}>
+        La variable se <strong>{distDesc}</strong>.{" "}
+        {zScore !== null && zDesc && (
+          <>
+            La posición de <strong>{primaryState}</strong> a{" "}
+            <strong>{Math.abs(zScore).toFixed(2)} σ</strong> de la media confirma {zDesc}.
+          </>
+        )}
+        {nonNormalNote && <> {nonNormalNote}</>}
+      </p>
+
+      {activeGroups.length > 0 && (
         <p style={S}>
-          <strong>{primaryState}</strong> registra un valor de{" "}
-          <strong>{stateValue.toFixed(2)}</strong>
-          {quartileLabel ? <>, ubicado en el <strong>{quartileLabel}</strong></> : ""}.
-          {rankingRow && rankTercile ? (
-            <> En el ranking ocupa el <strong>lugar {rankingRow.rank} de {totalStates}</strong> ({rankTercile} nacional),
-            con un valor <strong>{rankingRow.pct_vs_mean >= 0 ? "+" : ""}{rankingRow.pct_vs_mean.toFixed(1)} %</strong> respecto a la media.</>
-          ) : ""}
+          Respecto a los grupos activos:{" "}
+          {activeGroups.map((g, i) => (
+            <span key={g.label}>
+              {i > 0 ? "; " : ""}
+              <strong>{Math.abs(g.delta!).toFixed(1)}% {(g.delta ?? 0) >= 0 ? "por encima" : "por debajo"}</strong> de {g.label}
+            </span>
+          ))}.
         </p>
       )}
-      <p style={S}>
-        La distribución entre los 32 estados es <strong>{skewDesc}</strong>.
-        El mapa coroplético muestra la variación geográfica — busca patrones regionales.
-      </p>
-      <p style={{ lineHeight: 1.5, color: "var(--text-3)", fontSize: 11, margin: 0, borderTop: "1px solid var(--border)", paddingTop: 6 }}>
+
+      <p style={Sfooter}>
         Media: <strong>{mean.toFixed(2)}</strong> · σ: <strong>{std.toFixed(2)}</strong>
         {zScore !== null && <> · z del estado: <strong>{zScore >= 0 ? "+" : ""}{zScore.toFixed(2)}</strong></>}
-        {normalityNote && <> · {normalityNote}</>}
+        {normality?.p_value != null && (
+          <> · Shapiro-Wilk p = <strong>{normality.p_value.toFixed(3)}</strong>{isNormal === false ? " (no normal)" : " (normal)"}</>
+        )}
       </p>
     </div>
   );
@@ -743,27 +797,53 @@ function MunicipalNarrative({
   varLabel,
   varUnit,
   direction,
+  activeGroupNames = [],
 }: {
   stateName: string;
   varLabel: string;
   varUnit?: string;
   direction: import("../types/dataStandard").MetricPolaridad;
+  activeGroupNames?: string[];
 }) {
-  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
-  const betterWord = direction === "lower_better" ? "menor" : "mayor";
+  const S = { lineHeight: 1.7, color: "#334155", margin: "0 0 10px" } as const;
+  const isLowerBetter = direction === "lower_better";
+  const favorableAdj = isLowerBetter ? "bajos" : "altos";
+  const leadersDesc = isLowerBetter ? "menor valor son las zonas líderes" : "mayor valor son las zonas líderes";
+  const rezagoDesc = isLowerBetter ? "mayor valor representan los rezagos más críticos" : "menor valor representan los rezagos más críticos";
+  const priorityInterv = isLowerBetter
+    ? "mayor valor en esta variable requieren atención prioritaria"
+    : "menor valor en esta variable requieren atención prioritaria";
+
   return (
     <div style={{ marginTop: 12, padding: "0 4px" }}>
       <p style={S}>
-        Distribución de <strong>{varLabel}</strong>{varUnit ? ` (${varUnit})` : ""} entre los
-        municipios de <strong>{stateName}</strong>.
+        Esta vista desagrega <strong>{varLabel}</strong>
+        {varUnit ? ` (${varUnit})` : ""} a nivel municipal en{" "}
+        <strong>{stateName}</strong> para identificar las brechas internas del estado.
+        Dado que valores <strong>{favorableAdj}</strong> son favorables,
+        los municipios con {leadersDesc}, mientras que los de {rezagoDesc} al interior del estado.
       </p>
       <p style={S}>
-        El <strong>histograma</strong> muestra cómo se reparte la variable entre municipios —
-        una distribución muy dispersa indica desigualdad intraestatal alta.
-        El <strong>mapa</strong> permite identificar patrones geográficos dentro del estado.
-        El <strong>ranking</strong> señala los municipios con {betterWord} y menor desempeño relativo
-        al promedio estatal.
+        Si el <strong>histograma</strong> muestra una distribución bimodal o muy dispersa,
+        indica polarización interna significativa: la media estatal oculta contrastes extremos
+        entre municipios y no debe usarse como referencia única.
+        El <strong>mapa</strong> permite identificar si ese patrón sigue lógicas geográficas
+        (norte/sur, sierra/costa, urbano/rural), lo que orienta intervenciones focalizadas
+        hacia zonas con características territoriales compartidas.
       </p>
+      <p style={{ lineHeight: 1.7, color: "#334155", margin: activeGroupNames.length > 0 ? "0 0 10px" : 0 }}>
+        El <strong>ranking municipal</strong> es la herramienta clave para identificar prioridades
+        de intervención: los municipios con {priorityInterv} para reducir las brechas internas
+        y acercar al estado a una distribución más equitativa.
+      </p>
+      {activeGroupNames.length > 0 && (
+        <p style={{ lineHeight: 1.7, color: "#334155", margin: 0 }}>
+          Los grupos de comparación activos ({activeGroupNames.join(", ")}) están disponibles
+          en la vista nacional. Para comparar el comportamiento de{" "}
+          <strong>{stateName}</strong> frente a esos grupos en términos municipales,
+          consulta el ranking y el mapa coroplético del estado seleccionado.
+        </p>
+      )}
     </div>
   );
 }
@@ -773,114 +853,152 @@ function MunicipalNarrative({
 type KpiCardSummary = {
   label: string;
   value: number | null;
+  unit?: string;
   delta: number | null;
   direction: string;
   isOutlier: boolean;
+  rank: number | null;
 };
-
-function fmtPct(d: number | null): string {
-  if (d === null) return "—";
-  return `${d > 0 ? "+" : ""}${d.toFixed(1)}%`;
-}
 
 function DiagnosticoNarrative({
   primaryState,
   stateRegion,
   kpiCards,
-  rankingRow,
-  rankingLabel,
   totalStates,
 }: {
   primaryState: string;
   stateRegion: string | null;
   kpiCards: KpiCardSummary[];
-  rankingRow: import("../types/dataStandard").RankingEntry | null;
-  rankingLabel: string;
   totalStates: number;
 }) {
-  const withData = kpiCards.filter((c) => c.value !== null);
+  const withData = kpiCards.filter((c) => c.value !== null && c.delta !== null);
   if (!withData.length) return null;
 
-  const outliers = withData.filter((c) => c.isOutlier);
+  const good = withData
+    .filter((c) => c.direction === "lower_better" ? (c.delta! < 0) : (c.delta! > 0))
+    .sort((a, b) => Math.abs(b.delta!) - Math.abs(a.delta!));
+  const bad = withData
+    .filter((c) => c.direction === "lower_better" ? (c.delta! > 0) : (c.delta! < 0))
+    .sort((a, b) => Math.abs(b.delta!) - Math.abs(a.delta!));
 
-  const goodPerformers = withData
-    .filter((c) => c.direction === "lower_better" ? (c.delta ?? 0) < 0 : (c.delta ?? 0) > 0)
-    .sort((a, b) => Math.abs(b.delta ?? 0) - Math.abs(a.delta ?? 0));
+  const worstBad = bad[0] ?? null;
+  const worstIsOutlier = worstBad?.isOutlier ?? false;
 
-  const badPerformers = withData
-    .filter((c) => c.direction === "lower_better" ? (c.delta ?? 0) > 0 : (c.delta ?? 0) < 0)
-    .sort((a, b) => Math.abs(b.delta ?? 0) - Math.abs(a.delta ?? 0));
+  // Profile adjective
+  const profileAdj =
+    good.length === withData.length ? "altamente competitivo"
+    : bad.length === withData.length ? "con rezago generalizado"
+    : good.length / withData.length >= 0.75 ? "competitivo"
+    : good.length / withData.length >= 0.5 ? "mixto, con predominio de fortalezas"
+    : "mixto, con brechas relevantes";
 
-  const rankPct = rankingRow ? (rankingRow.rank / totalStates) * 100 : null;
-  const rankTercile =
-    rankPct !== null
-      ? rankPct <= 33 ? "tercio superior" : rankPct <= 66 ? "tercio medio" : "tercio inferior"
-      : null;
+  // Rule 2 — ordinal position: no "tercio" if % was already cited
+  function ordinalRank(rank: number | null): string {
+    if (!rank) return "";
+    if (rank === 1) return "primer lugar nacional";
+    if (rank === 2) return "segundo lugar nacional";
+    if (rank === 3) return "tercer lugar nacional";
+    if (rank === totalStates) return "último lugar nacional";
+    if (rank === totalStates - 1) return "penúltimo lugar nacional";
+    if (rank === totalStates - 2) return "antepenúltimo lugar nacional";
+    return `lugar ${rank} de ${totalStates}`;
+  }
 
-  const S = { lineHeight: 1.65, color: "#334155", margin: "0 0 8px" } as const;
+  // Delta description (favorable / unfavorable)
+  function deltaDesc(c: KpiCardSummary, favorable: boolean): React.ReactNode {
+    const abs = Math.abs(c.delta!).toFixed(1);
+    if (favorable) {
+      return c.direction === "lower_better"
+        ? <><strong>{abs}%</strong> menor a la media nacional</>
+        : <><strong>{abs}%</strong> superior al promedio nacional</>;
+    }
+    return c.direction === "lower_better"
+      ? <><strong>{abs}%</strong> por encima de la media nacional</>
+      : <><strong>{abs}%</strong> por debajo de la media nacional</>;
+  }
+
+  const S = { lineHeight: 1.7, color: "#334155", margin: "0 0 10px" } as const;
+
+  // Outliers NOT already covered as worstBad
+  const residualOutliers = withData.filter((c) => c.isOutlier && c !== worstBad);
 
   return (
     <div>
+      {/* Párrafo 1 — perfil general */}
       <p style={S}>
-        El perfil de <strong>{primaryState}</strong>
-        {stateRegion ? <>, región <strong>{stateRegion}</strong>,</> : ""}{" "}
-        se analiza a partir de <strong>{withData.length}</strong> variable{withData.length !== 1 ? "s" : ""} con datos disponibles.{" "}
-        {goodPerformers.length === withData.length
-          ? "El estado supera la media nacional en todas las variables analizadas."
-          : badPerformers.length === withData.length
-          ? "El estado se ubica por debajo de la media nacional en todas las variables analizadas."
-          : <>
-              <strong>{goodPerformers.length}</strong> {goodPerformers.length === 1 ? "presenta" : "presentan"} desempeño favorable frente a la media nacional
-              y <strong>{badPerformers.length}</strong> {badPerformers.length === 1 ? "muestra" : "muestran"} oportunidad de mejora.
-            </>
-        }
+        El estado muestra un <strong>perfil {profileAdj}</strong>, con desempeño favorable en{" "}
+        <strong>{good.length}</strong> de <strong>{withData.length}</strong>{" "}
+        variable{withData.length !== 1 ? "s" : ""} analizadas frente a la media nacional
+        {stateRegion ? ` dentro de la región ${stateRegion}` : ""}.
       </p>
 
-      {goodPerformers.length > 0 && (
+      {/* Párrafo 2 — fortalezas */}
+      {good.length > 0 && (
         <p style={S}>
-          {goodPerformers.length === 1
-            ? <>La variable con mejor desempeño relativo es <strong>{goodPerformers[0].label}</strong> ({fmtPct(goodPerformers[0].delta)} vs media).</>
-            : <>
-                Las variables con mayor ventaja frente a la media nacional son{" "}
-                <strong>{goodPerformers[0].label}</strong> ({fmtPct(goodPerformers[0].delta)})
-                {goodPerformers[1] && <> y <strong>{goodPerformers[1].label}</strong> ({fmtPct(goodPerformers[1].delta)})</>}
-                {goodPerformers.length > 2 && <>, entre otras {goodPerformers.length - 2}</>}.
-              </>
-          }
+          {good.length === 1 ? (
+            <>
+              Su principal fortaleza es <strong>{good[0].label}</strong>, con un valor {deltaDesc(good[0], true)}
+              {good[0].rank && <>, situándolo en el <strong>{ordinalRank(good[0].rank)}</strong></>}.
+            </>
+          ) : (
+            <>
+              Su principal fortaleza radica en{" "}
+              <strong>{good[0].label}</strong> ({deltaDesc(good[0], true)})
+              {good[1] && <>, seguido de <strong>{good[1].label}</strong> ({deltaDesc(good[1], true)})</>}
+              {good.length > 2 && <>, entre otras <strong>{good.length - 2}</strong> variable{good.length - 2 !== 1 ? "s" : ""}</>}.
+            </>
+          )}
         </p>
       )}
 
-      {badPerformers.length > 0 && (
+      {/* Párrafo 3 — brecha principal */}
+      {worstBad && (
         <p style={S}>
-          {badPerformers.length === 1
-            ? <>La variable con mayor brecha respecto a la media es <strong>{badPerformers[0].label}</strong> ({fmtPct(badPerformers[0].delta)} vs media).</>
-            : <>
-                Las variables con mayor brecha respecto a la media nacional son{" "}
-                <strong>{badPerformers[0].label}</strong> ({fmtPct(badPerformers[0].delta)})
-                {badPerformers[1] && <> y <strong>{badPerformers[1].label}</strong> ({fmtPct(badPerformers[1].delta)})</>}
-                {badPerformers.length > 2 && <>, entre otras {badPerformers.length - 2}</>}.
-              </>
-          }
+          {worstIsOutlier ? (
+            // Regla 1: Consolidación de outlier — lenguaje de rezago crítico/aislamiento
+            <>
+              Sin embargo, {good.length > 0 ? "este perfil contrasta con " : "el estado presenta "}
+              un <strong>rezago crítico de carácter atípico</strong> en{" "}
+              <strong>{worstBad.label}</strong>: la entidad se ubica un {deltaDesc(worstBad, false)},
+              {worstBad.rank && <> situándola en el <strong>{ordinalRank(worstBad.rank)}</strong></>}.{" "}
+              Este <strong>aislamiento estadístico</strong> —que supera el umbral IQR×1.5 de la distribución nacional—
+              sugiere una condición estructural diferenciada o un déficit severo que no se explica
+              por la tendencia general del país
+              {stateRegion ? ` para los estados de la región ${stateRegion}` : ""}.
+              {bad.length > 1 && (
+                <> Adicionalmente, <strong>{bad.slice(1, 3).map((c) => c.label).join(" y ")}</strong>{" "}
+                también registra{bad.slice(1, 3).length > 1 ? "n" : ""} valores desfavorables.</>
+              )}
+            </>
+          ) : (
+            // Sin outlier: brecha directa (Regla 2: ordinal en vez de absoluto+tercio)
+            <>
+              El principal déficit se observa en <strong>{worstBad.label}</strong>,
+              que registra un {deltaDesc(worstBad, false)}
+              {worstBad.rank && <> ({ordinalRank(worstBad.rank)})</>}.
+              {bad.length > 1 && (
+                <> Le siguen{" "}
+                {bad.slice(1, 3).map((c, i) => (
+                  <span key={c.label}>{i > 0 ? " y " : " "}<strong>{c.label}</strong> ({deltaDesc(c, false)})</span>
+                ))}.
+                </>
+              )}
+              {/* Regla 1: outliers residuales no cubiertos por worstBad */}
+              {residualOutliers.length > 0 && (
+                <> Se detecta además comportamiento atípico en{" "}
+                <strong>{residualOutliers.map((c) => c.label).join(", ")}</strong>.</>
+              )}
+            </>
+          )}
         </p>
       )}
 
-      {rankingRow && rankingLabel && (
-        <p style={S}>
-          En <strong>{rankingLabel}</strong>, el estado ocupa el{" "}
-          <strong>lugar {rankingRow.rank} de {totalStates}</strong>
-          {rankTercile ? <> ({rankTercile} nacional)</> : ""},{" "}
-          con un valor <strong>{fmtPct(rankingRow.pct_vs_mean)}</strong> respecto al promedio nacional.
-        </p>
-      )}
-
-      {outliers.length > 0 && (
+      {/* Solo outliers positivos (buen desempeño pero atípico) */}
+      {!worstBad && withData.some((c) => c.isOutlier) && (
         <p style={{ ...S, margin: 0 }}>
-          Se detecta comportamiento atípico (criterio IQR ×1.5) en:{" "}
-          <strong>{outliers.map((c) => c.label).join(", ")}</strong>.{" "}
-          {outliers.length === 1
-            ? "El estado se aleja significativamente de la distribución del resto en esta variable, lo que puede reflejar una condición estructural o una política pública diferenciada."
-            : "El estado se aleja de la distribución del resto en estas variables, lo que puede reflejar condiciones estructurales diferenciadas o efectos de políticas públicas específicas."
-          }
+          A pesar del desempeño favorable, se detecta comportamiento atípico en{" "}
+          <strong>{withData.filter((c) => c.isOutlier).map((c) => c.label).join(", ")}</strong>,
+          lo que puede reflejar condiciones estructurales diferenciadas o políticas públicas específicas.
         </p>
       )}
     </div>

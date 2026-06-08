@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 
 export const MAX_COMPARISON_GROUPS = 3;
-export const GROUP_COLORS = ["#64748b", "#059669", "#7c3aed", "#dc2626", "#0891b2"];
+export const GROUP_COLORS = ["#059669", "#7c3aed", "#dc2626", "#0891b2"];
 export const NACIONAL_COLOR = "#94a3b8";
 
 type Props = {

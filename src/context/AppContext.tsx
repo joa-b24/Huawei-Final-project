@@ -4,6 +4,8 @@ import { createContext, useContext, useReducer, type Dispatch, type ReactNode } 
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
 
+export const MAX_ACTIVE_VARIABLES = 5;
+
 export type TabId = "diagnostico" | "estructura" | "relaciones" | "temporal" | "territorial";
 
 export type AppState = {
@@ -24,7 +26,7 @@ type Action =
   | { type: "SET_VARIABLES"; variableIds: string[] }
   | { type: "SET_COMPARISON_GROUPS"; groups: string[] };
 
-const MAX_ACTIVE_VARIABLES = 5;
+
 
 function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {

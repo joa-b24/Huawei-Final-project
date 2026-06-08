@@ -61,6 +61,12 @@ def build_alias_map(catalog_path: Path) -> dict[str, str]:
     return m
 
 
+def build_direction_map(catalog_path: Path) -> dict[str, str]:
+    """Retorna dict variable_id → direction ('higher_better' | 'lower_better')."""
+    data = json.loads(catalog_path.read_text(encoding="utf-8"))
+    return {v["variable_id"]: v.get("direction", "higher_better") for v in data.get("variables", [])}
+
+
 def map_state(name: str, alias_map: dict[str, str]) -> str | None:
     return alias_map.get(normalize(name))
 
@@ -112,44 +118,124 @@ def logistic(x: np.ndarray, L: float, k: float, x0: float) -> np.ndarray:
     return L / (1 + np.exp(-k * (x - x0)))
 
 
-def fit_scurve(years: np.ndarray, values: np.ndarray, last_year: int
-               ) -> dict | None:
-    """Ajusta curva logística S. Requiere ≥6 puntos y varianza suficiente."""
+def fit_scurve(years: np.ndarray, values: np.ndarray, last_year: int,
+               direction: str = "higher_better",
+               ceiling_max: float | None = None) -> dict | None:
+    """
+    Ajusta curva logística S. Requiere ≥6 puntos y varianza suficiente.
+
+    Para variables 'lower_better' (e.g. pobreza_pct) invierte la serie antes
+    del ajuste: y_fit = y[0] - y (crece cuando la variable decrece).
+    El campo 'ceiling' devuelto es el piso de saturación esperado.
+    """
     if len(years) < 6:
         return None
     x = (years - years[0]).astype(float)
     y = values.astype(float)
     if y.max() - y.min() < 5:
         return None
+
+    is_lower = direction == "lower_better"
+    amplitude = float(y.max() - y.min())  # rango observado — escala-agnóstico
+
+    if is_lower:
+        # Serie invertida: crece a medida que la variable mejora (baja)
+        y_fit = y[0] - y
+        L_lower = max(float(y_fit.max()), amplitude * 0.5)
+        # Techo de mejora: como mínimo el doble del rango observado, sin asumir límite de 100
+        L_upper = max(amplitude * 4.0, float(y[0]) * 0.95)
+        p0 = [L_lower * 1.5, 0.5, float(len(x) / 2)]
+        bounds = ([L_lower, 0.001, 0.0], [L_upper, 3.0, float(len(x)) * 2])
+    else:
+        y_fit = y
+        L_min = float(y.max())
+        # Si hay un máximo natural (e.g. 100 para %) lo respetamos; si no, usamos el rango
+        L_max = float(ceiling_max) if ceiling_max is not None else L_min + amplitude * 4.0
+        p0 = [min(L_min + amplitude, L_max), 0.5, float(len(x) / 2)]
+        bounds = ([L_min, 0.001, 0.0], [L_max, 3.0, float(len(x)) * 2])
+
     try:
-        p0 = [max(y.max(), 90.0), 0.5, float(len(x) / 2)]
-        bounds = ([y.max(), 0.001, 0], [100.0, 3.0, len(x) * 2])
-        params, _ = curve_fit(logistic, x, y, p0=p0, bounds=bounds, maxfev=5000)
-        L, k, x0 = params
-        inflection_year = int(years[0] + x0)
-        gap = float(L - y[-1])
-        if k > 0.6:
-            velocity = "Acelerada"
-            velocity_label = "Crecimiento explosivo en cortos periodos"
-        elif k > 0.3:
-            velocity = "Moderada"
-            velocity_label = "Crecimiento constante y estable"
-        else:
-            velocity = "Lenta"
-            velocity_label = "Adopción paulatina prolongada"
-        # Proyección hasta last_year+3
-        proj_years = list(range(int(years[0]), last_year + 4))
-        proj_x = np.array(proj_years) - years[0]
-        proj_vals = [round(float(logistic(np.array([xi]), L, k, x0)[0]), 3)
-                     for xi in proj_x]
+        params, _ = curve_fit(logistic, x, y_fit, p0=p0, bounds=bounds, maxfev=5000)
+        L, k, x0_param = params
+        inflection_year = int(years[0] + x0_param)
         passed_inflection = int(years[-1]) >= inflection_year
+
+        if is_lower:
+            floor_val = float(y[0]) - float(L)
+            ceiling_out = round(floor_val, 2)
+            gap_out = round(float(y[-1]) - floor_val, 2)
+        else:
+            ceiling_out = round(float(L), 2)
+            gap_out = round(float(L) - float(y[-1]), 2)
+
+        # Cuando la inflexión cae en el primer año o antes, el modelo solo ve
+        # la desaceleración final (meseta); k no refleja la velocidad de adopción
+        # real sino qué tan rápido se acerca al techo. En ese caso usamos la
+        # pendiente OLS (pp/año) como indicador del ritmo actual observable.
+        inflection_in_data = x0_param >= 1.0  # al menos 1 año dentro de la serie
+
+        if not inflection_in_data:
+            # Fase madura: ritmo relativo = fracción del rango total cubierta por año
+            n_years = float(len(years) - 1) if len(years) > 1 else 1.0
+            ols_slope = float(np.polyfit(x, y if not is_lower else y_fit, 1)[0])
+            # Ritmo relativo: qué fracción del rango observado se avanza por año
+            rel_rate = abs(ols_slope) / amplitude if amplitude > 0 else 0.0
+            if rel_rate > 0.12:   # > 12% del rango por año → rápido
+                velocity = "Maduración rápida"
+                velocity_label = (
+                    "El indicador ya superó su pico de crecimiento (antes del período disponible) "
+                    "y continúa avanzando a buen ritmo hacia su techo de saturación"
+                )
+            elif rel_rate > 0.04:  # > 4% del rango por año → gradual
+                velocity = "Maduración"
+                velocity_label = (
+                    "El indicador ya superó su pico de crecimiento (antes del período disponible) "
+                    "y se aproxima gradualmente a su techo de saturación"
+                )
+            else:                  # ≤ 4% del rango por año → lento
+                velocity = "Maduración lenta"
+                velocity_label = (
+                    "El indicador ya superó su pico de crecimiento (antes del período disponible) "
+                    "y converge muy lentamente hacia su techo de saturación"
+                )
+        elif is_lower:
+            if k > 0.6:
+                velocity = "Acelerada"
+                velocity_label = "Reducción acelerada — ciclo completo estimado en ~5 años"
+            elif k > 0.3:
+                velocity = "Moderada"
+                velocity_label = "Reducción constante y estable"
+            else:
+                velocity = "Lenta"
+                velocity_label = "Reducción gradual prolongada"
+        else:
+            if k > 0.6:
+                velocity = "Acelerada"
+                velocity_label = "Crecimiento explosivo — ciclo completo estimado en ~5 años"
+            elif k > 0.3:
+                velocity = "Moderada"
+                velocity_label = "Crecimiento constante y estable"
+            else:
+                velocity = "Lenta"
+                velocity_label = "Adopción paulatina prolongada"
+
+        # Proyección hasta last_year+3 (valores en escala original)
+        proj_years = list(range(int(years[0]), last_year + 4))
+        proj_x = np.array(proj_years, dtype=float) - years[0]
+        proj_vals_fit = [float(logistic(np.array([xi]), L, k, x0_param)[0]) for xi in proj_x]
+        if is_lower:
+            proj_vals = [round(float(y[0]) - pv, 3) for pv in proj_vals_fit]
+        else:
+            proj_vals = [round(pv, 3) for pv in proj_vals_fit]
+
         return {
-            "ceiling": round(float(L), 2),
-            "gap": round(gap, 2),
+            "ceiling": ceiling_out,   # piso cuando direction="lower_better"
+            "gap": gap_out,
             "inflection_year": inflection_year,
             "passed_inflection": passed_inflection,
             "velocity": velocity,
             "velocity_label": velocity_label,
+            "direction": direction,
             "proj_years": proj_years,
             "proj_values": proj_vals,
         }
@@ -184,7 +270,9 @@ def save_forecast_json(var_id: str, states_forecast: dict) -> None:
 def process_series(var_id: str, df_long: pd.DataFrame,
                    state_col: str = "state_code",
                    year_col: str = "year",
-                   value_col: str = "value") -> list[dict]:
+                   value_col: str = "value",
+                   direction: str = "higher_better",
+                   ceiling_max: float | None = None) -> list[dict]:
     """Convierte un DataFrame long en lista de records y calcula forecasts."""
     records = []
     states_forecast: dict[str, dict] = {}
@@ -210,7 +298,7 @@ def process_series(var_id: str, df_long: pd.DataFrame,
         forecast_year = last_year + 1
         ols    = ols_trend(years, values, forecast_year)
         holt   = holt_forecast(values, last_year, steps=2)
-        scurve = fit_scurve(years, values, last_year)
+        scurve = fit_scurve(years, values, last_year, direction=direction, ceiling_max=ceiling_max)
 
         states_forecast[str(code)] = {
             "ols":     ols,
@@ -220,40 +308,60 @@ def process_series(var_id: str, df_long: pd.DataFrame,
 
     save_temporal_json(var_id, records)
     save_forecast_json(var_id, states_forecast)
-    print(f"  OK {var_id}.json  ({len(records)} registros)")
+    print(f"  OK {var_id}.json  ({len(records)} registros, direction={direction})")
     return records
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# 1. BD_consts.csv — 3 variables × 10 años
+# Cargar catálogo una sola vez — fuente de verdad para metadatos y dirección
+# ═══════════════════════════════════════════════════════════════════════════
+alias_map  = build_alias_map(CATALOGS / "states.master.json")
+cat_data   = json.loads((CATALOGS / "variables.catalog.json").read_text(encoding="utf-8"))
+cat_vars   = {v["variable_id"]: v for v in cat_data.get("variables", [])}
+direction_map = {vid: v.get("direction", "higher_better") for vid, v in cat_vars.items()}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 1. BD_consts.csv — auto-descubrimiento por sinonimos del catálogo
 # ═══════════════════════════════════════════════════════════════════════════
 print("=" * 60)
-print("1. BD_consts.csv (ENDUTIH histórico 2015-2024)")
+print("1. BD_consts.csv — descubrimiento automático por sinonimos")
 print("=" * 60)
-
-alias_map = build_alias_map(CATALOGS / "states.master.json")
 
 bd_path = TEST_DATA / "BD_consts.csv"
 df_bd = pd.read_csv(bd_path, encoding="utf-8-sig")
 df_bd.columns = [c.strip() for c in df_bd.columns]
-
-# Mapear nombres → state_code, descartar nacional
 df_bd["state_code"] = df_bd["Entidad Federativa"].apply(lambda x: map_state(str(x), alias_map))
-df_bd = df_bd.dropna(subset=["state_code"])  # excluye "Estados Unidos Mexicanos" y no mapeados
+df_bd = df_bd.dropna(subset=["state_code"])
 
-BD_VARS = {
-    "hogares_con_internet_pct":    ("Pct_Hogares_Internet",  "%", "Hogares con acceso a internet"),
-    "uso_internet_educacion_pct":  ("Pct_Uso_Educacion",     "%", "Uso de internet para educación"),
-    "uso_internet_gobierno_pct":   ("Pct_Uso_Gobierno",      "%", "Uso de internet para trámites gubernamentales"),
-}
+bd_cols = set(df_bd.columns)
 
+# bd_col_map: vid → nombre de columna en el CSV (para actualizar combined.json después)
+bd_col_map:  dict[str, str]  = {}
 bd_metadata: dict[str, dict] = {}
-for var_id, (col, unit, label) in BD_VARS.items():
-    long = df_bd[["state_code", "Anio", col]].rename(
-        columns={"Anio": "year", col: "value"}
-    ).dropna(subset=["value"])
-    process_series(var_id, long)
-    bd_metadata[var_id] = {"label": label, "unit": unit, "source": "INEGI ENDUTIH 2015-2024"}
+
+for vid, v in cat_vars.items():
+    for sin in v.get("sinonimos", []):
+        if sin not in bd_cols:
+            continue
+        long = (
+            df_bd[["state_code", "Anio", sin]]
+            .rename(columns={"Anio": "year", sin: "value"})
+            .dropna(subset=["value"])
+        )
+        unit = v.get("unidad", v.get("unidad_base", ""))
+        # Para variables acotadas naturalmente (porcentaje → 100, índice 0-1 → 1) se pasa el techo
+        ceiling_max: float | None = 100.0 if unit in ("%", "pct", "porcentaje") else None
+        process_series(vid, long, direction=direction_map.get(vid, "higher_better"), ceiling_max=ceiling_max)
+        bd_col_map[vid] = sin
+        bd_metadata[vid] = {
+            "label":  v.get("label", v.get("nombre", vid)),
+            "unit":   v.get("unidad", v.get("unidad_base", "")),
+            "source": v.get("fuente_sugerida", ""),
+        }
+        break  # primer sinonimo que coincida es suficiente
+
+if not bd_col_map:
+    print("  AVISO: ninguna variable del catálogo coincide con columnas de BD_consts.csv")
 
 # ═══════════════════════════════════════════════════════════════════════════
 # 2. manifest.json
@@ -263,16 +371,12 @@ print("=" * 60)
 print("2. Generando manifest.json")
 print("=" * 60)
 
-all_vars = list(BD_VARS.keys())
-all_meta = {**bd_metadata}
-
-# Solo incluir vars que realmente tienen archivo
-available = [v for v in all_vars if (OUT / f"{v}.json").exists()]
+available = [vid for vid in bd_col_map if (OUT / f"{vid}.json").exists()]
 
 manifest = {
     "updated_at": TODAY,
     "variables": available,
-    "metadata": all_meta,
+    "metadata": {vid: bd_metadata[vid] for vid in available},
 }
 (OUT / "manifest.json").write_text(
     json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -280,109 +384,36 @@ manifest = {
 print(f"  OK manifest.json  ({len(available)} variables: {available})")
 
 # ═══════════════════════════════════════════════════════════════════════════
-# 3. Registrar en combined.json + variables.catalog.json
-#    Para que aparezcan en el sidebar con badge HIST
+# 3. Actualizar combined.json con valores del último año disponible
+#    (no modifica catálogo — las variables deben importarse con import_variable.py)
 # ═══════════════════════════════════════════════════════════════════════════
 print()
 print("=" * 60)
-print("3. Registrando en catálogos y combined.json")
+print("3. Actualizando combined.json")
 print("=" * 60)
 
-BD_CATALOG_ENTRIES = {
-    "hogares_con_internet_pct": {
-        "variable_id": "hogares_con_internet_pct",
-        "nombre": "Hogares con acceso a internet",
-        "label": "Hogares con internet",
-        "descripcion": "Porcentaje de hogares con acceso a internet (ENDUTIH 2015-2024).",
-        "unidad_base": "%",
-        "unidad": "%",
-        "categoria_id": "infraestructura_digital",
-        "tipo_valor": "number",
-        "agregacion_default": "avg",
-        "fuente_sugerida": "INEGI ENDUTIH 2015-2024",
-        "sinonimos": ["Pct_Hogares_Internet"],
-    },
-    "uso_internet_educacion_pct": {
-        "variable_id": "uso_internet_educacion_pct",
-        "nombre": "Uso de internet para educación",
-        "label": "Internet: educación",
-        "descripcion": "Porcentaje de usuarios de internet que lo usan para actividades educativas (ENDUTIH 2015-2024).",
-        "unidad_base": "%",
-        "unidad": "%",
-        "categoria_id": "infraestructura_digital",
-        "tipo_valor": "number",
-        "agregacion_default": "avg",
-        "fuente_sugerida": "INEGI ENDUTIH 2015-2024",
-        "sinonimos": ["Pct_Uso_Educacion"],
-    },
-    "uso_internet_gobierno_pct": {
-        "variable_id": "uso_internet_gobierno_pct",
-        "nombre": "Uso de internet para trámites gubernamentales",
-        "label": "Internet: gobierno",
-        "descripcion": "Porcentaje de usuarios de internet que realizan trámites gubernamentales en línea (ENDUTIH 2015-2024).",
-        "unidad_base": "%",
-        "unidad": "%",
-        "categoria_id": "infraestructura_digital",
-        "tipo_valor": "number",
-        "agregacion_default": "avg",
-        "fuente_sugerida": "INEGI ENDUTIH 2015-2024",
-        "sinonimos": ["Pct_Uso_Gobierno"],
-    },
-}
-
-# — variables.catalog.json (public y data/catalogs) —
-for cat_path in [ROOT / "public" / "data" / "variables.catalog.json",
-                 CATALOGS / "variables.catalog.json"]:
-    if not cat_path.exists():
-        continue
-    cat_data = json.loads(cat_path.read_text(encoding="utf-8"))
-    existing_ids = {v["variable_id"] for v in cat_data.get("variables", [])}
-    added = 0
-    for vid, entry in BD_CATALOG_ENTRIES.items():
-        if vid not in existing_ids:
-            cat_data.setdefault("variables", []).append(entry)
-            added += 1
-    if added:
-        cat_path.write_text(json.dumps(cat_data, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"  OK {cat_path.name}: +{added} variables")
-    else:
-        print(f"  -- {cat_path.name}: ya estaban registradas")
-
-# — state_dashboard.combined.json (metric_catalog + valores 2024) —
 COMBINED_PATH = ROOT / "public" / "data" / "state_dashboard.combined.json"
 combined = json.loads(COMBINED_PATH.read_text(encoding="utf-8"))
-existing_metric_ids = {m["variable_id"] for m in combined.get("metric_catalog", [])}
-cat_added = 0
-for vid, entry in BD_CATALOG_ENTRIES.items():
-    if vid not in existing_metric_ids:
-        combined.setdefault("metric_catalog", []).append({
-            "variable_id": vid,
-            "anio": 2024,
-            "categoria_id": entry["categoria_id"],
-            "label": entry["label"],
-            "unidad": entry["unidad"],
-        })
-        cat_added += 1
 
-# Insertar valores del año 2024 en cada registro estatal
-df_2024 = df_bd[df_bd["Anio"] == 2024].set_index("state_code")
+# Insertar valores del año más reciente disponible por variable
 metrics_updated = 0
-for record in combined.get("records", []):
-    sc = record.get("state_code", "")
-    if sc not in df_2024.index:
-        continue
-    row = df_2024.loc[sc]
-    for vid, (col, *_) in BD_VARS.items():
-        val = row.get(col)
+for vid, col in bd_col_map.items():
+    last_year = int(df_bd["Anio"].max())
+    df_last = df_bd[df_bd["Anio"] == last_year].set_index("state_code")
+    for record in combined.get("records", []):
+        sc = record.get("state_code", "")
+        if sc not in df_last.index:
+            continue
+        val = df_last.loc[sc].get(col)
         if val is not None and not (isinstance(val, float) and pd.isna(val)):
             record.setdefault("metrics", {})[vid] = round(float(val), 4)
             metrics_updated += 1
 
-if cat_added or metrics_updated:
+if metrics_updated:
     from datetime import date as _date
     combined["updated_at"] = _date.today().isoformat()
     COMBINED_PATH.write_text(json.dumps(combined, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"  OK combined.json: +{cat_added} metric_catalog, {metrics_updated} valores 2024")
+    print(f"  OK combined.json: {metrics_updated} valores actualizados")
 else:
     print("  -- combined.json: sin cambios")
 

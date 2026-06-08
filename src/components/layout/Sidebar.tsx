@@ -2,6 +2,7 @@ import { useMemo, useState, useRef } from "react";
 import StateSearch from "../sidebar/StateSearch";
 import VarChipList from "../sidebar/VarChipList";
 import ComparisonGroupSelector, { GROUP_COLORS, NACIONAL_COLOR } from "../sidebar/ComparisonGroupSelector";
+import { MAX_ACTIVE_VARIABLES } from "../../context/AppContext";
 
 type VarItem = { id: string; label: string; category?: string; role?: string; hasMunicipal?: boolean; hasHistorical?: boolean };
 
@@ -197,7 +198,7 @@ export default function Sidebar({
                 </button>
               ))}
             </div>
-            <VarChipList vars={filteredVars} activeIds={activeVarIds} onToggle={onToggleVar} />
+            <VarChipList vars={filteredVars} activeIds={activeVarIds} maxActive={MAX_ACTIVE_VARIABLES} onToggle={onToggleVar} />
           </div>
         </>
       )}

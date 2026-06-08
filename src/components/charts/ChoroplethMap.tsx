@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { useAppContext } from "../../context/AppContext";
 import type { AppData } from "../../services/DataService";
+import ChartWrapper from "./ChartWrapper";
 
 const GEO_URL = "/data/estados.geojson";
 
@@ -11,6 +12,8 @@ type Props = {
   groupStateNames?: Map<string, string>; // stateName → color (border highlight)
   stateColorOverrides?: Map<string, string>; // stateName → fill color (e.g. cluster map)
   stateLabelOverrides?: Map<string, string>; // stateName → tooltip label
+  panelTitle?: string;
+  tooltip?: React.ReactNode;
 };
 
 function interpolateColor(t: number): string {
@@ -21,7 +24,17 @@ function interpolateColor(t: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-export default function ChoroplethMap({ appData, varId, groupStateNames, stateColorOverrides, stateLabelOverrides }: Props) {
+const N_STEPS = 5;
+
+function fmtLegendVal(v: number): string {
+  if (Math.abs(v) >= 1_000_000) return `${(v / 1_000_000).toFixed(1)}M`;
+  if (Math.abs(v) >= 10_000) return `${(v / 1_000).toFixed(0)}K`;
+  if (Math.abs(v) >= 1_000) return `${(v / 1_000).toFixed(1)}K`;
+  if (Number.isInteger(v) || Math.abs(v) >= 10) return v.toFixed(0);
+  return v.toFixed(1);
+}
+
+export default function ChoroplethMap({ appData, varId, groupStateNames, stateColorOverrides, stateLabelOverrides, panelTitle, tooltip: infoTooltip }: Props) {
   const { state: appState, dispatch } = useAppContext();
   const { primaryState } = appState;
   const { dataset } = appData;
@@ -74,16 +87,29 @@ export default function ChoroplethMap({ appData, varId, groupStateNames, stateCo
   }
 
   function getRelativePos(e: any) {
-    const rect = containerRef.current?.getBoundingClientRect() ?? { left: 0, top: 0 };
+    const node = containerRef.current;
+    const container: HTMLElement | null =
+      node && document.contains(node)
+        ? node
+        : (e.target as Element).closest(".choropleth-container");
+    const rect = container?.getBoundingClientRect() ?? { left: 0, top: 0 };
     return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
 
   return (
-    <div ref={containerRef} style={{ position: "relative" }}>
+    <ChartWrapper
+      title={metricDef?.label ?? varId ?? "Mapa"}
+      variableName={metricDef?.label ?? varId}
+      chartType="Mapa coroplético"
+      description="Muestra la distribución geográfica de la variable seleccionada entre los estados del país."
+      panelTitle={panelTitle}
+      tooltip={infoTooltip}
+    >
+    <div ref={containerRef} style={{ position: "relative" }} className="choropleth-container">
 
       <ComposableMap
         projection="geoMercator"
-        projectionConfig={{ center: [-102, 24], scale: 1600 }}
+        projectionConfig={{ center: [-102, 24], scale: 1500 }}
         style={{ width: "100%", height: 420 }}
       >
         <defs>
@@ -209,19 +235,38 @@ export default function ChoroplethMap({ appData, varId, groupStateNames, stateCo
         );
       })()}
 
-      {!stateColorOverrides && (
-        <div className="legend-map" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, justifyContent: "center" }}>
-          <span style={{ fontSize: 11, color: "var(--text-3)" }}>Menor</span>
-          <div style={{
-            width: 140, height: 10, borderRadius: 5,
-            background: "linear-gradient(to right, rgb(210,220,235), rgb(60,120,225))",
-          }} />
-          <span style={{ fontSize: 11, color: "var(--text-3)" }}>Mayor</span>
-        </div>
-      )}
+      {!stateColorOverrides && minVal !== maxVal && (() => {
+        const range = maxVal - minVal;
+        const steps = Array.from({ length: N_STEPS }, (_, i) => ({
+          color: interpolateColor((i + 0.5) / N_STEPS),
+          lo: minVal + (i / N_STEPS) * range,
+          hi: minVal + ((i + 1) / N_STEPS) * range,
+        }));
+        return (
+          <div style={{ marginTop: 10, padding: "0 4px" }}>
+            <p style={{ fontSize: 10.5, color: "var(--text-3)", margin: "0 0 5px", fontWeight: 500 }}>
+              {metricDef?.label ?? varId}
+            </p>
+            <div style={{ display: "flex", gap: 2 }}>
+              {steps.map((s, i) => (
+                <div key={i} style={{ flex: 1, textAlign: "center" }}>
+                  <div style={{
+                    height: 12, background: s.color,
+                    borderRadius: i === 0 ? "3px 0 0 3px" : i === N_STEPS - 1 ? "0 3px 3px 0" : 0,
+                  }} />
+                  <span style={{ fontSize: 9.5, color: "var(--text-3)", display: "block", marginTop: 3, whiteSpace: "nowrap" }}>
+                    {fmtLegendVal(s.lo)}{i < N_STEPS - 1 ? "" : `–${fmtLegendVal(s.hi)}`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
 
       <p style={{ textAlign: "center", fontSize: 11, color: "var(--text-3)", margin: "4px 0 0" }}>
       </p>
     </div>
+    </ChartWrapper>
   );
 }

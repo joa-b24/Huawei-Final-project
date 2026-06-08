@@ -7,17 +7,17 @@
   ],
   "metadata": {
     "hogares_con_internet_pct": {
-      "label": "Hogares con acceso a internet",
+      "label": "Hogares con internet",
       "unit": "%",
       "source": "INEGI ENDUTIH 2015-2024"
     },
     "uso_internet_educacion_pct": {
-      "label": "Uso de internet para educación",
+      "label": "Internet: educación",
       "unit": "%",
       "source": "INEGI ENDUTIH 2015-2024"
     },
     "uso_internet_gobierno_pct": {
-      "label": "Uso de internet para trámites gubernamentales",
+      "label": "Internet: gobierno",
       "unit": "%",
       "source": "INEGI ENDUTIH 2015-2024"
     }

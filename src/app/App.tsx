@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Database, Download, HelpCircle, Layers } from "lucide-react";
+import { Database, HelpCircle, Layers, Printer, X } from "lucide-react";
 import { AppProvider, actions, useAppContext, type TabId } from "../context/AppContext";
 import { loadAppData, type AppData } from "../services/DataService";
 import { loadHiddenIds, syncNoDataAutoHidden } from "../lib/dataStorage";
@@ -52,12 +52,14 @@ function buildTabs(appData: AppData, activeVarIds: string[]): Tab[] {
   ];
 }
 
-function Dashboard({ appData }: { appData: AppData }) {
+function Dashboard({ appData, onRefreshData }: { appData: AppData; onRefreshData: () => void }) {
   const { state, dispatch } = useAppContext();
   const [datosOpen, setDatosOpen] = useState(false);
   const [estructuraOpen, setEstructuraOpen] = useState(false);
   const [catalogVersion, setCatalogVersion] = useState(0);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [reporteModalOpen, setReporteModalOpen] = useState(false);
+  const [analystNotes, setAnalystNotes] = useState("");
 
   const hasPca = appData.pcaResults !== null;
   const tabs = useMemo(() => buildTabs(appData, state.activeVariableIds), [appData, state.activeVariableIds]);
@@ -69,30 +71,12 @@ function Dashboard({ appData }: { appData: AppData }) {
     }
   }, [dispatch, state.activeTab, tabs]);
 
-  function exportSnapshot() {
-    const styles = Array.from(document.styleSheets)
-      .map((sheet) => {
-        try {
-          return Array.from(sheet.cssRules).map((r) => r.cssText).join("\n");
-        } catch { return ""; }
-      }).join("\n");
-    const content = document.querySelector(".layout-shell")?.outerHTML ?? document.body.innerHTML;
-    const date = new Date().toISOString().slice(0, 10);
-    const html = `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Dashboard Snapshot ${date}</title>
-<style>${styles}</style>
-<style>button,select,input{pointer-events:none!important;cursor:default!important}.sidebar-toggle{display:none}</style>
-</head>
-<body>${content}</body>
-</html>`;
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));
-    a.download = `dashboard-snapshot-${date}.html`;
-    a.click();
-    URL.revokeObjectURL(a.href);
+  const today = new Date().toISOString().slice(0, 10);
+
+  function handlePrint() {
+    setReporteModalOpen(false);
+    // Allow DOM to update with notes before printing
+    setTimeout(() => window.print(), 120);
   }
 
   const allStateNames = useMemo(
@@ -150,6 +134,28 @@ function Dashboard({ appData }: { appData: AppData }) {
 
   return (
     <AppShell>
+      {/* ── Print-only header ──────────────────────────────────────────────── */}
+      <div className="print-header">
+        <div className="print-header__orgs">
+          <span className="print-header__org">Tecnológico de Monterrey</span>
+          <span className="print-header__sep" aria-hidden>·</span>
+          <span className="print-header__org">Huawei</span>
+        </div>
+        <h1 className="print-header__title">Paquete de Diagnóstico Territorial</h1>
+        <div className="print-header__meta">
+          <span>Estado analizado: <strong>{state.primaryState ?? "—"}</strong></span>
+          <span>Fecha de generación: <strong>{today}</strong></span>
+          <span>Variables activas: <strong>{state.activeVariableIds.length}</strong></span>
+        </div>
+        {analystNotes.trim() && (
+          <div className="print-header__notes">
+            <p className="print-header__notes-label">Notas del Analista</p>
+            <p className="print-header__notes-text">{analystNotes}</p>
+          </div>
+        )}
+        <hr className="print-header__rule" />
+      </div>
+
       <Sidebar
         states={allStateNames}
         primaryState={state.primaryState}
@@ -197,11 +203,11 @@ function Dashboard({ appData }: { appData: AppData }) {
             </button>
             <button
               className="btn-datos btn-datos--icon"
-              onClick={exportSnapshot}
+              onClick={() => setReporteModalOpen(true)}
               type="button"
-              title="Exportar snapshot HTML"
+              title="Reporte ejecutivo / Imprimir"
             >
-              <Download size={14} />
+              <Printer size={14} />
             </button>
             <button
               className="btn-datos btn-datos--icon"
@@ -214,7 +220,7 @@ function Dashboard({ appData }: { appData: AppData }) {
           </div>
         </div>
         {datosOpen ? (
-          <DatosTab appData={appData} onCatalogChange={() => setCatalogVersion((v) => v + 1)} />
+          <DatosTab appData={appData} onCatalogChange={() => { setCatalogVersion((v) => v + 1); onRefreshData(); }} />
         ) : estructuraOpen ? (
           <EstructuraTab appData={appData} />
         ) : (
@@ -240,6 +246,68 @@ function Dashboard({ appData }: { appData: AppData }) {
           currentContext={datosOpen ? "datos" : estructuraOpen ? "estructura" : state.activeTab}
         />
       )}
+
+      {/* ── Reporte modal (notas del analista) ─────────────────────────────── */}
+      {reporteModalOpen && (
+        <div className="help-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setReporteModalOpen(false); }}>
+          <div className="help-modal reporte-modal">
+            <div className="help-modal__header">
+              <div>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-1)" }}>Reporte Ejecutivo</h2>
+                <p style={{ fontSize: 12, color: "var(--text-3)", marginTop: 2 }}>
+                  Agrega notas opcionales del analista antes de imprimir.
+                </p>
+              </div>
+              <button className="help-modal__close" onClick={() => setReporteModalOpen(false)} type="button">
+                <X size={16} />
+              </button>
+            </div>
+
+            <div style={{ marginBottom: 16 }}>
+              <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-2)", marginBottom: 6 }}>
+                Notas del Analista <span style={{ fontWeight: 400, color: "var(--text-3)" }}>(opcional)</span>
+              </p>
+              <textarea
+                className="reporte-notes-input"
+                rows={5}
+                placeholder="Contexto, observaciones o recomendaciones que aparecerán en el encabezado del reporte impreso…"
+                value={analystNotes}
+                onChange={(e) => setAnalystNotes(e.target.value)}
+              />
+            </div>
+
+            <div style={{ background: "var(--bg)", border: "1px solid var(--border)", borderRadius: 8, padding: "10px 14px", marginBottom: 16 }}>
+              <p style={{ fontSize: 12, color: "var(--text-3)", lineHeight: 1.6 }}>
+                El reporte imprimirá el estado de la vista actual: <strong>{state.primaryState ?? "—"}</strong> · {today}.
+                El sidebar, botones de navegación y controles interactivos se ocultarán automáticamente.
+                Los diagramas se ajustarán para evitar cortes de página.
+              </p>
+            </div>
+
+            <div className="wizard-nav">
+              <button className="btn-ghost" type="button" onClick={() => setReporteModalOpen(false)}>Cancelar</button>
+              <button className="btn-primary" type="button" onClick={handlePrint}>
+                <Printer size={13} style={{ marginRight: 6 }} /> Imprimir / Guardar PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Print-only footer (notas metodológicas) ─────────────────────────── */}
+      <div className="print-footer">
+        <hr className="print-footer__rule" />
+        <h3 className="print-footer__title">Notas Metodológicas</h3>
+        <ul className="print-footer__list">
+          <li><strong>Conectividad:</strong> INEGI ENDUTIH 2024 + IFT Cobertura Móvil 2024. Indicadores de uso y acceso a internet por entidad federativa.</li>
+          <li><strong>Bienestar social:</strong> CONEVAL 2022. Índices de pobreza, carencias y rezago educativo.</li>
+          <li><strong>Economía y demografía:</strong> INEGI ITER 2020; PIB estatal 2022–2024 (INEGI).</li>
+          <li><strong>Coeficiente de Gini:</strong> calculado sobre la distribución municipal normalizada [0–1] de cada indicador en los estados con datos municipales disponibles.</li>
+          <li><strong>Correlaciones de Spearman:</strong> coeficiente de rango entre pares de indicadores estatales; umbral de significancia p &lt; 0.05.</li>
+          <li><strong>Análisis PCA:</strong> componentes principales (varianza explicada ≥ 70 %) sobre variables con cobertura estatal completa; clústeres por K-Means sobre los primeros 2 componentes.</li>
+        </ul>
+        <p className="print-footer__stamp">© 2026 Tecnológico de Monterrey · Generado: {today}</p>
+      </div>
     </AppShell>
   );
 }
@@ -248,15 +316,17 @@ export default function App() {
   const [appData, setAppData] = useState<AppData | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadAppData()
+  function doLoad() {
+    return loadAppData()
       .then((data) => {
         const idsWithData = new Set(data.dataset.metricCatalog.map((m) => m.id));
         syncNoDataAutoHidden(idsWithData, data.variablesCatalog.map((v) => v.variable_id));
         setAppData(data);
       })
       .catch((err) => setLoadError(String(err)));
-  }, []);
+  }
+
+  useEffect(() => { doLoad(); }, []);
 
   if (loadError) {
     return <div className="app-shell loading">Error al cargar datos: {loadError}</div>;
@@ -268,7 +338,7 @@ export default function App() {
 
   return (
     <AppProvider>
-      <Dashboard appData={appData} />
+      <Dashboard appData={appData} onRefreshData={doLoad} />
     </AppProvider>
   );
 }
