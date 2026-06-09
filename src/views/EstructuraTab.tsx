@@ -143,7 +143,7 @@ function PcaScatterChart({
             value: `PC2 (${(varExplained[1] * 100).toFixed(1)} %)`,
             angle: -90,
             position: "insideLeft",
-            offset: 12,
+            offset: 4,
             fontSize: 11,
             fill: "var(--text-3)",
           }}
@@ -485,10 +485,28 @@ function PeersSection({
 
   return (
     <ChartWrapper
-      panelTitle="Mismo grupo estructural"
+      panelTitle="Grupo estructural"
       title={groupLabel}
       description={`${peers.length} estado${peers.length !== 1 ? "s" : ""} · media del grupo: ${clusterStat?.mean_index.toFixed(1) ?? "—"}`}
       standalone
+      tooltip={
+        <InfoTooltip wide text={
+          <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+            <p style={{ fontWeight: 700, margin: "0 0 6px", color: "var(--text-1)", fontSize: 13 }}>
+              Desempeño Interno del Cluster
+            </p>
+            <p style={{ margin: "0 0 8px" }}>
+              Muestra la jerarquía de las entidades que integran el grupo seleccionado según el <em>análisis activo</em>. La columna de rendimiento evalúa la posición de cada estado frente al índice compuesto.
+            </p>
+            <p style={{ margin: "0 0 4px" }}>
+              • <strong>Índice:</strong> Puntuación estandarizada del estado en una escala relativa.
+            </p>
+            <p style={{ margin: "0 0 8px" }}>
+              • <strong>VS Media Nacional:</strong> La brecha en puntos porcentuales respecto al promedio de todo el país. Los valores en <strong style={{ color: "var(--green)" }}>verde</strong> indican mejor desempeño. Mientras que los valores en <strong style={{ color: "var(--red)" }}>rojo</strong> muestran rezago frente al promedio nacional.
+            </p>
+          </div>
+        } />
+      }
     >
       <table className="ranking-table" style={{ marginTop: 4, width: "100%" }}>
         <thead>
@@ -659,60 +677,30 @@ export default function EstructuraTab({ appData }: Props) {
     <div className="tab-content">
       {/* ── Selector de análisis ── */}
       {manifest && manifest.analyses.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            padding: "10px 16px",
-            background: "var(--surface)",
-            border: "1px solid var(--border)",
-            borderRadius: 10,
-            marginBottom: 16,
-            flexWrap: "wrap",
-          }}
-        >
-          <span style={{ fontSize: 13, color: "var(--text-2)", fontWeight: 600, flexShrink: 0 }}>
-            Análisis activo:
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-3)", flexShrink: 0 }}>
+            Análisis activo
           </span>
           <select
             value={manifest.active}
             onChange={(e) => switchAnalysis(e.target.value)}
             disabled={loadingPca}
-            style={{
-              flex: 1,
-              minWidth: 200,
-              padding: "6px 10px",
-              border: "1px solid var(--border)",
-              borderRadius: 6,
-              fontSize: 13,
-              background: "var(--surface)",
-              color: "var(--text-1)",
-              cursor: "pointer",
-            }}
+            className="comparison-select comparison-select--sm"
+            style={{ flex: 1, minWidth: 200, maxWidth: 420 }}
           >
             {manifest.analyses.map((a) => (
               <option key={a.id} value={a.id}>{a.name}</option>
             ))}
           </select>
           {loadingPca && (
-            <span style={{ fontSize: 12, color: "var(--text-3)" }}>Cargando…</span>
+            <span style={{ fontSize: 11, color: "var(--text-3)" }}>Cargando…</span>
           )}
           {import.meta.env.DEV && (
             <button
               type="button"
               onClick={() => setShowWizard(true)}
-              style={{
-                padding: "6px 14px",
-                background: "var(--blue)",
-                color: "#fff",
-                border: "none",
-                borderRadius: 6,
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer",
-                flexShrink: 0,
-              }}
+              className="btn-ghost"
+              style={{ fontSize: 12, padding: "5px 12px" }}
             >
               + Nuevo análisis
             </button>
@@ -776,20 +764,32 @@ export default function EstructuraTab({ appData }: Props) {
 
           {/* ── Mapa | Estados del mismo cluster (70 / 30) ── */}
           <div style={{ display: "grid", gridTemplateColumns: "7fr 3fr", gap: 16, alignItems: "start" }}>
-            <ChartWrapper
-              panelTitle="Grupos estructurales"
+            <ChoroplethMap
+              appData={appData}
+              varId=""
+              stateColorOverrides={clusterColorOverrides}
+              stateLabelOverrides={clusterLabelOverrides}
+              panelTitle="Mapa de grupos"
               title="Distribución geográfica por grupo"
               description="Cada estado coloreado según su grupo k-means. Clic en un estado para seleccionarlo."
               legend={clusterLegend.map((c) => ({ color: c.color, label: c.label }))}
               standalone
-            >
-              <ChoroplethMap
-                appData={appData}
-                varId=""
-                stateColorOverrides={clusterColorOverrides}
-                stateLabelOverrides={clusterLabelOverrides}
-              />
-            </ChartWrapper>
+              tooltip={
+                <InfoTooltip wide text={
+                  <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
+                    <p style={{ fontWeight: 700, margin: "0 0 6px", color: "var(--text-1)", fontSize: 13 }}>
+                      Análisis de Conglomerados (Clustering)
+                    </p>
+                    <p style={{ margin: "0 0 8px" }}>
+                      Los estados se agrupan mediante el algoritmo estadístico <strong>K-Means</strong> basado en el <em>análisis activo</em>. Este método identifica entidades con características similares, con base en las variables seleccionadas para el análisis (puedes revisar la nota metodológica en la narrativa) para segmentar el país sin sesgos intuitivos.
+                    </p>
+                    <p style={{ margin: 0, fontSize: 11, color: "var(--text-3)" }}>
+                      <strong>Utilidad:</strong> Permite diseñar políticas públicas regionales o estrategias de mercado diferenciadas, reconociendo que estados de distintas geografías pueden compartir los mismos retos estructurales.
+                    </p>
+                  </div>
+                } />
+              }
+            />
 
             {primaryRecord ? (
               <PeersSection primaryRecord={primaryRecord} pcaResults={pcaResults} />
@@ -822,7 +822,7 @@ export default function EstructuraTab({ appData }: Props) {
           />
 
           {/* ── Cargas PC1 | Posición estructural (50 / 50) ── */}
-          <div className="two-col" style={{ alignItems: "start" }}>
+          <div className="two-col" style={{ alignItems: "stretch" }}>
             <LoadingsPanel pcaResults={pcaResults} varCatalog={varCatalog} />
 
             <ChartWrapper
@@ -839,7 +839,7 @@ export default function EstructuraTab({ appData }: Props) {
                     </p>
                     <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Grupos y atípicos</p>
                     <p style={{ margin: 0 }}>
-                      El <strong>color</strong> indica el grupo k-means. El <strong>punto azul</strong> es el estado seleccionado.
+                      El <strong>color</strong> indica el grupo k-means. El <strong style={{ color: "#2563eb" }}>punto azul</strong> es el estado seleccionado.
                     </p>
                   </div>
                 } />

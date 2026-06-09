@@ -1,5 +1,4 @@
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { formatPValue } from "../../lib/format";
 import EmptyState from "../EmptyState";
 
 export type CorrelationRow = {
@@ -55,7 +54,7 @@ export default function CorrelationBarChart({ rows, significanceThreshold = 0.05
   }
 
   return (
-    <ResponsiveContainer width="100%" height={chartHeight ?? Math.max(360, data.length * 38)}>
+    <ResponsiveContainer width="100%" height={chartHeight ?? Math.max(400, data.length * 44)}>
       <BarChart
         data={data}
         layout="vertical"
@@ -104,9 +103,32 @@ export default function CorrelationBarChart({ rows, significanceThreshold = 0.05
           width={200}
         />
         <Tooltip
-          formatter={(r: number, _: string, props: any) => {
-            const sig = props.payload.pValue !== undefined ? ` (${formatPValue(props.payload.pValue)})` : "";
-            return [`r = ${r.toFixed(2)}${sig}`, "Correlación"];
+          content={({ payload }) => {
+            if (!payload?.length) return null;
+            const d = payload[0].payload;
+            const abs = Math.abs(d.r);
+            const strength = abs >= 0.7 ? "Fuerte" : abs >= 0.4 ? "Moderada" : abs >= 0.2 ? "Débil" : "Muy débil";
+            const dir = d.r >= 0 ? "positiva" : "negativa";
+            const pv = d.pValue;
+            const sigText = pv === undefined ? null
+              : pv < 0.001 ? "p < 0.001 ***"
+              : pv < 0.01  ? `p = ${pv.toFixed(3)} **`
+              : pv < 0.05  ? `p = ${pv.toFixed(3)} *`
+              : `p = ${pv.toFixed(3)} ns`;
+            return (
+              <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "8px 12px", fontSize: 12, maxWidth: 230, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+                <strong style={{ display: "block", marginBottom: 5, color: "var(--text-1)", lineHeight: 1.3 }}>{d.label}</strong>
+                <div style={{ fontWeight: 700, fontSize: 13, color: d.r >= 0 ? "var(--green)" : "var(--red)" }}>
+                  r = {d.r.toFixed(3)}
+                </div>
+                <div style={{ color: "var(--text-2)", marginTop: 2 }}>{strength} · {dir}</div>
+                {sigText && (
+                  <div style={{ color: d.significant ? "var(--text-3)" : "var(--text-3)", fontSize: 11, marginTop: 4, fontStyle: d.significant ? "normal" : "italic" }}>
+                    {sigText}
+                  </div>
+                )}
+              </div>
+            );
           }}
         />
         <Bar

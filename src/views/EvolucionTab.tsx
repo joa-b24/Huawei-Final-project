@@ -140,7 +140,7 @@ function KpiStrip({
     varUnit === "%" ? `${v.toFixed(1)}%` : v.toLocaleString("es-MX", { maximumFractionDigits: 1 });
 
   return (
-    <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+    <div style={{ display: "flex", gap: 10, marginBottom: 16, flexDirection: "row", flex: "0 0 auto" }}>
       <KpiCard
         label={`Último valor (${lastYear})`}
         value={fmt(lastValue)}
@@ -478,20 +478,14 @@ function SlopePanel({
 
   const maxAbs = Math.max(...slopes.map((s) => Math.abs(s.slope)));
 
-  const slopeDownloadData = useMemo(
-    () => slopes.map((s) => ({ Estado: s.state, "Pendiente (pp/año)": s.slope })),
-    [slopes]
-  );
-
   return (
     <ChartWrapper
       standalone
       panelTitle="Velocidad de cambio"
-      title={`Velocidad de cambio: ${varLabel}`}
+      title={`${varLabel}`}
       description={`Pendiente OLS · pp/año — Estados con mayor pendiente positiva han crecido más rápido.`}
       chartType="Barras horizontales"
       tooltip={<InfoTooltip wide text={SLOPE_TOOLTIP} />}
-      downloadTableData={slopeDownloadData}
     >
       <div style={{ maxHeight: 400, overflowY: "auto", paddingRight: 4 }}>
         {slopes.map(({ state, slope }) => {
@@ -811,6 +805,7 @@ export default function EvolucionTab({ appData }: Props) {
         }
         legend={tsLegend}
         downloadTableData={tsDownloadData}
+        tableLayout="below"
       >
         {/* KPI strip */}
         {primaryTrend && primaryForecast && delta !== null && (

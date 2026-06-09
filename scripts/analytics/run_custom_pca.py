@@ -97,21 +97,35 @@ def mahalanobis_outliers(scores: np.ndarray, index: pd.Index, threshold: float =
     return flag
 
 
-def best_k(X: np.ndarray, k_range=range(2, 7)) -> int:
-    best_sil, best_k = -1.0, 2
+def best_k(X: np.ndarray, k_range=range(3, 8)) -> int:
+    best_sil, best_k = -1.0, 3
     for k in k_range:
         if k >= len(X):
             break
         labels = KMeans(n_clusters=k, random_state=42, n_init=10).fit_predict(X)
-        sil    = silhouette_score(X, labels)
+        sil = silhouette_score(X, labels)
         if sil > best_sil:
             best_sil, best_k = sil, k
     return best_k
 
 
-def label_cluster(cluster_id: int, n: int, mean_idx: float) -> str:
-    tier = "Alto" if mean_idx >= 65 else "Medio-alto" if mean_idx >= 50 else "Medio" if mean_idx >= 35 else "Bajo"
-    return f"{tier} ({cluster_id + 1})"
+def label_cluster(rank_position: int, n: int) -> str:
+    """
+    Genera un nombramiento semántico estructurado como 'Cluster X: Descripción'
+    basado en la posición ordenada del cluster (0 = el más alto, n-1 = el más bajo).
+    """
+    labels_map = {
+        3: ["Alto", "Medio", "Bajo"],
+        4: ["Muy Alto", "Alto", "Medio-Bajo", "Bajo"],
+        5: ["Muy Alto", "Alto", "Medio", "Medio-Bajo", "Bajo"],
+        6: ["Muy Alto", "Alto", "Medio-Alto", "Medio-Bajo", "Bajo", "Muy Bajo"],
+        7: ["Avanzado", "Muy Alto", "Alto", "Medio", "Medio-Bajo", "Bajo", "Rezago Crítico"],
+    }
+    
+    current_labels = labels_map.get(n, ["Nivel " + str(i+1) for i in range(n)])
+    
+    tier_description = current_labels[rank_position]
+    return f"Cluster {rank_position + 1}: {tier_description}"
 
 
 # ── Carga de datos ─────────────────────────────────────────────────────────────
@@ -194,11 +208,15 @@ def run(config: dict) -> None:
     index_vals = ((pc1_raw - mn) / (mx - mn) * 100).tolist() if mx > mn else [50.0] * len(states)
 
     # 7. Clustering
-    n_k = n_clusters_cfg if n_clusters_cfg >= 2 else best_k(scores)
+    if n_clusters_cfg == 0:
+        n_k = best_k(scores)
+    else:
+        n_k = max(3, min(n_clusters_cfg, 7)) # Acota cualquier locura del JSON a [3, 8]
+        
     n_k = min(n_k, len(states) - 1)
-    km  = KMeans(n_clusters=n_k, random_state=42, n_init=10)
+    km = KMeans(n_clusters=n_k, random_state=42, n_init=10)
     labels = km.fit_predict(scores).tolist()
-    print(f"  Clusters: {n_k}")
+    print(f"   Clusters determinados: {n_k}")
 
     # 8. Outliers
     outlier_flags = mahalanobis_outliers(scores, pd.Index(states))
@@ -208,15 +226,29 @@ def run(config: dict) -> None:
     rankings   = {s: r + 1 for r, s in enumerate(idx_series.index)}
 
     # 10. Estadísticas por cluster
-    cluster_stats: dict[str, dict] = {}
+    raw_cluster_data = []
     for k in range(n_k):
         members = [s for s, c in zip(states, labels) if c == k]
-        mean_idx = float(np.mean([index_vals[states.index(s)] for s in members]))
-        cluster_stats[str(k)] = {
-            "label": label_cluster(k, n_k, mean_idx),
-            "states": members,
-            "mean_index": round(mean_idx, 2),
+        mean_idx = float(np.mean([index_vals[states.index(s)] for s in members])) if members else 0.0
+        raw_cluster_data.append({"original_id": k, "mean_index": mean_idx, "states": members})
+        
+    # Ordenamos de mayor a menor score promedio
+    raw_cluster_data.sort(key=lambda x: x["mean_index"], reverse=True)
+    
+    # Construimos el diccionario final asignando las etiquetas estructuradas
+    cluster_stats: dict[str, dict] = {}
+    mapping_old_to_new_label = {} # Auxiliar para actualizar los records individuales de los estados
+    
+    for rank_idx, cdata in enumerate(raw_cluster_data):
+        orig_id = cdata["original_id"]
+        lbl = label_cluster(rank_idx, n_k)
+        
+        cluster_stats[str(orig_id)] = {
+            "label": lbl,
+            "states": cdata["states"],
+            "mean_index": round(cdata["mean_index"], 2),
         }
+        mapping_old_to_new_label[orig_id] = lbl
 
     # 11. Records
     records = []
