@@ -201,7 +201,7 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
       </div>
 
       <TabNarrative
-        title={`Análisis territorial - ${selectedVar.label}`}
+        title={`Análisis territorial: ${selectedVar.label}`}
         description={`Desigualdad intraestatal de ${selectedVar.label.toLowerCase()} entre municipios de ${primaryState ?? "este estado"}.`}
       >
         <TerritorialNarrative
@@ -220,13 +220,14 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
       <div className="two-col territorial-chart-grid">
         {/* Left: Gini + extremos */}
         <LorenzCurveChart
-            title={`Desigualdad territorial - ${selectedVar.label}${lorenzInput.shifted ? " (desplazados ≥0)" : ""}`}
+            title={`Desigualdad territorial: ${selectedVar.label}${lorenzInput.shifted ? " (desplazados ≥0)" : ""}`}
             description={`Distribución de ${selectedVar.label.toLowerCase()} ponderada por ${
               selectedVar.weight === "localidades_n" ? "número de localidades" : "población"
             }.`}
             points={lorenz}
             gini={giniClient}
             nationalGini={nationalGiniRef}
+            aggregationLabel={selectedVar.weight === "localidades_n" ? "localidades" : "población"}
             tooltip={
               <InfoTooltip text={
                 <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
@@ -250,17 +251,19 @@ export default function StateTerritorialAnalysis({ stateAnalytics, municipios, a
             municipios={municipiosEstado}
             fixedYKey={selectedVar.key as ScatterMetricKey}
             allowedMetricKeys={scatterAllowedKeys}
+            weightKey={selectedVar.weight as "pobtot_iter" | "localidades_n"}
         />
       </div>
 
       <div className="two-col" style={{ alignItems: "stretch" }}>
         <section className="panel">
-          <p className="panel-title">Extremos municipales — {selectedVar.label}</p>
+          <p className="panel-title">Extremos municipales</p>
           <ExtremeMunicipioCards
             municipios={municipiosEstado}
             varKey={selectedVar.key}
             varLabel={selectedVar.label}
             varUnit={selectedVar.unit}
+            weightKey={selectedVar.weight as "pobtot_iter" | "localidades_n"}
           />
         </section>
 
@@ -295,22 +298,25 @@ function ExtremeMunicipioCards({
   varKey,
   varLabel,
   varUnit,
+  weightKey = "pobtot_iter",
 }: {
   municipios: MunicipioAnalyticsRecord[];
   varKey: string;
   varLabel: string;
   varUnit: string;
+  weightKey?: "pobtot_iter" | "localidades_n";
 }) {
   const sorted = useMemo(() => {
     return municipios
       .map((m) => {
         const v = (m as Record<string, unknown>)[varKey];
         const value = typeof v === "number" && isFinite(v) ? v : null;
-        return { name: m.nom_mun, value, pop: m.pobtot_iter };
+        const weight = weightKey === "localidades_n" ? (m.localidades_n ?? null) : m.pobtot_iter;
+        return { name: m.nom_mun, value, weight };
       })
-      .filter((m): m is { name: string; value: number; pop: number } => m.value !== null)
+      .filter((m): m is { name: string; value: number; weight: number | null } => m.value !== null)
       .sort((a, b) => b.value - a.value);
-  }, [municipios, varKey]);
+  }, [municipios, varKey, weightKey]);
 
   const k = Math.min(3, sorted.length);
   if (k === 0) {
@@ -330,8 +336,10 @@ function ExtremeMunicipioCards({
       ? `${v.toFixed(1)} Mbps`
       : v.toLocaleString("es-MX", { maximumFractionDigits: 1 });
 
+  const weightLabel = weightKey === "localidades_n" ? "loc." : "hab.";
+
   const renderCards = (
-    items: { name: string; value: number; pop: number }[],
+    items: { name: string; value: number; weight: number | null }[],
     isTop: boolean,
     startRank: number
   ) => {
@@ -377,9 +385,11 @@ function ExtremeMunicipioCards({
             <p style={{ fontSize: 16, fontWeight: 700, color: valueColor, margin: "0 0 2px" }}>
               {fmt(m.value)}
             </p>
-            <p style={{ fontSize: 10, color: "var(--text-3)", margin: 0 }}>
-              {m.pop.toLocaleString("es-MX")} hab.
-            </p>
+            {m.weight != null && (
+              <p style={{ fontSize: 10, color: "var(--text-3)", margin: 0 }}>
+                {m.weight.toLocaleString("es-MX")} {weightLabel}
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -454,7 +464,7 @@ function giniInterpretLevel(g: number): { label: string; message: string } {
   if (g < 0.1)
     return {
       label: "muy baja",
-      message: `La variable está distribuida de forma bastante uniforme entre los municipios - no hay concentración notable.`,
+      message: `La variable está distribuida de forma bastante uniforme entre los municipios; no hay concentración notable.`,
     };
   if (g < 0.25)
     return {

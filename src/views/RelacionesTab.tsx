@@ -128,10 +128,21 @@ export default function RelacionesTab({ appData }: Props) {
     });
   }, [activeVariableIds, dataset.metricCatalog, appData.variablesCatalog]);
 
+  const groupLegend = useMemo(() => {
+    if (!nonNacionalGroups.length) return undefined;
+    return nonNacionalGroups.map((g) => {
+      let label: string;
+      if (g.startsWith("r:")) label = g.slice(2);
+      else if (g.startsWith("c:")) label = appData.pcaResults?.cluster_stats[g.slice(2)]?.label ?? `Cluster ${g.slice(2)}`;
+      else label = g;
+      return { label, color: groupColorMap.get(g) ?? "#6b7280" };
+    });
+  }, [nonNacionalGroups, groupColorMap, appData.pcaResults]);
+
   const hasCorrData = correlations.pearson.variables.length > 0;
 
   const fsChartH = corrFullscreen
-    ? Math.max(380, Math.floor((window.innerHeight - 360) / 2))
+    ? Math.max(480, Math.floor(window.innerHeight - 400))
     : undefined;
 
   async function handleCorrDownload() {
@@ -140,8 +151,8 @@ export default function RelacionesTab({ appData }: Props) {
     if (!barEl || !scatterEl) return;
     function slug(s: string) { return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 30); }
     const [barUrl, scatterUrl] = await Promise.all([
-      captureElementToPng(barEl, `Correlaciones con ${yLabel}`),
-      captureElementToPng(scatterEl, `${xLabel} vs ${yLabel}`),
+      captureElementToPng(barEl),
+      captureElementToPng(scatterEl),
     ]);
     const zipBytes = createZip([
       { name: `correlaciones-${slug(yLabel)}.png`, data: dataUrlToBytes(barUrl) },
@@ -176,8 +187,8 @@ export default function RelacionesTab({ appData }: Props) {
           <ChartWrapper
             standalone
             panelTitle="Correlación"
-            title="Correlación univariada"
-            description={`Coeficientes de Pearson de ${yLabel} con las demás variables activas. El botón de descarga exporta las 2 gráficas en un archivo ZIP.`}
+            title={`Impacto de ${yLabel}`}
+            description={`Coeficientes de Pearson. El botón de descarga exporta las 2 gráficas en un archivo ZIP.`}
             chartType="Correlación"
             onDownload={handleCorrDownload}
             onFullscreenChange={setCorrFullscreen}
@@ -216,7 +227,7 @@ export default function RelacionesTab({ appData }: Props) {
             }
           >
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8}}>
                 <span style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-3)" }}>
                   Variable objetivo
                 </span>
@@ -263,6 +274,7 @@ export default function RelacionesTab({ appData }: Props) {
                     xUnit={xUnit}
                     yUnit={yUnit}
                     groupStateColors={nonNacionalGroups.length > 0 ? groupStateColors : undefined}
+                    groupLegend={groupLegend}
                     chartHeight={fsChartH}
                   />
                 </div>
@@ -273,7 +285,7 @@ export default function RelacionesTab({ appData }: Props) {
           <ChartWrapper
             standalone
             panelTitle="Regresión OLS"
-            title="Regresión multivariada (OLS estandarizado)"
+            title="Coeficientes β y ajuste del modelo"
             description="Modelo OLS múltiple calculado en cliente sobre los 32 estados. Coeficientes β estandarizados con intervalos de confianza al 95%. La descarga exporta coeficientes PNG, tabla CSV y ajuste del modelo PNG en un ZIP."
             chartType="Regresión OLS"
             onDownload={regDownloadFn ?? undefined}

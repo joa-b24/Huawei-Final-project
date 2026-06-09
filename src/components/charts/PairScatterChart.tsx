@@ -22,6 +22,7 @@ type Props = {
   xUnit?: string;
   yUnit?: string;
   groupStateColors?: Map<string, string>;
+  groupLegend?: { label: string; color: string }[];
   chartHeight?: number;
 };
 
@@ -87,7 +88,7 @@ const CustomDot = (props: any) => {
   );
 };
 
-export default function PairScatterChart({ data, xLabel, yLabel, highlightState, xUnit = "", yUnit = "", groupStateColors, chartHeight = 300 }: Props) {
+export default function PairScatterChart({ data, xLabel, yLabel, highlightState, xUnit = "", yUnit = "", groupStateColors, groupLegend, chartHeight = 320 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panX, setPanX] = useState(0);
@@ -224,6 +225,20 @@ export default function PairScatterChart({ data, xLabel, yLabel, highlightState,
           )}
         </div>
       </div>
+      {groupLegend && groupLegend.length > 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "4px 0 8px" }}>
+          {groupLegend.map(({ label, color }) => (
+            <div key={label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11 }}>
+              <span style={{ width: 9, height: 9, borderRadius: "50%", background: color, display: "inline-block", flexShrink: 0 }} />
+              <span style={{ color: "var(--text-2)" }}>{label}</span>
+            </div>
+          ))}
+          <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11 }}>
+            <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#93c5fd", display: "inline-block", flexShrink: 0 }} />
+            <span style={{ color: "var(--text-3)" }}>Resto</span>
+          </div>
+        </div>
+      )}
       <ResponsiveContainer width="100%" height={chartHeight}>
         <ComposedChart data={combined} margin={{ top: 8, right: 24, bottom: 28, left: 16 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />

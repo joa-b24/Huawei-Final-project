@@ -28,6 +28,7 @@ type Props = {
   municipios: MunicipioAnalyticsRecord[];
   fixedYKey?: ScatterMetricKey;
   allowedMetricKeys?: ScatterMetricKey[];
+  weightKey?: "pobtot_iter" | "localidades_n";
 };
 
 const CLUSTER_COLOR_BY_LABEL: Record<string, string> = {
@@ -62,7 +63,7 @@ function resolveAxisPair(
   return { x, y };
 }
 
-export default function MunicipioScatterExplore({ municipios, fixedYKey, allowedMetricKeys }: Props) {
+export default function MunicipioScatterExplore({ municipios, fixedYKey, allowedMetricKeys, weightKey = "pobtot_iter" }: Props) {
   const [xKey, setXKey] = useState<ScatterMetricKey>("graproes");
   const [yKeyState, setYKeyState] = useState<ScatterMetricKey>("pob_pct_4g_garantizada");
 
@@ -108,18 +109,21 @@ export default function MunicipioScatterExplore({ municipios, fixedYKey, allowed
 
   const colorEchoesCoverageAxis = xKey === "pob_pct_4g_garantizada" || yKey === "pob_pct_4g_garantizada";
 
+  const weightLabel = weightKey === "localidades_n" ? "localidades" : "población";
+  const weightLabelCap = weightKey === "localidades_n" ? "Localidades" : "Población";
+
   const data = useMemo(
     () =>
       municipios.map((m) => ({
         name: m.nom_mun,
         x: pickMetric(m, xKey),
         y: pickMetric(m, yKey),
-        z: m.pobtot_iter,
+        z: weightKey === "localidades_n" ? (m.localidades_n ?? 1) : m.pobtot_iter,
         clusterLabel:
           m.cluster_label?.trim() ||
           (typeof m.cluster_id === "number" ? `Grupo ${m.cluster_id}` : "Sin grupo"),
       })),
-    [municipios, xKey, yKey]
+    [municipios, xKey, yKey, weightKey]
   );
 
   const rho = useMemo(() => {
@@ -189,7 +193,7 @@ export default function MunicipioScatterExplore({ municipios, fixedYKey, allowed
     <div style={{ fontSize: 12, lineHeight: 1.6, color: "var(--text-2)" }}>
       <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Cómo leer la dispersión</p>
       <p style={{ margin: "0 0 8px" }}>
-        Cada punto es un municipio. El <strong>tamaño</strong> representa la población.
+        Cada punto es un municipio. El <strong>tamaño</strong> representa la {weightLabel}.
         El <strong>color</strong> indica el perfil de cobertura 4G dentro del estado (3 grupos k-means).
       </p>
       <p style={{ fontWeight: 700, margin: "0 0 4px", color: "var(--text-1)" }}>Spearman (ρ)</p>
@@ -212,14 +216,14 @@ export default function MunicipioScatterExplore({ municipios, fixedYKey, allowed
   return (
   <ChartWrapper
     panelTitle="Gráfico de dispersión con peso"
-    title={`Explorador municipal - ${yMeta.label}`}
-    description="Cada punto es un municipio; el tamaño refleja la población y el color el grupo de cobertura 4G."
+    title={`Explorador municipal: ${yMeta.label}`}
+    description={`Cada punto es un municipio; el tamaño refleja la ${weightLabel} y el color el grupo de cobertura 4G.`}
     chartType="Dispersión municipal"
-    headerActions={<InfoTooltip wide text={tooltipContent} />}
+    tooltip={<InfoTooltip wide text={tooltipContent} />}
     standalone
   >
     <div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10, alignItems: "center" }}>
+      <div data-html2canvas-ignore="true" style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10, alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <label htmlFor="scatter-x" style={{ fontSize: 11, fontWeight: 600, color: "var(--text-3)", whiteSpace: "nowrap" }}>
             Eje X
@@ -268,7 +272,7 @@ export default function MunicipioScatterExplore({ municipios, fixedYKey, allowed
 
       {/* Scatter narrative */}
       {!sameAxis && rho !== null && rhoInterpretation && (
-        <p style={{ fontSize: 13, color: "var(--text-2)", margin: "0 0 12px", lineHeight: 1.6 }}>
+        <p data-html2canvas-ignore="true" style={{ fontSize: 13, color: "var(--text-2)", margin: "0 0 12px", lineHeight: 1.6 }}>
           <strong>{filtered.length}</strong> municipios graficados. Correlación Spearman entre{" "}
           <strong>{xMeta.label}</strong> y <strong>{yMeta.label}</strong>:{" "}
           <strong
@@ -295,7 +299,7 @@ export default function MunicipioScatterExplore({ municipios, fixedYKey, allowed
           <p style={{ padding: 24, color: "#64748b" }}>No hay municipios con ambos ejes numéricos para graficar.</p>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <ScatterChart margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
+            <ScatterChart margin={{ top: 8, right: 16, bottom: 28, left: 28 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 type="number"
@@ -303,6 +307,8 @@ export default function MunicipioScatterExplore({ municipios, fixedYKey, allowed
                 name={xMeta.label}
                 unit={xMeta.unit ? ` ${xMeta.unit}` : ""}
                 tickLine={false}
+                tick={{ fontSize: 11 }}
+                label={{ value: `${xMeta.label}${xMeta.unit ? ` (${xMeta.unit})` : ""}`, position: "insideBottom", offset: -14, fontSize: 11, fill: "#94a3b8" }}
               />
               <YAxis
                 type="number"
@@ -310,15 +316,39 @@ export default function MunicipioScatterExplore({ municipios, fixedYKey, allowed
                 name={yMeta.label}
                 unit={yMeta.unit ? ` ${yMeta.unit}` : ""}
                 tickLine={false}
+                tick={{ fontSize: 11 }}
+                label={{ value: `${yMeta.label}${yMeta.unit ? ` (${yMeta.unit})` : ""}`, angle: -90, position: "insideLeft", offset: 16, style: { textAnchor: "middle" }, fontSize: 11, fill: "#94a3b8" }}
               />
-              <ZAxis type="number" dataKey="z" range={[40, 400]} name="Población" />
+              <ZAxis type="number" dataKey="z" range={[40, 400]} name={weightLabelCap} />
               <Tooltip
                 cursor={{ strokeDasharray: "3 3" }}
-                formatter={(value: number, name: string) => {
-                  if (name === "Población") return [value.toLocaleString("es-MX"), name];
-                  return [typeof value === "number" ? value.toFixed(2) : value, name];
+                content={({ payload }) => {
+                  if (!payload?.length) return null;
+                  const d = payload[0]?.payload;
+                  if (!d) return null;
+                  const clusterColor = CLUSTER_COLOR_BY_LABEL[d.clusterLabel as string] ?? "#94a3b8";
+                  return (
+                    <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, padding: "8px 12px", fontSize: 12, maxWidth: 240, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+                      <strong style={{ display: "block", marginBottom: 6, color: "#1e293b" }}>{d.name}</strong>
+                      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", columnGap: 10, rowGap: 3 }}>
+                        <span style={{ color: "#94a3b8" }}>{xMeta.label}:</span>
+                        <span style={{ fontWeight: 600 }}>{typeof d.x === "number" ? d.x.toFixed(2) : "—"}{xMeta.unit ? ` ${xMeta.unit}` : ""}</span>
+                        <span style={{ color: "#94a3b8" }}>{yMeta.label}:</span>
+                        <span style={{ fontWeight: 600 }}>{typeof d.y === "number" ? d.y.toFixed(2) : "—"}{yMeta.unit ? ` ${yMeta.unit}` : ""}</span>
+                        {typeof d.z === "number" && (
+                          <>
+                            <span style={{ color: "#94a3b8" }}>{weightLabelCap}:</span>
+                            <span>{d.z.toLocaleString("es-MX")}</span>
+                          </>
+                        )}
+                      </div>
+                      <div style={{ marginTop: 7, display: "flex", alignItems: "center", gap: 5 }}>
+                        <span style={{ width: 9, height: 9, borderRadius: "50%", background: clusterColor, display: "inline-block", flexShrink: 0 }} />
+                        <span style={{ color: "#475569", fontSize: 11 }}>{d.clusterLabel}</span>
+                      </div>
+                    </div>
+                  );
                 }}
-                labelFormatter={(_, payload) => payload?.[0]?.payload?.name ?? ""}
               />
               {groupedByCluster.map(([clusterName, points], idx) => (
                 <Scatter

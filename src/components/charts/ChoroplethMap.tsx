@@ -6,6 +6,8 @@ import ChartWrapper from "./ChartWrapper";
 
 const GEO_URL = "/data/estados.geojson";
 
+import type { LegendItem } from "./ChartWrapper";
+
 type Props = {
   appData: AppData;
   varId: string;
@@ -14,6 +16,10 @@ type Props = {
   stateLabelOverrides?: Map<string, string>; // stateName → tooltip label
   panelTitle?: string;
   tooltip?: React.ReactNode;
+  title?: string;
+  description?: string;
+  legend?: LegendItem[];
+  standalone?: boolean;
 };
 
 function interpolateColor(t: number): string {
@@ -34,7 +40,7 @@ function fmtLegendVal(v: number): string {
   return v.toFixed(1);
 }
 
-export default function ChoroplethMap({ appData, varId, groupStateNames, stateColorOverrides, stateLabelOverrides, panelTitle, tooltip: infoTooltip }: Props) {
+export default function ChoroplethMap({ appData, varId, groupStateNames, stateColorOverrides, stateLabelOverrides, panelTitle, tooltip: infoTooltip, title, description, legend, standalone }: Props) {
   const { state: appState, dispatch } = useAppContext();
   const { primaryState } = appState;
   const { dataset } = appData;
@@ -98,12 +104,14 @@ export default function ChoroplethMap({ appData, varId, groupStateNames, stateCo
 
   return (
     <ChartWrapper
-      title={metricDef?.label ?? varId ?? "Mapa"}
+      title={title ?? metricDef?.label ?? varId ?? "Mapa"}
       variableName={metricDef?.label ?? varId}
       chartType="Mapa coroplético"
-      description="Muestra la distribución geográfica de la variable seleccionada entre los estados del país."
+      description={description ?? "Muestra la distribución geográfica de la variable seleccionada entre los estados del país."}
       panelTitle={panelTitle}
       tooltip={infoTooltip}
+      legend={legend}
+      standalone={standalone}
     >
     <div ref={containerRef} style={{ position: "relative" }} className="choropleth-container">
 

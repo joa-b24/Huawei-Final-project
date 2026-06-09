@@ -388,7 +388,7 @@ useEffect(() => {
 
           {/* Beta chart */}
           <div ref={betaChartRef}>
-          <ResponsiveContainer width="100%" height={Math.max(180, betaData.length * 44)}>
+          <ResponsiveContainer width="100%" height={Math.max(380, betaData.length * 84)}>
             <BarChart data={betaData} layout="vertical" margin={{ top: 4, right: 60, bottom: 4, left: 4 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
               <XAxis type="number" tick={{ fontSize: 11, fill: "var(--text-3)" }} axisLine={false} tickLine={false} />
@@ -431,22 +431,40 @@ useEffect(() => {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+
+          {/* Beta chart legend */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 16px", margin: "6px 0 12px", alignItems: "center" }}>
+            {[
+              { color: "var(--green)", label: "Efecto positivo", faded: false },
+              { color: "var(--red)",   label: "Efecto negativo", faded: false },
+              { color: "var(--green)", label: "No significativo (p ≥ 0.05)", faded: true },
+            ].map(({ color, label, faded }) => (
+              <span key={label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: faded ? "var(--text-3)" : "var(--text-2)" }}>
+                <span style={{ width: 14, height: 10, borderRadius: 2, background: color, opacity: faded ? 0.4 : 1, display: "inline-block", flexShrink: 0 }} />
+                {label}
+              </span>
+            ))}
+            <span style={{ fontSize: 11, color: "var(--text-3)", borderLeft: "1px solid var(--border)", paddingLeft: 12 }}>
+              β en escala σ — barra más larga = mayor impacto relativo
+            </span>
+          </div>
           </div>
 
           {/* Coefficients table — collapsed by default */}
           <button
             type="button"
             className="regression-detail-btn"
+            data-html2canvas-ignore="true"
             onClick={() => setShowTable((v) => !v)}
           >
             {showTable ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
             Ver detalle estadístico
           </button>
           {showTable && (
-            <>
+            <div data-html2canvas-ignore="true">
               <table
                 ref={coefTableRef}
-                className={`regression-coef-table${showTable ? "" : " regression-coef-table--hidden"}`}
+                className="regression-coef-table"
               >
                 <thead>
                   <tr>
@@ -506,7 +524,7 @@ useEffect(() => {
                   ))}
                 </dl>
               </InterpretationHelp>
-            </>
+            </div>
           )}
 
           {/* Fitted vs actual */}
@@ -547,7 +565,7 @@ useEffect(() => {
           <p style={{ fontSize: 12, color: "var(--text-3)", margin: "0 0 8px" }}>
             Cada punto es un estado. Los cercanos a la diagonal están bien predichos; los alejados son casos que el modelo no captura.
           </p>
-          <ResponsiveContainer width="100%" height={240}>
+          <ResponsiveContainer width="100%" height={460}>
             <ComposedChart data={fittedCombined} margin={{ top: 8, right: 24, bottom: 24, left: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="yhat" type="number" tick={{ fontSize: 11, fill: "var(--text-3)" }} axisLine={false} tickLine={false} label={{ value: "Predicho (std)", position: "insideBottom", offset: -12, fontSize: 11, fill: "var(--text-3)" }} />

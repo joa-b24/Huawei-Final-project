@@ -90,6 +90,16 @@ export default function ChartWrapper({
         }
       }
 
+      // onclone adds padding:24px (all sides) to the cloned element. With border-box the
+      // outer box stays the same size so the content area shrinks by pad*2 in both axes,
+      // causing content to overflow and be clipped. For standalone (.panel) the CSS already
+      // supplies the same padding, so offsetWidth/Height already include it — no compensation.
+      // For non-standalone we must enlarge the canvas by pad*2 on each axis.
+      // The eyebrow <p> inserted when panelTitle is set shifts content down an extra ~28px.
+      const hasOwnPadding = el.classList.contains("panel");
+      const paddingCompensation = hasOwnPadding ? 0 : pad * 2;
+      const eyebrowCompensation = panelTitle ? 28 : 0;
+
       const canvas = await html2canvas(el, {
         backgroundColor: "#ffffff",
         scale: 3,
@@ -98,8 +108,8 @@ export default function ChartWrapper({
         logging: false,
         scrollX: 0,
         scrollY: 0,
-        width: el.offsetWidth,
-        height: el.offsetHeight + tableExtraHeight,
+        width: el.offsetWidth + paddingCompensation,
+        height: el.offsetHeight + tableExtraHeight + paddingCompensation + eyebrowCompensation,
         onclone: (_, cloned) => {
           patchColorMixOnClone(el, cloned);
           cloned.style.padding = `${pad}px`;
