@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Database, HelpCircle, Layers, Printer, X } from "lucide-react";
+import { Database, HelpCircle, Layers, Loader2, Printer, X } from "lucide-react";
+import { snapshotCharts } from "../lib/svgToPng";
 import { AppProvider, actions, useAppContext, type TabId } from "../context/AppContext";
 import { loadAppData, type AppData } from "../services/DataService";
 import { loadHiddenIds, syncNoDataAutoHidden } from "../lib/dataStorage";
@@ -60,6 +61,7 @@ function Dashboard({ appData, onRefreshData }: { appData: AppData; onRefreshData
   const [helpOpen, setHelpOpen] = useState(false);
   const [reporteModalOpen, setReporteModalOpen] = useState(false);
   const [analystNotes, setAnalystNotes] = useState("");
+  const [printing, setPrinting] = useState(false);
 
   const hasPca = appData.pcaResults !== null;
   const tabs = useMemo(() => buildTabs(appData, state.activeVariableIds), [appData, state.activeVariableIds]);
@@ -73,10 +75,28 @@ function Dashboard({ appData, onRefreshData }: { appData: AppData; onRefreshData
 
   const today = new Date().toISOString().slice(0, 10);
 
-  function handlePrint() {
+  async function handlePrint() {
     setReporteModalOpen(false);
-    // Allow DOM to update with notes before printing
-    setTimeout(() => window.print(), 120);
+    setPrinting(true);
+    await new Promise<void>((r) => setTimeout(r, 80));
+
+    // Remove any leftover images from a previous incomplete print
+    document.querySelectorAll<HTMLImageElement>(".print-chart-img").forEach((img) => img.remove());
+
+    const cleanup = await snapshotCharts();
+
+    await new Promise<void>((r) => requestAnimationFrame(() => setTimeout(r, 60)));
+    window.print();
+
+    let fallbackId: ReturnType<typeof setTimeout>;
+    const finish = () => {
+      cleanup();
+      setPrinting(false);
+      window.removeEventListener("afterprint", finish);
+      clearTimeout(fallbackId);
+    };
+    window.addEventListener("afterprint", finish);
+    fallbackId = setTimeout(finish, 10_000);
   }
 
   const allStateNames = useMemo(
@@ -286,8 +306,11 @@ function Dashboard({ appData, onRefreshData }: { appData: AppData; onRefreshData
 
             <div className="wizard-nav">
               <button className="btn-ghost" type="button" onClick={() => setReporteModalOpen(false)}>Cancelar</button>
-              <button className="btn-primary" type="button" onClick={handlePrint}>
-                <Printer size={13} style={{ marginRight: 6 }} /> Imprimir / Guardar PDF
+              <button className="btn-primary" type="button" onClick={handlePrint} disabled={printing}>
+                {printing
+                  ? <><Loader2 size={13} style={{ marginRight: 6, animation: "spin 1s linear infinite" }} /> Preparando…</>
+                  : <><Printer size={13} style={{ marginRight: 6 }} /> Imprimir / Guardar PDF</>
+                }
               </button>
             </div>
           </div>
@@ -312,16 +335,21 @@ function Dashboard({ appData, onRefreshData }: { appData: AppData; onRefreshData
   );
 }
 
+const LOADING_MIN_MS = 700;
+
 export default function App() {
   const [appData, setAppData] = useState<AppData | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   function doLoad() {
+    const start = Date.now();
     return loadAppData()
       .then((data) => {
         const idsWithData = new Set(data.dataset.metricCatalog.map((m) => m.id));
         syncNoDataAutoHidden(idsWithData, data.variablesCatalog.map((v) => v.variable_id));
-        setAppData(data);
+        const elapsed = Date.now() - start;
+        const remaining = Math.max(0, LOADING_MIN_MS - elapsed);
+        setTimeout(() => setAppData(data), remaining);
       })
       .catch((err) => setLoadError(String(err)));
   }
@@ -333,7 +361,41 @@ export default function App() {
   }
 
   if (!appData) {
-    return <div className="app-shell loading">Cargando dashboard...</div>;
+    return (
+      <div className="app-shell loading">
+        <div className="loading-screen">
+          <svg className="loading-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="llBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#1b46ba" />
+                <stop offset="100%" stopColor="#0b2475" />
+              </linearGradient>
+              <linearGradient id="llCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#22d3ee" />
+                <stop offset="100%" stopColor="#06b6d4" />
+              </linearGradient>
+            </defs>
+            <g transform="translate(10, 10)">
+              <path className="loading-logo__layer loading-logo__layer--3" d="M 15 55 L 40 70 L 65 55 L 40 40 Z" fill="#e2e8f0" stroke="#cbd5e1" strokeWidth="2" strokeLinejoin="round" />
+              <path className="loading-logo__layer loading-logo__layer--2" d="M 15 38 L 40 53 L 65 38 L 40 23 Z" fill="url(#llCyan)" fillOpacity="0.25" stroke="url(#llCyan)" strokeWidth="2.5" strokeLinejoin="round" />
+              <path className="loading-logo__layer loading-logo__layer--1" d="M 15 21 L 40 36 L 65 21 L 40 6 Z" fill="url(#llBlue)" fillOpacity="0.85" stroke="url(#llBlue)" strokeWidth="3" strokeLinejoin="round" />
+              <line x1="40" y1="6" x2="40" y2="70" stroke="url(#llCyan)" strokeWidth="2.5" strokeDasharray="2 3" opacity="0.7" />
+              <circle cx="40" cy="21" r="5" fill="#ffffff" stroke="url(#llBlue)" strokeWidth="3" />
+              <circle cx="40" cy="21" r="1.5" fill="url(#llCyan)" />
+            </g>
+          </svg>
+          <div className="loading-text">
+            <span className="loading-text__title">Observatorio de Indicadores</span>
+            <span className="loading-text__sub">
+              Cargando datos
+              <span className="loading-dots">
+                <span>.</span><span>.</span><span>.</span>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

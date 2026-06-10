@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { Loader2 } from "lucide-react";
 import type { PcaManifest, PcaResults } from "../../services/DataService";
 import { humanizeVarId } from "../../utils/humanize";
 
@@ -93,18 +92,15 @@ export default function PcaWizard({ availableVariables, varLabels, manifest, onC
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify(config),
       });
-      const data = await res.json() as { ok: boolean; log: string[] };
+      const data = await res.json() as { ok: boolean; log: string[]; manifest: unknown; results: unknown };
       setLog(data.log ?? []);
       if (!data.ok) {
         setError("El script terminó con errores. Revisa el log.");
+      } else if (!data.manifest || !data.results) {
+        setError("El script terminó pero no se encontraron los archivos de resultados. Revisa el log.");
       } else {
-        // Cargar manifest y resultados actualizados
-        const [newManifest, newResults] = await Promise.all([
-          fetch("/data/outputs/pca/manifest.json").then((r) => r.json()),
-          fetch(`/data/outputs/pca/${analysisId}/pca_results.json`).then((r) => r.json()),
-        ]);
         setDone(true);
-        onDone(newManifest, newResults);
+        onDone(data.manifest as any, data.results as any);
       }
     } catch (e) {
       setError(String(e));
@@ -411,12 +407,33 @@ export default function PcaWizard({ availableVariables, varLabels, manifest, onC
               )}
 
               {running && (
-                <div style={{ textAlign: "center", padding: "24px 0", color: "var(--text-2)" }}>
-                  <Loader2 size={32} style={{ animation: "spin 1s linear infinite", color: "var(--blue)", marginBottom: 10 }} />
-                  <p style={{ margin: 0, fontSize: 14 }}>Ejecutando análisis…</p>
-                  <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--text-3)" }}>
-                    Esto puede tardar unos segundos.
-                  </p>
+                <div style={{ textAlign: "center", padding: "24px 0" }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 100 100"
+                    style={{ width: 72, height: 72, animation: "loading-float 1.6s ease-in-out infinite", filter: "drop-shadow(0 10px 24px rgba(27,70,186,0.35))", marginBottom: 16 }}
+                  >
+                    <defs>
+                      <linearGradient id="pcaBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#1b46ba" />
+                        <stop offset="100%" stopColor="#0b2475" />
+                      </linearGradient>
+                      <linearGradient id="pcaCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#22d3ee" />
+                        <stop offset="100%" stopColor="#06b6d4" />
+                      </linearGradient>
+                    </defs>
+                    <g transform="translate(10,10)">
+                      <path className="loading-logo__layer--3" d="M 15 55 L 40 70 L 65 55 L 40 40 Z" fill="#e2e8f0" stroke="#cbd5e1" strokeWidth="2" strokeLinejoin="round" />
+                      <path className="loading-logo__layer--2" d="M 15 38 L 40 53 L 65 38 L 40 23 Z" fill="url(#pcaCyan)" fillOpacity="0.25" stroke="url(#pcaCyan)" strokeWidth="2.5" strokeLinejoin="round" />
+                      <path className="loading-logo__layer--1" d="M 15 21 L 40 36 L 65 21 L 40 6 Z" fill="url(#pcaBlue)" fillOpacity="0.85" stroke="url(#pcaBlue)" strokeWidth="3" strokeLinejoin="round" />
+                      <line x1="40" y1="6" x2="40" y2="70" stroke="url(#pcaCyan)" strokeWidth="2.5" strokeDasharray="2 3" opacity="0.7" />
+                      <circle cx="40" cy="21" r="5" fill="#ffffff" stroke="url(#pcaBlue)" strokeWidth="3" />
+                      <circle cx="40" cy="21" r="1.5" fill="url(#pcaCyan)" />
+                    </g>
+                  </svg>
+                  <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "var(--text-1)" }}>Ejecutando análisis…</p>
+                  <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--text-3)" }}>Esto puede tardar unos segundos.</p>
                 </div>
               )}
 

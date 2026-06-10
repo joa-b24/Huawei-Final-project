@@ -67,6 +67,7 @@ export default function DatosTab({ appData, onCatalogChange }: Props) {
 
   function handleWizardDone() {
     setOverrideVersion((v) => v + 1);
+    bump();
     setMode("catalog");
   }
 

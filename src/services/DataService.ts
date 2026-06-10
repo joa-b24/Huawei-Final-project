@@ -278,8 +278,34 @@ export async function loadAppData(): Promise<AppData> {
     ? await fetchJsonOptional<PcaResults | null>(`/data/outputs/pca/${activeId}/pca_results.json`, null)
     : null;
 
+  const dataset = buildDataset(combined, stateAnalytics);
+
+  // If the pipeline wrote data to records but omitted the variable from metric_catalog,
+  // supplement metricCatalog with any variable that has data in records + is in variablesCatalog.
+  const metricCatalogIds = new Set(dataset.metricCatalog.map((m) => m.id));
+  const catalogEntryMap = new Map(catalogPayload.variables.map((v) => [v.variable_id, v]));
+  const supplemented = new Set<string>();
+  for (const record of dataset.records) {
+    for (const [id, val] of Object.entries(record.metrics)) {
+      if (val != null && !metricCatalogIds.has(id) && !supplemented.has(id)) {
+        const entry = catalogEntryMap.get(id);
+        if (entry) {
+          dataset.metricCatalog.push({
+            id,
+            label: entry.nombre,
+            unit: entry.unidad_base ?? "",
+            category: entry.categoria_id,
+            description: entry.descripcion ?? entry.nombre,
+            year: undefined,
+          });
+          supplemented.add(id);
+        }
+      }
+    }
+  }
+
   return {
-    dataset: buildDataset(combined, stateAnalytics),
+    dataset,
     correlations,
     distributions,
     univariateStats,

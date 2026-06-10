@@ -113,7 +113,8 @@ function PcaScatterChart({
   varExplained: [number, number];
 }) {
   return (
-    <ResponsiveContainer width="100%" height={320}>
+    <div className="chart-rc-wrap" style={{ height: 320 }}>
+    <ResponsiveContainer width="100%" height="100%">
       <ScatterChart margin={{ top: 8, right: 16, bottom: 24, left: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
         <XAxis
@@ -177,6 +178,7 @@ function PcaScatterChart({
         </Scatter>
       </ScatterChart>
     </ResponsiveContainer>
+    </div>
   );
 }
 

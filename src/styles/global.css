@@ -63,6 +63,71 @@ select {
 .loading {
   display: grid;
   place-items: center;
+  min-height: 100vh;
+  background: var(--bg, #f1f5f9);
+}
+
+/* ── Loading screen ─────────────────────────────────────────────────────────── */
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.loading-logo {
+  width: 88px;
+  height: 88px;
+  animation: loading-float 1.6s ease-in-out infinite;
+  filter: drop-shadow(0 12px 28px rgba(27, 70, 186, 0.35));
+}
+
+.loading-logo__layer--1 { animation: loading-layer 1.2s ease-in-out infinite 0s; }
+.loading-logo__layer--2 { animation: loading-layer 1.2s ease-in-out infinite 0.2s; }
+.loading-logo__layer--3 { animation: loading-layer 1.2s ease-in-out infinite 0.4s; }
+
+.loading-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.loading-text__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-1, #0f172a);
+  letter-spacing: -0.01em;
+}
+
+.loading-text__sub {
+  font-size: 12px;
+  color: var(--text-3, #94a3b8);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.loading-dots span {
+  display: inline-block;
+  animation: loading-dot 1.2s ease-in-out infinite;
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes loading-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-10px) scale(1.06); }
+}
+
+@keyframes loading-layer {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.15; }
+}
+
+@keyframes loading-dot {
+  0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+  40%           { opacity: 1;   transform: translateY(-3px); }
 }
 
 .hero {
@@ -1459,8 +1524,46 @@ select {
 .print-header,
 .print-footer { display: none; }
 
+/* PNG snapshot — hidden on screen, shown in print */
+.print-chart-img { display: none; }
+
+/* ── Page setup ──────────────────────────────────────────────────────────── */
+@page { size: letter; margin: 16mm 14mm; }
+
 /* ── @media print ────────────────────────────────────────────────────────── */
 @media print {
+  /* Force color printing only on small indicator elements (legend dots, badges, chips) */
+  .chart-wrapper__legend-dot,
+  .kpi-card-v2__outlier,
+  .comparison-state-chip,
+  .state-chip,
+  .print-chart-img,
+  [class*="badge"],
+  [class*="chip"],
+  [class*="tag"],
+  [class*="pill"] {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Reset all layout/structural backgrounds to white */
+  body,
+  .layout-shell,
+  .layout-main,
+  .main-content,
+  .tab-content,
+  .panel,
+  .chart-wrapper,
+  .kpi-card,
+  .kpi-card-v2 { background: #ffffff !important; background-image: none !important; }
+
+  /* Collapse all multi-column grids to single column */
+  .two-col,
+  .grid-layout { grid-template-columns: 1fr !important; }
+
+  /* Boxplot label + bar row: stack instead of fixed 200px column */
+  .boxplot-row { grid-template-columns: 1fr !important; }
+
   /* Hide interactive chrome */
   .layout-sidebar,
   .sidebar-toggle,
@@ -1469,6 +1572,15 @@ select {
   .help-modal-overlay,
   .delete-modal-overlay,
   [class*="btn-datos"] { display: none !important; }
+
+  /* Hide interactive elements inside panels */
+  .chart-wrapper__topbar,
+  .view-toggle,
+  button,
+  select { display: none !important; }
+
+  /* Hide empty-state placeholders */
+  .empty-state { display: none !important; }
 
   /* Full-width main */
   .layout-shell { display: block !important; }
@@ -1486,9 +1598,25 @@ select {
   .panel,
   [class*="ranking"] { page-break-inside: avoid; break-inside: avoid; }
 
-  /* Expand any collapsed/hidden chart elements */
   .chart-wrapper__fullscreen,
   .hidden { display: none !important; }
+
+  /* SVG snapshot swap: hide live chart, show PNG */
+  .chart-wrapper svg,
+  .chart-wrapper .recharts-responsive-container,
+  .chart-wrapper .chart-rc-wrap { display: none !important; }
+  .print-chart-img { display: block !important; width: 100% !important; height: auto !important; }
+
+  /* Stamp fixed at bottom of every page */
+  .print-footer__stamp {
+    position: fixed;
+    bottom: 6mm;
+    right: 0;
+    left: 0;
+    text-align: center;
+    font-size: 9px;
+    color: #94a3b8;
+  }
 }
 
 /* ── Print header styles ─────────────────────────────────────────────────── */

@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import { writeFileSync, mkdirSync } from "fs";
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { execFileSync } from "child_process";
 
@@ -92,9 +92,18 @@ export default function pipelinePlugin(): Plugin {
             writeFileSync(configPath, JSON.stringify(config, null, 2), "utf-8");
             log.push(`✓ Config escrita: ${configPath}`);
             const ok = runScript(server, ["scripts/analytics/run_custom_pca.py", configPath], log);
+            let manifest = null;
+            let results = null;
+            if (ok) {
+              const pcaDir = join(root, "public", "data", "outputs", "pca");
+              const manifestPath = join(pcaDir, "manifest.json");
+              const resultsPath  = join(pcaDir, config.id, "pca_results.json");
+              if (existsSync(manifestPath)) manifest = JSON.parse(readFileSync(manifestPath, "utf-8"));
+              if (existsSync(resultsPath))  results  = JSON.parse(readFileSync(resultsPath,  "utf-8"));
+            }
             res.setHeader("Content-Type", "application/json");
             res.statusCode = ok ? 200 : 500;
-            res.end(JSON.stringify({ ok, log }));
+            res.end(JSON.stringify({ ok, log, manifest, results }));
           } catch (err: any) {
             log.push(`✗ ${String(err)}`);
             res.setHeader("Content-Type", "application/json");

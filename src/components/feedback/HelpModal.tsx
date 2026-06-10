@@ -284,9 +284,7 @@ function DevContent() {
       </p>
       <ul className="help-section-list">
         <li>
-          <strong>Carga de datos locales</strong> — en desarrollo, los archivos de datos se sirven desde <code>public/data/</code>. Para añadir o actualizar variables, coloca los CSV en esa carpeta y ejecuta el pipeline de build de datos:
-          <pre style={{ margin: "6px 0 0", background: "var(--bg)", border: "1px solid var(--border)", borderRadius: 6, padding: "8px 10px", fontSize: 11, color: "var(--text-1)", overflowX: "auto" }}>npm run data:build:analytics</pre>
-          Esto regenera los archivos <code>.combined.json</code> y los outputs en <code>public/data/outputs/</code>.
+          <strong>Carga de datos locales</strong> — las variables se gestionan directamente desde el tab <strong>Datos</strong> de la aplicación: usa el wizard de importación para subir un CSV y el sistema actualiza los archivos en <code>public/data/</code> automáticamente.
         </li>
         <li>
           <strong>Verificar cambios antes de guardar</strong> — revisa qué archivos han cambiado con:
